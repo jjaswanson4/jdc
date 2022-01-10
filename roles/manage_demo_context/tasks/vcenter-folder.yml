@@ -1,0 +1,11 @@
+---
+
+- name: create folder in vcenter
+  community.vmware.vcenter_folder:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    validate_certs: "{{ vcenter_validate_certs | default(false) }}"
+    datacenter_name: "{{ vcenter_datacenter }}"
+    folder_name: "{{ audience }} - {{ demo }}"
+    parent_folder: Demos
