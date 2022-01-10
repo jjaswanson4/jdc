@@ -2,9 +2,9 @@
 
 - name: manage tenant
   netbox.netbox.netbox_tenant:
-    netbox_url: "{{ netbox.url }}"
+    netbox_url: "{{ netbox_url }}"
     netbox_token: "{{ netbox_token }}"
-    validate_certs: "{{ netbox.validate_certs | default('no') }}"
+    validate_certs: "{{ netbox_validate_certs | default('no') }}"
     data:
       name: "{{ audience }} - {{ demo_prefix }}"
-    state: "{{ context_state }}"
+    state: "{{ demo_context_state }}"
