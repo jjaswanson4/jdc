@@ -1,0 +1,17 @@
+---
+
+- name: configure demo inventory on controller
+  hosts:
+    - all
+  gather_facts: no
+  vars_files:
+    - "vars/demos/{{ demo }}/provisioner.yml"
+  pre_tasks:
+    - name: set inventories fact
+      ansible.builtin.set_fact:
+        controller_inventories:
+          - name: "{{ audience }} - {{ demo }} Infrastructure"
+            organization: "{{ controller_organization }}"
+            variables: "{{ lookup('file', 'vars/controller/inventories.yml') | from_yaml }}"
+  roles:
+    - redhat_cop.controller_configuration.inventories
