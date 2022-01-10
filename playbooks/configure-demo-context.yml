@@ -18,9 +18,9 @@
               username: "{{ netbox_username }}"
               password: "{{ netbox_password }}"
           register: netbox_auth_token_raw
-        - name: set auth token fact
+        - name: set netbox token fact
           ansible.builtin.set_fact:
-            netbox_auth_token: "{{ netbox_auth_token_raw.json.key }}"
+            netbox_token: "{{ netbox_auth_token_raw.json.key }}"
   roles:
     - ../roles/manage_demo_context
   
