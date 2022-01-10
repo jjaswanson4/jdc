@@ -6,7 +6,7 @@
   ask_limit_on_launch: yes
   project: "{{ project }}"
   allow_simultaneous: yes
-  playbook: provisioner/resources/playbooks/install-aap.yml
+  playbook: playbooks/install-aap.yml
   execution_environment: "{{ execution_environment.name }}"
   ask_credential_on_launch: yes
 - name: Configure Ansible Controller
@@ -15,7 +15,7 @@
   ask_limit_on_launch: yes
   project: "{{ project }}"
   allow_simultaneous: yes
-  playbook: provisioner/resources/playbooks/configure-ansible-controller.yml
+  playbook: playbooks/configure-ansible-controller.yml
   execution_environment: "{{ execution_environment.name }}"
   ask_credential_on_launch: yes
   extra_vars:
@@ -27,7 +27,7 @@
   ask_limit_on_launch: yes
   project: "{{ project }}"
   allow_simultaneous: yes
-  playbook: provisioner/resources/playbooks/install-satellite.yml
+  playbook: playbooks/install-satellite.yml
   execution_environment: "{{ execution_environment.name }}"
   ask_credential_on_launch: yes
 - name: Configure Red Hat Satellite
@@ -36,7 +36,7 @@
   ask_limit_on_launch: yes
   project: "{{ project }}"
   allow_simultaneous: yes
-  playbook: provisioner/resources/playbooks/configure-satellite.yml
+  playbook: playbooks/configure-satellite.yml
   execution_environment: "{{ execution_environment.name }}"
   ask_credential_on_launch: yes
 - name: Provision Systems
@@ -46,7 +46,7 @@
   forks: 10
   project: "{{ project }}"
   allow_simultaneous: yes
-  playbook: provisioner/resources/playbooks/provision-systems.yml
+  playbook: playbooks/provision-systems.yml
   execution_environment: "{{ execution_environment.name }}"
   ask_credential_on_launch: yes
   extra_vars:
@@ -58,7 +58,7 @@
   forks: 10
   project: "{{ project }}"
   allow_simultaneous: yes
-  playbook: provisioner/resources/playbooks/sap-preconfigure.yml
+  playbook: playbooks/sap-preconfigure.yml
   execution_environment: "{{ execution_environment.name }}"
   ask_credential_on_launch: yes
 - name: Preconfigure for HANA
@@ -67,7 +67,7 @@
   ask_limit_on_launch: yes
   project: "{{ project }}"
   allow_simultaneous: yes
-  playbook: provisioner/resources/playbooks/hana-preconfigure.yml
+  playbook: playbooks/hana-preconfigure.yml
   execution_environment: "{{ execution_environment.name }}"
   ask_credential_on_launch: yes
 - name: Preconfigure for Netweaver
@@ -76,7 +76,7 @@
   ask_limit_on_launch: yes
   project: "{{ project }}"
   allow_simultaneous: yes
-  playbook: provisioner/resources/playbooks/netweaver-preconfigure.yml
+  playbook: playbooks/netweaver-preconfigure.yml
   execution_environment: "{{ execution_environment.name }}"
   ask_credential_on_launch: yes
 - name: Deploy SAP HANA
@@ -85,7 +85,7 @@
   ask_limit_on_launch: yes
   project: "{{ project }}"
   allow_simultaneous: yes
-  playbook: provisioner/resources/playbooks/deploy-hana.yml
+  playbook: playbooks/deploy-hana.yml
   execution_environment: "{{ execution_environment.name }}"
   ask_credential_on_launch: yes
 - name: Install Netweaver
@@ -94,7 +94,7 @@
   ask_limit_on_launch: yes
   project: "{{ project }}"
   allow_simultaneous: yes
-  playbook: provisioner/resources/playbooks/install-s4.yml
+  playbook: playbooks/install-s4.yml
   execution_environment: "{{ execution_environment.name }}"
   ask_credential_on_launch: yes
 - name: Reinstate HSR
@@ -103,7 +103,7 @@
   ask_limit_on_launch: yes
   project: "{{ project }}"
   allow_simultaneous: yes
-  playbook: provisioner/resources/playbooks/reinstate-hsr.yml
+  playbook: playbooks/reinstate-hsr.yml
   execution_environment: "{{ execution_environment.name }}"
   ask_credential_on_launch: yes
 - name: Remove Controller Configuration
@@ -112,7 +112,7 @@
   ask_limit_on_launch: yes
   project: "{{ project }}"
   allow_simultaneous: yes
-  playbook: provisioner/resources/playbooks/remove-controller-configuration.yml
+  playbook: playbooks/remove-controller-configuration.yml
   execution_environment: "{{ execution_environment.name }}"
   ask_credential_on_launch: yes
   extra_vars:
@@ -124,7 +124,7 @@
   forks: 10
   project: "{{ project }}"
   allow_simultaneous: yes
-  playbook: provisioner/resources/playbooks/attempt-insights-unregister.yml
+  playbook: playbooks/attempt-insights-unregister.yml
   execution_environment: "{{ execution_environment.name }}"
   ask_credential_on_launch: yes
   ask_variables_on_launch: yes
@@ -136,7 +136,7 @@
   ask_limit_on_launch: yes
   project: "{{ project }}"
   allow_simultaneous: yes
-  playbook: provisioner/resources/playbooks/teardown-systems.yml
+  playbook: playbooks/teardown-systems.yml
   execution_environment: "{{ execution_environment.name }}"
   ask_credential_on_launch: yes
 - name: Cleanup DNS Records
@@ -145,7 +145,7 @@
   ask_limit_on_launch: yes
   project: "{{ project }}"
   allow_simultaneous: yes
-  playbook: provisioner/resources/playbooks/delete-dns-records.yml
+  playbook: playbooks/delete-dns-records.yml
   execution_environment: "{{ execution_environment.name }}"
   ask_credential_on_launch: yes
 - name: Send Provisioner Email
@@ -154,7 +154,7 @@
   limit: localhost
   project: "{{ project }}"
   allow_simultaneous: yes
-  playbook: provisioner/resources/playbooks/send-email.yml
+  playbook: playbooks/send-email.yml
   execution_environment: "{{ execution_environment.name }}"
   ask_variables_on_launch: yes
 - name: Run Remote Execution Jobs
@@ -163,6 +163,6 @@
   ask_limit_on_launch: yes
   project: "{{ project }}"
   allow_simultaneous: yes
-  playbook: provisioner/resources/playbooks/run-rex-job-via-satellite.yml
+  playbook: playbooks/run-rex-job-via-satellite.yml
   execution_environment: "{{ execution_environment.name }}"
   ask_credential_on_launch: yes
