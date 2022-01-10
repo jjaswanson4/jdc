@@ -22,5 +22,5 @@
           ansible.builtin.set_fact:
             netbox_auth_token: "{{ netbox_auth_token_raw.json.key }}"
   roles:
-    - manage_demo_context
+    - ../roles/manage_demo_context
   
