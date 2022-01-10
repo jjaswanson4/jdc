@@ -1,0 +1,4 @@
+extra-vars.yml
+execution-environment/context
+*tmp
+*swp
