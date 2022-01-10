@@ -15,8 +15,8 @@
             status_code: 201
             body_format: json
             body:
-              username: "{{ netbox.username }}"
-              password: "{{ netbox.password }}"
+              username: "{{ netbox_username }}"
+              password: "{{ netbox_password }}"
           register: netbox_auth_token_raw
         - name: set auth token fact
           ansible.builtin.set_fact:
