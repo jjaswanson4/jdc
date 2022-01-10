@@ -1,0 +1,49 @@
+---
+
+name: ''
+description: ''
+spec:
+  - type: text
+    question_name: "Demo Audience?"
+    question_description: "Who is the audience for this demo?"
+    variable: audience
+    required: yes
+  - type: text
+    question_name: "Provisioner?"
+    question_description: "Who is provisioning this demo?"
+    variable: provisioner
+    required: yes
+    default: 'Josh Swanson'
+  - type: text
+    question_name: "Provisioner's Email?"
+    question_description: "What is the provisioner's email address?"
+    variable: provisioner_email
+    required: yes
+    default: 'joshswanson@redhat.com'
+  - type: multiplechoice
+    question_name: Deploy Satellite?
+    question_description: Should satellite be deployed?
+    variable: deploy_satellite
+    choices:
+      - "yes"
+      - "no"
+    default: "yes"
+    required: yes
+  - type: multiplechoice
+    question_name: Configure controller?
+    question_description: Should controller be configured?
+    variable: configure_controller
+    choices:
+      - "yes"
+      - "no"
+    default: "yes"
+    required: yes
+  - type: multiplechoice
+    question_name: Provision demo hosts?
+    question_description: Should the demo hosts be provisioned?
+    variable: provision_demo_hosts
+    choices:
+      - "yes"
+      - "no"
+    default: "yes"
+    required: yes

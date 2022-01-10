@@ -1,0 +1,8 @@
+---
+
+- name: "{{ project }}"
+  organization: "{{ controller_organization }}"
+  scm_branch: main
+  scm_type: git
+  scm_url: https://github.com/jjaswanson4/jdc.git
+  wait: yes

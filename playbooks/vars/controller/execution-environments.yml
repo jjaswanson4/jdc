@@ -1,0 +1,6 @@
+---
+
+- name: "{{ execution_environment.name }}"
+  image: "{{ execution_environment.registry }}/{{ execution_environment.image }}"
+  credential: "{{ execution_environment.credential }}"
+  pull: always
