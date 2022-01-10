@@ -1,0 +1,37 @@
+---
+
+namespace: jjaswanson4
+
+name: jdc
+
+version: 1.0.0
+
+readme: README.md
+
+authors:
+- Josh Swanson <joshswanson@redhat.com>
+
+description: Josh's Ansible demos shipped as a collection
+
+license_file: 'LICENSE'
+
+tags:
+  - ansible
+  - rhel
+  - windows
+  - idm
+  - vmware
+  - sap
+
+dependencies: {}
+
+repository: https://github.com/jjaswanson4/jdc
+
+documentation: https://github.com/jjaswanson4/jdc/blob/main/README.md
+
+homepage: http://example.com
+
+issues: https://github.com/jjaswanson4/jdc/issues
+
+build_ignore:
+  - execution-environment
