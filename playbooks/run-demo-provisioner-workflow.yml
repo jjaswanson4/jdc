@@ -1,0 +1,25 @@
+---
+
+- name: run demo provisioner workflow
+  hosts:
+    - all
+  gather_facts: no
+  vars_files:
+    - vars/demos.yml
+  pre_tasks:
+    - name: match demo to display name
+      ansible.builtin.set_fact:
+        demo_display_name: "{{ demos.display_name }}"
+      when:
+        - demo == demos.display_name
+      loop_control:
+        - loop_var: demos
+      loop: "{{ available_demos }}"
+    - name: set demo provisioner workflow facts
+      ansible.builtin.set_fact:
+        controller_workflow_launch_jobs:
+          - name: "{{ demo_display_name }}"
+            inventory: "{{ audience }} - {{ demo }} Infrastructure"
+            wait: yes
+  roles:
+    - redhat_cop.controller_configuration.workflow_launch
