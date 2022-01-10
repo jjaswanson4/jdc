@@ -1,0 +1,18 @@
+---
+
+- name: promote content to production
+  hosts:
+    - all
+  gather_facts: false
+  tasks:
+    - name: "promote composite content view {{ satellite.composite_content_view }}"
+      redhat.satellite.content_view_version:
+        username: "{{ satellite.username }}"
+        password: "{{ satellite.password }}"
+        validate_certs: false
+        server_url: "{{ satellite.url }}"
+        organization: "{{ satellite.organization }}"
+        content_view: "{{ satellite.composite_content_view }}"
+        current_lifecycle_environment: "{{ current_lifecycle_environment }}"
+        lifecycle_environments: "{{ new_lifecycle_environment }}"
+      delegate_to: localhost

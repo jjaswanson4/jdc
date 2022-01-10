@@ -1,0 +1,25 @@
+---
+
+- name: rollback content for resetting demo
+  hosts:
+    - all
+  gather_facts: false
+  pre_tasks:
+    - name: set content facts
+      ansible.builtin.set_fact:
+        composite_content_view: composite-rhel8
+  tasks:
+    - name: "repromote version 1.0 of content view {{ composite_content_view }} to the appropriate lifecycle environments"
+      redhat.satellite.content_view_version:
+        username: "{{ satellite.admin_username }}"
+        password: "{{ satellite.admin_password }}"
+        validate_certs: false
+        server_url: "https://{{ inventory_hostname }}"
+        organization: "{{ audience }}"
+        content_view: "{{ composite_content_view }}"
+        force_promote: yes
+        version: 1.0
+        lifecycle_environments:
+          - Non_Production
+          - Production
+      delegate_to: localhost
