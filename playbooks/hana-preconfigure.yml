@@ -1,0 +1,12 @@
+---
+
+- name: prep for hana install
+  hosts:
+    - all
+  roles:
+    - sap.rhel.hana_preconfigure
+  handlers:
+    - name: reboot system
+      ansible.builtin.reboot:
+      listen:
+      - __sap_hana_preconfigure_reboot_handler

@@ -1,0 +1,17 @@
+---
+
+- name: delete deployed systems
+  hosts:
+    - all
+  gather_facts: false
+  tasks:
+    - name: delete systems from satellite
+      redhat.satellite.host:
+        username: "{{ provisioning.satellite.username }}"
+        password: "{{ provisioning.satellite.password }}"
+        server_url: "https://{{ provisioning.satellite.server | mandatory }}"
+        validate_certs: "{{ provisioning.validate_certs | default('false') }}"
+        name: "{{ inventory_hostname }}"
+        state: absent
+      delegate_to: localhost
+      throttle: 1

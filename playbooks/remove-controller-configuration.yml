@@ -1,0 +1,25 @@
+---
+
+- name: remove appropriate configurations from Ansible Controller
+  hosts:
+    - all
+  gather_facts: no
+  pre_tasks:
+    - name: force evaluation of controller_templates if _local and _imported are set
+      ansible.builtin.set_fact:
+        controller_templates: "{{ lookup('vars', 'controller_templates_imported') + lookup('vars', 'controller_templates_local') }}"
+      when:
+        - controller_templates_local is defined
+        - controller_templates_imported is defined
+        - controller_templates is not defined
+  roles:
+    - redhat_cop.controller_configuration.workflow_job_templates
+    - redhat_cop.controller_configuration.job_templates
+    - redhat_cop.controller_configuration.projects
+    - redhat_cop.controller_configuration.inventories
+    - redhat_cop.controller_configuration.teams
+    - redhat_cop.controller_configuration.users
+    - redhat_cop.controller_configuration.execution_environments
+    - redhat_cop.controller_configuration.credentials
+    - redhat_cop.controller_configuration.organizations
+    

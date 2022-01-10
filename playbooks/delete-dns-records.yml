@@ -1,0 +1,31 @@
+---
+
+- name: delete DNS records
+  hosts:
+    - all
+  gather_facts: false
+  pre_tasks:
+    - name: add host and custom DNS entries
+      ansible.builtin.set_fact:
+        dns:
+          server: "{{ dns.server }}"
+          password: "{{ dns_pass }}"
+          records: "{{ dns.records  + custom_dns_records }}"
+      when:
+        - custom_dns_records is defined
+  tasks:
+    - name: delete DNS records
+      community.general.ipa_dnsrecord:
+        ipa_host: "{{ dns.server | mandatory }}"
+        ipa_pass: "{{ dns.password | mandatory }}"
+        validate_certs: "{{ dns.validate_certs | default('false') }}"
+        zone_name: "{{ record.zone | default(dns_zone) }}"
+        record_name: "{{ record.name | mandatory }}"
+        record_value: "{{ record.value | mandatory }}"
+        record_type: "{{ record.type | mandatory }}"
+        state: absent
+      loop_control:
+        loop_var: record
+      loop: "{{ dns.records }}"
+      delegate_to: "{{ delegate_host | default('localhost') }}"
+      throttle: 1

@@ -1,0 +1,17 @@
+---
+
+- name: prep for netweaver install
+  hosts:
+    - all
+  roles:
+    - sap.rhel.netweaver_preconfigure
+  post_tasks:
+    - name: check if reboot is required
+      ansible.builtin.shell: yum needs-restarting -r
+      changed_when: false
+      ignore_errors: true
+      register: reboot_needed
+    - name: reboot system
+      ansible.builtin.reboot:
+      when:
+        - reboot_needed.rc | int != 0

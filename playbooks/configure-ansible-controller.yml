@@ -1,0 +1,73 @@
+---
+
+- name: configure controller
+  hosts:
+    - all
+  gather_facts: no
+  vars:
+    ansible_python_interpreter: "{{ ansible_playbook_python }}"
+  pre_tasks:
+    - name: run bootstrap tasks
+      block:
+        - name: super secure way to grab the manifest
+          ansible.builtin.get_url:
+            url: http://satellite06.lab.msp.redhat.com/pub/controller-manifest.zip
+            dest: /tmp/controller-manifest.zip
+        - name: apply manifest to controller
+          ansible.builtin.include_role:
+            name: redhat_cop.controller_configuration.license
+      when:
+        - bootstrap_controller is defined
+        - bootstrap_controller
+
+  tasks:
+    - name: ansible controller configuration block
+      block:
+        - name: include pre-inventory sync configuration roles
+          ansible.builtin.include_role:
+            name: "{{ role }}"
+          loop_control:
+            loop_var: role
+          loop:
+            - redhat_cop.controller_configuration.organizations
+            - redhat_cop.controller_configuration.credential_types
+            - redhat_cop.controller_configuration.credentials
+            - redhat_cop.controller_configuration.execution_environments
+            - redhat_cop.controller_configuration.teams
+            - redhat_cop.controller_configuration.users
+            - redhat_cop.controller_configuration.inventories
+
+        - name: include roles to setup inventory source if defined
+          ansible.builtin.include_role:
+            name: "{{ role }}"
+          loop_control:
+            loop_var: role
+          loop:        
+            - redhat_cop.controller_configuration.inventory_sources
+            - redhat_cop.controller_configuration.inventory_source_update
+          when:
+            controller_inventory_sources is defined
+
+        - name: include roles to create hosts if statically defined
+          ansible.builtin.include_role:
+            name: "{{ role }}"
+          loop_control:
+            loop_var: role
+          loop:        
+            - redhat_cop.controller_configuration.hosts
+          when:
+            controller_inventory_sources is not defined
+
+        - name: include post-inventory sync configuration roles
+          ansible.builtin.include_role:
+            name: "{{ role }}"
+          loop_control:
+            loop_var: role
+          loop:      
+            - redhat_cop.controller_configuration.groups
+            - redhat_cop.controller_configuration.projects
+            - redhat_cop.controller_configuration.job_templates
+            - redhat_cop.controller_configuration.workflow_job_templates
+            - redhat_cop.controller_configuration.roles
+      when:
+        - configure_controller | bool

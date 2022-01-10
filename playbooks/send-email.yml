@@ -1,0 +1,19 @@
+---
+
+- name: send email to provisioner
+  hosts:
+    - all
+  gather_facts: false
+  tasks:
+    - name: send email with the provisioner status of "{{ provisioner_status }}"
+      community.general.mail: 
+        host: smtp.redhat.com
+        to: "{{ provisioner }} <{{ provisioner_email }}>"
+        from: Demo Provisioner <dont@email.me>
+        subject: Demo Provisioning {{ provisioner_status }}
+        body: >
+          Hello {{ provisioner }},
+
+          {{ demo }} demo for {{ audience }} has completed with state: {{ provisioner_status }}
+
+          - The Demo Provisioner

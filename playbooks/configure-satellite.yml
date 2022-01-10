@@ -1,0 +1,33 @@
+---
+
+- name: build out satellite
+  hosts:
+    - all
+  vars:
+    deploy_satellite: yes
+  pre_tasks:
+    - name: super secure way to grab the manifest file
+      ansible.builtin.get_url:
+        url: http://satellite06.lab.msp.redhat.com/pub/satellite-manifest.zip
+        dest: /tmp/satellite-manifest.zip
+      delegate_to: localhost
+      when:
+        - deploy_satellite | bool
+  roles:
+    - jjaswanson4.configure_satellite.configure_satellite_foreman
+  tasks:
+    - name: include configuration roles
+      block:
+        - name: build satellite by organization
+          include_role:
+            name: jjaswanson4.configure_satellite.configure_satellite_katello
+          loop_control:
+            loop_var: organization
+          loop: "{{ satellite.katello }}"
+        - name: do that again but for katello dependent pieces
+          include_role:
+            name: jjaswanson4.configure_satellite.configure_satellite_foreman
+          vars:
+            requires_katello_content: true
+      when:
+        - deploy_satellite | bool

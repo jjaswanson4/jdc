@@ -1,0 +1,20 @@
+---
+
+- name: run job via satellite REX
+  hosts:
+    - all
+  gather_facts: no
+  tasks:
+    - name: run ansible roles against hosts via satellite
+      redhat.satellite.job_invocation:
+        username: "{{ rex_jobs.username }}"
+        password: "{{ rex_jobs.password }}"
+        validate_certs: no
+        server_url: "https://{{ rex_jobs.server }}"
+        job_template: "{{ rex_job.job_template }}"
+        search_query: "{{ rex_job.search_query }}"
+        inputs: '{{ rex_job.inputs | default(omit) }}'
+      loop: "{{ rex_jobs.jobs }}"
+      loop_control:
+        loop_var: rex_job
+      delegate_to: localhost

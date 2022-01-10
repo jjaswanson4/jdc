@@ -1,0 +1,16 @@
+---
+
+- name: initial setup of SAP hosts
+  hosts:
+    - all
+  roles:
+    - jjaswanson4.utilities.mount_nfs_shares
+    - jjaswanson4.utilities.add_virtual_disk
+    - redhat.rhel_system_roles.storage
+    - sap.rhel.preconfigure
+    - redhat_sap.sap_hostagent
+  handlers:
+    - name: reboot system
+      ansible.builtin.reboot:
+      listen:
+        - __sap_preconfigure_reboot_handler

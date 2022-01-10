@@ -1,0 +1,9 @@
+---
+
+- name: install hana
+  hosts:
+    - all
+  roles:
+    - redhat_sap.sap_hana_deployment
+    - sap-hana-hsr
+    - sap-hana-ha-pacemaker

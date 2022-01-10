@@ -1,0 +1,24 @@
+---
+
+- name: install Ansible Automation Platform
+  hosts:
+    - all
+  pre_tasks:
+    - name: ensure /var is big enough
+      community.general.lvol:
+        vg: os
+        lv: var
+        size: 20g
+        resizefs: yes
+  roles:
+    - jjaswanson4.utilities.install_aap
+  post_tasks:
+    - name: login to registry.redhat.io
+      ansible.builtin.shell:
+        cmd: "podman login --username '{{ crhc_username }}' --password '{{ crhc_password }}' registry.redhat.io"
+      become: yes
+      become_user: awx
+      #no_log: yes
+      when:
+        - bootstrap_controller is defined
+        - bootstrap_controller

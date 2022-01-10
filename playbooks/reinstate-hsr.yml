@@ -1,0 +1,30 @@
+---
+
+- name: set persistence in HANA configuration so HSR kicks back in
+  hosts:
+    - all
+  tasks:
+    - name: set persistence to normal mode
+      ansible.builtin.shell: >
+        source /usr/sap/{{ sap_hana_deployment_hana_sid | upper }}/home/.sapenv.sh &&
+        /usr/sap/{{ sap_hana_deployment_hana_sid | upper }}/HDB{{ sap_hana_deployment_hana_instance_number }}/exe/hdbsql
+        -n {{ ansible_hostname }}
+        -i {{ sap_hana_deployment_hana_instance_number }}
+        -u SYSTEM
+        -p {{ sap_hana_deployment_hana_db_system_password }}
+        "ALTER SYSTEM ALTER CONFIGURATION ('global.ini', 'SYSTEM') SET ('persistence', 'normal') = 'overwrite' WITH RECONFIGURE";
+      become: yes
+      become_user: "{{ sap_hana_deployment_hana_sid | lower }}adm"
+      become_method: su
+    - name: run initial backup on primary
+      ansible.builtin.shell: >
+        source /usr/sap/{{ sap_hana_deployment_hana_sid | upper }}/home/.sapenv.sh &&
+        /usr/sap/{{ sap_hana_deployment_hana_sid | upper }}/HDB{{ sap_hana_deployment_hana_instance_number }}/exe/hdbsql
+        -i {{ sap_hana_deployment_hana_instance_number }}
+        -u SYSTEM
+        -p {{ sap_hana_deployment_hana_db_system_password }}
+        -d SYSTEMDB
+        "BACKUP DATA FOR {{ sap_hana_deployment_hana_sid | upper }} USING FILE ('data_bck')"
+      become: yes
+      become_user: "{{ sap_hana_deployment_hana_sid | lower }}adm"
+      become_method: su

@@ -1,0 +1,16 @@
+---
+
+- name: attempt to unregister from Red Hat Insights for Red Hat Enterprise Linux
+  hosts:
+    - all
+  gather_facts: no
+  tasks:
+    - name: block to rescue if needed
+      block:
+        - name: attempt unregister
+          ansible.builtin.shell:
+            cmd: /usr/bin/insights-client --unregister
+      rescue:
+        - name: print warning
+          ansible.builtin.debug:
+            msg: "Insights registration unsuccessful, check c.rh.c"
