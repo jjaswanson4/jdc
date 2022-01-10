@@ -1,0 +1,9 @@
+---
+
+- name: include tasks to create context
+  ansible.builtin.include_tasks:
+    file: "{{ task_file }}"
+  loop_control:
+    loop_var: task_file
+  loop:
+    - tenant.yml
