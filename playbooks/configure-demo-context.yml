@@ -1,0 +1,26 @@
+---
+
+- name: setup demo context
+  hosts:
+    - all
+  gather_facts: no
+  pre_tasks:
+    - name: run tasks from localhost
+      block:
+        - name: get auth token for netbox
+          ansible.builtin.uri:
+            url: "{{ netbox.url }}/api/users/tokens/provision/"
+            validate_certs: no
+            method: POST
+            status_code: 201
+            body_format: json
+            body:
+              username: "{{ netbox.username }}"
+              password: "{{ netbox.password }}"
+          register: netbox_auth_token_raw
+        - name: set auth token fact
+          ansible.builtin.set_fact:
+            netbox_auth_token: "{{ netbox_auth_token_raw.json.key }}"
+  roles:
+    - manage_demo_context
+  
