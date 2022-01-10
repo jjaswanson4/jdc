@@ -6,4 +6,5 @@
   loop_control:
     loop_var: task_file
   loop:
-    - tenant.yml
+    - netbox-tenant.yml
+    - vcenter-folder.yml
