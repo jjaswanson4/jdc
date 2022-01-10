@@ -9,7 +9,7 @@
       block:
         - name: get auth token for netbox
           ansible.builtin.uri:
-            url: "https://{{ netbox_url }}/api/users/tokens/provision/"
+            url: "{{ netbox_url }}/api/users/tokens/provision/"
             validate_certs: no
             method: POST
             status_code: 201
