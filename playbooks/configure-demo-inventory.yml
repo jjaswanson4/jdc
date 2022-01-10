@@ -4,14 +4,29 @@
   hosts:
     - all
   gather_facts: no
-  vars_files:
-    - "vars/demos/{{ demo }}/provisioner.yml"
   pre_tasks:
-    - name: set inventories fact
+    - name: load demo provisioner vars into tmp var
+      ansible.builtin.include_vars:
+        file: "vars/demos/{{ demo }}/provisioner.yml"
+    - name: set inventories facts
       ansible.builtin.set_fact:
         controller_inventories:
           - name: "{{ audience }} - {{ demo }} Infrastructure"
             organization: "{{ controller_organization }}"
             variables: "{{ lookup('file', 'vars/controller/inventories.yml') | from_yaml }}"
+    - name: build list of hosts
+      ansible.builtin.set_fact:
+        controller_hosts: "{{ controller_hosts | default('[]') + [ host | combine( { 'inventory': audience + ' - ' + demo } ) ] }}"
+      loop_control:
+        loop_var: host
+      loop: "{{ controller_hosts }}"
+    - name: build list of groups
+      ansible.builtin.set_fact:
+        controller_groups: "{{ controller_groups | default('[]') + [ group | combine( { 'inventory': audience + ' - ' + demo } ) ] }}"
+      loop_control:
+        loop_var: group
+      loop: "{{ controller_groups }}"
   roles:
-    - redhat_cop.controller_configuration.inventories
+   - redhat_cop.controller_configuration.inventories
+   - redhat_cop.controller_configuration.hosts
+   - redhat_cop.controller_configuration.groups
