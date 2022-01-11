@@ -24,6 +24,8 @@
         data:
           prefix: "{{ network_prefix }}"
           dns_name: "{{ virtual_ip.dns_record }}"
+          assigned_object:
+            virtual_machine: "{{ inventory_hostname }}"
         state: new
       register: allocated_vip
       when:
