@@ -4,6 +4,9 @@
   hosts:
     - all
   gather_facts: no
+  vars:
+    controller_hosts_to_add: []
+    controller_groups_to_add: []
   pre_tasks:
     - name: load demo provisioner vars into tmp var
       ansible.builtin.include_vars:
@@ -14,20 +17,32 @@
           - name: "{{ audience }} - {{ demo }} Infrastructure"
             organization: "{{ controller_organization }}"
             variables: "{{ lookup('file', 'vars/controller/inventories.yml') | from_yaml }}"
+    - name: add inventory to hosts
+      ansible.builtin.set_fact:
+        controller_hosts_to_add: "{{ controller_hosts_to_add + [ host | combine( { 'inventory': audience + ' - ' + demo + ' Infrastructure'} ) ] }}"
+      loop_control:
+        loop_var: host
+      loop: "{{ controller_hosts }}"
+    - name: build list of groups
+      ansible.builtin.set_fact:
+        controller_groups_to_add: "{{ controller_groups_to_add | default('[]') + [ group | combine( { 'inventory': audience + ' - ' + demo + ' Infrastructure' } ) ] }}"
+      loop_control:
+        loop_var: group
+      loop: "{{ controller_groups }}"
     - name: load in satellite vars and group
       block:
         - name: set satellite host and group facts
           ansible.builtin.set_fact:
             satellite_host:
-              - name: "{{ audience | lower }}-satellite.demos.lab.msp.redhat.com"
+              - name: "{{ audience | lower }}-{{ demo }}-satellite.demos.lab.msp.redhat.com"
                 variables: "{{ lookup('file', 'vars/demos/' + demo + '/satellite.yml') | from_yaml }}"
             satellite_group:
               - name: satellite
                 hosts:
-                  - "{{ audience | lower }}-satellite.demos.lab.msp.redhat.com"
+                  - "{{ audience | lower }}-{{ demo }}-satellite.demos.lab.msp.redhat.com"
         - name: add satellite host to main list
           ansible.builtin.set_fact:
-            controller_hosts: "{{ controller_hosts + satellite_host }}"
+            controller_hosts: "{{ controller_hosts_to_add + satellite_host }}"
       when:
         - satellite_configuration_file is defined
     - name: load in controller vars and group
@@ -35,15 +50,15 @@
         - name: set controller host and group facts
           ansible.builtin.set_fact:
             controller_host:
-              - name: "{{ audience | lower }}-controller.demos.lab.msp.redhat.com"
+              - name: "{{ audience | lower }}-{{ demo }}-controller.demos.lab.msp.redhat.com"
                 variables: "{{ lookup('file', 'vars/demos/' + demo + '/controller.yml') | from_yaml }}"
             controller_group:
               - name: controller
                 hosts:
-                  - "{{ audience | lower }}-controller.demos.lab.msp.redhat.com"
+                  - "{{ audience | lower }}-{{ demo }}-controller.demos.lab.msp.redhat.com"
         - name: add controller host to main list
           ansible.builtin.set_fact:
-            controller_hosts: "{{ controller_hosts + controller_host }}"
+            controller_hosts: "{{ controller_hosts_to_add + controller_host }}"
       when:
         - controller_configuration_file is defined
     - name: define satellite group even if empty
@@ -68,20 +83,11 @@
               - satellite
     - name: add up groups
       ansible.builtin.set_fact:
-        controller_groups: "{{ controller_groups + satellite_group + controller_group + management_plane_group }}"
-    - name: build list of hosts
+        controller_groups: "{{ controller_groups_to_add + satellite_group + controller_group + management_plane_group }}"
+    - name: set vars for roles
       ansible.builtin.set_fact:
-        controller_hosts: "{{ controller_hosts | default('[]') + [ host | combine( { 'inventory': audience + ' - ' + demo + ' Infrastructure'} ) ] }}"
-      loop_control:
-        loop_var: host
-      loop: "{{ controller_hosts }}"
-    - name: build list of groups
-      ansible.builtin.set_fact:
-        controller_groups: "{{ controller_groups | default('[]') + [ group | combine( { 'inventory': audience + ' - ' + demo + ' Infrastructure' } ) ] }}"
-      loop_control:
-        loop_var: group
-      loop: "{{ controller_groups }}"
-
+        controller_hosts: "{{ controller_hosts_to_add }}"
+        controller_groups: "{{ controller_groups_to_add }}"
   roles:
    - redhat_cop.controller_configuration.inventories
    - redhat_cop.controller_configuration.hosts
