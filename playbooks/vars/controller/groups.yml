@@ -1,0 +1,17 @@
+---
+
+lifecycle_environment: production
+provisioning:
+  satellite:
+    server: satellite.lab.msp.redhat.com
+    username: admin
+    password: "{  { satellite_password }}"
+  host_group: "{  { os }}"
+  organization: MSP Lab
+  location: MSP Lab
+  method: bootdisk
+  dns_domain: josh.lab.msp.redhat.com
+  cpus: "{  { cpus }}"
+  memory_mb: "{  { memory_mb }}"
+  activation_keys: "ak-{  { application }}-{  { os }}-{  { lifecycle_environment }}"
+run_additional_roles: no
