@@ -50,6 +50,8 @@ controller_hosts:
   - name: sapdnhdb1.josh.lab.msp.redhat.com
     variables:
       sap_hana_hsr_alias: DC1
+      virtual_ip:
+        dns_record: sapdnhdb.josh.lab.msp.redhat.com
   - name: sapdnhdb2.josh.lab.msp.redhat.com
     variables:
       sap_hana_hsr_alias: DC2
@@ -329,11 +331,11 @@ controller_workflows:
     state: "{{ controller_state | default('present') }}"
     ask_inventory_on_launch: yes
     simplified_workflow_nodes:
-      - identifier: Provision Satellite System
-        unified_job_template: Provision Systems
-        limit: satellite
+      - identifier: Create CMDB Entries
+        unified_job_template: Manage CMDB Entries
         credentials:
-          - Demo Provisioner IDM Credentials
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner vCenter Credentials
   #       success_nodes:
   #         - node102
   #       failure_nodes:
