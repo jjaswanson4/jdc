@@ -55,9 +55,9 @@
         management_plane_group:
           - name: management_plane
             variables: "{{ lookup('file', 'vars/controller/groups.yml') | from_yaml }}"
-      children:
-        - controller
-        - satellite
+            children:
+              - controller
+              - satellite
     - name: add up groups
       ansible.builtin.set_fact:
         controller_groups: "{{ controller_groups + satellite_group + controller_group + management_plane_group }}"
