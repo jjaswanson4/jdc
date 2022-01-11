@@ -14,8 +14,53 @@
           - name: "{{ audience }} - {{ demo }} Infrastructure"
             organization: "{{ controller_organization }}"
             variables: "{{ lookup('file', 'vars/controller/inventories.yml') | from_yaml }}"
-    - debug:
-        msg: "{{ controller_inventories }}"
+    - name: load in satellite vars and group
+      ansible.builtin.set_fact:
+        satellite_host:
+          - name: "{{ audience | lower }}-satellite.demos.lab.msp.redhat.com"
+            variables: "{{ lookup('file', 'vars/demos/' + demo + '/satellite.yml') | from_yaml }}"
+        satellite_group:
+          - name: satellite
+            hosts:
+              - "{{ audience | lower }}-satellite.demos.lab.msp.redhat.com"
+        controller_hosts: "{{ controller_hosts + satellite_host }}"
+      when:
+        - satellite_configuration_file is defined
+    - name: load in controller vars and group
+      ansible.builtin.set_fact:
+        controller_host:
+          - name: "{{ audience | lower }}-controller.demos.lab.msp.redhat.com"
+            variables: "{{ lookup('file', 'vars/demos/' + demo + '/controller.yml') | from_yaml }}"
+        controller_group:
+          - name: controller
+            hosts:
+              - "{{ audience | lower }}-controller.demos.lab.msp.redhat.com"
+        controller_hosts: "{{ controller_hosts + controller_host }}"
+      when:
+        - controller_configuration_file is defined
+    - name: define satellite group even if empty
+      ansible.builtin.set_fact:
+        satellite_group:
+          - name: satellite
+      when:
+        - satellite_configuration_file is not defined
+    - name: define controller group even if empty
+      ansible.builtin.set_fact:
+        controller_group:
+          - name: controller
+      when:
+        - controller_configuration_file is not defined
+    - name: load in management_plane group
+      ansible.builtin.set_fact:
+        management_plane_group:
+          - name: management_plane
+            variables: "{{ lookup('file', 'vars/controller/groups.yml') | from_yaml }}"
+      children:
+        - controller
+        - satellite
+    - name: add up groups
+      ansible.builtin.set_fact:
+        controller_groups: "{{ controller_groups + satellite_group + controller_group + management_plane_group }}"
     - name: build list of hosts
       ansible.builtin.set_fact:
         controller_hosts: "{{ controller_hosts | default('[]') + [ host | combine( { 'inventory': audience + ' - ' + demo + ' Infrastructure'} ) ] }}"
@@ -28,6 +73,7 @@
       loop_control:
         loop_var: group
       loop: "{{ controller_groups }}"
+
   roles:
    - redhat_cop.controller_configuration.inventories
    - redhat_cop.controller_configuration.hosts
