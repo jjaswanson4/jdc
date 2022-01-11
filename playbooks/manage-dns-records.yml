@@ -1,0 +1,8 @@
+---
+
+- name: manage DNS records
+  hosts:
+    - all
+  gather_facts: no
+  roles:
+    - ../roles/manage_dns_records
