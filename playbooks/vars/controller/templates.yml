@@ -41,7 +41,7 @@
   ask_credential_on_launch: yes
 - name: Provision Systems
   organization: "{{ controller_organization }}"
-  ask_inventory_on_launch: yes
+  inventory: Demo Inventory
   ask_limit_on_launch: yes
   forks: 10
   project: "{{ project }}"
@@ -166,3 +166,52 @@
   playbook: playbooks/run-rex-job-via-satellite.yml
   execution_environment: "{{ execution_environment.name }}"
   ask_credential_on_launch: yes
+- name: Configure Demo Context
+  organization: "{{ controller_organization }}"
+  inventory: Demo Inventory
+  limit: localhost
+  project: "{{ project }}"
+  allow_simultaneous: yes
+  playbook: playbooks/configure-demo-context.yml
+  execution_environment: "{{ execution_environment.name }}"
+  ask_credential_on_launch: yes
+  ask_variables_on_launch: yes
+- name: Configure Demo Inventory
+  organization: "{{ controller_organization }}"
+  inventory: Demo Inventory
+  limit: localhost
+  project: "{{ project }}"
+  allow_simultaneous: yes
+  playbook: playbooks/configure-demo-inventory.yml
+  execution_environment: "{{ execution_environment.name }}"
+  ask_credential_on_launch: yes
+  ask_variables_on_launch: yes
+- name: Run Demo Provisioner Workflow
+  organization: "{{ controller_organization }}"
+  inventory: Demo Inventory
+  limit: localhost
+  project: "{{ project }}"
+  allow_simultaneous: yes
+  playbook: playbooks/run-demo-provisioner-workflow.yml
+  execution_environment: "{{ execution_environment.name }}"
+  ask_credential_on_launch: yes
+  ask_variables_on_launch: yes
+- name: Manage CMDB Records
+  organization: "{{ controller_organization }}"
+  inventory: Demo Inventory
+  project: "{{ project }}"
+  allow_simultaneous: yes
+  playbook: playbooks/manage-cmdb-records.yml
+  execution_environment: "{{ execution_environment.name }}"
+  ask_credential_on_launch: yes
+  ask_variables_on_launch: yes
+  ask_limit_on_launch: yes
+- name: Run Controller Job
+  organization: "{{ controller_organization }}"
+  inventory: Demo Inventory
+  project: "{{ project }}"
+  allow_simultaneous: yes
+  playbook: playbooks/run-controller-job.yml
+  execution_environment: "{{ execution_environment.name }}"
+  ask_credential_on_launch: yes
+  ask_variables_on_launch: yes
