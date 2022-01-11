@@ -39,6 +39,7 @@
                 variables: "{{ lookup('file', 'vars/demos/' + demo + '/satellite.yml') | from_yaml }}"
             satellite_group:
               - name: satellite
+                inventory: "{{ audience }} - {{ demo }} Infrastructure"
                 hosts:
                   - "{{ audience | lower }}-{{ demo }}-satellite.demos.lab.msp.redhat.com"
         - name: add satellite host to main list
@@ -56,6 +57,7 @@
                 variables: "{{ lookup('file', 'vars/demos/' + demo + '/controller.yml') | from_yaml }}"
             controller_group:
               - name: controller
+                inventory: "{{ audience }} - {{ demo }} Infrastructure"
                 hosts:
                   - "{{ audience | lower }}-{{ demo }}-controller.demos.lab.msp.redhat.com"
         - name: add controller host to main list
@@ -67,18 +69,21 @@
       ansible.builtin.set_fact:
         satellite_group:
           - name: satellite
+            inventory: "{{ audience }} - {{ demo }} Infrastructure"
       when:
         - satellite_configuration_file is not defined
     - name: define controller group even if empty
       ansible.builtin.set_fact:
         controller_group:
           - name: controller
+            inventory: "{{ audience }} - {{ demo }} Infrastructure"
       when:
         - controller_configuration_file is not defined
     - name: load in management_plane group
       ansible.builtin.set_fact:
         management_plane_group:
           - name: management_plane
+            inventory: "{{ audience }} - {{ demo }} Infrastructure"
             variables: "{{ lookup('file', 'vars/controller/groups.yml') | from_yaml }}"
             children:
               - controller
