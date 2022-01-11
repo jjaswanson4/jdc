@@ -35,6 +35,7 @@
           ansible.builtin.set_fact:
             satellite_host:
               - name: "{{ audience | lower }}-{{ demo }}-satellite.demos.lab.msp.redhat.com"
+                inventory: "{{ audience }} - {{ demo }} Infrastructure"
                 variables: "{{ lookup('file', 'vars/demos/' + demo + '/satellite.yml') | from_yaml }}"
             satellite_group:
               - name: satellite
@@ -42,7 +43,7 @@
                   - "{{ audience | lower }}-{{ demo }}-satellite.demos.lab.msp.redhat.com"
         - name: add satellite host to main list
           ansible.builtin.set_fact:
-            controller_hosts: "{{ controller_hosts_to_add + satellite_host }}"
+            controller_hosts_to_add: "{{ controller_hosts_to_add + satellite_host }}"
       when:
         - satellite_configuration_file is defined
     - name: load in controller vars and group
@@ -51,6 +52,7 @@
           ansible.builtin.set_fact:
             controller_host:
               - name: "{{ audience | lower }}-{{ demo }}-controller.demos.lab.msp.redhat.com"
+                inventory: "{{ audience }} - {{ demo }} Infrastructure"
                 variables: "{{ lookup('file', 'vars/demos/' + demo + '/controller.yml') | from_yaml }}"
             controller_group:
               - name: controller
