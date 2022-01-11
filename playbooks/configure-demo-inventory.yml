@@ -14,15 +14,17 @@
           - name: "{{ audience }} - {{ demo }} Infrastructure"
             organization: "{{ controller_organization }}"
             variables: "{{ lookup('file', 'vars/controller/inventories.yml') | from_yaml }}"
+    - debug:
+        msg: "{{ controller_inventories }}"
     - name: build list of hosts
       ansible.builtin.set_fact:
-        controller_hosts: "{{ controller_hosts | default('[]') + [ host | combine( { 'inventory': audience + ' - ' + demo } ) ] }}"
+        controller_hosts: "{{ controller_hosts | default('[]') + [ host | combine( { 'inventory': audience + ' - ' + demo + ' Infrastructure'} ) ] }}"
       loop_control:
         loop_var: host
       loop: "{{ controller_hosts }}"
     - name: build list of groups
       ansible.builtin.set_fact:
-        controller_groups: "{{ controller_groups | default('[]') + [ group | combine( { 'inventory': audience + ' - ' + demo } ) ] }}"
+        controller_groups: "{{ controller_groups | default('[]') + [ group | combine( { 'inventory': audience + ' - ' + demo + ' Infrastructure' } ) ] }}"
       loop_control:
         loop_var: group
       loop: "{{ controller_groups }}"
