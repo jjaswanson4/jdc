@@ -1,0 +1,18 @@
+---
+
+- name: request IP addresses from netbox
+  netbox.netbox.netbox_ip_address:
+    netbox_url: "{{ netbox_url }}"
+    netbox_token: "{{ netbox_token }}"
+    validate_certs: "{{ (netbox_validate_certs | bool) | default(omit) }}"
+    data:
+      prefix: "{{ network_prefix }}"
+      assigned_object:
+        virtual_machine: "{{ inventory_hostname }}"
+        name: ens192
+      dns_name: "{{ inventory_hostname }}"
+      tenant: "{{ audience }} - {{ demo }}"
+    state: new
+  register: allocated_ip_address
+  delegate_to: "{{ delegate_host }}"
+    

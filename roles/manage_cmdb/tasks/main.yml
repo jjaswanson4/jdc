@@ -1,0 +1,34 @@
+---
+
+- name: get auth token for netbox
+  ansible.builtin.uri:
+    url: "{{ netbox_url }}/api/users/tokens/provision/"
+    validate_certs: "{{ netbox_validate_certs | default(omit) }}"
+    method: POST
+    status_code: 201
+    body_format: json
+    body:
+      username: "{{ netbox_username }}"
+      password: "{{ netbox_password }}"
+  register: netbox_auth_token_raw
+  throttle: 2
+  delegate_to: "{{ delegate_host }}"  
+
+- name: set netbox token fact
+  ansible.builtin.set_fact:
+    netbox_token: "{{ netbox_auth_token_raw.json.key }}"
+
+#- name: add virtual IPs
+- import_tasks: manage-vm-record.yml
+
+- name: include tasks to get IP address
+  ansible.builtin.include_tasks:
+    file: manage-ip-addresses.yml
+  when:
+    - vm_record_created.changed
+
+- name: update host record with ip address
+  ansible.builtin.include_tasks:
+    file: manage-vm-record.yml
+  when:
+    - allocated_ip_address.ip_address is defined
