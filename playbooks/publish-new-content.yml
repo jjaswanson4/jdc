@@ -1,0 +1,49 @@
+---
+
+- name: prepare new content views for monthly patching
+  hosts:
+    - all
+  gather_facts: false
+  tasks:
+    - name: update content views for this patch cycle
+      block:
+        - name: remove content view filter used for demo purposes
+          redhat.satellite.content_view_filter:
+            username: "{{ satellite.username }}"
+            password: "{{ satellite.password }}"
+            validate_certs: false
+            server_url: "{{ satellite.url }}"
+            organization: "{{ satellite.organization }}"
+            name: "{{ satellite.content_view_filter_name }}"
+            filter_state: absent
+            filter_type: erratum
+            content_view: "{{ content_view.name }}"
+          loop_control:
+            loop_var: content_view
+          loop: "{{ satellite.content_views }}"
+        - name: "publish content view to the library"
+          redhat.satellite.content_view_version:
+            username: "{{ satellite.username }}"
+            password: "{{ satellite.password }}"
+            validate_certs: false
+            server_url: "{{ satellite.url }}"
+            organization: "{{ satellite.organization }}"
+            content_view: "{{ content_view.name }}"
+            lifecycle_environments:
+              - Library
+          loop_control:
+            loop_var: content_view
+          loop: "{{ satellite.content_views }}"
+        - name: "publish new version of composite content view {{ satellite.composite_content_view }}"
+          redhat.satellite.content_view_version:
+            username: "{{ satellite.username }}"
+            password: "{{ satellite.password }}"
+            validate_certs: false
+            server_url: "{{ satellite.url }}"
+            organization: "{{ satellite.organization }}"
+            content_view: "{{ satellite.composite_content_view }}"
+            lifecycle_environments:
+              - Library
+              - Non_Production
+      delegate_to: localhost
+      

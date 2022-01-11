@@ -1,0 +1,12 @@
+---
+
+- name: adjust node standby/unstandby status in a pacemaker cluster
+  hosts:
+    - all
+  tasks:
+    - name: standby/unstandby a node
+      ansible.builtin.shell:
+        cmd: "pcs node {{ pcs_node_status }} {{ ansible_fqdn }}"
+    - name: wait for node status change to complete
+      ansible.builtin.pause:
+        seconds: 30

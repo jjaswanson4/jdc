@@ -1,0 +1,31 @@
+---
+
+- name: grab traces information from satellite
+  hosts:
+    - all
+  gather_facts: false
+  tasks:
+    - name: get traces for system
+      block:
+        - name: get host id from satellite
+          redhat.satellite.host_info:
+            username: "{{ satellite.username }}"
+            password: "{{ satellite.password }}"
+            server_url: "{{ satellite.url }}"
+            validate_certs: false
+            organization: "{{ satellite.organization }}"
+            name: "{{ inventory_hostname }}"
+          register: satellite_host_info
+        - name: get traces from satellite
+          ansible.builtin.uri:
+            url: "{{ satellite.url }}/api/hosts/{{ satellite_host_info.host.id }}/traces"
+            user: "{{ satellite.username }}"
+            password: "{{ satellite.password }}"
+            validate_certs: no
+            force_basic_auth: yes
+          register: traces
+      delegate_to: localhost
+    - name: print out tracer information
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      loop: "{{ traces.json.results }}"

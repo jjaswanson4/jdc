@@ -1,0 +1,10 @@
+---
+
+- name: run Red Hat Insights for Red Hat Enterprise Linux scan and upload data
+  hosts:
+    - all
+  gather_facts: false
+  tasks:
+    - name: run an insights scan
+      ansible.builtin.shell: /usr/bin/insights-client
+      changed_when: no

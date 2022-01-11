@@ -1,0 +1,9 @@
+---
+
+- name: run tracer
+  hosts:
+    - all
+  tasks:
+    - name: run tracer on hosts
+      ansible.builtin.shell:
+        cmd: katello-tracer-upload

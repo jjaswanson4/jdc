@@ -1,0 +1,17 @@
+---
+
+- name: check for available updates
+  hosts:
+    - all
+  tasks:
+    - name: grab packages that can be updated
+      ansible.builtin.shell:
+        cmd: yum list updates
+      args:
+        warn: no
+      changed_when: no
+      check_mode: no
+      register: packages_to_update
+    - name: list packages to be updated
+      ansible.builtin.debug:
+        var: packages_to_update.stdout_lines

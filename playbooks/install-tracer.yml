@@ -1,0 +1,15 @@
+---
+
+- name: install tracer on systems
+  hosts:
+    - all
+  tasks:
+    - name: install tracer rpms
+      ansible.builtin.yum:
+        name: katello-host-tools-tracer
+        state: present
+      notify: run tracer report
+  handlers:
+    - name: run tracer report
+      ansible.builtin.shell:
+        cmd: katello-tracer-upload

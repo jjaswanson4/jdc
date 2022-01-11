@@ -1,0 +1,10 @@
+---
+
+- name: update all packages on server
+  hosts:
+    - all
+  tasks:
+    - name: update all packages
+      ansible.builtin.yum:
+        name: '*'
+        state: latest
