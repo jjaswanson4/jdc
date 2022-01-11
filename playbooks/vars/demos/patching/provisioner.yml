@@ -59,6 +59,8 @@ controller_hosts:
   - name: sapdphdb1.josh.lab.msp.redhat.com
     variables:
       sap_hana_hsr_alias: DC1
+      virtual_ip:
+        dns_record: sapdnhdb.josh.lab.msp.redhat.com
   - name: sapdphdb2.josh.lab.msp.redhat.com
     variables:
       sap_hana_hsr_alias: DC2
@@ -330,6 +332,7 @@ controller_workflows:
     organization: "{{ controller_organization }}"
     state: "{{ controller_state | default('present') }}"
     ask_inventory_on_launch: yes
+    ask_variables_on_launch: yes
     extra_vars:
       demo: patching
     simplified_workflow_nodes:
@@ -338,10 +341,17 @@ controller_workflows:
         credentials:
           - Demo Provisioner Netbox Credentials
           - Demo Provisioner vCenter Credentials
-  #       success_nodes:
-  #         - node102
+        success_nodes:
+          - Create DNS Records
   #       failure_nodes:
   #         - node1101
+      - identifier: Create DNS Records
+        unified_job_template: Manage DNS Records
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner IDM Credentials
+        # success_nodes:
+        #   - node102
   #     - unified_job_template: Install Red Hat Satellite
   #       identifier: node102
   #       limit: satellite
