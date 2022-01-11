@@ -8,6 +8,17 @@
     controller_hosts_to_add: []
     controller_groups_to_add: []
   pre_tasks:
+    - name: create unique id for demo if not existing
+      block:
+        - name: create unique id for demo instance
+          ansible.builtin.shell:
+            cmd: uuidgen | cut -c1-4
+          register: demo_uuid
+        - name: set unique id fact
+          ansible.builtin.set_fact:
+            demo_uuid: "{{ demo_uuid.stdout }}"
+      when:
+        - demo_uuid is not defined
     - name: load demo provisioner vars into tmp var
       ansible.builtin.include_vars:
         file: "vars/demos/{{ demo }}/provisioner.yml"
@@ -34,14 +45,14 @@
         - name: set satellite host and group facts
           ansible.builtin.set_fact:
             satellite_host:
-              - name: "{{ audience | lower }}-{{ demo }}-satellite.demos.lab.msp.redhat.com"
+              - name: "{{ audience | lower }}-{{ demo }}-satellite.{{ demo_uuid }}.{{ base_dns_suffix }}"
                 inventory: "{{ audience }} - {{ demo }} Infrastructure"
                 variables: "{{ lookup('file', 'vars/demos/' + demo + '/satellite.yml') | from_yaml }}"
             satellite_group:
               - name: satellite
                 inventory: "{{ audience }} - {{ demo }} Infrastructure"
                 hosts:
-                  - "{{ audience | lower }}-{{ demo }}-satellite.demos.lab.msp.redhat.com"
+                  - "{{ audience | lower }}-{{ demo }}-satellite.{{ demo_uuid }}.{{ base_dns_suffix }}"
         - name: add satellite host to main list
           ansible.builtin.set_fact:
             controller_hosts_to_add: "{{ controller_hosts_to_add + satellite_host }}"
@@ -52,14 +63,14 @@
         - name: set controller host and group facts
           ansible.builtin.set_fact:
             controller_host:
-              - name: "{{ audience | lower }}-{{ demo }}-controller.demos.lab.msp.redhat.com"
+              - name: "{{ audience | lower }}-{{ demo }}-controller.{{ demo_uuid }}.{{ base_dns_suffix }}"
                 inventory: "{{ audience }} - {{ demo }} Infrastructure"
                 variables: "{{ lookup('file', 'vars/demos/' + demo + '/controller.yml') | from_yaml }}"
             controller_group:
               - name: controller
                 inventory: "{{ audience }} - {{ demo }} Infrastructure"
                 hosts:
-                  - "{{ audience | lower }}-{{ demo }}-controller.demos.lab.msp.redhat.com"
+                  - "{{ audience | lower }}-{{ demo }}-controller.{{ demo_uuid }}.{{ base_dns_suffix }}"
         - name: add controller host to main list
           ansible.builtin.set_fact:
             controller_hosts_to_add: "{{ controller_hosts_to_add + controller_host }}"
@@ -95,6 +106,8 @@
       ansible.builtin.set_fact:
         controller_hosts: "{{ controller_hosts_to_add }}"
         controller_groups: "{{ controller_groups_to_add }}"
+    - debug:
+        msg: "{{ controller_hosts }}"
   roles:
    - redhat_cop.controller_configuration.inventories
    - redhat_cop.controller_configuration.hosts
