@@ -27,10 +27,7 @@
         controller_inventories:
           - name: "{{ audience }} - {{ demo }} Infrastructure"
             organization: "{{ controller_organization }}"
-            variables: "{{ lookup('file', 'vars/controller/inventories.yml') | from_yaml }}"
-    - name: force ansible to instanciate vars
-      ansible.builtin.set_fact:      
-        controller_inventories: "{{ lookup('vars', 'controller_inventories') }}"
+            variables: "{{ lookup('file', 'vars/controller/inventories.yml') | from_yaml | combine( { 'demo_uuid': demo_uuid } ) }}"
     - name: add inventory to hosts
       ansible.builtin.set_fact:
         controller_hosts_to_add: "{{ controller_hosts_to_add + [ host | combine( { 'inventory': audience + ' - ' + demo + ' Infrastructure'} ) ] }}"
@@ -109,8 +106,6 @@
       ansible.builtin.set_fact:
         controller_hosts: "{{ controller_hosts_to_add }}"
         controller_groups: "{{ controller_groups_to_add }}"
-    - debug:
-        msg: "{{ controller_hosts }}"
   roles:
    - redhat_cop.controller_configuration.inventories
    - redhat_cop.controller_configuration.hosts
