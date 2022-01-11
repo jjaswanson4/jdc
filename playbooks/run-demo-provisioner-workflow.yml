@@ -21,5 +21,7 @@
           - name: "Provision {{ demo_display_name }} Demo"
             inventory: "{{ audience }} - {{ demo }} Infrastructure"
             wait: yes
+            extra_vars:
+              audience: "{{ audience }}"
   roles:
     - redhat_cop.controller_configuration.workflow_launch
