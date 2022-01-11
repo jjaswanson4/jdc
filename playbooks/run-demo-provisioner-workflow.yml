@@ -13,7 +13,7 @@
       when:
         - demo == demos.display_name
       loop_control:
-        - loop_var: demos
+        loop_var: demos
       loop: "{{ available_demos }}"
     - name: set demo provisioner workflow facts
       ansible.builtin.set_fact:
