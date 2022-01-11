@@ -102,6 +102,17 @@
     - name: add up groups
       ansible.builtin.set_fact:
         controller_groups_to_add: "{{ controller_groups_to_add + satellite_group + controller_group + management_plane_group }}"
+    - name: create localhost host
+      ansible.builtin.set_fact:
+        localhost_host:
+          - name: localhost
+            inventory: "{{ audience }} - {{ demo }} Infrastructure"
+            variables:
+              ansible_connection: local
+              ansible_python_interpreter: '{  { ansible_playbook_python }}'
+    - name: add localhost to hosts list
+      ansible.builtin.set_fact:
+        controller_hosts_to_add: "{{ controller_hosts_to_add + localhost_host }}"
     - name: set vars for roles
       ansible.builtin.set_fact:
         controller_hosts: "{{ controller_hosts_to_add }}"
