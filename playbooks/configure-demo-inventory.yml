@@ -15,27 +15,35 @@
             organization: "{{ controller_organization }}"
             variables: "{{ lookup('file', 'vars/controller/inventories.yml') | from_yaml }}"
     - name: load in satellite vars and group
-      ansible.builtin.set_fact:
-        satellite_host:
-          - name: "{{ audience | lower }}-satellite.demos.lab.msp.redhat.com"
-            variables: "{{ lookup('file', 'vars/demos/' + demo + '/satellite.yml') | from_yaml }}"
-        satellite_group:
-          - name: satellite
-            hosts:
-              - "{{ audience | lower }}-satellite.demos.lab.msp.redhat.com"
-        controller_hosts: "{{ controller_hosts + satellite_host }}"
+      block:
+        - name: set satellite host and group facts
+          ansible.builtin.set_fact:
+            satellite_host:
+              - name: "{{ audience | lower }}-satellite.demos.lab.msp.redhat.com"
+                variables: "{{ lookup('file', 'vars/demos/' + demo + '/satellite.yml') | from_yaml }}"
+            satellite_group:
+              - name: satellite
+                hosts:
+                  - "{{ audience | lower }}-satellite.demos.lab.msp.redhat.com"
+        - name: add satellite host to main list
+          ansible.builtin.set_fact:
+            controller_hosts: "{{ controller_hosts + satellite_host }}"
       when:
         - satellite_configuration_file is defined
     - name: load in controller vars and group
-      ansible.builtin.set_fact:
-        controller_host:
-          - name: "{{ audience | lower }}-controller.demos.lab.msp.redhat.com"
-            variables: "{{ lookup('file', 'vars/demos/' + demo + '/controller.yml') | from_yaml }}"
-        controller_group:
-          - name: controller
-            hosts:
-              - "{{ audience | lower }}-controller.demos.lab.msp.redhat.com"
-        controller_hosts: "{{ controller_hosts + controller_host }}"
+      block:
+        - name: set controller host and group facts
+          ansible.builtin.set_fact:
+            controller_host:
+              - name: "{{ audience | lower }}-controller.demos.lab.msp.redhat.com"
+                variables: "{{ lookup('file', 'vars/demos/' + demo + '/controller.yml') | from_yaml }}"
+            controller_group:
+              - name: controller
+                hosts:
+                  - "{{ audience | lower }}-controller.demos.lab.msp.redhat.com"
+        - name: add controller host to main list
+          ansible.builtin.set_fact:
+            controller_hosts: "{{ controller_hosts + controller_host }}"
       when:
         - controller_configuration_file is defined
     - name: define satellite group even if empty
