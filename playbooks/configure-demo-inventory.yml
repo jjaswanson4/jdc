@@ -58,7 +58,7 @@
                   - "{{ audience | lower }}-{{ demo }}-controller.demos.lab.msp.redhat.com"
         - name: add controller host to main list
           ansible.builtin.set_fact:
-            controller_hosts: "{{ controller_hosts_to_add + controller_host }}"
+            controller_hosts_to_add: "{{ controller_hosts_to_add + controller_host }}"
       when:
         - controller_configuration_file is defined
     - name: define satellite group even if empty
@@ -83,7 +83,7 @@
               - satellite
     - name: add up groups
       ansible.builtin.set_fact:
-        controller_groups: "{{ controller_groups_to_add + satellite_group + controller_group + management_plane_group }}"
+        controller_groups_to_add: "{{ controller_groups_to_add + satellite_group + controller_group + management_plane_group }}"
     - name: set vars for roles
       ansible.builtin.set_fact:
         controller_hosts: "{{ controller_hosts_to_add }}"
