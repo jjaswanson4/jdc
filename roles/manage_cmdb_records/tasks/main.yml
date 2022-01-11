@@ -18,7 +18,6 @@
   ansible.builtin.set_fact:
     netbox_token: "{{ netbox_auth_token_raw.json.key }}"
 
-#- name: add virtual IPs
 - import_tasks: manage-vm-record.yml
 
 - name: include tasks to get IP address
