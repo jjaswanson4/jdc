@@ -169,6 +169,7 @@
 - name: Configure Demo Context
   organization: "{{ controller_organization }}"
   inventory: Demo Inventory
+  ask_inventory_on_launch: yes
   limit: localhost
   project: "{{ project }}"
   allow_simultaneous: yes
@@ -198,6 +199,7 @@
   ask_variables_on_launch: yes
 - name: Manage CMDB Records
   organization: "{{ controller_organization }}"
+  ask_inventory_on_launch: yes
   inventory: Demo Inventory
   project: "{{ project }}"
   allow_simultaneous: yes
@@ -206,12 +208,23 @@
   ask_credential_on_launch: yes
   ask_variables_on_launch: yes
   ask_limit_on_launch: yes
-- name: Run Controller Job
+# - name: Run Controller Job
+#   organization: "{{ controller_organization }}"
+#   inventory: Demo Inventory
+#   project: "{{ project }}"
+#   allow_simultaneous: yes
+#   playbook: playbooks/run-controller-job.yml
+#   execution_environment: "{{ execution_environment.name }}"
+#   ask_credential_on_launch: yes
+#   ask_variables_on_launch: yes
+- name: Manage DNS Records
   organization: "{{ controller_organization }}"
+  ask_inventory_on_launch: yes
   inventory: Demo Inventory
   project: "{{ project }}"
   allow_simultaneous: yes
-  playbook: playbooks/run-controller-job.yml
+  playbook: playbooks/manage-dns-records.yml
   execution_environment: "{{ execution_environment.name }}"
   ask_credential_on_launch: yes
   ask_variables_on_launch: yes
+  ask_limit_on_launch: yes  
