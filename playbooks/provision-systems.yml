@@ -25,8 +25,6 @@
     #     - jjaswanson4.utilities.common_config
     #     - redhat.rhel_system_roles.selinux
     #     - redhat.rhel_system_roles.timesync
-      when:
-        - provision_demo_hosts | bool
     # - name: run additional roles when requested
     #   ansible.builtin.include_role:
     #     name: "{{ role }}"
@@ -36,5 +34,4 @@
     #     - linux-system-roles.cockpit
     #     - linux-system-roles.metrics
     #   when:
-    #     - provision_demo_hosts | bool
     #     - run_additional_roles | bool
