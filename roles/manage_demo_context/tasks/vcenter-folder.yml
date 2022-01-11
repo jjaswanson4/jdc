@@ -7,5 +7,5 @@
     password: "{{ vcenter_password }}"
     validate_certs: "{{ vcenter_validate_certs | default(false) }}"
     datacenter_name: "{{ vcenter_datacenter }}"
-    folder_name: "{{ audience }} - {{ demo }}"
+    folder_name: "{{ demo_uuid }}"
     parent_folder: Demos

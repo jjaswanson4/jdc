@@ -6,5 +6,6 @@
     netbox_token: "{{ netbox_token }}"
     validate_certs: "{{ (netbox_validate_certs | bool) | default(omit) }}"
     data:
-      name: "{{ audience }} - {{ demo }}"
+      name: "{{ demo_uuid }}"
+      description: "{{ demo | capitalize }} demo for {{ audience }}"
     state: "{{ demo_context_state }}"
