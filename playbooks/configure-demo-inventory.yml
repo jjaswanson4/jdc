@@ -30,7 +30,7 @@
             variables: "{{ lookup('file', 'vars/controller/inventories.yml') | from_yaml }}"
     - name: force ansible to instanciate vars
       ansible.builtin.set_fact:      
-        controller_inventories: "{{ lookup('vars', 'controller_inventories')"
+        controller_inventories: "{{ lookup('vars', 'controller_inventories') }}"
     - name: add inventory to hosts
       ansible.builtin.set_fact:
         controller_hosts_to_add: "{{ controller_hosts_to_add + [ host | combine( { 'inventory': audience + ' - ' + demo + ' Infrastructure'} ) ] }}"
