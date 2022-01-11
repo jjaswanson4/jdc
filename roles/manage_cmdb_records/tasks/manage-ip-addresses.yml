@@ -26,6 +26,8 @@
           dns_name: "{{ virtual_ip.dns_record }}"
           assigned_object:
             virtual_machine: "{{ inventory_hostname }}"
+          tenant: "{{ audience }} - {{ demo }}"
+          role: VIP
         state: new
       register: allocated_vip
       when:
