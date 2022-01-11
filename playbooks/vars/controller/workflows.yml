@@ -35,17 +35,15 @@
         variable: provisioner_email
         required: yes
         default: 'joshswanson@redhat.com'
+      - type: text
+        question_name: "Demo UUID?"
+        question_description: "If this demo exists, what is the unique ID?"
+        variable: demo_uuid
+        required: no
   extra_vars:
     demo_context_state: present
   simplified_workflow_nodes:
-    - identifier: Configure Demo Context
-      unified_job_template: Configure Demo Context
-      credentials:
-        - Demo Provisioner Netbox Credentials
-        - Demo Provisioner vCenter Credentials
-      success_nodes:
-        - Run Demo Provisioner Workflow
-    - identifier: Configure Demo Inventory
+    - identifier: Create Demo Inventory
       unified_job_template: Configure Demo Inventory
       credentials:
         - Demo Provisioner Controller Credentials
