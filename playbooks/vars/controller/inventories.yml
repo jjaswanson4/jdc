@@ -1,6 +1,7 @@
 ---
 
 network_prefix: 10.15.120.0/22
+demo_uuid: "{{ demo_uuid }}"
 
 dns_records:
   - name: "{  { inventory_hostname.split('.')[0] }}"
