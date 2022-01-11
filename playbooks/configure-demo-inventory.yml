@@ -13,10 +13,10 @@
         - name: create unique id for demo instance
           ansible.builtin.shell:
             cmd: uuidgen | cut -c1-4
-          register: demo_uuid
+          register: demo_uuid_raw
         - name: set unique id fact
           ansible.builtin.set_fact:
-            demo_uuid: "{{ demo_uuid.stdout }}"
+            demo_uuid: "{{ demo_uuid_raw.stdout }}"
       when:
         - demo_uuid is not defined
     - name: load demo provisioner vars into tmp var
