@@ -18,7 +18,7 @@
     - name: set demo provisioner workflow facts
       ansible.builtin.set_fact:
         controller_workflow_launch_jobs:
-          - name: "{{ demo_display_name }}"
+          - name: "Provision {{ demo_display_name }} Demo"
             inventory: "{{ audience }} - {{ demo }} Infrastructure"
             wait: yes
   roles:
