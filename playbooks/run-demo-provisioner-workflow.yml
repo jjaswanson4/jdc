@@ -11,7 +11,7 @@
       ansible.builtin.set_fact:
         demo_display_name: "{{ demos.display_name }}"
       when:
-        - demo == demos.display_name
+        - demo == demos.name
       loop_control:
         loop_var: demos
       loop: "{{ available_demos }}"
