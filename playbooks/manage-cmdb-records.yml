@@ -1,14 +1,14 @@
 ---
 
-- name: provision managed hosts
+- name: manage host records in the CMDB
   hosts:
     - all
   gather_facts: no
   tasks:
-    - name: manage entries in CMDB
+    - name: manage records in CMDB
       ansible.builtin.include_role:
         name: "{{ role }}"
       loop_control:
         loop_var: role
       loop:
-        - ../roles/manage_cmdb
+        - ../roles/manage_cmdb_records
