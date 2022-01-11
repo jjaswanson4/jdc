@@ -331,8 +331,8 @@ controller_workflows:
     state: "{{ controller_state | default('present') }}"
     ask_inventory_on_launch: yes
     simplified_workflow_nodes:
-      - identifier: Create CMDB Entries
-        unified_job_template: Manage CMDB Entries
+      - identifier: Create CMDB Records
+        unified_job_template: Manage CMDB Records
         credentials:
           - Demo Provisioner Netbox Credentials
           - Demo Provisioner vCenter Credentials
