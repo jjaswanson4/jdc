@@ -8,8 +8,6 @@
     - name: add host and custom DNS entries
       ansible.builtin.set_fact:
         dns:
-          server: "{{ dns.server }}"
-          password: "{{ dns_pass }}"
           records: "{{ dns.records  + custom_dns_records }}"
       when:
         - custom_dns_records is defined
@@ -20,23 +18,23 @@
       loop_control:
         loop_var: role
       loop:
-        - jjaswanson4.utilities.idm_dns_records
-        - jjaswanson4.utilities.provision_via_satellite
-        - jjaswanson4.utilities.manage_firewall_state
-        - jjaswanson4.utilities.stop_networkmanager_dns
-        - jjaswanson4.utilities.common_config
-        - redhat.rhel_system_roles.selinux
-        - redhat.rhel_system_roles.timesync
+        - ../roles/manage_dns_records
+    #     - jjaswanson4.utilities.provision_via_satellite
+    #     - jjaswanson4.utilities.manage_firewall_state
+    #     - jjaswanson4.utilities.stop_networkmanager_dns
+    #     - jjaswanson4.utilities.common_config
+    #     - redhat.rhel_system_roles.selinux
+    #     - redhat.rhel_system_roles.timesync
       when:
         - provision_demo_hosts | bool
-    - name: run additional roles when requested
-      ansible.builtin.include_role:
-        name: "{{ role }}"
-      loop_control:
-        loop_var: role
-      loop:    
-        - linux-system-roles.cockpit
-        - linux-system-roles.metrics
-      when:
-        - provision_demo_hosts | bool
-        - run_additional_roles | bool
+    # - name: run additional roles when requested
+    #   ansible.builtin.include_role:
+    #     name: "{{ role }}"
+    #   loop_control:
+    #     loop_var: role
+    #   loop:    
+    #     - linux-system-roles.cockpit
+    #     - linux-system-roles.metrics
+    #   when:
+    #     - provision_demo_hosts | bool
+    #     - run_additional_roles | bool
