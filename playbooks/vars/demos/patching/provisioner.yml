@@ -15,37 +15,23 @@ demo_prefix: Patching Demo
 
 # This is the realitive path to the vars files for this demo.
 # Typically this contains a vars file for the provisioner, Satellite, and Controller.
-vars_files_path: "var/demos{{ demo }}"
-
-# This is the inventory that stores the information about the infrastructure needed for the demo.
-# This is commonly an instance of Satellite, Controller, and some "demo hosts".
-inventory: "{{ demo_prefix }} Infrastructure"
+vars_files_path: "var/demos/{{ demo }}"
 
 # This is the execution environment used for this demo provisioner.
 # This execution environment will automatically be configured in Controller.
 execution_environment:
   name: Josh's Demos Collection EE
   registry: "{{ ee.registry }}"
-  image: joshs-demos-provisioner-ee
+  image: joshs-demos-collection-ee
   credential: "{{ ee.credential }}"
 
 # This is the information used for the instance of Controller for the demo.
 # This can be the same instance as where the provisioner is deployed, but it's not recommended.
-controller:
-  hostname: patching-controller.josh.lab.msp.redhat.com
-  configuration_file: "{{ vars_files_path }}/controller-configuration.yml"
-  ip_address: 10.15.121.11
-  username: admin
-  password: "{{ controller_password }}"
+controller_configuration_file: "{{ vars_files_path }}/controller.yml"
 
 # This is the information used for the instance of Satellite for the demo.
 # This can be the same instance as where the provisioner is deployed, but it's not recommended.
-satellite:
-  hostname: patching-satellite.josh.lab.msp.redhat.com
-  configuration_file: "{{ vars_files_path }}/satellite-configuration.yml"
-  ip_address: 10.15.121.1
-  username: admin
-  password: "{{ satellite_password }}"
+satellite_configuration_file: "{{ vars_files_path }}/satellite.yml"
 
 # This toggles secure logging, for example: when configuring credentials on Ansible Controller.
 # Since I'm using my own instance, secure logging isn't a requirement.
@@ -62,62 +48,35 @@ controller_projects: []
 
 controller_hosts:
   - name: sapdnhdb1.josh.lab.msp.redhat.com
-    inventory: "{{ inventory }}"
     variables:
-      ansible_host: 10.15.121.31
-      ip_address: "{  { ansible_host }}"
       sap_hana_hsr_alias: DC1
   - name: sapdnhdb2.josh.lab.msp.redhat.com
-    inventory: "{{ inventory }}"
     variables:
-      ansible_host: 10.15.121.32
-      ip_address: "{  { ansible_host }}"
       sap_hana_hsr_alias: DC2
   - name: sapdnapp1.josh.lab.msp.redhat.com
-    inventory: "{{ inventory }}"
-    variables:
-      ansible_host: 10.15.121.34
-      ip_address: "{  { ansible_host }}"
   - name: sapdphdb1.josh.lab.msp.redhat.com
-    inventory: "{{ inventory }}"
     variables:
-      ansible_host: 10.15.121.35
-      ip_address: "{  { ansible_host }}"
       sap_hana_hsr_alias: DC1
   - name: sapdphdb2.josh.lab.msp.redhat.com
-    inventory: "{{ inventory }}"
     variables:
-      ansible_host: 10.15.121.36
-      ip_address: "{  { ansible_host }}"
       sap_hana_hsr_alias: DC2
   - name: sapdpapp1.josh.lab.msp.redhat.com
-    inventory: "{{ inventory }}"
-    variables:
-      ansible_host: 10.15.121.38
-      ip_address: "{  { ansible_host }}"
   - name: sap-metrics.josh.lab.msp.redhat.com
-    inventory: "{{ inventory }}"
-    variables:
-      ansible_host: 10.15.121.39
-      ip_address: "{  { ansible_host }}"  
 
 controller_groups:
   - name: primary
-    inventory: "{{ inventory }}"
     hosts:
       - sapdnhdb1.josh.lab.msp.redhat.com
       - sapdphdb1.josh.lab.msp.redhat.com
     variables:
       sap_hana_hsr_role: primary
   - name: secondary
-    inventory: "{{ inventory }}"
     hosts:
       - sapdnhdb2.josh.lab.msp.redhat.com
       - sapdphdb2.josh.lab.msp.redhat.com
     variables:
       sap_hana_hsr_role: secondary
   - name: hana
-    inventory: "{{ inventory }}"
     children:
       - primary
       - secondary
@@ -168,7 +127,6 @@ controller_groups:
       sap_hana_hsr_hana_db_system_password: "{  { ansible_password }}"
       sap_hana_preconfigure_fail_if_reboot_required: no
   - name: netweaver
-    inventory: "{{ inventory }}"
     hosts:
       - sapdnapp1.josh.lab.msp.redhat.com
       - sapdpapp1.josh.lab.msp.redhat.com
@@ -222,7 +180,6 @@ controller_groups:
       sap_s4hana_deployment_sapadm_password: "{  { ansible_password }}"
       sap_s4hana_deployment_sap_sidadm_password: "{  { ansible_password }}"
   - name: non_production
-    inventory: "{{ inventory }}"
     hosts:
       - sapdnapp1.josh.lab.msp.redhat.com
       - sapdnhdb1.josh.lab.msp.redhat.com
@@ -255,7 +212,6 @@ controller_groups:
           type: PTR
           value: "{  { sap_s4hana_deployment_db_host }}."
   - name: production
-    inventory: "{{ inventory }}"
     hosts:
       - sapdpapp1.josh.lab.msp.redhat.com
       - sapdphdb1.josh.lab.msp.redhat.com
@@ -288,7 +244,6 @@ controller_groups:
           type: PTR
           value: "{  { sap_s4hana_deployment_db_host }}."
   - name: sap
-    inventory: "{{ inventory }}"
     children:
       - hana
       - netweaver
@@ -307,7 +262,6 @@ controller_groups:
         - src: 10.15.108.14:/mnt/data01/sap
           path: /software
   - name: peripheral
-    inventory: "{{ inventory }}"
     hosts:
       - sap-metrics.josh.lab.msp.redhat.com
     variables:
@@ -321,7 +275,6 @@ controller_groups:
       metrics_rention_days: 14
       metrics_monitored_hosts:  "{  { groups['sap'] }}"
   - name: demo_hosts
-    inventory: "{{ inventory }}"
     children:
       - sap
       - non_production
@@ -356,360 +309,336 @@ controller_groups:
 
 controller_templates:
   - name: Prepare New Content
-    inventory: "{{ inventory }}"
+    ask_inventory_on_launch: yes
     limit: satellite
-    project: Demo Provisioner Codebase
-    playbook: provisioner/demos/patching/playbooks/prepare-new-content.yml
-    execution_environment: Demo Provisioner EE
+    project: "{{ project }}"
+    playbook: playbooks/prepare-new-content.yml
+    execution_environment: "{{ execution_environment.name }}"
     ask_credential_on_launch: yes
   - name: Roll Back Content
-    inventory: "{{ inventory }}"
+    ask_inventory_on_launch: yes
     limit: satellite
-    project: Demo Provisioner Codebase
-    playbook: provisioner/demos/patching/playbooks/rollback-content.yml
-    execution_environment: Demo Provisioner EE
+    project: "{{ project }}"
+    playbook: playbooks/rollback-content.yml
+    execution_environment: "{{ execution_environment.name }}"
     ask_credential_on_launch: yes
 
 controller_workflows:
   - name: Provision Patching Demo
-    organization: Demo Provisioner
+    organization: "{{ controller_organization }}"
     state: "{{ controller_state | default('present') }}"
-    extra_vars:
-      demo: patching
-    survey_enabled: yes
-    survey: "{{ lookup('file', 'vars/controller/workflow-survey.yml') | from_yaml }}"
+    ask_inventory_on_launch: yes
     simplified_workflow_nodes:
-      - unified_job_template: Provision Systems
-        identifier: node101
-        inventory: "{{ inventory }}"
+      - identifier: Provision Satellite System
+        unified_job_template: Provision Systems
         limit: satellite
         credentials:
-          - "{{ demo_prefix }} Peripheral Credentials"
-          - "{{ demo_prefix }} Root Account"
-        success_nodes:
-          - node102
-        failure_nodes:
-          - node1101
-      - unified_job_template: Install Red Hat Satellite
-        identifier: node102
-        inventory: "{{ inventory }}"
-        limit: satellite
-        credentials:
-          - "{{ demo_prefix }} Peripheral Credentials"
-          - "{{ demo_prefix }} Root Account"
-        success_nodes:
-          - node103
-        failure_nodes:
-          - node1102
-      - unified_job_template: Configure Red Hat Satellite
-        identifier: node103
-        inventory: "{{ inventory }}"
-        limit: satellite
-        credentials:
-          - "{{ demo_prefix }} Peripheral Credentials"
-          - "{{ demo_prefix }} Root Account"
-        success_nodes:
-          - node301
-        failure_nodes:
-          - node1103
-      - unified_job_template: Provision Systems
-        identifier: node201
-        inventory: "{{ inventory }}"
-        limit: controller
-        credentials:
-          - "{{ demo_prefix }} Peripheral Credentials"
-          - "{{ demo_prefix }} Root Account"
-        success_nodes:
-          - node202
-        failure_nodes:
-          - node1201
-      - unified_job_template: Install Ansible Controller
-        identifier: node202
-        inventory: "{{ inventory }}"
-        limit: controller
-        credentials:
-          - "{{ demo_prefix }} Peripheral Credentials"
-          - "{{ demo_prefix }} Root Account"
-        success_nodes:
-          - node203
-        failure_nodes:
-          - node1202
-      - unified_job_template: Configure Ansible Controller
-        identifier: node203
-        inventory: "{{ inventory }}"
-        limit: controller
-        credentials:
-          - "{{ demo_prefix }} Peripheral Credentials"
-          - "{{ demo_prefix }} Root Account"
-        all_parents_must_converge: yes
-        success_nodes:
-          - node999
-        failure_nodes:
-          - node1203
-      - unified_job_template: Provision Systems
-        identifier: node301
-        inventory: "{{ inventory }}"
-        limit: demo_hosts
-        credentials:
-          - "{{ demo_prefix }} Peripheral Credentials"
-          - "{{ demo_prefix }} Root Account"
-        success_nodes:
-          - node302
-          - node203
-        failure_nodes:
-          - node1301
-      - unified_job_template: Preconfigure for SAP
-        identifier: node302
-        inventory: "{{ inventory }}"
-        limit: sap
-        credentials:
-          - "{{ demo_prefix }} Peripheral Credentials"
-          - "{{ demo_prefix }} Root Account"
-        success_nodes:
-          - node303
-          - node304
-        failure_nodes:
-          - node1302
-      - unified_job_template: Preconfigure for HANA
-        identifier: node303
-        inventory: "{{ inventory }}"
-        limit: hana
-        credentials:
-          - "{{ demo_prefix }} Root Account"
-        success_nodes:
-          - node305
-          - node306
-          - node401
-        failure_nodes:
-          - node1303
-      - unified_job_template: Preconfigure for Netweaver
-        identifier: node304
-        inventory: "{{ inventory }}"
-        limit: netweaver
-        credentials:
-          - "{{ demo_prefix }} Root Account"
-        success_nodes:
-          - node307
-          - node308
-          - node401
-        failure_nodes:
-          - node1304
-      - unified_job_template: Deploy SAP HANA
-        identifier: node305
-        inventory: "{{ inventory }}"
-        limit: 'hana:&non_production'
-        credentials:
-          - "{{ demo_prefix }} Root Account"
-        success_nodes:
-          - node307
-        failure_nodes:
-          - node1305
-      - unified_job_template: Deploy SAP HANA
-        identifier: node306
-        inventory: "{{ inventory }}"
-        limit: 'hana:&production'
-        credentials:
-          - "{{ demo_prefix }} Root Account"
-        success_nodes:
-          - node308
-        failure_nodes:
-          - node1306
-      - unified_job_template: Install Netweaver
-        identifier: node307
-        inventory: "{{ inventory }}"
-        limit: 'netweaver:&non_production'
-        credentials:
-          - "{{ demo_prefix }} Root Account"
-        all_parents_must_converge: yes
-        success_nodes:
-          - node309
-        failure_nodes:
-          - node1307
-      - unified_job_template: Install Netweaver
-        identifier: node308
-        inventory: "{{ inventory }}"
-        limit: 'netweaver:&production'
-        credentials:
-          - "{{ demo_prefix }} Root Account"
-        all_parents_must_converge: yes
-        success_nodes:
-          - node309
-        failure_nodes:
-          - node1308
-      - unified_job_template: Reinstate HSR
-        identifier: node309
-        inventory: "{{ inventory }}"
-        limit: 'hana:&primary'
-        credentials:
-          - "{{ demo_prefix }} Root Account"
-        all_parents_must_converge: yes
-        success_nodes:
-          - node999
-        failure_nodes:
-          - node1309
-      - unified_job_template: Prepare New Content
-        identifier: node401
-        credentials:
-          - "{{ demo_prefix }} Peripheral Credentials"
-        all_parents_must_converge: yes
-        success_nodes:
-          - node999
-        failure_nodes:
-          - node1401
-      - unified_job_template: Send Provisioner Email
-        identifier: node999
-        all_parents_must_converge: yes
-        extra_data:
-          provisioner_status: success
-      - unified_job_template: Send Provisioner Email
-        identifier: node1101
-        extra_data:
-          provisioner_status: failed
-      - unified_job_template: Send Provisioner Email
-        identifier: node1102
-        extra_data:
-          provisioner_status: failed
-      - unified_job_template: Send Provisioner Email
-        identifier: node1103
-        extra_data:
-          provisioner_status: failed
-      - unified_job_template: Send Provisioner Email
-        identifier: node1201
-        extra_data:
-          provisioner_status: failed
-      - unified_job_template: Send Provisioner Email
-        identifier: node1202
-        extra_data:
-          provisioner_status: failed
-      - unified_job_template: Send Provisioner Email
-        identifier: node1203
-        extra_data:
-          provisioner_status: failed
-      - unified_job_template: Send Provisioner Email
-        identifier: node1301
-        extra_data:
-          provisioner_status: failed
-      - unified_job_template: Send Provisioner Email
-        identifier: node1302
-        extra_data:
-          provisioner_status: failed
-      - unified_job_template: Send Provisioner Email
-        identifier: node1303
-        extra_data:
-          provisioner_status: failed
-      - unified_job_template: Send Provisioner Email
-        identifier: node1304
-        extra_data:
-          provisioner_status: failed
-      - unified_job_template: Send Provisioner Email
-        identifier: node1305
-        extra_data:
-          provisioner_status: failed
-      - unified_job_template: Send Provisioner Email
-        identifier: node1306
-        extra_data:
-          provisioner_status: failed
-      - unified_job_template: Send Provisioner Email
-        identifier: node1307
-        extra_data:
-          provisioner_status: failed
-      - unified_job_template: Send Provisioner Email
-        identifier: node1308
-        extra_data:
-          provisioner_status: failed
-      - unified_job_template: Send Provisioner Email
-        identifier: node1309
-        extra_data:
-          provisioner_status: failed
-      - unified_job_template: Send Provisioner Email
-        identifier: node1401
-        extra_data:
-          provisioner_status: failed
-  - name: Teardown Patching Demo
-    organization: Demo Provisioner
-    state: "{{ controller_state | default('present') }}"
-    extra_vars:
-      demo: patching
-    survey_enabled: yes
-    survey:
-      name: ''
-      description: ''
-      spec:
-        - type: text
-          question_name: "Demo Audience?"
-          question_description: "Who is the audience for this demo"
-          variable: audience
-          required: yes
-    simplified_workflow_nodes:
-      - unified_job_template: Unregister from Insights
-        identifier: node996
-        inventory: "{{ inventory }}"
-        limit: 'demo_hosts:satellite:controller'
-        credentials:
-          - "{{ demo_prefix }} Root Account"
-        always_nodes:
-          - node997
-      - unified_job_template: Teardown Systems
-        identifier: node997
-        inventory: "{{ inventory }}"
-        limit: demo_hosts
-        credentials:
-          - "{{ demo_prefix }} Peripheral Credentials"
-        always_nodes:
-          - node998
-      - unified_job_template: Teardown Systems
-        identifier: node998
-        inventory: "{{ inventory }}"
-        limit: management_plane
-        credentials:
-          - "{{ demo_prefix }} Peripheral Credentials"
-        always_nodes:
-          - node999
-      - unified_job_template: Cleanup DNS Records
-        identifier: node999
-        inventory: "{{ inventory }}"
-        limit: 'demo_hosts:management_plane'
-        credentials:
-          - "{{ demo_prefix }} Peripheral Credentials"
-  - name: Reset Patching Demo
-    organization: Demo Provisioner
-    state: "{{ controller_state | default('present') }}"
-    extra_vars:
-      demo: patching
-    survey_enabled: yes
-    survey:
-      name: ''
-      description: ''
-      spec:
-        - type: text
-          question_name: "Demo Audience?"
-          question_description: "Who is the audience for this demo"
-          variable: audience
-          required: yes
-    simplified_workflow_nodes:
-      - unified_job_template: Unregister from Insights
-        identifier: node101
-        inventory: "{{ inventory }}"
-        limit: 'demo_hosts:controller'
-        credentials:
-          - "{{ demo_prefix }} Root Account"
-        always_nodes:
-          - node102
-          - node103
-          - node104
-      - unified_job_template: Teardown Systems
-        identifier: node102
-        inventory: "{{ inventory }}"
-        limit: 'demo_hosts:controller'
-        credentials:
-          - "{{ demo_prefix }} Peripheral Credentials"
-      - unified_job_template: Roll Back Content
-        identifier: node103
-        credentials:
-          - "{{ demo_prefix }} Peripheral Credentials"
-      - unified_job_template: Cleanup DNS Records
-        identifier: node104
-        inventory: "{{ inventory }}"
-        limit: 'demo_hosts:controller'
-        credentials:
-          - "{{ demo_prefix }} Peripheral Credentials"
+          - Demo Provisioner IDM Credentials
+  #       success_nodes:
+  #         - node102
+  #       failure_nodes:
+  #         - node1101
+  #     - unified_job_template: Install Red Hat Satellite
+  #       identifier: node102
+  #       limit: satellite
+  #       credentials:
+  #         - Demo Provisioner Peripheral Credentials
+  #         - Demo Provisioner Root Account
+  #       success_nodes:
+  #         - node103
+  #       failure_nodes:
+  #         - node1102
+  #     - unified_job_template: Configure Red Hat Satellite
+  #       identifier: node103
+  #       limit: satellite
+  #       credentials:
+  #         - Demo Provisioner Peripheral Credentials
+  #         - Demo Provisioner Root Account
+  #       success_nodes:
+  #         - node301
+  #       failure_nodes:
+  #         - node1103
+  #     - unified_job_template: Provision Systems
+  #       identifier: node201
+  #       limit: controller
+  #       credentials:
+  #         - Demo Provisioner Peripheral Credentials
+  #         - Demo Provisioner Root Account
+  #       success_nodes:
+  #         - node202
+  #       failure_nodes:
+  #         - node1201
+  #     - unified_job_template: Install Ansible Controller
+  #       identifier: node202
+  #       limit: controller
+  #       credentials:
+  #         - Demo Provisioner Peripheral Credentials
+  #         - Demo Provisioner Root Account
+  #       success_nodes:
+  #         - node203
+  #       failure_nodes:
+  #         - node1202
+  #     - unified_job_template: Configure Ansible Controller
+  #       identifier: node203
+  #       limit: controller
+  #       credentials:
+  #         - Demo Provisioner Peripheral Credentials
+  #         - Demo Provisioner Root Account
+  #       all_parents_must_converge: yes
+  #       success_nodes:
+  #         - node999
+  #       failure_nodes:
+  #         - node1203
+  #     - unified_job_template: Provision Systems
+  #       identifier: node301
+  #       limit: demo_hosts
+  #       credentials:
+  #         - Demo Provisioner Peripheral Credentials
+  #         - Demo Provisioner Root Account
+  #       success_nodes:
+  #         - node302
+  #         - node203
+  #       failure_nodes:
+  #         - node1301
+  #     - unified_job_template: Preconfigure for SAP
+  #       identifier: node302
+  #       limit: sap
+  #       credentials:
+  #         - Demo Provisioner Peripheral Credentials
+  #         - Demo Provisioner Root Account
+  #       success_nodes:
+  #         - node303
+  #         - node304
+  #       failure_nodes:
+  #         - node1302
+  #     - unified_job_template: Preconfigure for HANA
+  #       identifier: node303
+  #       limit: hana
+  #       credentials:
+  #         - Demo Provisioner Root Account
+  #       success_nodes:
+  #         - node305
+  #         - node306
+  #         - node401
+  #       failure_nodes:
+  #         - node1303
+  #     - unified_job_template: Preconfigure for Netweaver
+  #       identifier: node304
+  #       limit: netweaver
+  #       credentials:
+  #         - Demo Provisioner Root Account
+  #       success_nodes:
+  #         - node307
+  #         - node308
+  #         - node401
+  #       failure_nodes:
+  #         - node1304
+  #     - unified_job_template: Deploy SAP HANA
+  #       identifier: node305
+  #       limit: 'hana:&non_production'
+  #       credentials:
+  #         - Demo Provisioner Root Account
+  #       success_nodes:
+  #         - node307
+  #       failure_nodes:
+  #         - node1305
+  #     - unified_job_template: Deploy SAP HANA
+  #       identifier: node306
+  #       limit: 'hana:&production'
+  #       credentials:
+  #         - Demo Provisioner Root Account
+  #       success_nodes:
+  #         - node308
+  #       failure_nodes:
+  #         - node1306
+  #     - unified_job_template: Install Netweaver
+  #       identifier: node307
+  #       limit: 'netweaver:&non_production'
+  #       credentials:
+  #         - Demo Provisioner Root Account
+  #       all_parents_must_converge: yes
+  #       success_nodes:
+  #         - node309
+  #       failure_nodes:
+  #         - node1307
+  #     - unified_job_template: Install Netweaver
+  #       identifier: node308
+  #       limit: 'netweaver:&production'
+  #       credentials:
+  #         - Demo Provisioner Root Account
+  #       all_parents_must_converge: yes
+  #       success_nodes:
+  #         - node309
+  #       failure_nodes:
+  #         - node1308
+  #     - unified_job_template: Reinstate HSR
+  #       identifier: node309
+  #       limit: 'hana:&primary'
+  #       credentials:
+  #         - Demo Provisioner Root Account
+  #       all_parents_must_converge: yes
+  #       success_nodes:
+  #         - node999
+  #       failure_nodes:
+  #         - node1309
+  #     - unified_job_template: Prepare New Content
+  #       identifier: node401
+  #       credentials:
+  #         - Demo Provisioner Peripheral Credentials
+  #       all_parents_must_converge: yes
+  #       success_nodes:
+  #         - node999
+  #       failure_nodes:
+  #         - node1401
+  #     - unified_job_template: Send Provisioner Email
+  #       identifier: node999
+  #       all_parents_must_converge: yes
+  #       extra_data:
+  #         provisioner_status: success
+  #     - unified_job_template: Send Provisioner Email
+  #       identifier: node1101
+  #       extra_data:
+  #         provisioner_status: failed
+  #     - unified_job_template: Send Provisioner Email
+  #       identifier: node1102
+  #       extra_data:
+  #         provisioner_status: failed
+  #     - unified_job_template: Send Provisioner Email
+  #       identifier: node1103
+  #       extra_data:
+  #         provisioner_status: failed
+  #     - unified_job_template: Send Provisioner Email
+  #       identifier: node1201
+  #       extra_data:
+  #         provisioner_status: failed
+  #     - unified_job_template: Send Provisioner Email
+  #       identifier: node1202
+  #       extra_data:
+  #         provisioner_status: failed
+  #     - unified_job_template: Send Provisioner Email
+  #       identifier: node1203
+  #       extra_data:
+  #         provisioner_status: failed
+  #     - unified_job_template: Send Provisioner Email
+  #       identifier: node1301
+  #       extra_data:
+  #         provisioner_status: failed
+  #     - unified_job_template: Send Provisioner Email
+  #       identifier: node1302
+  #       extra_data:
+  #         provisioner_status: failed
+  #     - unified_job_template: Send Provisioner Email
+  #       identifier: node1303
+  #       extra_data:
+  #         provisioner_status: failed
+  #     - unified_job_template: Send Provisioner Email
+  #       identifier: node1304
+  #       extra_data:
+  #         provisioner_status: failed
+  #     - unified_job_template: Send Provisioner Email
+  #       identifier: node1305
+  #       extra_data:
+  #         provisioner_status: failed
+  #     - unified_job_template: Send Provisioner Email
+  #       identifier: node1306
+  #       extra_data:
+  #         provisioner_status: failed
+  #     - unified_job_template: Send Provisioner Email
+  #       identifier: node1307
+  #       extra_data:
+  #         provisioner_status: failed
+  #     - unified_job_template: Send Provisioner Email
+  #       identifier: node1308
+  #       extra_data:
+  #         provisioner_status: failed
+  #     - unified_job_template: Send Provisioner Email
+  #       identifier: node1309
+  #       extra_data:
+  #         provisioner_status: failed
+  #     - unified_job_template: Send Provisioner Email
+  #       identifier: node1401
+  #       extra_data:
+  #         provisioner_status: failed
+  # - name: Teardown Patching Demo
+  #   organization: Demo Provisioner
+  #   ask_inventory_on_launch: yes
+  #   state: "{{ controller_state | default('present') }}"
+  #   extra_vars:
+  #     demo: patching
+  #   survey_enabled: yes
+  #   survey:
+  #     name: ''
+  #     description: ''
+  #     spec:
+  #       - type: text
+  #         question_name: "Demo Audience?"
+  #         question_description: "Who is the audience for this demo"
+  #         variable: audience
+  #         required: yes
+  #   simplified_workflow_nodes:
+  #     - unified_job_template: Unregister from Insights
+  #       identifier: node996
+  #       limit: 'demo_hosts:satellite:controller'
+  #       credentials:
+  #         - Demo Provisioner Root Account
+  #       always_nodes:
+  #         - node997
+  #     - unified_job_template: Teardown Systems
+  #       identifier: node997
+  #       limit: demo_hosts
+  #       credentials:
+  #         - Demo Provisioner Peripheral Credentials
+  #       always_nodes:
+  #         - node998
+  #     - unified_job_template: Teardown Systems
+  #       identifier: node998
+  #       limit: management_plane
+  #       credentials:
+  #         - Demo Provisioner Peripheral Credentials
+  #       always_nodes:
+  #         - node999
+  #     - unified_job_template: Cleanup DNS Records
+  #       identifier: node999
+  #       limit: 'demo_hosts:management_plane'
+  #       credentials:
+  #         - Demo Provisioner Peripheral Credentials
+  # - name: Reset Patching Demo
+  #   organization: Demo Provisioner
+  #   ask_inventory_on_launch: yes
+  #   state: "{{ controller_state | default('present') }}"
+  #   extra_vars:
+  #     demo: patching
+  #   survey_enabled: yes
+  #   survey:
+  #     name: ''
+  #     description: ''
+  #     spec:
+  #       - type: text
+  #         question_name: "Demo Audience?"
+  #         question_description: "Who is the audience for this demo"
+  #         variable: audience
+  #         required: yes
+  #   simplified_workflow_nodes:
+  #     - unified_job_template: Unregister from Insights
+  #       identifier: node101
+  #       limit: 'demo_hosts:controller'
+  #       credentials:
+  #         - Demo Provisioner Root Account
+  #       always_nodes:
+  #         - node102
+  #         - node103
+  #         - node104
+  #     - unified_job_template: Teardown Systems
+  #       identifier: node102
+  #       limit: 'demo_hosts:controller'
+  #       credentials:
+  #         - Demo Provisioner Peripheral Credentials
+  #     - unified_job_template: Roll Back Content
+  #       identifier: node103
+  #       credentials:
+  #         - Demo Provisioner Peripheral Credentials
+  #     - unified_job_template: Cleanup DNS Records
+  #       identifier: node104
+  #       limit: 'demo_hosts:controller'
+  #       credentials:
+  #         - Demo Provisioner Peripheral Credentials
