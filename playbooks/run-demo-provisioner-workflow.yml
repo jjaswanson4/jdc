@@ -23,5 +23,6 @@
             wait: yes
             extra_vars:
               audience: "{{ audience }}"
+              demo_uuid: "{{ demo_uuid }}"
   roles:
     - redhat_cop.controller_configuration.workflow_launch
