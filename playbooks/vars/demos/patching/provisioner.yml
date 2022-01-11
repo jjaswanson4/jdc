@@ -330,6 +330,8 @@ controller_workflows:
     organization: "{{ controller_organization }}"
     state: "{{ controller_state | default('present') }}"
     ask_inventory_on_launch: yes
+    extra_vars:
+      demo: patching
     simplified_workflow_nodes:
       - identifier: Create CMDB Records
         unified_job_template: Manage CMDB Records
