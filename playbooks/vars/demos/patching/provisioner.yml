@@ -311,15 +311,11 @@ controller_groups:
         - cockpit-networkmanager
         - cockpit-packagekit
       provisioning:
-        satellite:
-          server: patching-satellite.josh.lab.msp.redhat.com
-          username: admin
-          password: "{  { ansible_password }}"
         host_group: "{  { os }}"
         organization: "{  { audience }}"
         location: "{  { audience }}"
         method: bootdisk
-        dns_domain: josh.lab.msp.redhat.com
+        dns_domain: "{  { demo_uuid }}.{  { dns_suffix }}"
         cpus: "{  { cpus }}"
         memory_mb: "{  { memory_mb }}"
         activation_keys: "ak-{  { application }}-{  { os }}-{  { lifecycle_environment }}"
@@ -374,8 +370,14 @@ controller_workflows:
         credentials:
           - Demo Provisioner Netbox Credentials
           - Demo Provisioner IDM Credentials
-        # success_nodes:
-        #   - node102
+        success_nodes:
+          - Provision Satellite
+      - identifier: Provision Satellite
+        unified_job_template: Provision Systems
+        limit: satellite
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner Satellite Credentials
   #     - unified_job_template: Install Red Hat Satellite
   #       identifier: node102
   #       limit: satellite
