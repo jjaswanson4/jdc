@@ -23,6 +23,7 @@
     ansible_connection: local
 - name: Install Red Hat Satellite
   organization: "{{ controller_organization }}"
+  inventory: Demo Inventory
   ask_inventory_on_launch: yes
   ask_limit_on_launch: yes
   project: "{{ project }}"
