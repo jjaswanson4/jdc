@@ -13,7 +13,7 @@
             virtual_machine: "{{ inventory_hostname }}"
             name: ens192
           dns_name: "{{ inventory_hostname }}"
-          tenant: "{{ audience }} - {{ demo }}"
+          tenant: "{{ demo_uuid }}"
         state: new
       register: allocated_ip_address
     - name: request IP address for VIPs
@@ -26,7 +26,7 @@
           dns_name: "{{ virtual_ip.dns_record }}"
           assigned_object:
             virtual_machine: "{{ inventory_hostname }}"
-          tenant: "{{ audience }} - {{ demo }}"
+          tenant: "{{ demo_uuid }}"
           role: VIP
         state: new
       register: allocated_vip
