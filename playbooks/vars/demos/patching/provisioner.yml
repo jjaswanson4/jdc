@@ -387,13 +387,15 @@ controller_workflows:
         unified_job_template: Apply Standard Configuration
         limit: satellite
         credentials:
-          - Demo Provisioner Root Account  
-  #     - unified_job_template: Install Red Hat Satellite
-  #       identifier: node102
-  #       limit: satellite
-  #       credentials:
-  #         - Demo Provisioner Peripheral Credentials
-  #         - Demo Provisioner Root Account
+          - Demo Provisioner Root Account
+        success_nodes:
+          - Install Red Hat Satellite
+      - Identifier: Install Red Hat Satellite
+        unified_job_template: Install Red Hat Satellite
+        limit: satellite
+        credentials:
+          - Demo Provisioner vCenter Credentials
+          - Demo Provisioner Root Account
   #       success_nodes:
   #         - node103
   #       failure_nodes:
