@@ -228,4 +228,17 @@
   execution_environment: "{{ execution_environment.name }}"
   ask_credential_on_launch: yes
   ask_variables_on_launch: yes
-  ask_limit_on_launch: yes  
+  ask_limit_on_launch: yes
+- name: Apply Standard Configuration
+  organization: "{{ controller_organization }}"
+  inventory: Demo Inventory
+  ask_inventory_on_launch: yes
+  ask_limit_on_launch: yes
+  forks: 10
+  project: "{{ project }}"
+  allow_simultaneous: yes
+  playbook: playbooks/apply-standard-configuration.yml
+  execution_environment: "{{ execution_environment.name }}"
+  ask_credential_on_launch: yes
+  extra_vars:
+    ansible_become: no
