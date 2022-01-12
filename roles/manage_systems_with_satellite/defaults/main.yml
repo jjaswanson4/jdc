@@ -2,4 +2,4 @@
 
 remove_cdrom: yes
 delegate_host: localhost
-throttle: 1
+task_throttle: 1

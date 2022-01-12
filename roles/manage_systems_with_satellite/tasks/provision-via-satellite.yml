@@ -9,7 +9,7 @@
     name:             "{{ inventory_hostname }}"
   register: host_status
   delegate_to: localhost
-  throttle: "{{ throttle }}"
+  throttle: "{{ task_throttle }}"
 
 - name: run provisioning tasks
   block:
@@ -19,7 +19,7 @@
         password:         "{{ satellite_password }}"
         server_url:       "{{ satellite_url }}"
         validate_certs:   "{{ satellite_validate_certs | default(false) }}"
-        name:             "{{ inventory_hostname }}"
+        name:             "{{ inventory_hostname.split('.')[0] }}"
         domain:           "{{ provisioning.dns_domain | default(omit) }}"
         hostgroup:        "{{ provisioning.host_group | default(omit) }}"
         provision_method: "{{ provisioning.method | default(omit) }}"
@@ -34,7 +34,7 @@
         organization:     "{{ satellite_organization }}"
         location:         "{{ satellite_location }}"
       delegate_to: "{{ delegate_host }}"
-      throttle: "{{ throttle }}"
+      throttle: "{{ task_throttle }}"
 
     - name: move vm to correct folder
       community.vmware.vmware_guest_move:
@@ -46,7 +46,7 @@
         name: "{{ inventory_hostname }}"
         dest_folder: "/{{ vcenter_datacenter }}/vm/Demos/{{ demo_uuid }}" # take a look at later
       delegate_to: "{{ delegate_host }}"
-      throttle: "{{ throttle }}"
+      throttle: "{{ task_throttle }}"
         
     - name: wait for VM to come up
       ansible.builtin.wait_for_connection:
