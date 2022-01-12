@@ -3,19 +3,7 @@
 - name: build out satellite
   hosts:
     - all
-  vars:
-    deploy_satellite: yes
-  tasks:
-    - name: include configuration roles
-      block:
-        - name: include initial roles
-          ansible.builtin.include_role:
-            name: "{{ role }}"
-          loop_control:
-            loop_var: role
-          loop:
-            - jjaswanson4.utilities.add_virtual_disk
-            - jjaswanson4.setup_rhel_for_satellite.setup_storage
-            - jjaswanson4.install_satellite.install_satellite
-      when:
-        - deploy_satellite | bool
+  roles:
+    - ../roles/add_virtual_disk
+    - jjaswanson4.setup_rhel_for_satellite.setup_storage
+    - jjaswanson4.install_satellite.install_satellite
