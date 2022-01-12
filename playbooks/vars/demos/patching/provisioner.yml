@@ -372,12 +372,14 @@ controller_workflows:
           - Demo Provisioner IDM Credentials
         success_nodes:
           - Provision Satellite
+          - Provision Controller
       - identifier: Provision Satellite
         unified_job_template: Provision Systems
         limit: satellite
         credentials:
           - Demo Provisioner Netbox Credentials
           - Demo Provisioner Satellite Credentials
+          - Demo Provisioner vCenter Credentials
   #     - unified_job_template: Install Red Hat Satellite
   #       identifier: node102
   #       limit: satellite
@@ -398,12 +400,13 @@ controller_workflows:
   #         - node301
   #       failure_nodes:
   #         - node1103
-  #     - unified_job_template: Provision Systems
-  #       identifier: node201
-  #       limit: controller
-  #       credentials:
-  #         - Demo Provisioner Peripheral Credentials
-  #         - Demo Provisioner Root Account
+      - identifier: Provision Controller
+        unified_job_template: Provision Systems
+        limit: controller
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner Satellite Credentials
+          - Demo Provisioner vCenter Credentials
   #       success_nodes:
   #         - node202
   #       failure_nodes:
