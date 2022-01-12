@@ -55,7 +55,7 @@ controller_hosts:
       memory_mb: 73728
       sap_hana_hsr_alias: DC1
       virtual_ip:
-        dns_record: sapdnhdb
+        dns_record: "sapdnhdb.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: "sapdnhdb2.{{ demo_uuid }}.{{ base_dns_suffix }}"
     variables:
       cpus: 8
@@ -71,7 +71,7 @@ controller_hosts:
       memory_mb: 73728
       sap_hana_hsr_alias: DC1
       virtual_ip:
-        dns_record: sapdnhdb
+        dns_record: "sapdphdb.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: "sapdphdb2.{{ demo_uuid }}.{{ base_dns_suffix }}"
     variables:
       cpus: 8
