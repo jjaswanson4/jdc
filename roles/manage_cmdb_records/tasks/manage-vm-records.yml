@@ -6,17 +6,14 @@
     netbox_token: "{{ netbox_token }}"
     validate_certs: "{{ (netbox_validate_certs | bool) | default(omit) }}"
     data:
-      name: "{{ host.name }}.{{ dns_suffix }}"
-      vcpus: "{{ host.variables.cpus | float }}"
-      memory: "{{ host.variables.memory_mb }}"
+      name: "{{ inventory_hostname }}"
+      vcpus: "{{ cpus | float }}"
+      memory: "{{ memory_mb }}"
       disk: 100
-      tenant: "{{ audience }} - {{ demo }}"
+      tenant: "{{ demo_uuid }}"
       cluster: "{{ vcenter_cluster }}"
       primary_ip4: "{{ allocated_ip_address.ip_address | default(omit) }}"
   register: vm_record_created
-  loop_control:
-    loop_var: host
-  loop: "{{ controller_hosts }}"
 
 - name: add interface to vm in cmdb
   netbox.netbox.netbox_vm_interface:
@@ -24,12 +21,6 @@
     netbox_token: "{{ netbox_token }}"
     validate_certs: "{{ (netbox_validate_certs | bool) | default(omit) }}"
     data:
-      virtual_machine: "{{ host.name }}.{{ audience }}.{{ dns_suffix }}"
+      virtual_machine: "{{ inventory_hostname }}"
       name: ens192
       mtu: 1500
-  loop_control:
-    loop_var: host
-  loop: "{{ controller_hosts }}"
-
-- debug:
-    msg: "{{ vm_record_created }}"
