@@ -19,7 +19,7 @@
         password:         "{{ satellite_password }}"
         server_url:       "{{ satellite_url }}"
         validate_certs:   "{{ satellite_validate_certs | default(false) }}"
-        name:             "{{ inventory_hostname.split('.')[0] }}"
+        name:             "{{ inventory_hostname }}"
         domain:           "{{ provisioning.dns_domain | default(omit) }}"
         hostgroup:        "{{ provisioning.host_group | default(omit) }}"
         provision_method: "{{ provisioning.method | default(omit) }}"
