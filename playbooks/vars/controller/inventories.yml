@@ -2,6 +2,8 @@
 
 network_prefix: 10.15.120.0/22
 
+base_dns_suffix: demos.lcl
+
 dns_records:
   - name: "{  { inventory_hostname.split('.')[0] }}"
     zone: demos.lab.msp.redhat.com
