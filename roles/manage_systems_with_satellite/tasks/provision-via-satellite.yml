@@ -1,0 +1,47 @@
+---
+
+- name: check if host exists
+  redhat.satellite.host_info:
+    username:         "{{ satellite_username }}"
+    password:         "{{ satellite_password }}"
+    server_url:       "{{ satellite_url }}"
+    validate_certs:   "{{ satellite_validate_certs | default(false) }}"
+    name:             "{{ inventory_hostname }}"
+  register: host_status
+  delegate_to: localhost
+  throttle: "{{ throttle }}"
+
+- name: run provisioning tasks
+  block:
+    - name: provision virtual machines
+      redhat.satellite.host:
+        username:         "{{ satellite_username }}"
+        password:         "{{ satellite_password }}"
+        server_url:       "{{ satellite_url }}"
+        validate_certs:   "{{ satellite_validate_certs | default(false) }}"
+        name:             "{{ inventory_hostname }}"
+        domain:           "{{ provisioning.dns_domain | default(omit) }}"
+        hostgroup:        "{{ provisioning.host_group | default(omit) }}"
+        provision_method: "{{ provisioning.method | default(omit) }}"
+        ip:               "{{ ip_address }}"
+        build:            "{{ provisioning.build | default(true) }}"
+        managed:          "{{ provisioning.managed | default(true) }}"
+        activation_keys:  "{{ provisioning.activation_keys | default(omit) }}"
+        compute_attributes:
+          start:          "{{ provisioning.start | default('1') }}"
+          cpus:           "{{ provisioning.cpus  | default(omit) }}"
+          memory_mb:      "{{ provisioning.memory_mb  | default(omit) }}"
+        organization:     "{{ satellite_organization }}"
+        location:         "{{ satellite_location }}"
+      delegate_to: "{{ delegate_host }}"
+      throttle: "{{ throttle }}"
+      
+    - name: wait for VM to come up
+      ansible.builtin.wait_for_connection:
+        timeout: 1800
+        sleep: 30
+  when:
+    - not host_status.host
+
+- name: run the setup module
+  ansible.builtin.setup:

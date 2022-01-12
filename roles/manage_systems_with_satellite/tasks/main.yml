@@ -1,0 +1,9 @@
+---
+
+- name: include tasks to get ip_address
+  ansible.builtin.include_tasks:
+    file: get-ip-addresses.yml
+  when:
+    - ip_address is not defined
+
+- import_tasks: provision-via-satellite.yml

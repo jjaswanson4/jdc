@@ -1,0 +1,5 @@
+---
+
+remove_cdrom: yes
+delegate_host: localhost
+throttle: 1
