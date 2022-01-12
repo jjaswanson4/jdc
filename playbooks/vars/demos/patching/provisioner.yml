@@ -354,16 +354,19 @@ controller_workflows:
         credentials:
           - Demo Provisioner Netbox Credentials
           - Demo Provisioner vCenter Credentials
-
-  #     - identifier: Create CMDB Records
-  #       unified_job_template: Manage CMDB Records
-  #       credentials:
-  #         - Demo Provisioner Netbox Credentials
-  #         - Demo Provisioner vCenter Credentials
-  #       success_nodes:
-  #         - Create DNS Records
-  # #       failure_nodes:
-  # #         - node1101
+          - Demo Provisioner IDM Credentials
+        success_nodes:
+          - Create CMDB Records
+      - identifier: Create CMDB Records
+        unified_job_template: Manage CMDB Records
+        limit: 'demo_hosts:management_plane'
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner vCenter Credentials
+        # success_nodes:
+        #   - Create DNS Records
+  #       failure_nodes:
+  #         - node1101
   #     - identifier: Create DNS Records
   #       unified_job_template: Manage DNS Records
   #       credentials:
