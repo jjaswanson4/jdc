@@ -4,16 +4,6 @@ network_prefix: 10.15.120.0/22
 
 base_dns_suffix: demos.lcl
 
-dns_records:
-  - name: "{  { inventory_hostname.split('.')[0] }}"
-    zone: demos.lab.msp.redhat.com
-    type: A
-    value: "{  { ip_address }}"
-  - name: "{  { ip_address.split('.')[-1] }}"
-    zone: "{  { ip_address.split('.')[2] }}.15.10.in-addr.arpa."
-    type: PTR
-    value: "{  { inventory_hostname }}."
-
 config_files:
   - hosts
   - resolv.conf
@@ -27,7 +17,6 @@ timesync_ntp_servers:
     iburst: yes
   - hostname: 3.rhel.pool.ntp.org
     iburst: yes
-
 
 selinux_policy: targeted
 selinux_state: permissive
