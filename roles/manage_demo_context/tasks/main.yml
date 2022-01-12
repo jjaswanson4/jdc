@@ -9,3 +9,4 @@
     - netbox-tenant.yml
     - vcenter-folder.yml
     - dns-zone.yml
+    - satellite-subnet.yml

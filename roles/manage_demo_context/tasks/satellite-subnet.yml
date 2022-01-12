@@ -1,0 +1,13 @@
+---
+
+- name: create domain for demo
+  redhat.satellite.domain:
+    server_url: "{{ satellite_url }}"
+    username: "{{ satellite_username }}"
+    password: "{{ satellite_password }}"
+    validate_certs: "{{ satellite_validate_certs | default(false) }}"
+    name: "{{ demo_uuid }}.{{ dns_suffix }}"
+    organizations:
+      - "{{ satellite_organization }}"
+    locations:
+      - "{{ satellite_location }}"
