@@ -4,7 +4,7 @@ lifecycle_environment: production
 provisioning:
   host_group: "{  { os }}/vlan146"
   method: bootdisk
-  dns_domain: josh.lab.msp.redhat.com
+  dns_domain: "{  { demo_uuid }}.{  { base_dns_suffix }}"
   cpus: "{  { cpus }}"
   memory_mb: "{  { memory_mb }}"
   activation_keys: "ak-{  { application }}-{  { os }}-{  { lifecycle_environment }}"
