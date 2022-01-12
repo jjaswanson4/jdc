@@ -4,34 +4,5 @@
   hosts:
     - all
   gather_facts: no
-  # pre_tasks:
-  #   - name: add host and custom DNS entries
-  #     ansible.builtin.set_fact:
-  #       dns:
-  #         records: "{{ dns.records  + custom_dns_records }}"
-  #     when:
-  #       - custom_dns_records is defined
-  tasks:
-    - name: include provisioning and initial config roles
-      ansible.builtin.include_role:
-        name: "{{ role }}"
-      loop_control:
-        loop_var: role
-      loop:
-        - ../roles/manage_cmdb
-    #     - jjaswanson4.utilities.provision_via_satellite
-    #     - jjaswanson4.utilities.manage_firewall_state
-    #     - jjaswanson4.utilities.stop_networkmanager_dns
-    #     - jjaswanson4.utilities.common_config
-    #     - redhat.rhel_system_roles.selinux
-    #     - redhat.rhel_system_roles.timesync
-    # - name: run additional roles when requested
-    #   ansible.builtin.include_role:
-    #     name: "{{ role }}"
-    #   loop_control:
-    #     loop_var: role
-    #   loop:    
-    #     - linux-system-roles.cockpit
-    #     - linux-system-roles.metrics
-    #   when:
-    #     - run_additional_roles | bool
+  roles:
+    - ../roles/manage_systems_with_satellite
