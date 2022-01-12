@@ -380,6 +380,7 @@ controller_workflows:
           - Demo Provisioner Netbox Credentials
           - Demo Provisioner Satellite Credentials
           - Demo Provisioner vCenter Credentials
+          - Demo Provisioner Root Account
   #     - unified_job_template: Install Red Hat Satellite
   #       identifier: node102
   #       limit: satellite
@@ -407,6 +408,7 @@ controller_workflows:
           - Demo Provisioner Netbox Credentials
           - Demo Provisioner Satellite Credentials
           - Demo Provisioner vCenter Credentials
+          - Demo Provisioner Root Account
   #       success_nodes:
   #         - node202
   #       failure_nodes:
