@@ -1,0 +1,16 @@
+---
+
+- name: run tasks from {{ delegate_host }}
+  block:
+    - name: get cmdb record
+      ansible.builtin.uri:
+        url: "{{ netbox_url }}/api/virtualization/virtual-machines/?name={{ inventory_hostname }}"
+        validate_certs: "{{ netbox_validate_certs | default(omit) }}"
+        headers:
+          Authorization: Token {{ netbox_token }}
+      throttle: 5
+      register: cmdb_record_raw
+    - name: set ip address fact
+      ansible.builtin.set_fact:
+        ip_address: "{{ cmdb_record_raw.json.results[0].primary_ip.address.split('/')[0] }}"
+  delegate_to: "{{ delegate_host }}"

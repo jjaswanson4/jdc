@@ -1,0 +1,16 @@
+---
+
+- name: run tasks from {{ delegate_host }}
+  block:
+    - name: get VIP record
+      ansible.builtin.uri:
+        url: "{{ netbox_url }}/api/ipam/ip-addresses/?dns_name={{ virtual_ip.dns_record }}"
+        validate_certs: "{{ netbox_validate_certs | default(omit) }}"
+        headers:
+          Authorization: Token {{ netbox_token }}
+      throttle: 5
+      register: vip_record_raw
+    - name: set vip record address fact
+      ansible.builtin.set_fact:
+        vip_address: "{{ vip_record_raw.json.results[0].address.split('/')[0] }}"
+  delegate_to: "{{ delegate_host }}"

@@ -1,0 +1,24 @@
+---
+
+- name: run tasks from "{{ delegate_host }}"
+  block:
+    - name: manage A records
+      community.general.ipa_dnsrecord:
+        ipa_host: "{{ idm_host }}"
+        ipa_pass: "{{ idm_password }}"
+        validate_certs: "{{ idm_validate_certs | default(false) }}"
+        zone_name: "{{ demo_uuid }}.{{ base_dns_suffix }}"
+        record_name: "{{ inventory_hostname.split('.')[0] }}"
+        record_value: "{{ ip_address }}"
+        record_type: A
+    - name: manage PTR records
+      community.general.ipa_dnsrecord:
+        ipa_host: "{{ idm_host }}"
+        ipa_pass: "{{ idm_password }}"
+        validate_certs: "{{ idm_validate_certs | default(false) }}"
+        zone_name: "{{ ip_address.split('.')[2] }}.{{ ip_address.split('.')[1] }}.{{ ip_address.split('.')[0] }}.in-addr.arpa."
+        record_name: "{{ ip_address.split('.')[-1] }}"
+        record_value: "{{ inventory_hostname }}."
+        record_type: PTR
+  throttle: 1
+  delegate_to: "{{ delegate_host }}"
