@@ -23,11 +23,11 @@ selinux_state: permissive
 
 dns_resolv:
   search_domains:
-    - josh.lab.msp.redhat.com
+    - "{  { demo_uuid }}.{{ base_dns_suffix }}"
     - lab.msp.redhat.com
   nameservers:
-    - 10.15.120.4
-    - 10.15.108.5
+    - 10.15.108.102
+    - 10.15.108.101
   options:
     - 'timeout:1'
 base_packages:
