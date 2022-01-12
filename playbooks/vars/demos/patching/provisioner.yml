@@ -363,15 +363,15 @@ controller_workflows:
         credentials:
           - Demo Provisioner Netbox Credentials
           - Demo Provisioner vCenter Credentials
-        # success_nodes:
-        #   - Create DNS Records
+        success_nodes:
+          - Create DNS Records
   #       failure_nodes:
   #         - node1101
-  #     - identifier: Create DNS Records
-  #       unified_job_template: Manage DNS Records
-  #       credentials:
-  #         - Demo Provisioner Netbox Credentials
-  #         - Demo Provisioner IDM Credentials
+      - identifier: Create DNS Records
+        unified_job_template: Manage DNS Records
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner IDM Credentials
         # success_nodes:
         #   - node102
   #     - unified_job_template: Install Red Hat Satellite
