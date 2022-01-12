@@ -1,0 +1,6 @@
+---
+
+- name: tell LVM about the new storage
+  community.general.lvg:
+    vg: "{{ lvm.vg }}"
+    pvs: "{{ lvm.pvs }}"

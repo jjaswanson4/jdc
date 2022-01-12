@@ -1,0 +1,4 @@
+---
+
+delegate_host: localhost
+manage_lvm: yes

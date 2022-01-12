@@ -1,0 +1,9 @@
+---
+
+- import_tasks: add-virtual-disk.yml
+
+- name: include LVM tasks
+  ansible.builtin.include_tasks:
+    file: manage-lvm.yml
+  when:
+    - manage_lvm
