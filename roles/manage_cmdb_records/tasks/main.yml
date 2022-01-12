@@ -11,14 +11,14 @@
       username: "{{ netbox_username }}"
       password: "{{ netbox_password }}"
   register: netbox_auth_token_raw
-  throttle: 2
-  delegate_to: "{{ delegate_host }}"  
+  throttle: 5
+  delegate_to: "{{ delegate_host }}" 
 
 - name: set netbox token fact
   ansible.builtin.set_fact:
     netbox_token: "{{ netbox_auth_token_raw.json.key }}"
 
-- import_tasks: manage-vm-record.yml
+- import_tasks: manage-vm-records.yml
 
 - name: include tasks to get IP address
   ansible.builtin.include_tasks:
@@ -28,6 +28,6 @@
 
 - name: update host record with ip address
   ansible.builtin.include_tasks:
-    file: manage-vm-record.yml
+    file: manage-vm-records.yml
   when:
     - allocated_ip_address.ip_address is defined
