@@ -2,13 +2,7 @@
 
 lifecycle_environment: production
 provisioning:
-  satellite:
-    server: satellite.lab.msp.redhat.com
-    username: admin
-    password: "{  { satellite_password }}"
-  host_group: "{  { os }}"
-  organization: MSP Lab
-  location: MSP Lab
+  host_group: "{  { os }}/vlan146"
   method: bootdisk
   dns_domain: josh.lab.msp.redhat.com
   cpus: "{  { cpus }}"
