@@ -1,0 +1,3 @@
+---
+
+- import_tasks: stop-networkmanager-dns.yml

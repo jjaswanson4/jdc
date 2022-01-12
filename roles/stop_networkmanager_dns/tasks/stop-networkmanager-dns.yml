@@ -1,0 +1,10 @@
+---
+
+- name: push nm config file
+  ansible.builtin.copy:
+    src: files/90-dns-none.conf
+    dest: /etc/NetworkManager/conf.d/90-dns-none.conf
+  notify: reload NetworkManager
+
+- name: flush handlers
+  ansible.builtin.meta: flush_handlers
