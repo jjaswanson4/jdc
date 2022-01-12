@@ -390,7 +390,7 @@ controller_workflows:
           - Demo Provisioner Root Account
         success_nodes:
           - Install Red Hat Satellite
-      - Identifier: Install Red Hat Satellite
+      - identifier: Install Red Hat Satellite
         unified_job_template: Install Red Hat Satellite
         limit: satellite
         credentials:
