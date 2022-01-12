@@ -1,0 +1,15 @@
+---
+
+available_config_files:
+  - name: hosts
+    src: templates/hosts.j2
+    dest: /etc/hosts
+    owner: root
+    group: root
+    mode: '0644'
+  - name: resolv.conf
+    src: templates/resolv.conf.j2
+    dest: /etc/resolv.conf
+    owner: root
+    group: root
+    mode: '0644'

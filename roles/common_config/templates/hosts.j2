@@ -1,0 +1,10 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }} {{ ansible_fqdn }} {{ ansible_hostname }}
+
+{% if static_dns_entries is defined %}
+{% for static_dns_entry in static_dns_entries %}
+{{ static_dns_entry.ip_address }} {{ static_dns_entry.fqdn }} {{ static_dns_entry.short_name }}
+{% endfor %}
+{% endif %}

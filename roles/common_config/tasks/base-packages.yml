@@ -1,0 +1,7 @@
+---
+
+- name: install some base packages
+  ansible.builtin.yum:
+    name: "{{ base_packages.packages }}"
+    disable_gpg_check: "{{ base_packages.disable_gpg_check | default(false) }}"
+    state: present

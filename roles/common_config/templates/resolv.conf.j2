@@ -1,0 +1,11 @@
+{% if dns_resolv.search_domains is defined %}
+search {{ dns_resolv.search_domains | join(' ') }}
+{% endif %}
+{% if dns_resolv.nameservers is defined %}
+{% for nameserver in dns_resolv.nameservers %}
+nameserver {{ nameserver }}
+{% endfor %}
+{% endif %}
+{% if dns_resolv.options is defined %}
+options {{ dns_resolv.options | join(' ') }}
+{% endif %}
