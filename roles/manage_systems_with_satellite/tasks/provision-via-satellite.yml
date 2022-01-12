@@ -35,7 +35,19 @@
         location:         "{{ satellite_location }}"
       delegate_to: "{{ delegate_host }}"
       throttle: "{{ throttle }}"
-      
+
+    - name: move vm to correct folder
+      community.vmware.vmware_guest_move:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: "{{ vcenter_validate_certs | default(false) }}"
+        datacenter: "{{ vcenter_datacenter }}"
+        name: "{{ inventory_hostname }}"
+        dest_folder: "/{{ vcenter_datacenter }}/vm/Demos/{{ demo_uuid }}" # take a look at later
+      delegate_to: "{{ delegate_host }}"
+      throttle: "{{ throttle }}"
+        
     - name: wait for VM to come up
       ansible.builtin.wait_for_connection:
         timeout: 1800
