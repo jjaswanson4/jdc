@@ -15,11 +15,11 @@ controller_install:
 
 bootstrap_controller: yes
 
-# controller_license:
-#   manifest: /tmp/controller-manifest.zip
+controller_license:
+  manifest: /tmp/controller-manifest.zip
 
-# controller_organizations:
-#   - name: "{  { audience }}"
+controller_organizations:
+  - name: "{  { audience }}"
 
 # controller_credentials:
 #   - name: Patching Credentials
