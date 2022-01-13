@@ -93,18 +93,18 @@ satellite:
         value: yes
       - name: destroy_vm_on_host_delete
         value: yes
-  #   compute_resources:
-  #     - name: vcenter.lab.msp.redhat.com
-  #       provider: vmware
-  #       provider_params:
-  #         url: "{  { vcenter_hostname }}"
-  #         user: "{  { vcenter_username }}"
-  #         password: "{  { vcenter_password }}"
-  #         datacenter: "{  { vcenter_datacenter }}"
-  #       organizations:
-  #         - name: "{  { audience }}"
-  #       locations:
-  #         - name: "{  { audience }}"
+    compute_resources:
+      - name: vcenter.lab.msp.redhat.com
+        provider: vmware
+        provider_params:
+          url: "{  { vcenter_hostname }}"
+          user: "{  { vcenter_username }}"
+          password: "{  { vcenter_password }}"
+          datacenter: "{  { vcenter_datacenter }}"
+        organizations:
+          - name: "{  { audience }}"
+        locations:
+          - name: "{  { audience }}"
   #   compute_profiles:
   #     - name: general-rhel7-vlan146
   #       compute_resource: "{  { vcenter_hostname }}"
