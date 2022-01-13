@@ -310,6 +310,9 @@ controller_groups:
         - cockpit-sosreport    
         - cockpit-networkmanager
         - cockpit-packagekit
+      satellite_url: "https://{  { inventory_hostname }}"
+      satellite_username: "{  { admin_username }}"
+      satellite_password: "{  { admin_password }}"
       provisioning:
         host_group: "{  { os }}"
         organization: "{  { audience }}"
@@ -362,8 +365,6 @@ controller_workflows:
           - Demo Provisioner vCenter Credentials
         success_nodes:
           - Create DNS Records
-  #       failure_nodes:
-  #         - node1101
       - identifier: Create DNS Records
         unified_job_template: Manage DNS Records
         limit: 'demo_hosts:management_plane'
@@ -399,8 +400,6 @@ controller_workflows:
           - Demo Provisioner Admin Credentials
         success_nodes:
           - Configure Red Hat Satellite
-  #       failure_nodes:
-  #         - node1102
       - identifier: Configure Red Hat Satellite
         unified_job_template: Configure Red Hat Satellite
         limit: satellite
@@ -408,10 +407,19 @@ controller_workflows:
           - Demo Provisioner vCenter Credentials
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
-        # success_nodes:
-        #   - node301
-        # failure_nodes:
-        #   - node1103
+        success_nodes:
+          - Provision Demo Systems
+      - identifier: Provision Demo Systems
+        unified_job_template: Provision Systems
+        limit: demo_hosts
+        credentials:
+          - Demo Provisioner vCenter Credentials
+          - Demo Provisioner Admin Credentials
+          - Demo Provisioner Netbox Credentials
+
+
+
+
       - identifier: Provision Controller
         unified_job_template: Provision Systems
         limit: controller
@@ -429,8 +437,6 @@ controller_workflows:
           - Demo Provisioner Root Account
         success_nodes:
           - Install Ansible Controller
-  #       failure_nodes:
-  #         - node1201
       - identifier: Install Ansible Controller
         unified_job_template: Install Ansible Controller
         limit: controller
@@ -439,9 +445,7 @@ controller_workflows:
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
   #       success_nodes:
-  #         - node203
-  #       failure_nodes:
-  #         - node1202
+  #         - Configure Ansible Controller
   #     - unified_job_template: Configure Ansible Controller
   #       identifier: node203
   #       limit: controller
