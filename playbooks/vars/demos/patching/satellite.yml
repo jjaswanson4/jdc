@@ -32,7 +32,7 @@ ignore_compute_resource_errors: true
 
 satellite:
   admin_username: admin
-  admin_password: "{  { ansible_password }}"
+  admin_password: "{  { admin_password }}"
   version: '6.10'
   logical_volumes:
     - name: cache
