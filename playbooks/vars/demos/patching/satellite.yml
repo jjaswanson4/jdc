@@ -81,7 +81,7 @@ satellite:
         organizations:
           - name: "{  { audience }}"
     settings:
-      - name: default_download_policy
+      - name: default_redhat_download_policy
         value: immediate
       - name: default_proxy_download_policy
         value: on_demand
@@ -251,7 +251,7 @@ satellite:
     - organization_name: "{  { audience }}"
       state: present
       manifest: "/tmp/satellite-manifest.zip"
-      repo_sync_attempts: 1
+      repo_sync_attempts: 3
       lifecycle_environments:
         - name: Non_Production
           prior: Library
