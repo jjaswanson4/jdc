@@ -82,7 +82,7 @@ satellite:
           - name: "{  { audience }}"
     settings:
       - name: default_download_policy
-        value: on_demand
+        value: immediate
       - name: default_proxy_download_policy
         value: on_demand
       - name: unregister_delete_host
