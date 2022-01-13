@@ -37,6 +37,7 @@ collections:
   - name: redhat.satellite
   - name: jjaswanson4.setup_rhel_for_satellite
   - name: jjaswanson4.install_satellite
+    version: 1.2.7
   - name: jjaswanson4.configure_satellite
   
   # controller ansible collections
