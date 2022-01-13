@@ -416,10 +416,15 @@ controller_workflows:
           - Demo Provisioner vCenter Credentials
           - Demo Provisioner Admin Credentials
           - Demo Provisioner Netbox Credentials
-
-
-
-
+        success_nodes:
+          - Apply Standard Configs to Demo Hosts
+          - Configure Ansible Controller
+      - identifier: Apply Standard Config to Demo Hosts
+        unified_job_template: Apply Standard Configuration
+        limit: demo_hosts
+        credentials:
+          - Demo Provisioner Root Account
+          # jump after configure controller config
       - identifier: Provision Controller
         unified_job_template: Provision Systems
         limit: controller
@@ -444,15 +449,19 @@ controller_workflows:
           - Demo Provisioner Red Hat Registry Credentials
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
-  #       success_nodes:
-  #         - Configure Ansible Controller
-  #     - unified_job_template: Configure Ansible Controller
-  #       identifier: node203
-  #       limit: controller
-  #       credentials:
-  #         - Demo Provisioner Peripheral Credentials
-  #         - Demo Provisioner Root Account
-  #       all_parents_must_converge: yes
+        success_nodes:
+          - Configure Ansible Controller
+      - identifier: Configure Ansible Controller
+        unified_job_template: Configure Ansible Controller
+        limit: controller
+        credentials:
+          - Demo Provisioner Admin Credentials
+        all_parents_must_converge: yes
+      - identifier: Preconfigure for SAP
+        unified_job_template: Preconfigure for SAP
+        limit: sap
+        credentials:
+          - Demo Provisioner Root Account
   #       success_nodes:
   #         - node999
   #       failure_nodes:
