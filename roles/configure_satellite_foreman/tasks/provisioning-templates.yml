@@ -1,0 +1,24 @@
+---
+
+- name: configure provisioning templates
+  redhat.satellite.provisioning_template:
+    username: "{{ satellite.admin_username }}"
+    password: "{{ satellite.admin_password }}"
+    validate_certs: false
+    server_url: "{{ satellite_url }}"
+    name: "{{ provisioning_template.name }}"
+    audit_comment: "{{ provisioning_template.audit_comment | default(omit) }}"
+    file_name: "{{ provisioning_template.file | default(omit) }}"
+    kind: "{{ provisioning_template.kind | default(omit) }}"
+    operatingsystems: "{{ omit if provisioning_template.operatingsystems is not defined else provisioning_template | json_query('operatingsystems[*].name') }}"
+    template: "{{ provisioning_template.template | default(omit) }}"
+    updated_name: "{{ provisioning_template.updated_name | default(omit) }}"
+    state: "{{ provisioning_template.state | default(omit) }}"
+    organizations: "{{ provisioning_template | json_query('organizations[*].name') | list }}"
+    locations: "{{ provisioning_template | json_query('locations[*].name') | list }}"
+  loop_control:
+    loop_var: provisioning_template
+  loop: "{{ satellite.foreman.provisioning_templates }}"
+  when:
+    - satellite.foreman.provisioning_templates is defined
+  delegate_to: "{{ delegate_host }}"

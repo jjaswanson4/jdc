@@ -1,0 +1,18 @@
+---
+
+- name: configure os default templates
+  redhat.satellite.os_default_template:
+    username: "{{ satellite.admin_username }}"
+    password: "{{ satellite.admin_password }}"
+    validate_certs: false
+    server_url: "{{ satellite_url }}"
+    operatingsystem: "{{ os_default_template.operatingsystem }}"
+    provisioning_template: "{{ os_default_template.provisioning_template }}"
+    state: "{{ os_default_template.state | default('present') }}"
+    template_kind: "{{ os_default_template.template_kind }}"
+  loop_control:
+    loop_var: os_default_template
+  loop: "{{ satellite.foreman.os_default_templates }}"
+  when:
+    - satellite.foreman.os_default_templates is defined
+  delegate_to: "{{ delegate_host }}"

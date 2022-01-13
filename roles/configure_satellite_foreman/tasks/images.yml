@@ -1,0 +1,23 @@
+---
+
+- name: configure images
+  redhat.satellite.image:
+    username: "{{ satellite.admin_username }}"
+    password: "{{ satellite.admin_password }}"
+    validate_certs: false
+    server_url: "{{ satellite_url }}"
+    architecture: "{{ image.architecture }}"
+    compute_resource: "{{ image.compute_resource }}"
+    image_password: "{{ image.passowrd | default(omit) }}"
+    image_username: "{{ image.username }}"
+    name: "{{ image.name }}"
+    operatingsystem: "{{ image.operatingsystem }}"
+    state: "{{ image.state | default('present') }}"
+    user_data: "{{ image.user_data | default(omit) }}"
+    uuid: "{{ image.uuid }}"
+  loop_control:
+    loop_var: image
+  loop: "{{ satellite.foreman.images }}"
+  when:
+    - satellite.foreman.images is defined
+  delegate_to: "{{ delegate_host }}"
