@@ -9,8 +9,6 @@
         url: http://satellite.lab.msp.redhat.com/pub/satellite-manifest.zip
         dest: /tmp/satellite-manifest.zip
       delegate_to: localhost
-      when:
-        - deploy_satellite | bool
   roles:
     - jjaswanson4.configure_satellite.configure_satellite_foreman
   tasks:
