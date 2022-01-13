@@ -5,6 +5,9 @@ roles:
     source: https://galaxy.ansible.com
   - name: linux-system-roles.metrics
     source: https://galaxy.ansible.com
+  # https://github.com/linux-system-roles/timesync/pull/134
+  - name: linux-system-roles.timesync
+    source: https://galaxy.ansible.com
   - name: redhat_sap.sap_hostagent
     source: https://galaxy.ansible.com
   - name: redhat_sap.sap_hana_deployment
