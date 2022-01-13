@@ -1,0 +1,11 @@
+---
+
+- name: run 
+  hosts:
+    - all
+  gather_facts: no
+  vars:
+    controller_launch_jobs:
+      - name: Manage CMDB Records
+  roles:
+    - redhat_cop.controller_configuration.job_launch
