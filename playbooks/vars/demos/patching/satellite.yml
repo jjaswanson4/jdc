@@ -222,7 +222,7 @@ satellite:
           - "{  { audience }}"
         locations:
           - "{  { audience }}"
-        subnet: VLAN146
+        subnet: vlan146
         pxe_loader: None
         root_pass: "{  { admin_password }}"
         kickstart_repository: Red Hat Enterprise Linux 8 for x86_64 - BaseOS Kickstart 8.5
