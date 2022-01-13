@@ -251,7 +251,7 @@ satellite:
     - organization_name: "{  { audience }}"
       state: present
       manifest: "/tmp/satellite-manifest.zip"
-      repo_sync_attempts: 3
+      repo_sync_attempts: 1
       lifecycle_environments:
         - name: Non_Production
           prior: Library
