@@ -1,5 +1,11 @@
 ---
 
+- debug:
+    var: satellite
+
+- debug:
+    var: satellite.foreman.settings
+
 - name: set initial settings
   redhat.satellite.setting:
     username: "{{ satellite.admin_username }}"
@@ -10,7 +16,8 @@
     value: "{{ setting.value }}"
   loop_control:
     loop_var: setting
-  loop: "{{ satellite | json_query('foreman.settings') }}"
+  #loop: "{{ satellite | json_query('foreman.settings') }}"
+  loop: "{{ satellite.foreman.settings }}"
   when:
     - satellite.foreman.settings is defined
   delegate_to: "{{ delegate_host }}"
