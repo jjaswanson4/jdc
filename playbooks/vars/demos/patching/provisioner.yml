@@ -396,20 +396,20 @@ controller_workflows:
         credentials:
           - Demo Provisioner vCenter Credentials
           - Demo Provisioner Root Account
-  #       success_nodes:
-  #         - node103
+        success_nodes:
+          - Configure Red Hat Satellite
   #       failure_nodes:
   #         - node1102
-  #     - unified_job_template: Configure Red Hat Satellite
-  #       identifier: node103
-  #       limit: satellite
-  #       credentials:
-  #         - Demo Provisioner Peripheral Credentials
-  #         - Demo Provisioner Root Account
-  #       success_nodes:
-  #         - node301
-  #       failure_nodes:
-  #         - node1103
+      - identifier: Configure Red Hat Satellite
+        unified_job_template: Configure Red Hat Satellite
+        limit: satellite
+        credentials:
+          - Demo Provisioner vCenter Credentials
+          - Demo Provisioner Root Account
+        # success_nodes:
+        #   - node301
+        # failure_nodes:
+        #   - node1103
       - identifier: Provision Controller
         unified_job_template: Provision Systems
         limit: controller
