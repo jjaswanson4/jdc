@@ -2,6 +2,7 @@
 
 - name: Install Ansible Controller
   organization: "{{ controller_organization }}"
+  inventory: Demo Inventory
   ask_inventory_on_launch: yes
   ask_limit_on_launch: yes
   project: "{{ project }}"
