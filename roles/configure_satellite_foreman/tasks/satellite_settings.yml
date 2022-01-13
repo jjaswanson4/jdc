@@ -4,7 +4,8 @@
     var: satellite
 
 - debug:
-    var: satellite.foreman.settings
+    var: item
+  loop: "{{ satellite.foreman.settings }}"
 
 - name: set initial settings
   redhat.satellite.setting:
