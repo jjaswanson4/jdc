@@ -1,0 +1,14 @@
+---
+
+galaxy_info:
+  author: Josh Swanson
+  description: install components of the Ansible Automation Platform
+  license: GPL-3.0
+  min_ansible_version: 2.9
+  galaxy_tags:
+    - aap
+    - tower
+    - automationhub
+    - ansible
+
+dependencies: []

@@ -1,0 +1,20 @@
+---
+
+- name: create extract directory
+  ansible.builtin.file:
+    path: /tmp/aap-installer
+    state: directory
+# https://stackoverflow.com/questions/984204/shell-command-to-tar-directory-excluding-certain-files-folders
+- name: extract the tower installer
+  ansible.builtin.unarchive:
+    src: "/tmp/{{ aap_bundle }}"
+    dest: /tmp/aap-installer/
+    remote_src: yes
+  when:
+    not dirty_extract
+
+- name: extract the tower installer (dirty)
+  ansible.builtin.shell:
+    cmd: "tar -xzvf /tmp/{{ aap_bundle }} --directory /tmp/aap-installer"
+  when:
+    dirty_extract

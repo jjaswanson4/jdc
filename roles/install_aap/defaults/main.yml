@@ -1,0 +1,6 @@
+---
+
+dirty_extract: no
+
+aap_download_url: https://releases.ansible.com/ansible-tower/setup/ansible-tower-setup-latest.tar.gz
+aap_bundle: ansible-tower-setup-latest.tar.gz

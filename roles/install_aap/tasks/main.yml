@@ -1,0 +1,21 @@
+---
+
+- name: check for existing controller install
+  ansible.builtin.shell: /usr/bin/tower-manage check
+  register: controller_check
+  ignore_errors: true
+  changed_when: false
+  when:
+    - "'controller' in group_names"
+
+- name: include install tasks
+  ansible.builtin.include_tasks:
+    file: "{{ task_file }}"
+  loop_control:
+    loop_var: task_file
+  loop:
+    - download-installer.yml
+    - extract-installer.yml
+    - run-installer.yml
+  when:
+    - controller_check.failed
