@@ -12,6 +12,7 @@
   ask_credential_on_launch: yes
 - name: Configure Ansible Controller
   organization: "{{ controller_organization }}"
+  inventory: Demo Inventory
   ask_inventory_on_launch: yes
   ask_limit_on_launch: yes
   project: "{{ project }}"
@@ -57,6 +58,7 @@
     ansible_become: no
 - name: Preconfigure for SAP
   organization: "{{ controller_organization }}"
+  inventory: Demo Inventory
   ask_inventory_on_launch: yes
   ask_limit_on_launch: yes
   forks: 10
