@@ -1,0 +1,21 @@
+<%#
+kind: ptable
+name: RHEL8 Kickstart Partition Table
+model: Ptable
+%>
+zerombr
+clearpart --all --initlabel
+part /boot --fstype xfs --size=1024
+part /boot/efi --fstype efi --size=1024
+part swap --size=4096
+part pv.01 --size=1000 --grow --ondisk=sda
+volgroup os pv.01
+logvol / --vgname=os --fstype=xfs --size=4096 --name=root
+logvol /var --vgname=os --fstype=xfs --size=4096 --name=var
+logvol /tmp --vgname=os --fstype=xfs --size=4096 --name=tmp
+logvol /usr --vgname=os --fstype=xfs --size=4096 --name=usr
+logvol /opt --vgname=os --fstype=xfs --size=4096 --name=opt
+logvol /home --vgname=os --fstype=xfs --size=4096 --name=home
+logvol /var/log --vgname=os --fstype=xfs --size=4096 --name=varlog
+logvol /var/log/audit --vgname=os --fstype=xfs --size=1024 --name=varlogaudit
+logvol /var/cache/yum --vgname=os --fstype=xfs --size=4096 --name=varcachednf
