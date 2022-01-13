@@ -27,7 +27,7 @@
         controller_inventories:
           - name: "{{ audience }} - {{ demo }} Infrastructure"
             organization: "{{ controller_organization }}"
-            variables: "{{ lookup('file', 'vars/controller/inventories.yml') | from_yaml | combine( { 'demo_uuid': demo_uuid } ) }}"
+            variables: "{{ lookup('file', 'vars/controller/inventories.yml') | from_yaml | combine( { 'demo_uuid': demo_uuid } ) | combine ( { 'audience': audience } ) }}"
     - name: add inventory to hosts
       ansible.builtin.set_fact:
         controller_hosts_to_add: "{{ controller_hosts_to_add + [ host | combine( { 'inventory': audience + ' - ' + demo + ' Infrastructure'} ) ] }}"
