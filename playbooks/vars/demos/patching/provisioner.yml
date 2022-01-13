@@ -51,40 +51,23 @@ controller_projects: []
 controller_hosts:
   - name: "sapdnhdb1.{{ demo_uuid }}.{{ base_dns_suffix }}"
     variables:
-      cpus: 8
-      memory_mb: 73728
       sap_hana_hsr_alias: DC1
       virtual_ip:
         dns_record: "sapdnhdb.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: "sapdnhdb2.{{ demo_uuid }}.{{ base_dns_suffix }}"
     variables:
-      cpus: 8
-      memory_mb: 73728
       sap_hana_hsr_alias: DC2
   - name: "sapdnapp1.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    variables:
-      cpus: 4
-      memory_mb: 16384
   - name: "sapdphdb1.{{ demo_uuid }}.{{ base_dns_suffix }}"
     variables:
-      cpus: 8
-      memory_mb: 73728
       sap_hana_hsr_alias: DC1
       virtual_ip:
         dns_record: "sapdphdb.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: "sapdphdb2.{{ demo_uuid }}.{{ base_dns_suffix }}"
     variables:
-      cpus: 8
-      memory_mb: 73728
       sap_hana_hsr_alias: DC2
   - name: "sapdpapp1.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    variables:
-      cpus: 4
-      memory_mb: 16384
   - name: "sap-metrics.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    variables:
-      cpus: 4
-      memory_mb: 8192
 
 controller_groups:
   - name: primary
@@ -134,18 +117,18 @@ controller_groups:
       sap_hana_deployment_bundle_sar_file_name: IMDB_SERVER20_046_0-80002031.SAR
       sap_hana_deployment_sapcar_path: /software/SAPCAR
       sap_hana_deployment_sapcar_file_name: SAPCAR_1010-70006178.EXE
-      sap_hana_deployment_root_password: "{  { ansible_password }}"
-      sap_hana_deployment_sapadm_password: "{  { ansible_password }}"
+      sap_hana_deployment_root_password: "{  { admin_password }}"
+      sap_hana_deployment_sapadm_password: "{  { admin_password }}"
       sap_hana_deployment_hana_instance_number: "00"
       sap_hana_deployment_hana_env_type: development
       sap_hana_deployment_hana_mem_restrict: "n"
-      sap_hana_deployment_common_master_password: "{  { ansible_password }}"
-      sap_hana_deployment_sidadm_password: "{  { ansible_password }}"
-      sap_hana_deployment_hana_db_system_password: "{  { ansible_password }}"
-      sap_hana_deployment_ase_user_password: "{  { ansible_password }}"
+      sap_hana_deployment_common_master_password: "{  { admin_password }}"
+      sap_hana_deployment_sidadm_password: "{  { admin_password }}"
+      sap_hana_deployment_hana_db_system_password: "{  { admin_password }}"
+      sap_hana_deployment_ase_user_password: "{  { admin_password }}"
       sap_hana_deployment_apply_license: false
       sap_hana_hsr_hana_instance_number: "00"
-      sap_hana_hsr_hana_db_system_password: "{  { ansible_password }}"
+      sap_hana_hsr_hana_db_system_password: "{  { admin_password }}"
       sap_hana_preconfigure_fail_if_reboot_required: no
   - name: netweaver
     hosts:
@@ -179,14 +162,14 @@ controller_groups:
       sap_s4hana_deployment_sapcar_file_name: "SAPCAR_1010-70006178.EXE"
       sap_s4hana_deployment_swpm_path: "/software/S4HANA_installation"
       sap_s4hana_deployment_swpm_sar_file_name: "SWPM20SP04_6-80003424.SAR"
-      sap_s4hana_deployment_db_schema_password: "{  { ansible_password }}"
-      sap_s4hana_deployment_db_schema_abap_password: "{  { ansible_password }}"
-      sap_s4hana_deployment_master_password: "{  { ansible_password }}"
-      sap_s4hana_deployment_hana_systemdb_password: "{  { ansible_password }}"
+      sap_s4hana_deployment_db_schema_password: "{  { admin_password }}"
+      sap_s4hana_deployment_db_schema_abap_password: "{  { admin_password }}"
+      sap_s4hana_deployment_master_password: "{  { admin_password }}"
+      sap_s4hana_deployment_hana_systemdb_password: "{  { admin_password }}"
       sap_s4hana_deployment_hana_instance_nr: "00"
-      sap_s4hana_deployment_hana_system_password: "{  { ansible_password }}"
+      sap_s4hana_deployment_hana_system_password: "{  { admin_password }}"
       sap_s4hana_deployment_parallel_jobs_nr: "30"
-      sap_s4hana_deployment_db_sidadm_password: "{  { ansible_password }}"
+      sap_s4hana_deployment_db_sidadm_password: "{  { admin_password }}"
       sap_s4hana_deployment_igs_path: "/software/S4HANA_installation"
       sap_s4hana_deployment_igs_file_name: "igsexe_9-80003187.sar"
       sap_s4hana_deployment_igs_helper_path: "/software/S4HANA_installation"
@@ -196,8 +179,8 @@ controller_groups:
       sap_s4hana_deployment_kernel_independent_path: "/software/S4HANA_installation"
       sap_s4hana_deployment_kernel_independent_file_name: "SAPEXE_201-80003386.SAR"
       sap_s4hana_deployment_software_path: "/software/S4HANA_installation"
-      sap_s4hana_deployment_sapadm_password: "{  { ansible_password }}"
-      sap_s4hana_deployment_sap_sidadm_password: "{  { ansible_password }}"
+      sap_s4hana_deployment_sapadm_password: "{  { admin_password }}"
+      sap_s4hana_deployment_sap_sidadm_password: "{  { admin_password }}"
   - name: non_production
     hosts:
       - "sapdnapp1.{{ demo_uuid }}.{{ base_dns_suffix }}"
@@ -208,28 +191,19 @@ controller_groups:
       sap_hana_deployment_hana_sid: NS4
       sap_hana_hsr_hana_sid: NS4
       sap_hana_hsr_hana_primary_hostname: sapdnhdb1
-      sap_hana_hsr_full_primary_hostname: sapdnhdb1.josh.lab.msp.redhat.com
-      sap_hana_hsr_full_secondary_hostname: sapdnhdb2.josh.lab.msp.redhat.com
+      sap_hana_hsr_full_primary_hostname: "sapdnhdb1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      sap_hana_hsr_full_secondary_hostname: "sapdnhdb2.{{ demo_uuid }}.{{ base_dns_suffix }}"
       sap_hana_ha_pacemaker_hana_sid: NS4
       sap_hana_ha_pacemaker_hana_instance_number: "00"
       sap_hana_ha_pacemaker_vip: 10.15.121.33
-      sap_hana_ha_pacemaker_hacluster_password: "{  { ansible_password }}"
-      sap_hana_ha_pacemaker_node1_fqdn: sapdnhdb1.josh.lab.msp.redhat.com
-      sap_hana_ha_pacemaker_node2_fqdn: sapdnhdb2.josh.lab.msp.redhat.com
+      sap_hana_ha_pacemaker_hacluster_password: "{  { admin_password }}"
+      sap_hana_ha_pacemaker_node1_fqdn: "sapdnhdb1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      sap_hana_ha_pacemaker_node2_fqdn: "sapdnhdb2.{{ demo_uuid }}.{{ base_dns_suffix }}"
       sap_hana_ha_pacemaker_node1_ip: 10.15.121.31
       sap_hana_ha_pacemaker_node2_ip: 10.15.121.32
       sap_s4hana_deployment_sid: NS4
-      sap_s4hana_deployment_db_host: sapdnhdb.josh.lab.msp.redhat.com
+      sap_s4hana_deployment_db_host: "sapdnhdb.{{ demo_uuid }}.{{ base_dns_suffix }}"
       sap_s4hana_deployment_db_sid: NS4
-      custom_dns_records:
-        - name: "{  { sap_s4hana_deployment_db_host.split('.')[0] }}"
-          zone: josh.lab.msp.redhat.com
-          type: A
-          value: "{  { sap_hana_ha_pacemaker_vip }}"
-        - name: "{  { sap_hana_ha_pacemaker_vip.split('.')[-1] }}"
-          zone: "{  { sap_hana_ha_pacemaker_vip.split('.')[2] }}.15.10.in-addr.arpa."
-          type: PTR
-          value: "{  { sap_s4hana_deployment_db_host }}."
   - name: production
     hosts:
       - "sapdpapp1.{{ demo_uuid }}.{{ base_dns_suffix }}"
@@ -240,28 +214,19 @@ controller_groups:
       sap_hana_deployment_hana_sid: PS4
       sap_hana_hsr_hana_sid: PS4
       sap_hana_hsr_hana_primary_hostname: sapdphdb1
-      sap_hana_hsr_full_primary_hostname: sapdphdb1.josh.lab.msp.redhat.com
-      sap_hana_hsr_full_secondary_hostname: sapdphdb2.josh.lab.msp.redhat.com
+      sap_hana_hsr_full_primary_hostname: "sapdphdb1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      sap_hana_hsr_full_secondary_hostname: "sapdphdb2.{{ demo_uuid }}.{{ base_dns_suffix }}"
       sap_hana_ha_pacemaker_hana_sid: PS4
       sap_hana_ha_pacemaker_hana_instance_number: "00"
       sap_hana_ha_pacemaker_vip: 10.15.121.37
-      sap_hana_ha_pacemaker_hacluster_password: "{  { ansible_password }}"
-      sap_hana_ha_pacemaker_node1_fqdn: sapdphdb1.josh.lab.msp.redhat.com
-      sap_hana_ha_pacemaker_node2_fqdn: sapdphdb2.josh.lab.msp.redhat.com
+      sap_hana_ha_pacemaker_hacluster_password: "{  { admin_password }}"
+      sap_hana_ha_pacemaker_node1_fqdn: "sapdphdb1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      sap_hana_ha_pacemaker_node2_fqdn: "sapdphdb2.{{ demo_uuid }}.{{ base_dns_suffix }}"
       sap_hana_ha_pacemaker_node1_ip: 10.15.121.35
       sap_hana_ha_pacemaker_node2_ip: 10.15.121.36
       sap_s4hana_deployment_sid: PS4
-      sap_s4hana_deployment_db_host: sapdphdb.josh.lab.msp.redhat.com
+      sap_s4hana_deployment_db_host: "sapdphdb.{{ demo_uuid }}.{{ base_dns_suffix }}"
       sap_s4hana_deployment_db_sid: PS4
-      custom_dns_records:
-        - name: "{  { sap_s4hana_deployment_db_host.split('.')[0] }}"
-          zone: josh.lab.msp.redhat.com
-          type: A
-          value: "{  { sap_hana_ha_pacemaker_vip }}"
-        - name: "{  { sap_hana_ha_pacemaker_vip.split('.')[-1] }}"
-          zone: "{  { sap_hana_ha_pacemaker_vip.split('.')[2] }}.15.10.in-addr.arpa."
-          type: PTR
-          value: "{  { sap_s4hana_deployment_db_host }}."
   - name: sap
     children:
       - hana
@@ -310,7 +275,7 @@ controller_groups:
         - cockpit-sosreport    
         - cockpit-networkmanager
         - cockpit-packagekit
-      satellite_url: "https://{  { inventory_hostname }}"
+      satellite_url: "https://{  { groups['satellite'][0]['inventory_hostname'] }}"
       satellite_username: "{  { admin_username }}"
       satellite_password: "{  { admin_password }}"
       provisioning:
