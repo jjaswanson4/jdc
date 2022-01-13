@@ -278,6 +278,9 @@ controller_groups:
       satellite_url: "https://{  { groups['satellite'][0] }}"
       satellite_username: "{  { admin_username }}"
       satellite_password: "{  { admin_password }}"
+      satellite_validate_certs: no
+      satellite_organization: "{  { audience }}"
+      satellite_location: "{  { audience }}"
       provisioning:
         host_group: "{  { os }}"
         organization: "{  { audience }}"
