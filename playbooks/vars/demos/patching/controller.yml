@@ -15,6 +15,12 @@ controller_install:
 
 bootstrap_controller: yes
 
+controller_hostname: "{  { inventory_hostname }}"
+controller_username: "{  { admin_password }}"
+controller_password: "{  { admin_password }}"
+controller_validate_certs: no
+
+
 controller_license:
   manifest: /tmp/controller-manifest.zip
 
