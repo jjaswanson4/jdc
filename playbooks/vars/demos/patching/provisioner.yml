@@ -275,7 +275,7 @@ controller_groups:
         - cockpit-sosreport    
         - cockpit-networkmanager
         - cockpit-packagekit
-      satellite_url: "https://{  { groups['satellite'][0]['inventory_hostname'] }}"
+      satellite_url: "https://{  { groups['satellite'][0] }}"
       satellite_username: "{  { admin_username }}"
       satellite_password: "{  { admin_password }}"
       provisioning:
