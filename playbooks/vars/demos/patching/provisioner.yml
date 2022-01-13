@@ -283,7 +283,7 @@ controller_groups:
         organization: "{  { audience }}"
         location: "{  { audience }}"
         method: bootdisk
-        dns_domain: "{  { demo_uuid }}.{  { dns_suffix }}"
+        dns_domain: "{  { demo_uuid }}.{  { base_dns_suffix }}"
         cpus: "{  { cpus }}"
         memory_mb: "{  { memory_mb }}"
         activation_keys: "ak-{  { application }}-{  { os }}-{  { lifecycle_environment }}"
