@@ -396,6 +396,7 @@ controller_workflows:
         credentials:
           - Demo Provisioner vCenter Credentials
           - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
         success_nodes:
           - Configure Red Hat Satellite
   #       failure_nodes:
@@ -406,6 +407,7 @@ controller_workflows:
         credentials:
           - Demo Provisioner vCenter Credentials
           - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
         # success_nodes:
         #   - node301
         # failure_nodes:
