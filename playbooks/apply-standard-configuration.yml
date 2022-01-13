@@ -4,20 +4,21 @@
   hosts:
     - all
   roles:
-    # - ../roles/manage_firewall_state
-    # - ../roles/stop_networkmanager_dns
-    # - ../roles/common_config
-    #- redhat.rhel_system_roles.selinux
-    - redhat.rhel_system_roles.timesync
-  # post_tasks:
-  #   - name: run additional roles when requested
-  #     ansible.builtin.include_role:
-  #       name: "{{ role }}"
-  #     loop_control:
-  #       loop_var: role
-  #     loop:    
-  #       - linux-system-roles.cockpit
-  #       - linux-system-roles.metrics
-  #     when:
-  #       - run_additional_roles is defined
-  #       - run_additional_roles | bool
+    - ../roles/manage_firewall_state
+    - ../roles/stop_networkmanager_dns
+    - ../roles/common_config
+    - redhat.rhel_system_roles.selinux
+    #- redhat.rhel_system_roles.timesync
+    - linux-system-roles.timesync
+  post_tasks:
+    - name: run additional roles when requested
+      ansible.builtin.include_role:
+        name: "{{ role }}"
+      loop_control:
+        loop_var: role
+      loop:    
+        - linux-system-roles.cockpit
+        - linux-system-roles.metrics
+      when:
+        - run_additional_roles is defined
+        - run_additional_roles | bool
