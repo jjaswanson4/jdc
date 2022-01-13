@@ -241,7 +241,7 @@ satellite:
         update_args: --partition-tables "RHEL8 Kickstart Partition Table,Kickstart default"
     partition_tables:
       - name: RHEL8 Kickstart Partition Table
-        file: ../satellite/rhel8-ptable.erb
+        file: files/rhel8-ptable.erb
         os_family: Redhat
         organizations:
           - name: "{  { audience }}"
