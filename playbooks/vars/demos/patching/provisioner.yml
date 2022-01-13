@@ -427,16 +427,17 @@ controller_workflows:
         limit: controller
         credentials:
           - Demo Provisioner Root Account
-  #       success_nodes:
-  #         - node202
+        success_nodes:
+          - Install Ansible Controller
   #       failure_nodes:
   #         - node1201
-  #     - unified_job_template: Install Ansible Controller
-  #       identifier: node202
-  #       limit: controller
-  #       credentials:
-  #         - Demo Provisioner Peripheral Credentials
-  #         - Demo Provisioner Root Account
+      - identifier: Install Ansible Controller
+        unified_job_template: Install Ansible Controller
+        limit: controller
+        credentials:
+          - Demo Provisioner Red Hat Registry Credentials
+          - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
   #       success_nodes:
   #         - node203
   #       failure_nodes:
