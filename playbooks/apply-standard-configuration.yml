@@ -7,8 +7,8 @@
     # - ../roles/manage_firewall_state
     # - ../roles/stop_networkmanager_dns
     # - ../roles/common_config
-    - redhat.rhel_system_roles.selinux
-    #- redhat.rhel_system_roles.timesync
+    #- redhat.rhel_system_roles.selinux
+    - redhat.rhel_system_roles.timesync
   # post_tasks:
   #   - name: run additional roles when requested
   #     ansible.builtin.include_role:
