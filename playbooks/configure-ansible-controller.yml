@@ -6,12 +6,13 @@
   gather_facts: no
   vars:
     ansible_python_interpreter: "{{ ansible_playbook_python }}"
+    ansible_connection: local
   pre_tasks:
     - name: run bootstrap tasks
       block:
         - name: super secure way to grab the manifest
           ansible.builtin.get_url:
-            url: http://satellite06.lab.msp.redhat.com/pub/controller-manifest.zip
+            url: http://satellite.lab.msp.redhat.com/pub/controller-manifest.zip
             dest: /tmp/controller-manifest.zip
         - name: apply manifest to controller
           ansible.builtin.include_role:
@@ -69,5 +70,3 @@
             - redhat_cop.controller_configuration.job_templates
             - redhat_cop.controller_configuration.workflow_job_templates
             - redhat_cop.controller_configuration.roles
-      when:
-        - configure_controller | bool
