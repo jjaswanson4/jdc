@@ -7,3 +7,4 @@
     validate_certs: "{{ idm_validate_certs | default(false) }}"
     zone_name: "{{ demo_uuid }}.{{ base_dns_suffix }}"
     state: "{{ demo_context_state | default('present') }}"
+  ignore_errors: true # possible bug in module
