@@ -87,6 +87,8 @@ controller_groups:
       - primary
       - secondary
     variables:
+      cpus: 8
+      memory_mb: 73728
       additional_storage:
         - size: 600Gb
           type: thin
@@ -135,6 +137,8 @@ controller_groups:
       - "sapdnapp1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "sapdpapp1.{{ demo_uuid }}.{{ base_dns_suffix }}"
     variables:
+      cpus: 4
+      memory_mb: 16384
       additional_storage:
         - size: 100Gb
           type: thin
@@ -249,6 +253,8 @@ controller_groups:
     hosts:
       - "sap-metrics.{{ demo_uuid }}.{{ base_dns_suffix }}"
     variables:
+      cpus: 4
+      memory_mb: 8192
       application: general
       os: rhel8
       lifecycle_environment: production
