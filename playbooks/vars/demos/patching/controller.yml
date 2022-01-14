@@ -38,7 +38,7 @@ controller_credentials:
     organization: "{  { audience }}"
     credential_type: Red Hat Satellite 6
     inputs:
-      host: "{  { groups['satellite'][0] }}"
+      host: "https://{  { groups['satellite'][0] }}"
       username: "{  { admin_username }}"
       password: "{  { admin_password }}"
   - name: Automation Hub Image Registry Credentials
