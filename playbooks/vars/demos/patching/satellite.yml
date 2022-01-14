@@ -33,7 +33,7 @@ ignore_compute_resource_errors: true
 satellite:
   admin_username: admin
   admin_password: "{  { admin_password }}"
-  version: 6.9
+  version: '6.10'
   logical_volumes:
     - name: cache
       size: 20
@@ -83,6 +83,8 @@ satellite:
     settings:
       # - name: default_redhat_download_policy
       #   value: immediate
+      - name: sync_connect_timeout
+        value: 3600
       - name: default_proxy_download_policy
         value: on_demand
       - name: unregister_delete_host
