@@ -448,8 +448,8 @@ controller_workflows:
         credentials:
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
-      - unified_job_template: Preconfigure for HANA
-        identifier: node303
+      - identifier: Preconfigure for HANA
+        unified_job_template: Preconfigure for HANA
         limit: hana
         credentials:
           - Demo Provisioner Root Account
