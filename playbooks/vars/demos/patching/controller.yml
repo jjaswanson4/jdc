@@ -16,7 +16,7 @@ controller_install:
 bootstrap_controller: yes
 
 controller_hostname: "{  { inventory_hostname }}"
-controller_username: "{  { admin_password }}"
+controller_username: "{  { admin_username }}"
 controller_password: "{  { admin_password }}"
 controller_validate_certs: no
 
