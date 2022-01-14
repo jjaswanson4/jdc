@@ -69,6 +69,7 @@
   ask_credential_on_launch: yes
 - name: Preconfigure for HANA
   organization: "{{ controller_organization }}"
+  inventory: Demo Inventory
   ask_inventory_on_launch: yes
   ask_limit_on_launch: yes
   project: "{{ project }}"
@@ -78,6 +79,7 @@
   ask_credential_on_launch: yes
 - name: Preconfigure for Netweaver
   organization: "{{ controller_organization }}"
+  inventory: Demo Inventory
   ask_inventory_on_launch: yes
   ask_limit_on_launch: yes
   project: "{{ project }}"
