@@ -38,7 +38,7 @@ controller_credentials:
     organization: "{  { audience }}"
     credential_type: Red Hat Satellite 6
     inputs:
-      host: "{  { groups['satellite'][0]['inventory_hostname'] }}"
+      host: "{  { groups['satellite'][0] }}"
       username: "{  { admin_username }}"
       password: "{  { admin_password }}"
   - name: Automation Hub Image Registry Credentials
@@ -170,12 +170,12 @@ controller_groups:
   - name: satellite
     inventory: "{  { audience }} Infrastructure"
     hosts:
-      - "{  { groups['satellite'][0]['inventory_hostname'] }}"
+      - "{  { groups['satellite'][0] }}"
     variables:
       satellite:
         username: "{  { admin_username }}"
         password: "{  { admin_password }}"
-        url: "https://{  { groups['satellite'][0]['inventory_hostname'] }}"
+        url: "https://{  { groups['satellite'][0] }}"
         organization: "{  { audience }}"
         composite_content_view: composite-rhel8
         content_view_filter_name: '07-01-2021'
