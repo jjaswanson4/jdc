@@ -195,7 +195,7 @@ controller_templates:
     project: "{  { audience }} Patching Code"
     organization: "{  { audience }}"
     playbook: playbooks/run-insights-report.yml
-    execution_environment: Patching Demo EE
+    execution_environment: Josh's Demos Collection EE
     credentials:
       - Patching Credentials
   - name: Check for Updates | Non_Production | Security
@@ -204,7 +204,7 @@ controller_templates:
     project: "{  { audience }} Patching Code"
     organization: "{  { audience }}"
     playbook: playbooks/check-for-updates.yml
-    execution_environment: Patching Demo EE
+    execution_environment: Josh's Demos Collection EE
     credentials:
       - Patching Credentials
   - name: Install Tracer | Non_Production | Infrastructure
@@ -213,7 +213,7 @@ controller_templates:
     project: "{  { audience }} Patching Code"
     organization: "{  { audience }}"
     playbook: playbooks/install-tracer.yml
-    execution_environment: Patching Demo EE
+    execution_environment: Josh's Demos Collection EE
     credentials:
       - Patching Credentials
   - name: Standby Secondary Database | Non_Production | BASIS (Application Team)
@@ -222,7 +222,7 @@ controller_templates:
     project: "{  { audience }} Patching Code"
     organization: "{  { audience }}"
     playbook: playbooks/pacemaker-node-control.yml
-    execution_environment: Patching Demo EE
+    execution_environment: Josh's Demos Collection EE
     credentials:
       - Patching Credentials
     extra_vars:
@@ -233,7 +233,7 @@ controller_templates:
     project: "{  { audience }} Patching Code"
     organization: "{  { audience }}"
     playbook: playbooks/update-all-packages.yml
-    execution_environment: Patching Demo EE
+    execution_environment: Josh's Demos Collection EE
     credentials:
       - Patching Credentials
   - name: Run Tracer Report | Non_Production | Infrastructure
@@ -242,7 +242,7 @@ controller_templates:
     project: "{  { audience }} Patching Code"
     organization: "{  { audience }}"
     playbook: playbooks/run-tracer-report.yml
-    execution_environment: Patching Demo EE
+    execution_environment: Josh's Demos Collection EE
     credentials:
       - Patching Credentials
   - name: Reboot Server | Non_Production | Infrastructure
@@ -251,7 +251,7 @@ controller_templates:
     project: "{  { audience }} Patching Code"
     organization: "{  { audience }}"
     playbook: playbooks/reboot-server.yml
-    execution_environment: Patching Demo EE
+    execution_environment: Josh's Demos Collection EE
     credentials:
       - Patching Credentials  
   - name: Kpatch Server | Non_Production | Infrastructure
@@ -260,7 +260,7 @@ controller_templates:
     project: "{  { audience }} Patching Code"
     organization: "{  { audience }}"
     playbook: playbooks/kpatch-server.yml
-    execution_environment: Patching Demo EE
+    execution_environment: Josh's Demos Collection EE
     credentials:
       - Patching Credentials
   - name: Unstandby Secondary Database | Non_Production | BASIS (Application Team)
@@ -269,7 +269,7 @@ controller_templates:
     project: "{  { audience }} Patching Code"
     organization: "{  { audience }}"
     playbook: playbooks/pacemaker-node-control.yml
-    execution_environment: Patching Demo EE
+    execution_environment: Josh's Demos Collection EE
     credentials:
       - Patching Credentials
     extra_vars:
@@ -280,6 +280,7 @@ controller_templates:
     project: "{  { audience }} Patching Code"
     organization: "{  { audience }}"
     playbook: playbooks/promote-content.yml
+    execution_environment: Josh's Demos Collection EE
     extra_vars:
       current_lifecycle_environment: Non_Production
       new_lifecycle_environment:
