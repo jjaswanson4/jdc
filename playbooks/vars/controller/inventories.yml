@@ -36,6 +36,5 @@ base_packages:
     - lsof
     - vim
     - sos
-    - redhat-support-tool
 ignore_virtual_disk_errors: yes
 remove_cdrom: no
