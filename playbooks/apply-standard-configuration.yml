@@ -6,7 +6,7 @@
   pre_tasks:
     - name: enable python3.6 module
       ansible.builtin.yum:
-        - name: '@python36:3.6/common'
+        name: '@python36:3.6/common'
       when:
         - ansible_distribution_version == 8.4
   roles:
