@@ -470,6 +470,8 @@ controller_workflows:
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
           - Demo Provisioner Netbox Credentials
+        success_nodes:
+          - Install Netweaver
       - identifier: Configure Non-Production SAP HANA HSR and Pacemaker
         unified_job_template: Configure HSR and Pacemaker
         limit: 'hana:&non_production'
@@ -477,16 +479,14 @@ controller_workflows:
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
           - Demo Provisioner Netbox Credentials
-  #     - unified_job_template: Install Netweaver
-  #       identifier: node307
-  #       limit: 'netweaver:&non_production'
-  #       credentials:
-  #         - Demo Provisioner Root Account
-  #       all_parents_must_converge: yes
-  #       success_nodes:
-  #         - node309
-  #       failure_nodes:
-  #         - node1307
+        success_nodes: Install Netweaver
+      - identifier: Install Netweaver
+        unified_job_template: Install Netweaver
+        limit: netweaver
+        credentials:
+          - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
+        all_parents_must_converge: yes
   #     - unified_job_template: Install Netweaver
   #       identifier: node308
   #       limit: 'netweaver:&production'
