@@ -438,7 +438,7 @@ controller_workflows:
         limit: sap
         credentials:
           - Demo Provisioner Root Account
-          - Demo Provisioner vCenter Account
+          - Demo Provisioner vCenter Credentials
   #       success_nodes:
   #         - node999
   #       failure_nodes:
