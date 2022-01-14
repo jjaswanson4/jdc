@@ -460,6 +460,9 @@ controller_workflows:
         credentials:
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
+        success_nodes:
+          - Configure Production SAP HANA HSR and Pacemaker
+          - Configure Non-Production SAP HANA HSR and Pacemaker
       - identifier: Configure Production SAP HANA HSR and Pacemaker
         unified_job_template: Configure HSR and Pacemaker
         limit: 'hana:&production'
