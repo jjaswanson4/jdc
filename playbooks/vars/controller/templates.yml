@@ -89,6 +89,7 @@
   ask_credential_on_launch: yes
 - name: Deploy SAP HANA
   organization: "{{ controller_organization }}"
+  inventory: Demo Inventory
   ask_inventory_on_launch: yes
   ask_limit_on_launch: yes
   project: "{{ project }}"
@@ -96,8 +97,19 @@
   playbook: playbooks/deploy-hana.yml
   execution_environment: "{{ execution_environment.name }}"
   ask_credential_on_launch: yes
+- name: Configure HSR and Pacemaker
+  organization: "{{ controller_organization }}"
+  inventory: Demo Inventory
+  ask_inventory_on_launch: yes
+  ask_limit_on_launch: yes
+  project: "{{ project }}"
+  allow_simultaneous: yes
+  playbook: playbooks/setup-hsr-pacemaker.yml
+  execution_environment: "{{ execution_environment.name }}"
+  ask_credential_on_launch: yes
 - name: Install Netweaver
   organization: "{{ controller_organization }}"
+  inventory: Demo Inventory
   ask_inventory_on_launch: yes
   ask_limit_on_launch: yes
   project: "{{ project }}"
