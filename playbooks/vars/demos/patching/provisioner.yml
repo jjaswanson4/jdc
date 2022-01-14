@@ -479,7 +479,8 @@ controller_workflows:
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
           - Demo Provisioner Netbox Credentials
-        success_nodes: Install Netweaver
+        success_nodes:
+          - Install Netweaver
       - identifier: Install Netweaver
         unified_job_template: Install Netweaver
         limit: netweaver
@@ -487,26 +488,15 @@ controller_workflows:
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
         all_parents_must_converge: yes
-  #     - unified_job_template: Install Netweaver
-  #       identifier: node308
-  #       limit: 'netweaver:&production'
-  #       credentials:
-  #         - Demo Provisioner Root Account
-  #       all_parents_must_converge: yes
-  #       success_nodes:
-  #         - node309
-  #       failure_nodes:
-  #         - node1308
-  #     - unified_job_template: Reinstate HSR
-  #       identifier: node309
-  #       limit: 'hana:&primary'
-  #       credentials:
-  #         - Demo Provisioner Root Account
-  #       all_parents_must_converge: yes
-  #       success_nodes:
-  #         - node999
-  #       failure_nodes:
-  #         - node1309
+        success_nodes:
+          - Reinstate HSR
+      - identifier: Reinstate HSR
+        unified_job_template: Reinstate HSR
+        limit: 'hana:&primary'
+        credentials:
+          - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
+        all_parents_must_converge: yes
   #     - unified_job_template: Prepare New Content
   #       identifier: node401
   #       credentials:
