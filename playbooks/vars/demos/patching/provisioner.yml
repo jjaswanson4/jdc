@@ -203,8 +203,8 @@ controller_groups:
       sap_hana_ha_pacemaker_hacluster_password: "{  { admin_password }}"
       sap_hana_ha_pacemaker_node1_fqdn: "sapdnhdb1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       sap_hana_ha_pacemaker_node2_fqdn: "sapdnhdb2.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      sap_hana_ha_pacemaker_node1_ip: 10.15.121.31
-      sap_hana_ha_pacemaker_node2_ip: 10.15.121.32
+      sap_hana_ha_pacemaker_node1_ip: "{  { hostvars['sapdnhdb1' + '.' + demo_uuid + '.' + base_dns_suffix ]['ansible_default_ipv4']['address'] }}"
+      sap_hana_ha_pacemaker_node2_ip: "{  { hostvars['sapdnhdb2' + '.' + demo_uuid + '.' + base_dns_suffix ]['ansible_default_ipv4']['address'] }}"
       sap_s4hana_deployment_sid: NS4
       sap_s4hana_deployment_db_host: "sapdnhdb.{{ demo_uuid }}.{{ base_dns_suffix }}"
       sap_s4hana_deployment_db_sid: NS4
@@ -226,8 +226,8 @@ controller_groups:
       sap_hana_ha_pacemaker_hacluster_password: "{  { admin_password }}"
       sap_hana_ha_pacemaker_node1_fqdn: "sapdphdb1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       sap_hana_ha_pacemaker_node2_fqdn: "sapdphdb2.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      sap_hana_ha_pacemaker_node1_ip: 10.15.121.35
-      sap_hana_ha_pacemaker_node2_ip: 10.15.121.36
+      sap_hana_ha_pacemaker_node1_ip: "{  { hostvars['sapdphdb1' + '.' + demo_uuid + '.' + base_dns_suffix ]['ansible_default_ipv4']['address'] }}"
+      sap_hana_ha_pacemaker_node2_ip: "{  { hostvars['sapdphdb2' + '.' + demo_uuid + '.' + base_dns_suffix ]['ansible_default_ipv4']['address'] }}"
       sap_s4hana_deployment_sid: PS4
       sap_s4hana_deployment_db_host: "sapdphdb.{{ demo_uuid }}.{{ base_dns_suffix }}"
       sap_s4hana_deployment_db_sid: PS4
@@ -239,10 +239,10 @@ controller_groups:
       os: rhel8.4
       application: sap
       sap_preconfigure_modify_etc_hosts: yes
-      sap_domain: "josh.lab.msp.redhat.com"
-      sap_hostagent_installation_type: "rpm"
-      sap_hostagent_rpm_remote_path: "/software/SAPHOSTAGENT"
-      sap_hostagent_rpm_file_name: "saphostagentrpm_44-20009394.rpm"
+      sap_domain: "{  { demo_uuid}}.{  { base_dns_suffix }}"
+      sap_hostagent_installation_type: rpm
+      sap_hostagent_rpm_remote_path: /software/SAPHOSTAGENT
+      sap_hostagent_rpm_file_name: saphostagentrpm_44-20009394.rpm
       sap_preconfigure_fail_if_reboot_required: no
       sap_preconfigure_selinux_state: permissive
       manage_lvm: no
