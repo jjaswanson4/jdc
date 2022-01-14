@@ -4,32 +4,32 @@
   hosts:
     - all
   pre_tasks:
-    - name: get auth token for netbox
-      ansible.builtin.uri:
-        url: "{{ netbox_url }}/api/users/tokens/provision/"
-        validate_certs: "{{ netbox_validate_certs | default(omit) }}"
-        method: POST
-        status_code: 201
-        body_format: json
-        body:
-          username: "{{ netbox_username }}"
-          password: "{{ netbox_password }}"
-      register: netbox_auth_token_raw
-    - name: set netbox token fact
-      ansible.builtin.set_fact:
-        netbox_token: "{{ netbox_auth_token_raw.json.key }}"
-    - name: grab ip address of pacemaker VIP
+    - name: run tasks from localhost
       block:
-    - name: get VIP record
-      ansible.builtin.uri:
-        url: "{{ netbox_url }}/api/ipam/ip-addresses/?dns_name={{ sap_s4hana_deployment_db_host }}"
-        validate_certs: "{{ netbox_validate_certs | default(omit) }}"
-        headers:
-          Authorization: Token {{ netbox_token }}
-      register: vip_record_raw
-    - name: set vip record address fact
-      ansible.builtin.set_fact:
-        sap_hana_ha_pacemaker_vip: "{{ vip_record_raw.json.results[0].address.split('/')[0] }}"
+        - name: get auth token for netbox
+          ansible.builtin.uri:
+            url: "{{ netbox_url }}/api/users/tokens/provision/"
+            validate_certs: "{{ netbox_validate_certs | default(omit) }}"
+            method: POST
+            status_code: 201
+            body_format: json
+            body:
+              username: "{{ netbox_username }}"
+              password: "{{ netbox_password }}"
+          register: netbox_auth_token_raw
+        - name: set netbox token fact
+          ansible.builtin.set_fact:
+            netbox_token: "{{ netbox_auth_token_raw.json.key }}"
+        - name: get VIP record
+          ansible.builtin.uri:
+            url: "{{ netbox_url }}/api/ipam/ip-addresses/?dns_name={{ sap_s4hana_deployment_db_host }}"
+            validate_certs: "{{ netbox_validate_certs | default(omit) }}"
+            headers:
+              Authorization: Token {{ netbox_token }}
+          register: vip_record_raw
+        - name: set vip record address fact
+          ansible.builtin.set_fact:
+            sap_hana_ha_pacemaker_vip: "{{ vip_record_raw.json.results[0].address.split('/')[0] }}"
       delegate_to: localhost
       throttle: 5
   roles:
