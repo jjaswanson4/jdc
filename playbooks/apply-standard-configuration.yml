@@ -3,6 +3,12 @@
 - name: apply standard configuration
   hosts:
     - all
+  pre_tasks:
+    - name: enable python3.6 module
+      ansible.builtin.yum:
+        - name: '@python36:3.6/common'
+      when:
+        - ansible_distribution_version == 8.4
   roles:
     - ../roles/manage_firewall_state
     - ../roles/stop_networkmanager_dns
