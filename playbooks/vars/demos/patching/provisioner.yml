@@ -199,7 +199,6 @@ controller_groups:
       sap_hana_hsr_full_secondary_hostname: "sapdnhdb2.{{ demo_uuid }}.{{ base_dns_suffix }}"
       sap_hana_ha_pacemaker_hana_sid: NS4
       sap_hana_ha_pacemaker_hana_instance_number: "00"
-      sap_hana_ha_pacemaker_vip: 10.15.121.33
       sap_hana_ha_pacemaker_hacluster_password: "{  { admin_password }}"
       sap_hana_ha_pacemaker_node1_fqdn: "sapdnhdb1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       sap_hana_ha_pacemaker_node2_fqdn: "sapdnhdb2.{{ demo_uuid }}.{{ base_dns_suffix }}"
@@ -222,7 +221,6 @@ controller_groups:
       sap_hana_hsr_full_secondary_hostname: "sapdphdb2.{{ demo_uuid }}.{{ base_dns_suffix }}"
       sap_hana_ha_pacemaker_hana_sid: PS4
       sap_hana_ha_pacemaker_hana_instance_number: "00"
-      sap_hana_ha_pacemaker_vip: 10.15.121.37
       sap_hana_ha_pacemaker_hacluster_password: "{  { admin_password }}"
       sap_hana_ha_pacemaker_node1_fqdn: "sapdphdb1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       sap_hana_ha_pacemaker_node2_fqdn: "sapdphdb2.{{ demo_uuid }}.{{ base_dns_suffix }}"
@@ -454,73 +452,28 @@ controller_workflows:
         credentials:
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
-
-  #       success_nodes:
-  #         - node999
-  #       failure_nodes:
-  #         - node1203
-  #     - unified_job_template: Provision Systems
-  #       identifier: node301
-  #       limit: demo_hosts
-  #       credentials:
-  #         - Demo Provisioner Peripheral Credentials
-  #         - Demo Provisioner Root Account
-  #       success_nodes:
-  #         - node302
-  #         - node203
-  #       failure_nodes:
-  #         - node1301
-  #     - unified_job_template: Preconfigure for SAP
-  #       identifier: node302
-  #       limit: sap
-  #       credentials:
-  #         - Demo Provisioner Peripheral Credentials
-  #         - Demo Provisioner Root Account
-  #       success_nodes:
-  #         - node303
-  #         - node304
-  #       failure_nodes:
-  #         - node1302
-  #     - unified_job_template: Preconfigure for HANA
-  #       identifier: node303
-  #       limit: hana
-  #       credentials:
-  #         - Demo Provisioner Root Account
-  #       success_nodes:
-  #         - node305
-  #         - node306
-  #         - node401
-  #       failure_nodes:
-  #         - node1303
-  #     - unified_job_template: Preconfigure for Netweaver
-  #       identifier: node304
-  #       limit: netweaver
-  #       credentials:
-  #         - Demo Provisioner Root Account
-  #       success_nodes:
-  #         - node307
-  #         - node308
-  #         - node401
-  #       failure_nodes:
-  #         - node1304
-  #     - unified_job_template: Deploy SAP HANA
-  #       identifier: node305
-  #       limit: 'hana:&non_production'
-  #       credentials:
-  #         - Demo Provisioner Root Account
-  #       success_nodes:
-  #         - node307
-  #       failure_nodes:
-  #         - node1305
-  #     - unified_job_template: Deploy SAP HANA
-  #       identifier: node306
-  #       limit: 'hana:&production'
-  #       credentials:
-  #         - Demo Provisioner Root Account
-  #       success_nodes:
-  #         - node308
-  #       failure_nodes:
-  #         - node1306
+        success_nodes:
+          - Deploy SAP HANA
+      - identifier: Deploy SAP HANA
+        unified_job_template: Deploy SAP HANA
+        limit: hana
+        credentials:
+          - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
+      - identifier: Configure Production SAP HANA HSR and Pacemaker
+        unified_job_template: Configure HSR and Pacemaker
+        limit: 'hana:&production'
+        credentials:
+          - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
+          - Demo Provisioner Netbox Credentials
+      - identifier: Configure Non-Production SAP HANA HSR and Pacemaker
+        unified_job_template: Configure HSR and Pacemaker
+        limit: 'hana:&non_production'
+        credentials:
+          - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
+          - Demo Provisioner Netbox Credentials
   #     - unified_job_template: Install Netweaver
   #       identifier: node307
   #       limit: 'netweaver:&non_production'
