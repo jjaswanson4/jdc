@@ -399,6 +399,8 @@ controller_workflows:
         limit: demo_hosts
         credentials:
           - Demo Provisioner Root Account
+        success_nodes:
+          - Preconfigure for SAP
       - identifier: Provision Controller
         unified_job_template: Provision Systems
         limit: controller
@@ -431,11 +433,12 @@ controller_workflows:
         credentials:
           - Demo Provisioner Admin Credentials
         all_parents_must_converge: yes
-      # - identifier: Preconfigure for SAP
-      #   unified_job_template: Preconfigure for SAP
-      #   limit: sap
-      #   credentials:
-      #     - Demo Provisioner Root Account
+      - identifier: Preconfigure for SAP
+        unified_job_template: Preconfigure for SAP
+        limit: sap
+        credentials:
+          - Demo Provisioner Root Account
+          - Demo Provisioner vCenter Account
   #       success_nodes:
   #         - node999
   #       failure_nodes:
