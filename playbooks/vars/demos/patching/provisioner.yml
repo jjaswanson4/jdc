@@ -439,6 +439,22 @@ controller_workflows:
         credentials:
           - Demo Provisioner Root Account
           - Demo Provisioner vCenter Credentials
+        success_nodes:
+          - Preconfigure for Netweaver
+          - Preconfigure for HANA
+      - identifier: Preconfigure for Netweaver
+        unified_job_template: Preconfigure for Netweaver
+        limit: netweaver
+        credentials:
+          - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
+      - unified_job_template: Preconfigure for HANA
+        identifier: node303
+        limit: hana
+        credentials:
+          - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
+
   #       success_nodes:
   #         - node999
   #       failure_nodes:
