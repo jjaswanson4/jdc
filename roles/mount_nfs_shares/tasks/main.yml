@@ -1,0 +1,4 @@
+---
+
+- import_tasks: install-nfs-utils.yml
+- import_tasks: mount-nfs-shares.yml

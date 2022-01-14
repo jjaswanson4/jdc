@@ -1,0 +1,11 @@
+---
+
+galaxy_info:
+  author: Josh Swanson
+  description: mount/manage nfs shares
+  license: GPL-3.0
+  min_ansible_version: 2.9
+  galaxy_tags:
+    - nfs
+
+dependencies: []

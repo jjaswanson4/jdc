@@ -1,0 +1,6 @@
+---
+
+- name: ensure nfs-utils are available
+  ansible.builtin.yum:
+    name: nfs-utils
+    state: present

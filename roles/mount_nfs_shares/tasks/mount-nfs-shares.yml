@@ -1,0 +1,12 @@
+---
+
+- name: mount nfs shares
+  ansible.builtin.mount:
+    src: "{{ nfs_share.src }}"
+    path: "{{ nfs_share.path }}"
+    fstype: nfs
+    state: "{{ nfs_share.state | default('mounted') }}"
+  loop_control:
+    loop_var: nfs_share
+  loop:
+    "{{ nfs_shares }}"
