@@ -8,7 +8,7 @@
       ansible.builtin.yum:
         name: '@python36:3.6/common'
       when:
-        - ansible_distribution_version == 8.4
+        - ansible_distribution_version is version ('8.4')
   roles:
     - ../roles/manage_firewall_state
     - ../roles/stop_networkmanager_dns
