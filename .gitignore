@@ -3,3 +3,4 @@ execution-environment/context
 *tmp
 *swp
 *ansible.cfg
+testing*
