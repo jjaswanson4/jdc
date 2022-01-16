@@ -4,29 +4,41 @@
   hosts:
     - all
   pre_tasks:
-    - name: check if /software/{{ sap_s4hana_deployment_sid }} exists
-      ansible.builtin.stat:
-        path: "/software/{{ sap_s4hana_deployment_sid }}"
-      register: sid_folder
-    - name: perpare clean install environment
+    - name: check for existing netweaver install
+      ansible.builtin.shell:
+        cmd: > 
+          /usr/sap/{{ sap_s4hana_deployment_hana_instance_nr }}/HDB{{ sap_s4hana_deployment_hana_instance_nr }}/exe/sapcontrol
+          -nr {{ sap_s4hana_deployment_hana_instance_nr }}
+          -function GetProcessList
+      become: yes
+      become_user: "{{ sap_hana_deployment_hana_sid | lower }}adm"
+      become_method: su
+      register: netweaver_status
+  tasks:
+    - name: tasks to install netweaver
       block:
-        - name: remove {{ sap_s4hana_deployment_sid }} directory
+        - name: check if /software/{{ sap_s4hana_deployment_sid }} exists
+          ansible.builtin.stat:
+            path: "/software/{{ sap_s4hana_deployment_sid }}"
+          register: sid_folder
+        - name: remove existing install files
           ansible.builtin.file:
             path: "/software/{{ sap_s4hana_deployment_sid }}/"
             state: absent
+          when:
+            - sid_folder.stat.isdir is defined
+            - sid_folder.stat.isdir
+        - name: ensure {{ sap_s4hana_deployment_sid }} directory exists
+          ansible.builtin.file:
+            path: "/software/{{ sap_s4hana_deployment_sid }}"
+            state: directory
+        - name: link {{ sap_s4hana_deployment_sapcar_file_name }} into the directory
+          ansible.builtin.file:
+            src: "/software/SAPCAR/{{ sap_s4hana_deployment_sapcar_file_name }}"
+            dest: "/software/{{ sap_s4hana_deployment_sid }}/{{ sap_s4hana_deployment_sapcar_file_name }}"
+            state: link
+        - name: include role to install netweaver
+          ansible.builtin.include_role:
+            name: redhat_sap.sap_s4hana_deployment
       when:
-        - sid_folder.stat.isdir is defined
-        - sid_folder.stat.isdir
-
-    - name: ensure {{ sap_s4hana_deployment_sid }} directory exists
-      ansible.builtin.file:
-        path: "/software/{{ sap_s4hana_deployment_sid }}"
-        state: directory
-    - name: link {{ sap_s4hana_deployment_sapcar_file_name }} into the directory
-      ansible.builtin.file:
-        src: "/software/SAPCAR/{{ sap_s4hana_deployment_sapcar_file_name }}"
-        dest: "/software/{{ sap_s4hana_deployment_sid }}/{{ sap_s4hana_deployment_sapcar_file_name }}"
-        state: link
-
-  roles:
-    - redhat_sap.sap_s4hana_deployment
+        - "'OK' not in netweaver_status.stdout"
