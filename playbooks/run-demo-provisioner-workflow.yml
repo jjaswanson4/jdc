@@ -20,7 +20,7 @@
         controller_workflow_launch_jobs:
           - name: "Provision {{ demo_display_name }} Demo"
             inventory: "{{ audience }} - {{ demo }} Infrastructure"
-            wait: yes
+            wait: no
             extra_vars:
               audience: "{{ audience }}"
               demo_uuid: "{{ demo_uuid }}"
