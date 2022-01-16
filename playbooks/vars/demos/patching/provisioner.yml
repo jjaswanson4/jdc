@@ -297,6 +297,7 @@ controller_groups:
 
 controller_templates:
   - name: Prepare New Content
+    inventory: Demo Inventory
     ask_inventory_on_launch: yes
     limit: satellite
     project: "{{ project }}"
@@ -304,6 +305,7 @@ controller_templates:
     execution_environment: "{{ execution_environment.name }}"
     ask_credential_on_launch: yes
   - name: Roll Back Content
+    inventory: Demo Inventory
     ask_inventory_on_launch: yes
     limit: satellite
     project: "{{ project }}"
@@ -329,6 +331,11 @@ controller_workflows:
           - Demo Provisioner Satellite Credentials
         success_nodes:
           - Create CMDB Records
+        failure_nodes:
+      - identifier: Send Email About 'Create Demo Context' Failure
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Create Demo Context
       - identifier: Create CMDB Records
         unified_job_template: Manage CMDB Records
         limit: 'demo_hosts:management_plane'
@@ -446,6 +453,8 @@ controller_workflows:
         credentials:
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
+        success_nodes:
+          - Install Netweaver
       - identifier: Preconfigure for HANA
         unified_job_template: Preconfigure for HANA
         limit: hana
@@ -472,6 +481,7 @@ controller_workflows:
           - Demo Provisioner Netbox Credentials
         success_nodes:
           - Install Netweaver
+          - Prepare New Content
       - identifier: Configure Non-Production SAP HANA HSR and Pacemaker
         unified_job_template: Configure HSR and Pacemaker
         limit: 'hana:&non_production'
@@ -481,6 +491,7 @@ controller_workflows:
           - Demo Provisioner Netbox Credentials
         success_nodes:
           - Install Netweaver
+          - Prepare New Content
       - identifier: Install Netweaver
         unified_job_template: Install Netweaver
         limit: netweaver
@@ -496,85 +507,21 @@ controller_workflows:
         credentials:
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
+        success_nodes:
+          - Send Success Email
+      - identifier: Prepare New Content
+        unified_job_template: Prepare New Content
+        credentials:
+          - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
         all_parents_must_converge: yes
-  #     - unified_job_template: Prepare New Content
-  #       identifier: node401
-  #       credentials:
-  #         - Demo Provisioner Peripheral Credentials
-  #       all_parents_must_converge: yes
-  #       success_nodes:
-  #         - node999
-  #       failure_nodes:
-  #         - node1401
-  #     - unified_job_template: Send Provisioner Email
-  #       identifier: node999
-  #       all_parents_must_converge: yes
-  #       extra_data:
-  #         provisioner_status: success
-  #     - unified_job_template: Send Provisioner Email
-  #       identifier: node1101
-  #       extra_data:
-  #         provisioner_status: failed
-  #     - unified_job_template: Send Provisioner Email
-  #       identifier: node1102
-  #       extra_data:
-  #         provisioner_status: failed
-  #     - unified_job_template: Send Provisioner Email
-  #       identifier: node1103
-  #       extra_data:
-  #         provisioner_status: failed
-  #     - unified_job_template: Send Provisioner Email
-  #       identifier: node1201
-  #       extra_data:
-  #         provisioner_status: failed
-  #     - unified_job_template: Send Provisioner Email
-  #       identifier: node1202
-  #       extra_data:
-  #         provisioner_status: failed
-  #     - unified_job_template: Send Provisioner Email
-  #       identifier: node1203
-  #       extra_data:
-  #         provisioner_status: failed
-  #     - unified_job_template: Send Provisioner Email
-  #       identifier: node1301
-  #       extra_data:
-  #         provisioner_status: failed
-  #     - unified_job_template: Send Provisioner Email
-  #       identifier: node1302
-  #       extra_data:
-  #         provisioner_status: failed
-  #     - unified_job_template: Send Provisioner Email
-  #       identifier: node1303
-  #       extra_data:
-  #         provisioner_status: failed
-  #     - unified_job_template: Send Provisioner Email
-  #       identifier: node1304
-  #       extra_data:
-  #         provisioner_status: failed
-  #     - unified_job_template: Send Provisioner Email
-  #       identifier: node1305
-  #       extra_data:
-  #         provisioner_status: failed
-  #     - unified_job_template: Send Provisioner Email
-  #       identifier: node1306
-  #       extra_data:
-  #         provisioner_status: failed
-  #     - unified_job_template: Send Provisioner Email
-  #       identifier: node1307
-  #       extra_data:
-  #         provisioner_status: failed
-  #     - unified_job_template: Send Provisioner Email
-  #       identifier: node1308
-  #       extra_data:
-  #         provisioner_status: failed
-  #     - unified_job_template: Send Provisioner Email
-  #       identifier: node1309
-  #       extra_data:
-  #         provisioner_status: failed
-  #     - unified_job_template: Send Provisioner Email
-  #       identifier: node1401
-  #       extra_data:
-  #         provisioner_status: failed
+        success_nodes:
+          - Send Success Email
+      - identifier: Send Success Email
+        unified_job_template: Send Provisioner Email
+        all_parents_must_converge: yes
+        extra_data:
+          provisioner_status: success
   # - name: Teardown Patching Demo
   #   organization: Demo Provisioner
   #   ask_inventory_on_launch: yes
