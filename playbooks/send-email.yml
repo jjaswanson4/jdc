@@ -4,6 +4,12 @@
   hosts:
     - all
   gather_facts: false
+  pre_tasks:
+    - name: build failure message if needed
+      ansible.builtin.set_fact:
+        failure_message: "Provisioning failed at step: {{ failed_at_step }}"
+      when:
+        - failed_at_step is defined
   tasks:
     - name: send email with the provisioner status of "{{ provisioner_status }}"
       community.general.mail: 
@@ -15,5 +21,7 @@
           Hello {{ provisioner }},
 
           {{ demo }} demo for {{ audience }} has completed with state: {{ provisioner_status }}
+
+          {{ failure_message | default(omit) }}
 
           - The Demo Provisioner
