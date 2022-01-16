@@ -332,7 +332,8 @@ controller_workflows:
         success_nodes:
           - Create CMDB Records
         failure_nodes:
-      - identifier: Send Email About 'Create Demo Context' Failure
+          - Send Failure Email About 'Create Demo Context'
+      - identifier: Send Failure Email About 'Create Demo Context'
         unified_job_template: Send Provisioner Email
         extra_data:
           failed_at_step: Create Demo Context
