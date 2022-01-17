@@ -672,15 +672,18 @@ controller_workflows:
         credentials:
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
-      #   always_nodes:
-      #     - node998
-      # - unified_job_template: Teardown Systems
-      #   identifier: node998
-      #   limit: management_plane
-      #   credentials:
-      #     - Demo Provisioner Peripheral Credentials
-      #   always_nodes:
-      #     - node999
+        always_nodes:
+          - Teardown Management Plane
+      - identifier: Teardown Management Plane
+        unified_job_template: Teardown Systems
+        limit: management_plane
+        credentials:
+          - Demo Provisioner Satellite Credentials
+          - Demo Provisioner Admin Credentials
+        extra_data:
+          - dns_records_state: absent
+        # always_nodes:
+        #   - node999
       # - unified_job_template: Cleanup DNS Records
       #   identifier: node999
       #   limit: 'demo_hosts:management_plane'
