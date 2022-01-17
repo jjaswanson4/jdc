@@ -41,8 +41,8 @@
             wait: "{{ wait_for_workflow | default(false) }}"
             extra_vars:
               audience: "{{ audience }}"
-              demo_uuid: "{{ demo_uuid }}"
               demo_state: "{{ demo_state | default('present') }}"
               demo_context_state: "{{ demo_context_state | default('present') }}"
+              #demo_uuid: "{{ demo_uuid }}" # shouldn't be needed here?
   roles:
     - redhat_cop.controller_configuration.workflow_launch
