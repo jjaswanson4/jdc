@@ -345,6 +345,12 @@ controller_workflows:
           - Demo Provisioner vCenter Credentials
         success_nodes:
           - Create DNS Records
+        failure_nodes:
+          - Send Failure Email About 'Create CMDB Records'
+      - identifier: Send Failure Email About 'Create CMDB Records'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Create CMDB Records
       - identifier: Create DNS Records
         unified_job_template: Manage DNS Records
         limit: 'demo_hosts:management_plane'
@@ -354,6 +360,12 @@ controller_workflows:
         success_nodes:
           - Provision Satellite
           - Provision Controller
+        failure_nodes:
+          - Send Failure Email About 'Create DNS Records'
+      - identifier: Send Failure Email About 'Create DNS Records'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Create DNS Records
       - identifier: Provision Satellite
         unified_job_template: Provision Systems
         limit: satellite
@@ -364,6 +376,12 @@ controller_workflows:
           - Demo Provisioner Root Account
         success_nodes:
           - Apply Standard Config to Satellite
+        failure_nodes:
+          - Send Failure Email About 'Provision Satellite'
+      - identifier: Send Failure Email About 'Provision Satellite'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Provision Satellite
       - identifier: Apply Standard Config to Satellite
         unified_job_template: Apply Standard Configuration
         limit: satellite
@@ -371,6 +389,12 @@ controller_workflows:
           - Demo Provisioner Root Account
         success_nodes:
           - Install Red Hat Satellite
+        failure_nodes:
+          - Send Failure Email About 'Apply Standard Config to Satellite'
+      - identifier: Send Failure Email About 'Apply Standard Config to Satellite'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Apply Standard Config to Satellite
       - identifier: Install Red Hat Satellite
         unified_job_template: Install Red Hat Satellite
         limit: satellite
@@ -380,6 +404,12 @@ controller_workflows:
           - Demo Provisioner Admin Credentials
         success_nodes:
           - Configure Red Hat Satellite
+        failure_nodes:
+          - Send Failure Email About 'Install Red Hat Satellite'
+      - identifier: Send Failure Email About 'Install Red Hat Satellite'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Install Red Hat Satellite
       - identifier: Configure Red Hat Satellite
         unified_job_template: Configure Red Hat Satellite
         limit: satellite
@@ -389,6 +419,12 @@ controller_workflows:
           - Demo Provisioner Admin Credentials
         success_nodes:
           - Provision Demo Systems
+        failure_nodes:
+          - Send Failure Email About 'Configure Red Hat Satellite'
+      - identifier: Send Failure Email About 'Configure Red Hat Satellite'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Configure Red Hat Satellite
       - identifier: Provision Demo Systems
         unified_job_template: Provision Systems
         limit: demo_hosts
@@ -400,6 +436,12 @@ controller_workflows:
         success_nodes:
           - Apply Standard Config to Demo Hosts
           - Configure Ansible Controller
+        failure_nodes:
+          - Send Failure Email About 'Provision Demo Systems'
+      - identifier: Send Failure Email About 'Provision Demo Systems'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Provision Demo Systems
       - identifier: Apply Standard Config to Demo Hosts
         unified_job_template: Apply Standard Configuration
         limit: demo_hosts
@@ -407,6 +449,12 @@ controller_workflows:
           - Demo Provisioner Root Account
         success_nodes:
           - Preconfigure for SAP
+        failure_nodes:
+          - Send Failure Email About 'Apply Standard Config to Demo Hosts'
+      - identifier: Send Failure Email About 'Apply Standard Config to Demo Hosts'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Apply Standard Config to Demo Hosts
       - identifier: Provision Controller
         unified_job_template: Provision Systems
         limit: controller
@@ -417,6 +465,12 @@ controller_workflows:
           - Demo Provisioner Root Account
         success_nodes:
           - Apply Standard Config to Controller
+        failure_nodes:
+          - Send Failure Email About 'Provision Controller'
+      - identifier: Send Failure Email About 'Provision Controller'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Provision Controller
       - identifier: Apply Standard Config to Controller
         unified_job_template: Apply Standard Configuration
         limit: controller
@@ -424,6 +478,12 @@ controller_workflows:
           - Demo Provisioner Root Account
         success_nodes:
           - Install Ansible Controller
+        failure_nodes:
+          - Send Failure Email About 'Apply Standard Config to Controller'
+      - identifier: Send Failure Email About 'Apply Standard Config to Controller'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Apply Standard Config to Controller     
       - identifier: Install Ansible Controller
         unified_job_template: Install Ansible Controller
         limit: controller
@@ -433,12 +493,26 @@ controller_workflows:
           - Demo Provisioner Admin Credentials
         success_nodes:
           - Configure Ansible Controller
+        failure_nodes:
+          - Send Failure Email About 'Install Ansible Controller'
+      - identifier: Send Failure Email About 'Install Ansible Controller'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Install Ansible Controller
       - identifier: Configure Ansible Controller
         unified_job_template: Configure Ansible Controller
         limit: controller
         credentials:
           - Demo Provisioner Admin Credentials
+        success_nodes:
+          - Send Success Email
+        failure_nodes:
+          - Send Failure Email About 'Configure Ansible Controller'
         all_parents_must_converge: yes
+      - identifier: Send Failure Email About 'Configure Ansible Controller'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Configure Ansible Controller
       - identifier: Preconfigure for SAP
         unified_job_template: Preconfigure for SAP
         limit: sap
@@ -448,6 +522,12 @@ controller_workflows:
         success_nodes:
           - Preconfigure for Netweaver
           - Preconfigure for HANA
+        failure_nodes:
+          - Send Failure Email About 'Preconfigure for SAP'
+      - identifier: Send Failure Email About 'Preconfigure for SAP'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Preconfigure for SAP
       - identifier: Preconfigure for Netweaver
         unified_job_template: Preconfigure for Netweaver
         limit: netweaver
@@ -456,6 +536,13 @@ controller_workflows:
           - Demo Provisioner Admin Credentials
         success_nodes:
           - Install Netweaver
+          - Prepare New Content
+        failure_nodes:
+          - Send Failure Email About 'Preconfigure for Netweaver'
+      - identifier: Send Failure Email About 'Preconfigure for Netweaver'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Preconfigure for Netweaver
       - identifier: Preconfigure for HANA
         unified_job_template: Preconfigure for HANA
         limit: hana
@@ -464,6 +551,10 @@ controller_workflows:
           - Demo Provisioner Admin Credentials
         success_nodes:
           - Deploy SAP HANA
+      - identifier: Send Failure Email About 'Preconfigure for HANA'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Preconfigure for HANA
       - identifier: Deploy SAP HANA
         unified_job_template: Deploy SAP HANA
         limit: hana
@@ -473,6 +564,12 @@ controller_workflows:
         success_nodes:
           - Configure Production SAP HANA HSR and Pacemaker
           - Configure Non-Production SAP HANA HSR and Pacemaker
+        failure_nodes:
+          - Send Failure Email About 'Deploy SAP HANA'
+      - identifier: Send Failure Email About 'Deploy SAP HANA'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Deploy SAP HANA
       - identifier: Configure Production SAP HANA HSR and Pacemaker
         unified_job_template: Configure HSR and Pacemaker
         limit: 'hana:&production'
@@ -483,6 +580,12 @@ controller_workflows:
         success_nodes:
           - Install Netweaver
           - Prepare New Content
+        failure_nodes:
+          - Send Failure Email About 'Configure Production SAP HANA HSR and Pacemaker'
+      - identifier: Send Failure Email About 'Configure Production SAP HANA HSR and Pacemaker'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Configure Production SAP HANA HSR and Pacemaker
       - identifier: Configure Non-Production SAP HANA HSR and Pacemaker
         unified_job_template: Configure HSR and Pacemaker
         limit: 'hana:&non_production'
@@ -493,6 +596,12 @@ controller_workflows:
         success_nodes:
           - Install Netweaver
           - Prepare New Content
+        failure_nodes:
+          - Send Failure Email About 'Configure Non-Production SAP HANA HSR and Pacemaker'
+      - identifier: Send Failure Email About 'Configure Non-Production SAP HANA HSR and Pacemaker'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Configure Non-Production SAP HANA HSR and Pacemaker
       - identifier: Install Netweaver
         unified_job_template: Install Netweaver
         limit: netweaver
@@ -502,6 +611,12 @@ controller_workflows:
         all_parents_must_converge: yes
         success_nodes:
           - Reinstate HSR
+        failure_nodes:
+          - Send Failure Email About 'Install Netweaver'
+      - identifier: Send Failure Email About 'Install Netweaver'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Install Netweaver
       - identifier: Reinstate HSR
         unified_job_template: Reinstate HSR
         limit: 'hana:&primary'
@@ -510,6 +625,12 @@ controller_workflows:
           - Demo Provisioner Admin Credentials
         success_nodes:
           - Send Success Email
+        failure_nodes:
+          - Send Failure Email About 'Reinstate HSR'
+      - identifier: Send Failure Email About 'Reinstate HSR'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Reinstate HSR
       - identifier: Prepare New Content
         unified_job_template: Prepare New Content
         credentials:
@@ -518,54 +639,52 @@ controller_workflows:
         all_parents_must_converge: yes
         success_nodes:
           - Send Success Email
+        failure_nodes:
+          - Send Failure Email About 'Prepare New Content'
+      - identifier: Send Failure Email About 'Prepare New Content'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Prepare New Content
       - identifier: Send Success Email
         unified_job_template: Send Provisioner Email
         all_parents_must_converge: yes
         extra_data:
           provisioner_status: success
-  # - name: Teardown Patching Demo
-  #   organization: Demo Provisioner
-  #   ask_inventory_on_launch: yes
-  #   state: "{{ controller_state | default('present') }}"
-  #   extra_vars:
-  #     demo: patching
-  #   survey_enabled: yes
-  #   survey:
-  #     name: ''
-  #     description: ''
-  #     spec:
-  #       - type: text
-  #         question_name: "Demo Audience?"
-  #         question_description: "Who is the audience for this demo"
-  #         variable: audience
-  #         required: yes
-  #   simplified_workflow_nodes:
-  #     - unified_job_template: Unregister from Insights
-  #       identifier: node996
-  #       limit: 'demo_hosts:satellite:controller'
-  #       credentials:
-  #         - Demo Provisioner Root Account
-  #       always_nodes:
-  #         - node997
-  #     - unified_job_template: Teardown Systems
-  #       identifier: node997
-  #       limit: demo_hosts
-  #       credentials:
-  #         - Demo Provisioner Peripheral Credentials
-  #       always_nodes:
-  #         - node998
-  #     - unified_job_template: Teardown Systems
-  #       identifier: node998
-  #       limit: management_plane
-  #       credentials:
-  #         - Demo Provisioner Peripheral Credentials
-  #       always_nodes:
-  #         - node999
-  #     - unified_job_template: Cleanup DNS Records
-  #       identifier: node999
-  #       limit: 'demo_hosts:management_plane'
-  #       credentials:
-  #         - Demo Provisioner Peripheral Credentials
+  - name: Teardown Patching Demo
+    organization: Demo Provisioner
+    ask_inventory_on_launch: yes
+    state: "{{ controller_state | default('present') }}"
+    extra_vars:
+      demo: patching
+    simplified_workflow_nodes:
+      - identifier: Unregister from Insights
+        unified_job_template: Unregister from Insights
+        limit: 'demo_hosts:satellite:controller'
+        credentials:
+          - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
+        # always_nodes:
+        #   - node997
+      # - unified_job_template: Teardown Systems
+      #   identifier: node997
+      #   limit: demo_hosts
+      #   credentials:
+      #     - Demo Provisioner Peripheral Credentials
+      #   always_nodes:
+      #     - node998
+      # - unified_job_template: Teardown Systems
+      #   identifier: node998
+      #   limit: management_plane
+      #   credentials:
+      #     - Demo Provisioner Peripheral Credentials
+      #   always_nodes:
+      #     - node999
+      # - unified_job_template: Cleanup DNS Records
+      #   identifier: node999
+      #   limit: 'demo_hosts:management_plane'
+      #   credentials:
+      #     - Demo Provisioner Peripheral Credentials
+
   # - name: Reset Patching Demo
   #   organization: Demo Provisioner
   #   ask_inventory_on_launch: yes
