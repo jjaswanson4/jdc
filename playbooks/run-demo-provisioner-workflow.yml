@@ -15,14 +15,32 @@
       loop_control:
         loop_var: demos
       loop: "{{ available_demos }}"
+    - name: set workflow to run | provision
+      ansible.builtin.set_fact:
+        workflow_to_run: Provision
+      when:
+        - demo_state is not defined or
+          demo_state == 'present'
+    - name: set workflow to run | teardown
+      ansible.builtin.set_fact:
+        workflow_to_run: Teardown
+      when:
+        - demo_state == 'absent'
+    - name: set workflow to run | reset
+      ansible.builtin.set_fact:
+        workflow_to_run: Reset
+      when:
+          demo_state == 'reset'
     - name: set demo provisioner workflow facts
       ansible.builtin.set_fact:
         controller_workflow_launch_jobs:
-          - name: "Provision {{ demo_display_name }} Demo"
+          - name: "{{ workflow_to_run }} {{ demo_display_name }} Demo"
             inventory: "{{ audience }} - {{ demo }} Infrastructure"
             wait: no
             extra_vars:
               audience: "{{ audience }}"
               demo_uuid: "{{ demo_uuid }}"
+              demo_state: "{{ demo_state | default('present') }}"
+              demo_context_state: "{{ demo_context_state | default('present' }}"
   roles:
     - redhat_cop.controller_configuration.workflow_launch
