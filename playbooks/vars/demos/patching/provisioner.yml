@@ -664,13 +664,14 @@ controller_workflows:
         credentials:
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
-        # always_nodes:
-        #   - node997
-      # - unified_job_template: Teardown Systems
-      #   identifier: node997
-      #   limit: demo_hosts
-      #   credentials:
-      #     - Demo Provisioner Peripheral Credentials
+        always_nodes:
+          - Teardown Demo Hosts
+      - identifier: Teardown Demo Hosts
+        unified_job_template: node997
+        limit: demo_hosts
+        credentials:
+          - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
       #   always_nodes:
       #     - node998
       # - unified_job_template: Teardown Systems
