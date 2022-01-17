@@ -5,6 +5,9 @@
     - all
   gather_facts: no
   pre_tasks:
+    - name: load demo provisioner vars
+      ansible.builtin.include_vars:
+        file: "vars/demos/{{ demo }}/provisioner.yml"
     - name: set inventories facts
       ansible.builtin.set_fact:
         controller_inventories:
