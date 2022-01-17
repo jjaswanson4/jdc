@@ -103,4 +103,11 @@
       unified_job_template: Run Demo Provisioner Workflow
       credentials:
         - Demo Provisioner Controller Credentials
-
+      success_nodes:
+        - Delete Demo Inventory
+    - identifier: Delete Demo Inventory
+      unified_job_template: Configure Demo Inventory
+      credentials:
+        - Demo Provisioner Controller Credentials
+      success_nodes:
+        - Run Demo Provisioner Workflow

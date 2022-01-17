@@ -700,7 +700,7 @@ controller_workflows:
           - Demo Provisioner Admin Credentials
           - Demo Provisioner Netbox Credentials
           - Demo Provisioner vCenter Credentials
-        extra_vars:
+        extra_data:
           cmdb_record_state: absent
         always_nodes:
           - Remove Demo Context
@@ -711,7 +711,7 @@ controller_workflows:
           - Demo Provisioner vCenter Credentials
           - Demo Provisioner IDM Credentials
           - Demo Provisioner Satellite Credentials
-        extra_vars:
+        extra_data:
           demo_context_state: absent
 
   # - name: Reset Patching Demo
