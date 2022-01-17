@@ -212,6 +212,16 @@
   execution_environment: "{{ execution_environment.name }}"
   ask_credential_on_launch: yes
   ask_variables_on_launch: yes
+- name: Remove Demo Inventory
+  organization: "{{ controller_organization }}"
+  inventory: Demo Inventory
+  limit: localhost
+  project: "{{ project }}"
+  allow_simultaneous: yes
+  playbook: playbooks/remove-demo-inventory.yml
+  execution_environment: "{{ execution_environment.name }}"
+  ask_credential_on_launch: yes
+  ask_variables_on_launch: yes
 - name: Run Demo Provisioner Workflow
   organization: "{{ controller_organization }}"
   inventory: Demo Inventory
