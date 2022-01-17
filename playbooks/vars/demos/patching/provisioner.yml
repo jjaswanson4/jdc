@@ -653,6 +653,7 @@ controller_workflows:
   - name: Teardown Patching Demo
     organization: Demo Provisioner
     ask_inventory_on_launch: yes
+    ask_variables_on_launch: yes
     state: "{{ controller_state | default('present') }}"
     extra_vars:
       demo: patching
