@@ -104,12 +104,10 @@
       credentials:
         - Demo Provisioner Controller Credentials
       success_nodes:
-        - Delete Demo Inventory
+        - Remove Demo Inventory
       extra_data:
         wait_for_workflow: yes
-    - identifier: Delete Demo Inventory
-      unified_job_template: Configure Demo Inventory
+    - identifier: Remove Demo Inventory
+      unified_job_template: Remove Demo Inventory
       credentials:
         - Demo Provisioner Controller Credentials
-      success_nodes:
-        - Run Demo Provisioner Workflow
