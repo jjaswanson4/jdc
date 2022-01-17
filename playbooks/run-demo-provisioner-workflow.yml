@@ -36,7 +36,7 @@
         controller_workflow_launch_jobs:
           - name: "{{ workflow_to_run }} {{ demo_display_name }} Demo"
             inventory: "{{ audience }} - {{ demo }} Infrastructure"
-            wait: no
+            wait: "{{ wait_for_workflow | default(false) }}"
             extra_vars:
               audience: "{{ audience }}"
               demo_uuid: "{{ demo_uuid }}"
