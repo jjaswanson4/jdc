@@ -41,6 +41,6 @@
               audience: "{{ audience }}"
               demo_uuid: "{{ demo_uuid }}"
               demo_state: "{{ demo_state | default('present') }}"
-              demo_context_state: "{{ demo_context_state | default('present' }}"
+              demo_context_state: "{{ demo_context_state | default('present') }}"
   roles:
     - redhat_cop.controller_configuration.workflow_launch
