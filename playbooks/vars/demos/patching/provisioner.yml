@@ -701,7 +701,7 @@ controller_workflows:
           - Demo Provisioner Netbox Credentials 
         extra_vars:
           cmdb_record_state: absent
-        success_nodes:
+        always_nodes:
           - Remove Demo Context
       - identifier: Remove Demo Context
         unified_job_template: Configure Demo Context
