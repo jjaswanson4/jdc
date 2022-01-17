@@ -698,7 +698,8 @@ controller_workflows:
         limit: 'demo_hosts:management_plane'
         credentials:
           - Demo Provisioner Admin Credentials
-          - Demo Provisioner Netbox Credentials 
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner vCenter Credentials
         extra_vars:
           cmdb_record_state: absent
         always_nodes:
