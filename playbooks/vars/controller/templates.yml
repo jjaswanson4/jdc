@@ -140,6 +140,7 @@
     controller_state: absent
 - name: Unregister from Insights
   organization: "{{ controller_organization }}"
+  inventory: Demo Inventory
   ask_inventory_on_launch: yes
   ask_limit_on_launch: yes
   forks: 10
