@@ -680,8 +680,9 @@ controller_workflows:
         credentials:
           - Demo Provisioner Satellite Credentials
           - Demo Provisioner Admin Credentials
+          - Demo Provisioner Netbox Credentials
         extra_data:
-          - dns_records_state: absent
+          dns_records_state: absent
         # always_nodes:
         #   - node999
       # - unified_job_template: Cleanup DNS Records
