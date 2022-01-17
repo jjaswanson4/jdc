@@ -9,3 +9,4 @@
     datacenter_name: "{{ vcenter_datacenter }}"
     folder_name: "{{ demo_uuid }}"
     parent_folder: Demos
+    state: "{{ demo_context_state }}"

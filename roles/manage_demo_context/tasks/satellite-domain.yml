@@ -11,3 +11,4 @@
       - "{{ satellite_organization }}"
     locations:
       - "{{ satellite_location }}"
+    state: "{{ demo_context_state }}"
