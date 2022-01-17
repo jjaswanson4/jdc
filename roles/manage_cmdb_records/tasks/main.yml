@@ -1,5 +1,11 @@
 ---
 
+- name: define conditional var
+  ansible.builtin.set_fact:
+    cmdb_record_state: present
+  when:
+    - cmdb_record_state is not defined
+
 - name: get auth token for netbox
   ansible.builtin.uri:
     url: "{{ netbox_url }}/api/users/tokens/provision/"
@@ -25,6 +31,7 @@
     file: manage-ip-addresses.yml
   when:
     - vm_record_created.changed
+    - cmdb_record_state == 'present'
 
 - name: update host record with ip address
   ansible.builtin.include_tasks:

@@ -15,6 +15,7 @@
           tenant: "{{ demo_uuid }}"
           cluster: "{{ vcenter_cluster }}"
           primary_ip4: "{{ allocated_ip_address.ip_address | default(omit) }}"
+        state: "{{ cmdb_record_state | default(omit) }}"
       register: vm_record_created
 
     - name: add interface to vm in cmdb
@@ -26,4 +27,6 @@
           virtual_machine: "{{ inventory_hostname }}"
           name: ens192
           mtu: 1500
+      when:
+        - cmdb_record_state == 'present'
   delegate_to: "{{ delegate_host }}"
