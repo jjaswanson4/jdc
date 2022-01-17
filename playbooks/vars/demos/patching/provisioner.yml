@@ -551,6 +551,8 @@ controller_workflows:
           - Demo Provisioner Admin Credentials
         success_nodes:
           - Deploy SAP HANA
+        failure_nodes:
+          - Send Failure Email About 'Preconfigure for HANA'
       - identifier: Send Failure Email About 'Preconfigure for HANA'
         unified_job_template: Send Provisioner Email
         extra_data:
