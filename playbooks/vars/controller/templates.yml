@@ -154,6 +154,7 @@
     ansible_become: no
 - name: Teardown Systems
   organization: "{{ controller_organization }}"
+  inventory: Demo Inventory
   ask_inventory_on_launch: yes
   ask_limit_on_launch: yes
   project: "{{ project }}"
