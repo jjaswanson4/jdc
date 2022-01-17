@@ -164,6 +164,7 @@
   ask_credential_on_launch: yes
 - name: Cleanup DNS Records
   organization: "{{ controller_organization }}"
+  inventory: Demo Inventory
   ask_inventory_on_launch: yes
   ask_limit_on_launch: yes
   project: "{{ project }}"
@@ -171,6 +172,7 @@
   playbook: playbooks/delete-dns-records.yml
   execution_environment: "{{ execution_environment.name }}"
   ask_credential_on_launch: yes
+  ask_variables_on_launch: yes
 - name: Send Provisioner Email
   organization: "{{ controller_organization }}"
   inventory: Demo Inventory
