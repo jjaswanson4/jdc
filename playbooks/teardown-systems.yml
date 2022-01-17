@@ -7,11 +7,11 @@
   tasks:
     - name: delete systems from satellite
       redhat.satellite.host:
-        username: "{{ provisioning.satellite.username }}"
-        password: "{{ provisioning.satellite.password }}"
-        server_url: "https://{{ provisioning.satellite.server | mandatory }}"
-        validate_certs: "{{ provisioning.validate_certs | default('false') }}"
+        username: "{{ satellite_username }}"
+        password: "{{ satellite_password }}"
+        server_url: "https://{{ satellite_url }}"
+        validate_certs: "{{ satellite_validate_certs | default('false') }}"
         name: "{{ inventory_hostname }}"
         state: absent
       delegate_to: localhost
-      throttle: 1
+      throttle: 2
