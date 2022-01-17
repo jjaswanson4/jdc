@@ -9,7 +9,7 @@
       redhat.satellite.host:
         username: "{{ satellite_username }}"
         password: "{{ satellite_password }}"
-        server_url: "https://{{ satellite_url }}"
+        server_url: "{{ satellite_url }}"
         validate_certs: "{{ satellite_validate_certs | default('false') }}"
         name: "{{ inventory_hostname }}"
         state: absent
