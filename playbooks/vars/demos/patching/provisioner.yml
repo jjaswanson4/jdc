@@ -680,16 +680,38 @@ controller_workflows:
         credentials:
           - Demo Provisioner Satellite Credentials
           - Demo Provisioner Admin Credentials
+        always_nodes:
+          - Cleanup DNS Records
+      - identifier: Cleanup DNS Records
+        unified_job_template: Manage DNS Records
+        limit: 'demo_hosts:management_plane'
+        credentials:
+          - Demo Provisioner Admin Credentials
           - Demo Provisioner Netbox Credentials
+          - Demo Provisioner IDM Credentials
         extra_data:
           dns_records_state: absent
-        # always_nodes:
-        #   - node999
-      # - unified_job_template: Cleanup DNS Records
-      #   identifier: node999
-      #   limit: 'demo_hosts:management_plane'
-      #   credentials:
-      #     - Demo Provisioner Peripheral Credentials
+        always_nodes:
+          - Remove CMDB Records
+      - identifier: Remove CMDB Records
+        unified_job_template: Manage CMDB Records
+        limit: 'demo_hosts:management_plane'
+        credentials:
+          - Demo Provisioner Admin Credentials
+          - Demo Provisioner Netbox Credentials 
+        extra_vars:
+          cmdb_record_state: absent
+        success_nodes:
+          - Remove Demo Context
+      - identifier: Remove Demo Context
+        unified_job_template: Configure Demo Context
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner vCenter Credentials
+          - Demo Provisioner IDM Credentials
+          - Demo Provisioner Satellite Credentials
+        extra_vars:
+          demo_context_state: absent
 
   # - name: Reset Patching Demo
   #   organization: Demo Provisioner
