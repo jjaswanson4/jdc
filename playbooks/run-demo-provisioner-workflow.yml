@@ -25,12 +25,14 @@
       ansible.builtin.set_fact:
         workflow_to_run: Teardown
       when:
+        - demo_state is defined
         - demo_state == 'absent'
     - name: set workflow to run | reset
       ansible.builtin.set_fact:
         workflow_to_run: Reset
       when:
-          demo_state == 'reset'
+        - demo_state is defined
+        - demo_state == 'reset'
     - name: set demo provisioner workflow facts
       ansible.builtin.set_fact:
         controller_workflow_launch_jobs:
