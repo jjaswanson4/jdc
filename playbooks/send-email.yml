@@ -7,6 +7,7 @@
   pre_tasks:
     - name: build failure message if needed
       ansible.builtin.set_fact:
+        provisioner_status: failed
         failure_message: "Provisioning failed at step: {{ failed_at_step }}"
       when:
         - failed_at_step is defined
