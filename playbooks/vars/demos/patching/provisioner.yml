@@ -667,7 +667,7 @@ controller_workflows:
         always_nodes:
           - Teardown Demo Hosts
       - identifier: Teardown Demo Hosts
-        unified_job_template: node997
+        unified_job_template: Teardown Systems
         limit: demo_hosts
         credentials:
           - Demo Provisioner Root Account
