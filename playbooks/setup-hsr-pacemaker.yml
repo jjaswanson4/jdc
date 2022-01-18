@@ -6,11 +6,7 @@
   pre_tasks:
     - name: check HSR
       ansible.builtin.shell:
-        cmd: >
-          su - {{ sap_hana_deployment_hana_sid | lower }}adm
-          -c
-          /usr/sap/{{ sap_hana_deployment_hana_sid }}/HDB{{ sap_hana_deployment_hana_instance_number }}/exe/Python/bin/python
-          /usr/sap/{{ sap_hana_deployment_hana_sid }}/HDB{{ sap_hana_deployment_hana_instance_number }}/exe/python_support/systemReplicationStatus.py
+        cmd: su - {{ sap_hana_deployment_hana_sid | lower }}adm -c "/usr/sap/{{ sap_hana_deployment_hana_sid }}/HDB{{ sap_hana_deployment_hana_instance_number }}/exe/Python/bin/python /usr/sap/{{ sap_hana_deployment_hana_sid }}/HDB{{ sap_hana_deployment_hana_instance_number }}/exe/python_support/systemReplicationStatus.py"
       register: hsr_check
       changed_when: no
       failed_when: no
