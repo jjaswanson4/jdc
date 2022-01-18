@@ -21,7 +21,7 @@
       become_method: su
       register: netweaver_status
       when:
-        - sid_user_exists.rc | int != 0
+        - sid_user_exists.rc | int == 0
   tasks:
     - name: tasks to install netweaver
       block:
