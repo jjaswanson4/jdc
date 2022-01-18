@@ -19,6 +19,8 @@
       become: yes
       become_user: "{{ sap_hana_deployment_hana_sid | lower }}adm"
       become_method: su
+      changed_when: no
+      failed_when: no
       register: hana_status
       when:
         - hana_user_exists.rc | int == 0
