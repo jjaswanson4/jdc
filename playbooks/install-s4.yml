@@ -49,4 +49,4 @@
           ansible.builtin.include_role:
             name: redhat_sap.sap_s4hana_deployment
       when:
-        - "sid_user_exists | int != 0 or 'OK' not in netweaver_status.stdout"
+        - "sid_user_exists.rc | int != 0 or 'OK' not in netweaver_status.stdout"
