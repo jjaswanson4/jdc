@@ -30,4 +30,4 @@
         name: redhat_sap.sap_hana_deployment
       when:
         - hana_user_exists.rc | int != 0 or
-          "'OK' not in hana_status.stdout"
+          hana_status.rc | int != 3
