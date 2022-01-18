@@ -4,6 +4,12 @@
   hosts:
     - all
   pre_tasks:
+    - name: check for sid user
+      ansible.builtin.shell:
+        cmd: "/usr/bin/grep {{ sap_s4hana_deployment_sid | lower }}adm /etc/passwd"
+      register: sid_user_exists
+      changed_when: no
+      failed_when: no
     - name: check for existing netweaver install
       ansible.builtin.shell:
         cmd: > 
@@ -11,7 +17,7 @@
           -nr {{ sap_s4hana_deployment_hana_instance_nr }}
           -function GetProcessList
       become: yes
-      become_user: "{{ sap_hana_deployment_hana_sid | lower }}adm"
+      become_user: "{{ sap_s4hana_deployment_sid | lower }}adm"
       become_method: su
       register: netweaver_status
   tasks:
@@ -41,4 +47,5 @@
           ansible.builtin.include_role:
             name: redhat_sap.sap_s4hana_deployment
       when:
-        - "'OK' not in netweaver_status.stdout"
+        - sid_user_exists | int != 0 or
+          "'OK' not in netweaver_status.stdout"
