@@ -20,6 +20,8 @@
       become_user: "{{ sap_s4hana_deployment_sid | lower }}adm"
       become_method: su
       register: netweaver_status
+      when:
+        - sid_user_exists.rc | int != 0
   tasks:
     - name: tasks to install netweaver
       block:
@@ -47,5 +49,4 @@
           ansible.builtin.include_role:
             name: redhat_sap.sap_s4hana_deployment
       when:
-        - sid_user_exists | int != 0 or
-          "'OK' not in netweaver_status.stdout"
+        - "sid_user_exists | int != 0 or 'OK' not in netweaver_status.stdout"
