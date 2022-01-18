@@ -4,6 +4,12 @@
   hosts:
     - all
   pre_tasks:
+    - name: check for hana user
+      ansible.builtin.shell:
+        cmd: "/usr/bin/grep {{ sap_hana_deployment_hana_sid | lower }}adm /etc/passwd"
+      register: hana_user_exists
+      changed_when: no
+      failed_when: no
     - name: check for existing HANA install
       ansible.builtin.shell:
         cmd: > 
@@ -14,9 +20,12 @@
       become_user: "{{ sap_hana_deployment_hana_sid | lower }}adm"
       become_method: su
       register: hana_status
+      when:
+        - hana_user_status.rc | int == 0
   tasks:
     - name: include hana deployment role
       ansible.builtin.include_role:
         name: redhat_sap.sap_hana_deployment
       when:
-        - "'OK' not in hana_status.stdout"
+        - hana_user_status.rc | int != 0 or
+          "'OK' not in hana_status.stdout"
