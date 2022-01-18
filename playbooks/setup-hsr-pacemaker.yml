@@ -48,7 +48,7 @@
       ansible.builtin.include_role:
         name: sap-hana-hsr
       when:
-        - "'this system is not a system replication site' not in hsr_check.stdout"
+        - "'this system is not a system replication site' in hsr_check.stdout"
 
   # roles:
   #   - sap-hana-ha-pacemaker
