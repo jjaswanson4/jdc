@@ -49,6 +49,8 @@
             sap_hana_ha_pacemaker_vip: "{{ vip_record_raw.json.results[0].address.split('/')[0] }}"
       delegate_to: localhost
       throttle: 5
+      when:
+        - pcs_check.rc | int != 0
     - name: run HSR role
       ansible.builtin.include_role:
         name: sap-hana-hsr
