@@ -4,39 +4,55 @@
   hosts:
     - all
   pre_tasks:
-    - name: run tasks from localhost
-      block:
-        - name: get auth token for netbox
-          ansible.builtin.uri:
-            url: "{{ netbox_url }}/api/users/tokens/provision/"
-            validate_certs: "{{ netbox_validate_certs | default(omit) }}"
-            method: POST
-            status_code: 201
-            body_format: json
-            body:
-              username: "{{ netbox_username }}"
-              password: "{{ netbox_password }}"
-          register: netbox_auth_token_raw
-        - name: set netbox token fact
-          ansible.builtin.set_fact:
-            netbox_token: "{{ netbox_auth_token_raw.json.key }}"
-        - name: get VIP record
-          ansible.builtin.uri:
-            url: "{{ netbox_url }}/api/ipam/ip-addresses/?dns_name={{ sap_s4hana_deployment_db_host }}"
-            validate_certs: "{{ netbox_validate_certs | default(omit) }}"
-            headers:
-              Authorization: Token {{ netbox_token }}
-          register: vip_record_raw
-        - name: set vip record address fact
-          ansible.builtin.set_fact:
-            sap_hana_ha_pacemaker_vip: "{{ vip_record_raw.json.results[0].address.split('/')[0] }}"
-      delegate_to: localhost
-      throttle: 5
+    - name: check HSR
+      ansible.builtin.shell:
+        cmd: "/usr/sap/{{ sap_hana_deployment_hana_sid }}/HDB{{ sap_hana_deployment_hana_instance_number }}/exe/python_support/systemReplicationStatus.py"
+        executable: "/usr/sap/{{ sap_hana_deployment_hana_sid }}/HDB{{ sap_hana_deployment_hana_instance_number }}/exe/Python/bin/python"
+      become: yes
+      become_user: "{{ sap_hana_deployment_hana_sid | lower }}adm"
+      become_method: su
+      register: hsr_check
+      changed_when: no
+      failed_when: no
+      
+    # - name: run tasks from localhost
+    #   block:
+    #     - name: get auth token for netbox
+    #       ansible.builtin.uri:
+    #         url: "{{ netbox_url }}/api/users/tokens/provision/"
+    #         validate_certs: "{{ netbox_validate_certs | default(omit) }}"
+    #         method: POST
+    #         status_code: 201
+    #         body_format: json
+    #         body:
+    #           username: "{{ netbox_username }}"
+    #           password: "{{ netbox_password }}"
+    #       register: netbox_auth_token_raw
+    #     - name: set netbox token fact
+    #       ansible.builtin.set_fact:
+    #         netbox_token: "{{ netbox_auth_token_raw.json.key }}"
+    #     - name: get VIP record
+    #       ansible.builtin.uri:
+    #         url: "{{ netbox_url }}/api/ipam/ip-addresses/?dns_name={{ sap_s4hana_deployment_db_host }}"
+    #         validate_certs: "{{ netbox_validate_certs | default(omit) }}"
+    #         headers:
+    #           Authorization: Token {{ netbox_token }}
+    #       register: vip_record_raw
+    #     - name: set vip record address fact
+    #       ansible.builtin.set_fact:
+    #         sap_hana_ha_pacemaker_vip: "{{ vip_record_raw.json.results[0].address.split('/')[0] }}"
+    #   delegate_to: localhost
+    #   throttle: 5
 
-    - name: enable the ruby 2.5 module stream
-      ansible.builtin.yum:
-        name: '@ruby:2.5/common'
+    # - name: enable the ruby 2.5 module stream
+    #   ansible.builtin.yum:
+    #     name: '@ruby:2.5/common'
+  tasks:
+    - name: run HSR role
+      ansible.builtin.include_role:
+        name: sap-hana-hsr
+      when:
+        - "'this system is not a system replication site' not in hsr_check.stdout"
 
-  roles:
-    - sap-hana-hsr
-    - sap-hana-ha-pacemaker
+  # roles:
+  #   - sap-hana-ha-pacemaker
