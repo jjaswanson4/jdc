@@ -21,11 +21,11 @@
       become_method: su
       register: hana_status
       when:
-        - hana_user_status.rc | int == 0
+        - hana_user_exists.rc | int == 0
   tasks:
     - name: include hana deployment role
       ansible.builtin.include_role:
         name: redhat_sap.sap_hana_deployment
       when:
-        - hana_user_status.rc | int != 0 or
+        - hana_user_exists.rc | int != 0 or
           "'OK' not in hana_status.stdout"
