@@ -1,6 +1,6 @@
 ---
 
-- name: configure demo inventory on controller
+- name: create demo context and run the demo provisioner workflow
   hosts:
     - all
   gather_facts: no
@@ -117,7 +117,21 @@
       ansible.builtin.set_fact:
         controller_hosts: "{{ controller_hosts_to_add }}"
         controller_groups: "{{ controller_groups_to_add }}"
+    - name: set demo provisioner workflow facts
+      ansible.builtin.set_fact:
+        controller_workflow_launch_jobs:
+          - name: "{{ workflow_to_run }} {{ demo_display_name }} Demo"
+            inventory: "Demo {{ demo_uuid }} Inventory"
+            wait: "{{ wait_for_workflow | default(false) }}"
+            extra_vars:
+              audience: "{{ audience }}"
+              demo_state: "{{ demo_state | default('present') }}"
+              demo_context_state: "{{ demo_context_state | default('present') }}"
+              provisioner: "{{ provisioner }}"
+              provisioner_email: "{{ provisioner_email }}"
   roles:
    - redhat_cop.controller_configuration.inventories
    - redhat_cop.controller_configuration.hosts
    - redhat_cop.controller_configuration.groups
+   - ../roles/manage_demo_context
+   - redhat_cop.controller_configuration.workflow_launch
