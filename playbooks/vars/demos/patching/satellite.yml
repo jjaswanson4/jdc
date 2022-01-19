@@ -81,8 +81,6 @@ satellite:
         organizations:
           - name: "{  { audience }}"
     settings:
-      # - name: default_redhat_download_policy
-      #   value: immediate
       - name: sync_connect_timeout
         value: 3600
       - name: default_proxy_download_policy
@@ -95,6 +93,8 @@ satellite:
         value: yes
       - name: destroy_vm_on_host_delete
         value: yes
+      - name: idle_timeout
+        value: 1440
     compute_resources:
       - name: vcenter.lab.msp.redhat.com
         provider: vmware
