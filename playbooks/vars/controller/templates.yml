@@ -283,7 +283,7 @@
   playbook: playbooks/configure-demo-context-and-run.yml
   execution_environment: "{{ execution_environment.name }}"
   extra_vars:
-    ansible_become: no
+    demo_context_state: present
   credentials:
     - Demo Provisioner Netbox Credentials
     - Demo Provisioner vCenter Credentials
