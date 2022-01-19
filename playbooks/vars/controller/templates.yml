@@ -278,6 +278,7 @@
     ansible_become: no
 - name: Provision Demo
   organization: "{{ controller_organization }}"
+  inventory: Demo Inventory
   project: "{{ project }}"
   allow_simultaneous: yes
   playbook: playbooks/configure-demo-context-and-run.yml
