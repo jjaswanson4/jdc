@@ -619,7 +619,7 @@ controller_workflows:
         extra_data:
           failed_at_step: Install Production Netweaver
       - identifier: Install Non-Production Netweaver
-        unified_job_template: Install Non-Production Netweaver
+        unified_job_template: Install Netweaver
         limit: 'netweaver:&non_production'
         credentials:
           - Demo Provisioner Root Account
