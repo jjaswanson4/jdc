@@ -30,13 +30,13 @@
             variables: "{{ lookup('file', 'vars/controller/inventories.yml') | from_yaml | combine( { 'demo_uuid': demo_uuid } ) | combine ( { 'audience': audience } ) }}"
     - name: add inventory to hosts
       ansible.builtin.set_fact:
-        controller_hosts_to_add: "{{ controller_hosts_to_add + [ host | combine( { 'inventory': audience + ' - ' + demo + ' Infrastructure'} ) ] }}"
+        controller_hosts_to_add: "{{ controller_hosts_to_add + [ host | combine( { 'inventory': 'Demo ' + demo_uuid + ' Inventory' } ) ] }}"
       loop_control:
         loop_var: host
       loop: "{{ controller_hosts }}"
     - name: build list of groups
       ansible.builtin.set_fact:
-        controller_groups_to_add: "{{ controller_groups_to_add | default('[]') + [ group | combine( { 'inventory': audience + ' - ' + demo + ' Infrastructure' } ) ] }}"
+        controller_groups_to_add: "{{ controller_groups_to_add | default('[]') + [ group | combine( { 'inventory': 'Demo ' + demo_uuid + ' Inventory' } ) ] }}"
       loop_control:
         loop_var: group
       loop: "{{ controller_groups }}"
