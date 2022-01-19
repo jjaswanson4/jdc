@@ -25,7 +25,7 @@
     - name: set inventories facts
       ansible.builtin.set_fact:
         controller_inventories:
-          - name: "{{ audience }} - {{ demo }} Infrastructure"
+          - name: "Demo {{ demo_uuid }} Inventory"
             organization: "{{ controller_organization }}"
             variables: "{{ lookup('file', 'vars/controller/inventories.yml') | from_yaml | combine( { 'demo_uuid': demo_uuid } ) | combine ( { 'audience': audience } ) }}"
     - name: add inventory to hosts
@@ -46,11 +46,11 @@
           ansible.builtin.set_fact:
             satellite_host:
               - name: "{{ audience | lower }}-{{ demo }}-satellite.{{ demo_uuid }}.{{ base_dns_suffix }}"
-                inventory: "{{ audience }} - {{ demo }} Infrastructure"
+                inventory: "Demo {{ demo_uuid }} Inventory"
                 variables: "{{ lookup('file', 'vars/demos/' + demo + '/satellite.yml') | from_yaml }}"
             satellite_group:
               - name: satellite
-                inventory: "{{ audience }} - {{ demo }} Infrastructure"
+                inventory: "Demo {{ demo_uuid }} Inventory"
                 hosts:
                   - "{{ audience | lower }}-{{ demo }}-satellite.{{ demo_uuid }}.{{ base_dns_suffix }}"
         - name: add satellite host to main list
@@ -64,11 +64,11 @@
           ansible.builtin.set_fact:
             controller_host:
               - name: "{{ audience | lower }}-{{ demo }}-controller.{{ demo_uuid }}.{{ base_dns_suffix }}"
-                inventory: "{{ audience }} - {{ demo }} Infrastructure"
+                inventory: "Demo {{ demo_uuid }} Inventory"
                 variables: "{{ lookup('file', 'vars/demos/' + demo + '/controller.yml') | from_yaml }}"
             controller_group:
               - name: controller
-                inventory: "{{ audience }} - {{ demo }} Infrastructure"
+                inventory: "Demo {{ demo_uuid }} Inventory"
                 hosts:
                   - "{{ audience | lower }}-{{ demo }}-controller.{{ demo_uuid }}.{{ base_dns_suffix }}"
         - name: add controller host to main list
@@ -80,21 +80,21 @@
       ansible.builtin.set_fact:
         satellite_group:
           - name: satellite
-            inventory: "{{ audience }} - {{ demo }} Infrastructure"
+            inventory: "Demo {{ demo_uuid }} Inventory"
       when:
         - satellite_configuration_file is not defined
     - name: define controller group even if empty
       ansible.builtin.set_fact:
         controller_group:
           - name: controller
-            inventory: "{{ audience }} - {{ demo }} Infrastructure"
+            inventory: "Demo {{ demo_uuid }} Inventory"
       when:
         - controller_configuration_file is not defined
     - name: load in management_plane group
       ansible.builtin.set_fact:
         management_plane_group:
           - name: management_plane
-            inventory: "{{ audience }} - {{ demo }} Infrastructure"
+            inventory: "Demo {{ demo_uuid }} Inventory"
             variables: "{{ lookup('file', 'vars/controller/groups.yml') | from_yaml }}"
             children:
               - controller
@@ -106,7 +106,7 @@
       ansible.builtin.set_fact:
         localhost_host:
           - name: localhost
-            inventory: "{{ audience }} - {{ demo }} Infrastructure"
+            inventory: "Demo {{ demo_uuid }} Inventory"
             variables:
               ansible_connection: local
               ansible_python_interpreter: '{  { ansible_playbook_python }}'
