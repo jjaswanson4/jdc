@@ -580,7 +580,7 @@ controller_workflows:
           - Demo Provisioner Admin Credentials
           - Demo Provisioner Netbox Credentials
         success_nodes:
-          - Install Netweaver
+          - Install Production Netweaver
           - Prepare New Content
         failure_nodes:
           - Send Failure Email About 'Configure Production SAP HANA HSR and Pacemaker'
@@ -596,7 +596,7 @@ controller_workflows:
           - Demo Provisioner Admin Credentials
           - Demo Provisioner Netbox Credentials
         success_nodes:
-          - Install Netweaver
+          - Install Non-Production Netweaver
           - Prepare New Content
         failure_nodes:
           - Send Failure Email About 'Configure Non-Production SAP HANA HSR and Pacemaker'
@@ -604,21 +604,34 @@ controller_workflows:
         unified_job_template: Send Provisioner Email
         extra_data:
           failed_at_step: Configure Non-Production SAP HANA HSR and Pacemaker
-      - identifier: Install Netweaver
+      - identifier: Install Production Netweaver
         unified_job_template: Install Netweaver
-        limit: netweaver
+        limit: 'netweaver:&production'
         credentials:
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
-        all_parents_must_converge: yes
         success_nodes:
           - Reinstate HSR
         failure_nodes:
-          - Send Failure Email About 'Install Netweaver'
-      - identifier: Send Failure Email About 'Install Netweaver'
+          - Send Failure Email About 'Install Production Netweaver'
+      - identifier: Send Failure Email About 'Install Production Netweaver'
         unified_job_template: Send Provisioner Email
         extra_data:
-          failed_at_step: Install Netweaver
+          failed_at_step: Install Production Netweaver
+      - identifier: Install Non-Production Netweaver
+        unified_job_template: Install Non-Production Netweaver
+        limit: 'netweaver:&non_production'
+        credentials:
+          - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
+        success_nodes:
+          - Reinstate HSR
+        failure_nodes:
+          - Send Failure Email About 'Install Non-Production Netweaver'
+      - identifier: Send Failure Email About 'Install Non-Production Netweaver'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Install Non-Production Netweaver
       - identifier: Reinstate HSR
         unified_job_template: Reinstate HSR
         limit: 'hana:&primary'
@@ -629,6 +642,7 @@ controller_workflows:
           - Send Success Email
         failure_nodes:
           - Send Failure Email About 'Reinstate HSR'
+        all_parents_must_converge: yes
       - identifier: Send Failure Email About 'Reinstate HSR'
         unified_job_template: Send Provisioner Email
         extra_data:
