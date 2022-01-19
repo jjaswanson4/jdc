@@ -19,6 +19,32 @@
             demo_uuid: "{{ demo_uuid_raw.stdout }}"
       when:
         - demo_uuid is not defined
+    - name: match demo to display name
+      ansible.builtin.set_fact:
+        demo_display_name: "{{ demos.display_name }}"
+      when:
+        - demo == demos.name
+      loop_control:
+        loop_var: demos
+      loop: "{{ available_demos }}"
+    - name: set workflow to run | provision
+      ansible.builtin.set_fact:
+        workflow_to_run: Provision
+      when:
+        - demo_state is not defined or
+          demo_state == 'present'
+    - name: set workflow to run | teardown
+      ansible.builtin.set_fact:
+        workflow_to_run: Teardown
+      when:
+        - demo_state is defined
+        - demo_state == 'absent'
+    - name: set workflow to run | reset
+      ansible.builtin.set_fact:
+        workflow_to_run: Reset
+      when:
+        - demo_state is defined
+        - demo_state == 'reset'
     - name: load demo provisioner vars into tmp var
       ansible.builtin.include_vars:
         file: "vars/demos/{{ demo }}/provisioner.yml"
