@@ -535,7 +535,8 @@ controller_workflows:
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
         success_nodes:
-          - Install Netweaver
+          - Install Production Netweaver
+          - Install Non-Production Netweaver
           - Prepare New Content
         failure_nodes:
           - Send Failure Email About 'Preconfigure for Netweaver'
@@ -614,6 +615,7 @@ controller_workflows:
           - Reinstate HSR
         failure_nodes:
           - Send Failure Email About 'Install Production Netweaver'
+        all_parents_must_converge: yes
       - identifier: Send Failure Email About 'Install Production Netweaver'
         unified_job_template: Send Provisioner Email
         extra_data:
@@ -628,6 +630,7 @@ controller_workflows:
           - Reinstate HSR
         failure_nodes:
           - Send Failure Email About 'Install Non-Production Netweaver'
+        all_parents_must_converge: yes
       - identifier: Send Failure Email About 'Install Non-Production Netweaver'
         unified_job_template: Send Provisioner Email
         extra_data:
