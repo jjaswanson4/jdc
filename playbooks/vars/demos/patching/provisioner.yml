@@ -640,6 +640,7 @@ controller_workflows:
         credentials:
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
+          - Demo Provisioner vCenter Credentials
         all_parents_must_converge: yes
         success_nodes:
           - Send Success Email
@@ -654,6 +655,7 @@ controller_workflows:
         all_parents_must_converge: yes
         extra_data:
           provisioner_status: success
+
   - name: Teardown Patching Demo
     organization: Demo Provisioner
     ask_inventory_on_launch: yes
