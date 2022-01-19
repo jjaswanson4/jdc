@@ -7,6 +7,8 @@
   vars:
     controller_hosts_to_add: []
     controller_groups_to_add: []
+  vars_files:
+    - vars/demos.yml
   pre_tasks:
     - name: create unique id for demo if not existing
       block:
