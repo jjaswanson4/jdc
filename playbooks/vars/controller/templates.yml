@@ -202,16 +202,16 @@
   execution_environment: "{{ execution_environment.name }}"
   ask_credential_on_launch: yes
   ask_variables_on_launch: yes
-- name: Configure Demo Inventory
-  organization: "{{ controller_organization }}"
-  inventory: Demo Inventory
-  limit: localhost
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/configure-demo-inventory.yml
-  execution_environment: "{{ execution_environment.name }}"
-  ask_credential_on_launch: yes
-  ask_variables_on_launch: yes
+# - name: Configure Demo Inventory
+#   organization: "{{ controller_organization }}"
+#   inventory: Demo Inventory
+#   limit: localhost
+#   project: "{{ project }}"
+#   allow_simultaneous: yes
+#   playbook: playbooks/configure-demo-inventory.yml
+#   execution_environment: "{{ execution_environment.name }}"
+#   ask_credential_on_launch: yes
+#   ask_variables_on_launch: yes
 - name: Remove Demo Inventory
   organization: "{{ controller_organization }}"
   inventory: Demo Inventory
@@ -276,3 +276,55 @@
   ask_credential_on_launch: yes
   extra_vars:
     ansible_become: no
+- name: Provision Demo
+  organization: "{{ controller_organization }}"
+  project: "{{ project }}"
+  allow_simultaneous: yes
+  playbook: playbooks/configure-demo-context-and-run.yml
+  execution_environment: "{{ execution_environment.name }}"
+  extra_vars:
+    ansible_become: no
+  credentials:
+    - Demo Provisioner Netbox Credentials
+    - Demo Provisioner vCenter Credentials
+    - Demo Provisioner IDM Credentials
+    - Demo Provisioner Satellite Credentials
+    - Demo Provisioner Controller Credentials
+    - Demo Provisioner Admin Credentials
+  survey_enabled: yes
+  survey:
+    name: ''
+    description: ''
+    spec:
+      - type: multiplechoice
+        question_name: Which Demo?
+        question_description: What demo should be provisioned?
+        variable: demo
+        choices:
+          - patching
+          - s4hana-deployment
+          - compliance
+          - idm-ad
+        required: yes
+      - type: text
+        question_name: "Demo Audience?"
+        question_description: "Who is the audience for this demo?"
+        variable: audience
+        required: yes
+      - type: text
+        question_name: "Provisioner?"
+        question_description: "Who is provisioning this demo?"
+        variable: provisioner
+        required: yes
+        default: 'Josh Swanson'
+      - type: text
+        question_name: "Provisioner's Email?"
+        question_description: "What is the provisioner's email address?"
+        variable: provisioner_email
+        required: yes
+        default: 'joshswanson@redhat.com'
+      - type: text
+        question_name: "Demo UUID?"
+        question_description: "If this demo exists, what is the unique ID?"
+        variable: demo_uuid
+        required: no
