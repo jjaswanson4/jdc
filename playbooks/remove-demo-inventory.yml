@@ -11,7 +11,7 @@
     - name: set inventories facts
       ansible.builtin.set_fact:
         controller_inventories:
-          - name: "{{ audience }} - {{ demo }} Infrastructure"
+          - name: "Demo {{ demo_uuid }} Inventory"
             organization: "{{ controller_organization }}"
             state: absent
   roles:
