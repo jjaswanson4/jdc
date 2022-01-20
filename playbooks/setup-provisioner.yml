@@ -30,9 +30,6 @@
           controller_credential_types: "{{ lookup('file', controller_resources + 'credential-types.yml') | from_yaml }}"
           controller_credentials: "{{ lookup('file', controller_resources + 'credentials.yml') | from_yaml }}"
           controller_execution_environments: "{{ lookup('file', controller_resources + 'execution-environments.yml') | from_yaml }}"
-          #controller_inventories: "{{ lookup('file', controller_resources + 'inventories.yml') | from_yaml }}"
-          #controller_hosts: "{{ lookup('file', controller_resources + 'hosts.yml') | from_yaml }}"
-          #controller_groups: "{{ lookup('file', controller_resources + 'groups.yml') | from_yaml }}"
           controller_projects: "{{ lookup('file', controller_resources + 'projects.yml') | from_yaml }}"
           controller_templates: "{{ lookup('file', controller_resources + 'templates.yml') | from_yaml }}"
           controller_workflows: "{{ lookup('file', controller_resources + 'workflows.yml') | from_yaml }}"
@@ -43,9 +40,6 @@
         controller_credential_types: "{{ preconfigured.controller_credential_types + controller_credential_types }}"
         controller_credentials: "{{ preconfigured.controller_credentials + controller_credentials }}"
         controller_execution_environments: "{{ preconfigured.controller_execution_environments + controller_execution_environments }}"
-        #controller_inventories: "{{ preconfigured.controller_inventories + controller_inventories }}"
-        #controller_hosts: "{{ preconfigured.controller_hosts + controller_hosts }}"
-        #controller_groups: "{{ preconfigured.controller_groups + controller_groups }}"
         controller_projects: "{{ preconfigured.controller_projects + controller_projects }}"
         controller_templates: "{{ preconfigured.controller_templates + controller_templates }}"
         controller_workflows: "{{ preconfigured.controller_workflows + controller_workflows }}"
@@ -56,9 +50,6 @@
         controller_credential_types: "{{ lookup('vars', 'controller_credential_types') | default(omit) }}"
         controller_credentials: "{{ lookup('vars', 'controller_credentials') | default(omit) }}"
         controller_execution_environments: "{{ lookup('vars', 'controller_execution_environments') | default(omit) }}"
-        # controller_inventories: "{{ lookup('vars', 'controller_inventories') | default(omit) }}"
-        # controller_hosts: "{{ lookup('vars', 'controller_hosts') | default(omit) }}"
-        # controller_groups: "{{ lookup('vars', 'controller_groups') | default(omit) }}"
         controller_projects: "{{ lookup('vars', 'controller_projects') | default(omit) }}"
         controller_templates: "{{ lookup('vars', 'controller_templates') | default(omit) }}"
         controller_workflows: "{{ lookup('vars', 'controller_workflows') | default(omit) }}"
@@ -68,9 +59,6 @@
     - redhat_cop.controller_configuration.credential_types
     - redhat_cop.controller_configuration.credentials
     - redhat_cop.controller_configuration.execution_environments
-    #- redhat_cop.controller_configuration.inventories
-    #- redhat_cop.controller_configuration.hosts
-    #- redhat_cop.controller_configuration.groups
     - redhat_cop.controller_configuration.projects
     - redhat_cop.controller_configuration.job_templates
     - redhat_cop.controller_configuration.workflow_job_templates
