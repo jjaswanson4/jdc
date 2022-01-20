@@ -8,4 +8,4 @@ available_demos:
   - name: compliance
     display_name: Compliance
   - name: idm-ad
-    display_name: IDM-AD
+    display_name: IDM-AD Integration
