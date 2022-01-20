@@ -498,6 +498,10 @@ controller_groups:
         - cockpit-sosreport
         - cockpit-networkmanager
         - cockpit-packagekit
+  - name: demo_hosts
+    children:
+      - rhel
+      - windows
 
 controller_templates:
   - name: Provision Windows Systems
@@ -545,6 +549,8 @@ controller_workflows:
   - name: Provision IDM-AD Integration Demo
     organization: "{{ controller_organization }}"
     state: "{{ controller_state | default('present') }}"
+    ask_inventory_on_launch: yes
+    ask_variables_on_launch: yes
     extra_vars:
       demo: idm-ad
     simplified_workflow_nodes:
