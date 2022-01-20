@@ -364,8 +364,9 @@ controller_groups:
       vm:
         folder: "/{  { vcenter_datacenter }}/Demos/{  { demo_uuid }}"
         os: server2019
-        cpus: "{  { cpus }}"
-        memory_mb: "{  { memory_mb }}"
+        hardware:
+          num_cpus: "{  { cpus }}"
+          memory_mb: "{  { memory_mb }}"
         networks:
           - name: vlan146
             ip: "{  { ip_address }}"
@@ -579,8 +580,8 @@ controller_workflows:
         credentials:
           - Demo Provisioner Netbox Credentials
           - Demo Provisioner IDM Credentials
-        # success_nodes:
-        #   - Provision Satellite
+        success_nodes:
+          - Provision Domain Controllers
         #   - Provision Controller
         failure_nodes:
           - Send Failure Email About 'Create DNS Records'
@@ -588,16 +589,16 @@ controller_workflows:
         unified_job_template: Send Provisioner Email
         extra_data:
           failed_at_step: Create DNS Records
-      # - identifier: Provision Windows Systems
-      #   unified_job_template: Provision Windows Systems
-      #   limit: windows
-      #   credentials:
-      #     - Demo Provisioner vCenter Credentials
-      #     - Demo Provisioner Local Administrator
-  #       success_nodes:
-  #         - node102
-  #       failure_nodes:
-  #         - node1101
+      - identifier: Provision Domain Controllers
+        unified_job_template: Provision Windows Systems
+        limit: windows
+        credentials:
+          - Demo Provisioner vCenter Credentials
+          - Demo Provisioner Local Administrator
+        # success_nodes:
+        #   - node102
+        # failure_nodes:
+        #   - node1101
   #     - unified_job_template: Create Active Directory Forest
   #       identifier: node102
   #       inventory: "{{ inventory }}"
