@@ -4,31 +4,20 @@
   hosts:
     - all
   gather_facts: no
-  pre_tasks:
-    - name: add host and custom DNS entries
-      ansible.builtin.set_fact:
-        dns:
-          server: "{{ dns.server }}"
-          password: "{{ dns_pass }}"
-          records: "{{ dns.records  + custom_dns_records }}"
-      when:
-        - custom_dns_records is defined
-    - name: manage dns records
-      ansible.builtin.include_role:
-        name: jjaswanson4.utilities.idm_dns_records
   tasks:
     - name: provision windows vm
       community.vmware.vmware_guest:
-        hostname: "{{ vcenter.server }}"
-        username: "{{ vcenter.username }}"
+        hostname: "{{ vcenter_server }}"
+        username: "{{ vcenter_username }}"
         password: "{{ vcenter_password }}"
         validate_certs: no
-        datacenter: "{{ vm.datacenter }}"
-        cluster: "{{ vm.cluster }}"
+        datacenter: "{{ vm_datacenter }}"
+        cluster: "{{ vm_cluster }}"
         name: "{{ inventory_hostname }}"
         folder: "{{ vm.folder }}"
         template: "{{ vm.os }}-template"
         networks: "{{ vm.networks }}"
+        hardware: "{{ vm.hardware }}"
         customization: "{{ vm.customization }}"
         wait_for_customization: yes
       delegate_to: localhost        
