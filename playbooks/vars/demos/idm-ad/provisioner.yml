@@ -577,10 +577,10 @@ controller_workflows:
         #   - Provision Controller
         failure_nodes:
           - Send Failure Email About 'Create DNS Records'
-      # - identifier: Send Failure Email About 'Create DNS Records'
-      #   unified_job_template: Send Provisioner Email
-      #   extra_data:
-      #     failed_at_step: Create DNS Records
+      - identifier: Send Failure Email About 'Create DNS Records'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Create DNS Records
       # - identifier: Provision Windows Systems
       #   unified_job_template: Provision Windows Systems
       #   limit: windows
