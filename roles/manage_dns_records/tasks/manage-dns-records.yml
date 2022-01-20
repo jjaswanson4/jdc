@@ -7,7 +7,7 @@
         ipa_host: "{{ idm_host }}"
         ipa_pass: "{{ idm_password }}"
         validate_certs: "{{ idm_validate_certs | default(false) }}"
-        zone_name: "{{ demo_uuid }}.{{ base_dns_suffix }}"
+        zone_name: "{{ inventory_hostname.split('.')[1:] | join('.') }}"
         record_name: "{{ inventory_hostname.split('.')[0] }}"
         record_value: "{{ ip_address }}"
         record_type: A
