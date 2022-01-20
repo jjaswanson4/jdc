@@ -11,8 +11,8 @@
         username: "{{ vcenter_username }}"
         password: "{{ vcenter_password }}"
         validate_certs: no
-        datacenter: "{{ vm_datacenter }}"
-        cluster: "{{ vm_cluster }}"
+        datacenter: "{{ vcenter_datacenter }}"
+        cluster: "{{ vcenter_cluster }}"
         name: "{{ inventory_hostname }}"
         folder: "{{ vm.folder }}"
         template: "{{ vm.os }}-template"
