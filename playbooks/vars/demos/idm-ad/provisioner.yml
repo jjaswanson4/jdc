@@ -595,6 +595,7 @@ controller_workflows:
         credentials:
           - Demo Provisioner vCenter Credentials
           - Demo Provisioner Local Administrator
+          - Demo Provisioner Netbox Credentials
         # success_nodes:
         #   - node102
         # failure_nodes:
