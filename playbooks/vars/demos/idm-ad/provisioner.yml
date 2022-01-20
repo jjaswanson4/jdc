@@ -355,12 +355,14 @@ controller_groups:
       ansible_connection: winrm
       ansible_winrm_transport: ntlm
       ansible_winrm_server_cert_validation: ignore
+      cpus: 4
+      memory_mb: 8192
       dns_zone: "ad.{{ demo_uuid }}.{{ base_dns_suffix }}"
       vm:
         folder: "/{  { vcenter_datacenter }}/Demos/{  { demo_uuid }}"
         os: server2019
-        cpus: 4
-        memory_mb: 8192
+        cpus: "{  { cpus }}"
+        memory_mb: "{  { memory_mb }}"
         networks:
           - name: vlan146
             ip: "{  { ip_address }}"
