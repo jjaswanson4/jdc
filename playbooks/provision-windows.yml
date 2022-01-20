@@ -1,0 +1,74 @@
+---
+
+- name: provision managed windows hosts
+  hosts:
+    - all
+  gather_facts: no
+  pre_tasks:
+    - name: add host and custom DNS entries
+      ansible.builtin.set_fact:
+        dns:
+          server: "{{ dns.server }}"
+          password: "{{ dns_pass }}"
+          records: "{{ dns.records  + custom_dns_records }}"
+      when:
+        - custom_dns_records is defined
+    - name: manage dns records
+      ansible.builtin.include_role:
+        name: jjaswanson4.utilities.idm_dns_records
+  tasks:
+    - name: provision windows vm
+      community.vmware.vmware_guest:
+        hostname: "{{ vcenter.server }}"
+        username: "{{ vcenter.username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: no
+        datacenter: "{{ vm.datacenter }}"
+        cluster: "{{ vm.cluster }}"
+        name: "{{ inventory_hostname }}"
+        folder: "{{ vm.folder }}"
+        template: "{{ vm.os }}-template"
+        networks: "{{ vm.networks }}"
+        customization: "{{ vm.customization }}"
+        wait_for_customization: yes
+      delegate_to: localhost        
+    
+    - name: ensure vm can be connected to
+      ansible.builtin.wait_for_connection:
+        timeout: 120
+        sleep: 5
+
+- name: enforce base system configuration
+  hosts:
+    - all
+  tasks:
+    - name: set hostname
+      ansible.windows.win_hostname:
+        name: "{{ inventory_hostname.split('.')[0] }}"
+      notify: reboot
+    - name: speed up powershell
+      ansible.windows.win_powershell:
+        script: |
+          function Optimize-PowershellAssemblies {
+            # NGEN powershell assembly, improves startup time of powershell by 10x
+            $old_path = $env:path
+            try {
+              $env:path = [Runtime.InteropServices.RuntimeEnvironment]::GetRuntimeDirectory()
+              [AppDomain]::CurrentDomain.GetAssemblies() | % {
+                if (! $_.location) {continue}
+                $Name = Split-Path $_.location -leaf
+                if ($Name.startswith("Microsoft.PowerShell.")) {
+                  Write-Progress -Activity "Native Image Installation" -Status "$name"
+                  ngen install $_.location | % {"`t$_"}
+                }
+              }
+            } finally {
+              $env:path = $old_path
+            }
+          }
+          Optimize-PowershellAssemblies
+  handlers:
+    - name: reboot if needed
+      ansible.windows.win_reboot:
+      listen:
+        - reboot

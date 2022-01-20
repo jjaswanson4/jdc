@@ -1,0 +1,27 @@
+---
+
+- name: populate active directory with entities
+  hosts:
+    - all
+  tasks:
+    - name: create OU in AD
+      ansible.windows.win_powershell:
+        script: New-ADOrganizationalUnit -Name "Groups" -Path "DC=AD,DC=JOSH,DC=LAB,DC=MSP,DC=REDHAT,DC=COM"
+    - name: create groups in AD
+      community.windows.win_domain_group:
+        name: "{{ group.name }}"
+        ou: "{{ group.ou | default('OU=Groups,DC=ad,DC=josh,DC=lab,DC=msp,DC=redhat,DC=com') }}"
+        scope: "{{ group.scope | default('global') }}"
+      loop: "{{ ad.groups }}"
+      loop_control:
+        loop_var: group
+    - name: create users in AD
+      community.windows.win_domain_user:
+        name: "{{ user.name }}"
+        upn: "{{ user.name }}@{{ dns_zone }}"
+        groups: "{{ user.groups | default(omit) }}"
+        password: "{{ user.password | default(ansible_password) }}"
+        password_never_expires: yes
+      loop: "{{ ad.users }}"
+      loop_control:
+        loop_var: user

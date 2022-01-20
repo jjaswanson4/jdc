@@ -1,0 +1,29 @@
+---
+
+ 
+- name: create forset on the pdc
+  hosts:
+    - all
+  pre_tasks:
+    - name: set DNS client
+      ansible.windows.win_dns_client:
+        adapter_names: 'Ethernet*'
+        dns_servers:
+          - 127.0.0.1
+          - "{{ vm.networks[0].dns_servers[0] }}"
+  tasks:
+    - name: create AD forest and domain
+      ansible.windows.win_domain:
+        dns_domain_name: "{{ dns_zone }}"
+        safe_mode_password: "{{ ansible_password }}"
+      register: forest_creation
+  post_tasks:
+    - name: reboot if needed
+      ansible.windows.win_reboot:
+      when:
+        - forest_creation.reboot_required
+    - name: allow AD to fully come up
+      ansible.builtin.pause:
+        minutes: 5
+      when:
+        - forest_creation.reboot_required

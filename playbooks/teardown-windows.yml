@@ -1,0 +1,29 @@
+---
+
+- name: teardown windows systems
+  hosts:
+    - all
+  gather_facts: no
+  tasks:
+    - name: throttle requests to vcenter API
+      block:
+        - name: power-off windows vm
+          community.vmware.vmware_guest:
+            hostname: "{{ vcenter.server }}"
+            username: "{{ vcenter.username }}"
+            password: "{{ vcenter_password }}"
+            validate_certs: no
+            datacenter: "{{ vm.datacenter }}"
+            name: "{{ inventory_hostname }}"
+            state: powered-off
+        - name: teardown windows vm
+          community.vmware.vmware_guest:
+            hostname: "{{ vcenter.server }}"
+            username: "{{ vcenter.username }}"
+            password: "{{ vcenter_password }}"
+            validate_certs: no
+            datacenter: "{{ vm.datacenter }}"
+            name: "{{ inventory_hostname }}"
+            state: absent
+      throttle: 2
+      delegate_to: localhost   
