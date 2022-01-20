@@ -8,3 +8,17 @@
     zone_name: "{{ demo_uuid }}.{{ base_dns_suffix }}"
     state: "{{ demo_context_state | default('present') }}"
   ignore_errors: true # possible bug in module
+
+- name: create custom DNS zones for demo
+  community.general.ipa_dnszone:
+    ipa_host: "{{ idm_host }}"
+    ipa_pass: "{{ idm_password }}"
+    validate_certs: "{{ idm_validate_certs | default(false) }}"
+    zone_name: "{{ dns_zone }}"
+    state: "{{ demo_context_state | default('present') }}"
+  ignore_errors: true # possible bug in module
+  loop_control:
+    loop_var: dns_zone
+  loop: "{{ custom_dns_zones }}"
+  when:
+    - custom_dns_zones is defined
