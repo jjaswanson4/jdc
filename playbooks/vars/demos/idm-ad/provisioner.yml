@@ -53,11 +53,11 @@ controller_hosts:
   - name: "ad-dc2.ad.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: "idm01.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: "idm02.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  - name: trust-client-1.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  - name: trust-client-2.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  - name: trust-client-3.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  - name: trust-client-4.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  - name: trust-client-5.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "trust-client-1.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "trust-client-2.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "trust-client-3.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "trust-client-4.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "trust-client-5.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
 
 controller_groups:
   - name: pdc
@@ -426,8 +426,8 @@ controller_groups:
           - idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
           - lab.msp.redhat.com
         nameservers:
-          - "{  { hostvars['idm01.idm.josh.lab.msp.redhat.com']['ansible_host'] }}"
-          - "{  { hostvars['idm02.idm.josh.lab.msp.redhat.com']['ansible_host'] }}"
+          - "{  { hostvars['ad-dc1.ad.' + demo_uuid + '.' + base_dns_suffix]['ansible_primary_ipv4']['address'] }}"
+          - "{  { hostvars['ad-dc2.ad.' + demo_uuid + '.' + base_dns_suffix]['ansible_primary_ipv4']['address'] }}"
           - 10.15.108.101
         options:
           - 'timeout:1'
