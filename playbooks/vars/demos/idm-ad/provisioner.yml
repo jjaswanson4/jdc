@@ -73,6 +73,8 @@ controller_groups:
       - pdc
       - domain_controllers
     variables:
+      custom_dns_zones:
+        - "ad.{{ demo_uuid }}.{{ base_dns_suffix }}"
       ad:
         groups:
           - name: infra_architects
@@ -449,7 +451,9 @@ controller_groups:
       ipaadmin_password: "{  { ansible_password }}"
       ipadm_password: "{  { ansible_password }}"
       ipaserver_domain: "idm.{{ demo_uuid | upper }}.{{ base_dns_suffix | upper }}" 
-      ipaserver_realm: "IDM.{{ demo_uuid | upper }}.{{ base_dns_suffix | upper }}" 
+      ipaserver_realm: "IDM.{{ demo_uuid | upper }}.{{ base_dns_suffix | upper }}"
+      custom_dns_zones:
+        - "idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: rhel
     children:
       - idm
