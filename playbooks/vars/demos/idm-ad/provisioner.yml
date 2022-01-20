@@ -412,28 +412,26 @@ controller_groups:
           - 'timeout:1'
   - name: clients
     hosts:
-      - trust-client-1.idm.josh.lab.msp.redhat.com
-      - trust-client-2.idm.josh.lab.msp.redhat.com
-      - trust-client-3.idm.josh.lab.msp.redhat.com
-      - trust-client-4.idm.josh.lab.msp.redhat.com
-      - trust-client-5.idm.josh.lab.msp.redhat.com
+      - "trust-client-1.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
+      - "trust-client-2.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
+      - "trust-client-3.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
+      - "trust-client-4.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
+      - "trust-client-5.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
     variables:
       cpus: 2
       memory_mb: 4096
       ipaclient_domain: idm.josh.lab.msp.redhat.com
       dns_resolv:
         search_domains:
-          - idm.josh.lab.msp.redhat.com
-          - josh.lab.msp.redhat.com
+          - idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
           - lab.msp.redhat.com
         nameservers:
           - "{  { hostvars['idm01.idm.josh.lab.msp.redhat.com']['ansible_host'] }}"
           - "{  { hostvars['idm02.idm.josh.lab.msp.redhat.com']['ansible_host'] }}"
-          - 10.15.120.4
+          - 10.15.108.101
         options:
           - 'timeout:1'
   - name: infra
-    inventory: "{{ inventory }}"
     children:
       - master
       - replicas
@@ -441,7 +439,6 @@ controller_groups:
       crypto_policies_policy: DEFAULT:AD-SUPPORT
       crypto_policies_reboot_ok: yes
   - name: idm
-    inventory: "{{ inventory }}"
     children:
       - infra
       - clients
@@ -449,10 +446,9 @@ controller_groups:
       ipaadmin_principal: admin
       ipaadmin_password: "{  { ansible_password }}"
       ipadm_password: "{  { ansible_password }}"
-      ipaserver_domain: idm.josh.lab.msp.redhat.com
-      ipaserver_realm: IDM.JOSH.LAB.MSP.REDHAT.COM
+      ipaserver_domain: "idm.{{ demo_uuid | upper }}.{{ base_dns_suffix | upper }}" 
+      ipaserver_realm: "IDM.{{ demo_uuid | upper }}.{{ base_dns_suffix | upper }}" 
   - name: rhel
-    inventory: "{{ inventory }}"
     children:
       - idm
     variables:
