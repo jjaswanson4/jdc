@@ -551,8 +551,6 @@ controller_workflows:
     state: "{{ controller_state | default('present') }}"
     extra_vars:
       demo: idm-ad
-    survey_enabled: yes
-    survey: "{{ lookup('file', 'resources/controller/provisioner-workflow-survey.yml') | from_yaml }}"
     simplified_workflow_nodes:
       - identifier: Create CMDB Records
         unified_job_template: Manage CMDB Records
