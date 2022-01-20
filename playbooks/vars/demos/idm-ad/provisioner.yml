@@ -34,6 +34,9 @@ controller_configuration_file: "{{ vars_files_path }}/controller.yml"
 satellite_configuration_file: "{{ vars_files_path }}/satellite.yml"
 
 base_dns_suffix: demos.lcl
+custom_dns_zones:
+  - "ad.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - "idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
 
 # This toggles secure logging, for example: when configuring credentials on Ansible Controller.
 # Since I'm using my own instance, secure logging isn't a requirement.
@@ -73,8 +76,6 @@ controller_groups:
       - pdc
       - domain_controllers
     variables:
-      custom_dns_zones:
-        - "ad.{{ demo_uuid }}.{{ base_dns_suffix }}"
       ad:
         groups:
           - name: infra_architects
@@ -452,8 +453,6 @@ controller_groups:
       ipadm_password: "{  { ansible_password }}"
       ipaserver_domain: "idm.{{ demo_uuid | upper }}.{{ base_dns_suffix | upper }}" 
       ipaserver_realm: "IDM.{{ demo_uuid | upper }}.{{ base_dns_suffix | upper }}"
-      custom_dns_zones:
-        - "idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: rhel
     children:
       - idm
