@@ -362,7 +362,7 @@ controller_groups:
       memory_mb: 8192
       dns_zone: "ad.{{ demo_uuid }}.{{ base_dns_suffix }}"
       vm:
-        folder: "/{  { vcenter_datacenter }}/Demos/{  { demo_uuid }}"
+        folder: "/Datacenters/{  { vcenter_datacenter }}/vm/Demos/{  { demo_uuid }}"
         os: server2019
         hardware:
           num_cpus: "{  { cpus }}"
@@ -596,6 +596,7 @@ controller_workflows:
           - Demo Provisioner vCenter Credentials
           - Demo Provisioner Local Administrator
           - Demo Provisioner Netbox Credentials
+          - Demo Provisioner Admin Credentials
         # success_nodes:
         #   - node102
         # failure_nodes:
