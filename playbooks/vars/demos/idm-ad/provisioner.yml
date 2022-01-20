@@ -1,0 +1,754 @@
+---
+
+# By default, the org 'Demo Provisioner' is created and resources are configured there,
+# Use this variable to override this behavior.
+# For example, overriding to 'Default' will put the resources into the default controller organization.
+controller_organization: Demo Provisioner
+
+# This is the default project name. It is a var so demos can import specific job templates and override the project locally.
+# Change this to change the name of the project for the provisioner job templates.
+project: Josh's Demos Collection
+
+# This is the default prefix for assets created for this demo.
+# Change this variable to use a different prefix.
+demo_prefix: IDM-AD Integration
+
+# This is the realitive path to the vars files for this demo.
+# Typically this contains a vars file for the provisioner, Satellite, and Controller.
+vars_files_path: "vars/demos/{{ demo }}"
+
+# This is the execution environment used for this demo provisioner.
+# This execution environment will automatically be configured in Controller.
+execution_environment:
+  name: Josh's Demos Collection EE
+  registry: "{{ ee.registry }}"
+  image: joshs-demos-collection-ee
+  credential: "{{ ee.credential }}"
+
+# This is the information used for the instance of Controller for the demo.
+# This can be the same instance as where the provisioner is deployed, but it's not recommended.
+controller_configuration_file: "{{ vars_files_path }}/controller.yml"
+
+# This is the information used for the instance of Satellite for the demo.
+# This can be the same instance as where the provisioner is deployed, but it's not recommended.
+satellite_configuration_file: "{{ vars_files_path }}/satellite.yml"
+
+base_dns_suffix: demos.lcl
+
+# This toggles secure logging, for example: when configuring credentials on Ansible Controller.
+# Since I'm using my own instance, secure logging isn't a requirement.
+controller_configuration_credentials_secure_logging: no
+
+# These are where demo specific components are defined, in hash form. These will automatically be added to the common resources.
+# If there is no need for a specific, resource, simply define an empty var, such as `controller_organizations: []`
+controller_organizations: []
+controller_credential_types: []
+controller_execution_environments: []
+controller_inventories: []
+controller_projects: []
+controller_credentials: []
+
+controller_hosts:
+  - name: "ad-dc1.ad.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "ad-dc2.ad.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "idm01.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "idm02.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: trust-client-1.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: trust-client-2.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: trust-client-3.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: trust-client-4.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: trust-client-5.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
+
+controller_groups:
+  - name: pdc
+    hosts:
+      - "ad-dc1.ad.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: domain_controllers
+    hosts:
+      - "ad-dc2.ad.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    variables:
+      pdc_ip_address: "{  { hostvars['ad-dc1.ad. + demo_uuid + '.' + base_dns_suffix]['ip_address'] }}"
+  - name: active_directory
+    children:
+      - pdc
+      - domain_controllers
+    variables:
+      ad:
+        groups:
+          - name: infra_architects
+          - name: rhel_admins
+          - name: app-team-1
+          - name: app-team-2
+          - name: app-team-3
+          - name: app-team-4
+          - name: app-team-5
+        users:
+          - name: Olivia
+            groups:
+              - infra_architects
+          - name: Liam
+            groups:
+              - infra_architects
+          - name: Emma
+            groups:
+              - infra_architects
+          - name: Noah
+            groups:
+              - infra_architects
+          - name: Amelia
+            groups:
+              - infra_architects
+          - name: Oliver
+            groups:
+              - rhel_admins
+          - name: Ava
+            groups:
+              - rhel_admins
+          - name: Elijah
+            groups:
+              - rhel_admins
+          - name: Sophia
+            groups:
+              - rhel_admins
+          - name: Lucas
+            groups:
+              - rhel_admins
+          - name: Charlotte
+            groups:
+              - app-team-1
+          - name: Levi
+            groups:
+              - app-team-1
+          - name: Isabella
+            groups:
+              - app-team-1
+          - name: Mason
+            groups:
+              - app-team-1
+          - name: Mia
+            groups:
+              - app-team-1
+          - name: James
+            groups:
+              - app-team-1
+              - app-team-2
+          - name: Luna
+            groups:
+              - app-team-1
+              - app-team-2
+          - name: Asher
+            groups:
+              - app-team-1
+              - app-team-2
+          - name: Harper
+            groups:
+              - app-team-1
+              - app-team-2
+          - name: Leo
+            groups:
+              - app-team-1
+              - app-team-2
+          - name: Gianna
+            groups:
+              - app-team-2
+          - name: Mateo
+            groups:
+              - app-team-2
+          - name: Evelyn
+            groups:
+              - app-team-2
+          - name: Ethan
+            groups:
+              - app-team-2
+          - name: Aria
+            groups:
+              - app-team-2
+          - name: Benjamin
+            groups:
+              - app-team-3
+          - name: Ella
+            groups:
+              - app-team-3
+          - name: Jack
+            groups:
+              - app-team-3
+          - name: Ellie
+            groups:
+              - app-team-3
+          - name: Aiden
+            groups:
+              - app-team-3
+          - name: Mila
+            groups:
+              - app-team-3
+              - app-team-4
+              - app-team-5
+          - name: Logan
+            groups:
+              - app-team-3
+              - app-team-4
+              - app-team-5
+          - name: Layla
+            groups:
+              - app-team-3
+              - app-team-4
+              - app-team-5
+          - name: Grayson
+            groups:
+              - app-team-3
+              - app-team-4
+              - app-team-5
+          - name: Ryilee
+            groups:
+              - app-team-3
+              - app-team-4
+              - app-team-5
+          - name: Leriel
+            groups:
+              - app-team-4
+              - app-team-5
+          - name: Camila
+            groups:
+              - app-team-4
+              - app-team-5
+          - name: Jackson
+            groups:
+              - app-team-4
+              - app-team-5
+          - name: Avery
+            groups:
+              - app-team-4
+              - app-team-5
+          - name: Wyatt
+            groups:
+              - app-team-4
+              - app-team-5
+          - name: Lily
+            groups:
+              - app-team-5
+          - name: Henry
+            groups:
+              - app-team-5
+          - name: Scarlett
+            groups:
+              - app-team-5
+          - name: Sebastian
+            groups:
+              - app-team-5
+          - name: Sofia
+            groups:
+              - app-team-5
+          - name: Carter
+            groups:
+              - app-team-1
+              - app-team-5
+          - name: Nova
+            groups:
+              - app-team-1
+              - app-team-5
+          - name: Daniel
+            groups:
+              - app-team-1
+              - app-team-5
+          - name: Aurora
+            groups:
+              - app-team-1
+              - app-team-5
+          - name: William
+            groups:
+              - app-team-1
+              - app-team-5
+          - name: Chloe
+            groups:
+              - app-team-1
+              - app-team-2
+              - app-team-5
+          - name: Owen
+            groups:
+              - app-team-1
+              - app-team-2
+              - app-team-5
+          - name: Riley
+            groups:
+              - app-team-1
+              - app-team-2
+              - app-team-5
+          - name: Alexander
+            groups:
+              - app-team-1
+              - app-team-2
+              - app-team-5
+          - name: Abigail
+            groups:
+              - app-team-1
+              - app-team-2
+              - app-team-5
+          - name: Julian
+            groups:
+              - app-team-1
+              - app-team-2
+              - app-team-3
+              - app-team-5
+          - name: Hazel
+            groups:
+              - app-team-1
+              - app-team-2
+              - app-team-3
+              - app-team-5
+          - name: Ezra
+            groups:
+              - app-team-1
+              - app-team-2
+              - app-team-3
+              - app-team-5
+          - name: Nora
+            groups:
+              - app-team-1
+              - app-team-2
+              - app-team-3
+              - app-team-5
+          - name: Michael
+            groups:
+              - app-team-1
+              - app-team-2
+              - app-team-3
+              - app-team-5
+          - name: Zoey
+            groups:
+              - app-team-1
+              - app-team-2
+              - app-team-3
+              - app-team-4
+              - app-team-5
+          - name: Muhammad
+            groups:
+              - app-team-1
+              - app-team-2
+              - app-team-3
+              - app-team-4
+              - app-team-5
+          - name: Elena
+            groups:
+              - app-team-1
+              - app-team-2
+              - app-team-3
+              - app-team-4
+              - app-team-5
+          - name: Hudson
+            groups:
+              - app-team-1
+              - app-team-2
+              - app-team-3
+              - app-team-4
+              - app-team-5
+          - name: Penelope
+            groups:
+              - app-team-1
+              - app-team-2
+              - app-team-3
+              - app-team-4
+              - app-team-5    
+  - name: windows
+    children:
+      - active_directory
+    variables:
+      ansible_connection: winrm
+      ansible_winrm_transport: ntlm
+      ansible_winrm_server_cert_validation: ignore
+      dns_zone: "ad.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      vm:
+        folder: "/{  { vcenter_datacenter }}/Demos/{  { demo_uuid }}"
+        os: server2019
+        cpus: 4
+        memory_mb: 8192
+        networks:
+          - name: vlan146
+            ip: "{  { ip_address }}"
+            netmask: 255.255.252.0
+            gateway: 10.15.123.254
+            dns_servers:
+              - 10.15.108.101
+              - 10.15.108.102
+            type: static
+        customization:
+          dns_servers:
+            - 10.15.108.101
+            - 10.15.108.102
+          dns_suffix: "ad.{  { demo_uuid }}.{  { base_dns_suffix }}"
+          hostname: "{  { inventory_hostname.split('.')[0] }}"
+          password: "{  { admin_password }}"
+          timezone: '020'
+  - name: master
+    hosts:
+      - "idm01.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    variables:
+      ipaserver_setup_dns: yes
+      ipaserver_allow_zone_overlap: yes
+      ipaserver_setup_firewalld: no
+      ipaserver_forwarders:
+        - 10.11.5.19
+        - 10.2.32.1
+      ipaserver_setup_adtrust: yes
+  - name: replicas
+    hosts:
+      - "idm02.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
+    variables:
+      ipareplica_setup_dns: yes
+      ipareplica_allow_zone_overlap: yes
+      ipareplica_setup_firewalld: no
+      ipareplica_forwarders:
+        - 10.11.5.19
+        - 10.2.32.1
+      ipareplica_setup_adtrust: yes
+      ipareplica_setup_ca: yes
+      dns_resolv:
+        search_domains:
+          - lab.msp.redhat.com
+        nameservers:
+          - "{  { hostvars['idm01.idm.' + demo_uuid + '.' + base_dns_suffix]['ansible_primary_ipv4']['address'] }}"
+          - 10.15.108.101
+          - 10.15.108.102
+        options:
+          - 'timeout:1'
+  - name: clients
+    hosts:
+      - trust-client-1.idm.josh.lab.msp.redhat.com
+      - trust-client-2.idm.josh.lab.msp.redhat.com
+      - trust-client-3.idm.josh.lab.msp.redhat.com
+      - trust-client-4.idm.josh.lab.msp.redhat.com
+      - trust-client-5.idm.josh.lab.msp.redhat.com
+    variables:
+      cpus: 2
+      memory_mb: 4096
+      ipaclient_domain: idm.josh.lab.msp.redhat.com
+      dns_resolv:
+        search_domains:
+          - idm.josh.lab.msp.redhat.com
+          - josh.lab.msp.redhat.com
+          - lab.msp.redhat.com
+        nameservers:
+          - "{  { hostvars['idm01.idm.josh.lab.msp.redhat.com']['ansible_host'] }}"
+          - "{  { hostvars['idm02.idm.josh.lab.msp.redhat.com']['ansible_host'] }}"
+          - 10.15.120.4
+        options:
+          - 'timeout:1'
+  - name: infra
+    inventory: "{{ inventory }}"
+    children:
+      - master
+      - replicas
+    variables:
+      crypto_policies_policy: DEFAULT:AD-SUPPORT
+      crypto_policies_reboot_ok: yes
+  - name: idm
+    inventory: "{{ inventory }}"
+    children:
+      - infra
+      - clients
+    variables:
+      ipaadmin_principal: admin
+      ipaadmin_password: "{  { ansible_password }}"
+      ipadm_password: "{  { ansible_password }}"
+      ipaserver_domain: idm.josh.lab.msp.redhat.com
+      ipaserver_realm: IDM.JOSH.LAB.MSP.REDHAT.COM
+  - name: rhel
+    inventory: "{{ inventory }}"
+    children:
+      - idm
+    variables:
+      cpus: 4
+      memory_mb: 8192
+      os: rhel8
+      application: general
+      lifecycle_environment: production
+      satellite_url: "https://{  { groups['satellite'][0] }}"
+      satellite_username: "{  { admin_username }}"
+      satellite_password: "{  { admin_password }}"
+      satellite_validate_certs: no
+      satellite_organization: "{  { audience }}"
+      satellite_location: "{  { audience }}"
+      provisioning:
+        host_group: "{  { os }}"
+        organization: "{  { audience }}"
+        location: "{  { audience }}"
+        method: bootdisk
+        dns_domain: "{  { demo_uuid }}.{  { base_dns_suffix }}"
+        cpus: "{  { cpus }}"
+        memory_mb: "{  { memory_mb }}"
+        activation_keys: "ak-{  { application }}-{  { os }}-{  { lifecycle_environment }}"
+      firewall:
+        state: stopped
+        enabled: no
+      static_dns_entries:
+        - fqdn: satellite.lab.msp.redhat.com
+          short_name: satellite
+          ip_address: 10.15.108.104
+      config_files:
+        - hosts
+        - resolv.conf
+      timesync_ntp_servers:
+        - hostname: 0.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 1.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 2.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 3.rhel.pool.ntp.org
+          iburst: yes
+      run_additional_roles: yes
+      cockpit_packages:
+        - cockpit-storaged
+        - cockpit-pcp
+        - cockpit-sosreport
+        - cockpit-networkmanager
+        - cockpit-packagekit
+
+controller_templates:
+  - name: Provision Windows Systems
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: "{{ project }}"
+    playbook: playbooks/provision-windows.yml
+    execution_environment: "{{ execution_environment.name }}"
+    ask_credential_on_launch: yes
+  - name: Create Active Directory Forest
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: "{{ project }}"
+    playbook: playbooks/create-forest.yml
+    execution_environment: "{{ execution_environment.name }}"
+    ask_credential_on_launch: yes
+  - name: Add Domain Controller to Forest
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: "{{ project }}"
+    playbook: playbooks/add-domain-controller.yml
+    execution_environment: "{{ execution_environment.name }}"
+    ask_credential_on_launch: yes
+  - name: Populate Active Directory
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: "{{ project }}"
+    playbook: playbooks/populate-ad.yml
+    execution_environment: "{{ execution_environment.name }}"
+    ask_credential_on_launch: yes
+  - name: Teardown Windows Systems
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: "{{ project }}"
+    playbook: playbooks/teardown-windows.yml
+    execution_environment: "{{ execution_environment.name }}"
+    ask_credential_on_launch: yes 
+
+controller_workflows:
+  - name: Provision IDM-AD Integration Demo
+    organization: "{{ controller_organization }}"
+    state: "{{ controller_state | default('present') }}"
+    extra_vars:
+      demo: idm-ad
+    survey_enabled: yes
+    survey: "{{ lookup('file', 'resources/controller/provisioner-workflow-survey.yml') | from_yaml }}"
+    simplified_workflow_nodes:
+      - identifier: Create CMDB Records
+        unified_job_template: Manage CMDB Records
+        limit: 'demo_hosts:management_plane'
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner vCenter Credentials
+        success_nodes:
+          - Create DNS Records
+        failure_nodes:
+          - Send Failure Email About 'Create CMDB Records'
+      - identifier: Send Failure Email About 'Create CMDB Records'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Create CMDB Records
+      - identifier: Create DNS Records
+        unified_job_template: Manage DNS Records
+        limit: 'demo_hosts:management_plane'
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner IDM Credentials
+        # success_nodes:
+        #   - Provision Satellite
+        #   - Provision Controller
+        failure_nodes:
+          - Send Failure Email About 'Create DNS Records'
+      # - identifier: Send Failure Email About 'Create DNS Records'
+      #   unified_job_template: Send Provisioner Email
+      #   extra_data:
+      #     failed_at_step: Create DNS Records
+      # - identifier: Provision Windows Systems
+      #   unified_job_template: Provision Windows Systems
+      #   limit: windows
+      #   credentials:
+      #     - Demo Provisioner vCenter Credentials
+      #     - Demo Provisioner Local Administrator
+  #       success_nodes:
+  #         - node102
+  #       failure_nodes:
+  #         - node1101
+  #     - unified_job_template: Create Active Directory Forest
+  #       identifier: node102
+  #       inventory: "{{ inventory }}"
+  #       limit: pdc
+  #       credentials:
+  #         - "{{ demo_prefix }} Local Administrator"
+  #       success_nodes:
+  #         - node103
+  #         - node104
+  #       failure_nodes:
+  #         - node1102
+  #     - unified_job_template: Populate Active Directory
+  #       identifier: node103
+  #       inventory: "{{ inventory }}"
+  #       limit: pdc
+  #       credentials:
+  #         - "{{ demo_prefix }} Domain Administrator"
+  #       failure_nodes:
+  #         - node1103
+  #       success_nodes:
+  #         - node999
+  #     - unified_job_template: Add Domain Controller to Forest
+  #       identifier: node104
+  #       inventory: "{{ inventory }}"
+  #       limit: domain_controllers
+  #       credentials:
+  #         - "{{ demo_prefix }} Local Administrator"
+  #       failure_nodes:
+  #         - node1104
+  #       success_nodes:
+  #         - node999
+  #     - unified_job_template: Provision Systems
+  #       identifier: node201
+  #       inventory: "{{ inventory }}"
+  #       limit: controller
+  #       credentials:
+  #         - "{{ demo_prefix }} Peripheral Credentials"
+  #         - "{{ demo_prefix }} Root Account"
+  #       success_nodes:
+  #         - node202
+  #       failure_nodes:
+  #         - node1201
+  #     - unified_job_template: Install Ansible Controller
+  #       identifier: node202
+  #       inventory: "{{ inventory }}"
+  #       limit: controller
+  #       credentials:
+  #         - "{{ demo_prefix }} Peripheral Credentials"
+  #         - "{{ demo_prefix }} Root Account"
+  #       success_nodes:
+  #         - node203
+  #       failure_nodes:
+  #         - node1202
+  #     - unified_job_template: Configure Ansible Controller
+  #       identifier: node203
+  #       inventory: "{{ inventory }}"
+  #       limit: controller
+  #       credentials:
+  #         - "{{ demo_prefix }} Peripheral Credentials"
+  #       success_nodes:
+  #         - node999
+  #       failure_nodes:
+  #         - node1203
+  #     - unified_job_template: Provision Systems
+  #       identifier: node301
+  #       inventory: "{{ inventory }}"
+  #       limit: rhel
+  #       credentials:
+  #         - "{{ demo_prefix }} Peripheral Credentials"
+  #         - "{{ demo_prefix }} Root Account"
+  #       success_nodes:
+  #         - node999
+  #       failure_nodes:
+  #         - node1301
+  #     - unified_job_template: Send Provisioner Email
+  #       identifier: node999
+  #       all_parents_must_converge: yes
+  #       extra_data:
+  #         provisioner_status: success
+  #     - unified_job_template: Send Provisioner Email
+  #       identifier: node1101
+  #       extra_data:
+  #         provisioner_status: failed
+  #     - unified_job_template: Send Provisioner Email
+  #       identifier: node1102
+  #       extra_data:
+  #         provisioner_status: failed
+  #     - unified_job_template: Send Provisioner Email
+  #       identifier: node1103
+  #       extra_data:
+  #         provisioner_status: failed
+  #     - unified_job_template: Send Provisioner Email
+  #       identifier: node1104
+  #       extra_data:
+  #         provisioner_status: failed
+  #     - unified_job_template: Send Provisioner Email
+  #       identifier: node1201
+  #       extra_data:
+  #         provisioner_status: failed
+  #     - unified_job_template: Send Provisioner Email
+  #       identifier: node1202
+  #       extra_data:
+  #         provisioner_status: failed
+  #     - unified_job_template: Send Provisioner Email
+  #       identifier: node1203
+  #       extra_data:
+  #         provisioner_status: failed
+  #     - unified_job_template: Send Provisioner Email
+  #       identifier: node1301
+  #       extra_data:
+  #         provisioner_status: failed
+
+  # - name: Teardown IDM-AD Integration Demo
+  #   organization: Demo Provisioner
+  #   state: "{{ controller_state | default('present') }}"
+  #   extra_vars:
+  #     demo: idm-ad
+  #   survey_enabled: yes
+  #   survey:
+  #     name: ''
+  #     description: ''
+  #     spec:
+  #       - type: text
+  #         question_name: "Demo Audience?"
+  #         question_description: "Who is the audience for this demo"
+  #         variable: audience
+  #         required: yes
+  #   simplified_workflow_nodes:
+  #     - unified_job_template: Unregister from Insights
+  #       identifier: node101
+  #       inventory: "{{ inventory }}"
+  #       limit: 'rhel:controller'
+  #       credentials:
+  #         - "{{ demo_prefix }} Root Account"
+  #       always_nodes:
+  #         - node102
+  #     - unified_job_template: Teardown Systems
+  #       identifier: node102
+  #       inventory: "{{ inventory }}"
+  #       limit: 'rhel:controller'
+  #       credentials:
+  #         - "{{ demo_prefix }} Peripheral Credentials"
+  #       always_nodes:
+  #         - node999
+  #     - unified_job_template: Teardown Windows Systems
+  #       identifier: node201
+  #       inventory: "{{ inventory }}"
+  #       limit: windows
+  #       credentials:
+  #         - "{{ demo_prefix }} Peripheral Credentials"
+  #       always_nodes:
+  #         - node999
+  #     - unified_job_template: Cleanup DNS Records
+  #       identifier: node999
+  #       inventory: "{{ inventory }}"
+  #       limit: 'rhel:controller:windows'
+  #       credentials:
+  #         - "{{ demo_prefix }} Peripheral Credentials"
+  #       all_parents_must_converge: yes
