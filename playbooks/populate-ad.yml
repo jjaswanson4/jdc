@@ -24,11 +24,11 @@
           )
           New-ADOrganizationalUnit -Name "Groups" -Path $Path
         parameters:
-          LDAP_Path: "{{ ['AD='] | product(dns_zone | upper | split('.')) | map('join') | join(',') }}"
+          LDAP_Path: "{{ ['DC='] | product(dns_zone | upper | split('.')) | map('join') | join(',') }}"
     - name: create groups in AD
       community.windows.win_domain_group:
         name: "{{ group.name }}"
-        ou: "{{ group.ou | default(['AD='] | product(dns_zone | upper | split('.')) | map('join') | join(',')) }}"
+        ou: "{{ group.ou | default(['DC='] | product(dns_zone | upper | split('.')) | map('join') | join(',')) }}"
         scope: "{{ group.scope | default('global') }}"
       loop: "{{ ad.groups }}"
       loop_control:
