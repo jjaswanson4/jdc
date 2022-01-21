@@ -362,7 +362,7 @@ controller_groups:
       memory_mb: 8192
       dns_zone: "ad.{{ demo_uuid }}.{{ base_dns_suffix }}"
       vm:
-        folder: "/Datacenters/{  { vcenter_datacenter }}/vm/Demos/{  { demo_uuid }}"
+        folder: "/{  { vcenter_datacenter }}/vm/Demos/{  { demo_uuid }}"
         os: server2019
         hardware:
           num_cpus: "{  { cpus }}"
@@ -597,16 +597,20 @@ controller_workflows:
           - Demo Provisioner Local Administrator
           - Demo Provisioner Netbox Credentials
           - Demo Provisioner Admin Credentials
-        # success_nodes:
-        #   - node102
-        # failure_nodes:
-        #   - node1101
-  #     - unified_job_template: Create Active Directory Forest
-  #       identifier: node102
-  #       inventory: "{{ inventory }}"
-  #       limit: pdc
-  #       credentials:
-  #         - "{{ demo_prefix }} Local Administrator"
+        success_nodes:
+          - Create Active Directory Forest
+        failure_nodes:
+          - Send Failure Email About 'Provision Windows Systems'
+      - identifier: Send Failure Email About 'Provision Windows Systems'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Provision Windows Systems
+      - identifier: Create Active Directory Forest
+        unified_job_template: Create Active Directory Forest
+        limit: pdc
+        credentials:
+          - Demo Provisioner Local Administrator
+          - Demo Provisioner Admin Credentials
   #       success_nodes:
   #         - node103
   #         - node104
