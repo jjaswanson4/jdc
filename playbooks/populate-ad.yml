@@ -3,14 +3,32 @@
 - name: populate active directory with entities
   hosts:
     - all
+  gather_facts: no
+  pre_tasks:
+    - name: get ip addresses from cmdb
+      ansible.builtin.include_role:
+        name: ../roles/get_ip_address
+    - name: set AD login username
+      ansible.builtin.set_fact:
+        ansible_user: "Administrator@{{ dns_zone }}"
+    - name: run the setup module
+      ansible.builtin.setup:
   tasks:
     - name: create OU in AD
       ansible.windows.win_powershell:
-        script: New-ADOrganizationalUnit -Name "Groups" -Path "DC=AD,DC=JOSH,DC=LAB,DC=MSP,DC=REDHAT,DC=COM"
+        script: |
+          [CmdletBinding()]
+          param (
+              [String]
+              $LDAP_Path
+          )
+          New-ADOrganizationalUnit -Name "Groups" -Path $Path
+      parameters:
+        LDAP_Path: "{{ ['AD='] | product(dns_zone | upper | split('.')) | map('join') | join(',') }}"
     - name: create groups in AD
       community.windows.win_domain_group:
         name: "{{ group.name }}"
-        ou: "{{ group.ou | default('OU=Groups,DC=ad,DC=josh,DC=lab,DC=msp,DC=redhat,DC=com') }}"
+        ou: "{{ group.ou | default(['AD='] | product(dns_zone | upper | split('.')) | map('join') | join(',')) }}"
         scope: "{{ group.scope | default('global') }}"
       loop: "{{ ad.groups }}"
       loop_control:
