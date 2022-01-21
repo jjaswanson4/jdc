@@ -23,8 +23,8 @@
               $LDAP_Path
           )
           New-ADOrganizationalUnit -Name "Groups" -Path $Path
-      parameters:
-        LDAP_Path: "{{ ['AD='] | product(dns_zone | upper | split('.')) | map('join') | join(',') }}"
+        parameters:
+          LDAP_Path: "{{ ['AD='] | product(dns_zone | upper | split('.')) | map('join') | join(',') }}"
     - name: create groups in AD
       community.windows.win_domain_group:
         name: "{{ group.name }}"
