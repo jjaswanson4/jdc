@@ -5,6 +5,35 @@
   hosts:
     - all
   pre_tasks:
+    - name: run tasks from localhost
+      block:
+        - name: get auth token for netbox
+          ansible.builtin.uri:
+            url: "{{ netbox_url }}/api/users/tokens/provision/"
+            validate_certs: "{{ netbox_validate_certs | default(omit) }}"
+            method: POST
+            status_code: 201
+            body_format: json
+            body:
+              username: "{{ netbox_username }}"
+              password: "{{ netbox_password }}"
+          register: netbox_auth_token_raw
+          throttle: 5
+        - name: set netbox token fact
+          ansible.builtin.set_fact:
+            netbox_token: "{{ netbox_auth_token_raw.json.key }}"
+        - name: get cmdb record
+          ansible.builtin.uri:
+            url: "{{ netbox_url }}/api/virtualization/virtual-machines/?name={{ inventory_hostname }}"
+            validate_certs: "{{ netbox_validate_certs | default(omit) }}"
+            headers:
+              Authorization: Token {{ netbox_token }}
+          throttle: 5
+          register: cmdb_record_raw
+        - name: set ip address fact
+          ansible.builtin.set_fact:
+            ip_address: "{{ cmdb_record_raw.json.results[0].primary_ip.address.split('/')[0] }}"
+      delegate_to: localhost
     - name: set DNS client
       ansible.windows.win_dns_client:
         adapter_names: 'Ethernet*'
