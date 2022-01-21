@@ -8,7 +8,7 @@
     - name: determine content views
       ansible.builtin.set_fact:
         content_views: "{{ satellite.katello[0].content_views | json_query('[*].name') }}"
-        content_view_filter: "{{ satellite.katello[0].content_views[0].filters[0].name }}"
+        content_view_filter: "{{ satellite.katello[0].content_views[1].filters[0].name }}"
         composite_content_view: composite-rhel8
   tasks:
     - name: update content views for this patch cycle
