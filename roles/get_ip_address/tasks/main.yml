@@ -1,4 +1,4 @@
 ---
 
-- name: get-netbox-token.yml
-- name: get-ip-address.yml
+- ansible.builtin.import_tasks: get-netbox-token.yml
+- ansible.builtin.import_tasks: get-ip-address.yml
