@@ -638,9 +638,10 @@ controller_workflows:
       - identifier: Prepare New Content
         unified_job_template: Prepare New Content
         credentials:
-          - Demo Provisioner Root Account
-          - Demo Provisioner Admin Credentials
           - Demo Provisioner vCenter Credentials
+          - Demo Provisioner Admin Credentials
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner Root Account
         all_parents_must_converge: yes
         success_nodes:
           - Send Success Email
