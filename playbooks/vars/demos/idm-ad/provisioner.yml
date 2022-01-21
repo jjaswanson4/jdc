@@ -612,21 +612,29 @@ controller_workflows:
         credentials:
           - Demo Provisioner Local Administrator
           - Demo Provisioner Admin Credentials
-  #       success_nodes:
-  #         - node103
-  #         - node104
-  #       failure_nodes:
-  #         - node1102
-  #     - unified_job_template: Populate Active Directory
-  #       identifier: node103
-  #       inventory: "{{ inventory }}"
-  #       limit: pdc
-  #       credentials:
-  #         - "{{ demo_prefix }} Domain Administrator"
-  #       failure_nodes:
-  #         - node1103
-  #       success_nodes:
-  #         - node999
+          - Demo Provisioner vCenter Credentials
+          - Demo Provisioner Netbox Credentials
+        success_nodes:
+          - Populate Active Directory
+        #   - Add Domain Controller to Forest
+        failure_nodes:
+          - Send Failure Email About 'Create Active Directory Forest'
+      - identifier: Send Failure Email About 'Create Active Directory Forest'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Create Active Directory Forest
+      - identifier: Populate Active Directory
+        unified_job_template: Populate Active Directory
+        limit: pdc
+        credentials:
+          - Demo Provisioner Local Administrator
+          - Demo Provisioner Admin Credentials
+          - Demo Provisioner vCenter Credentials
+          - Demo Provisioner Netbox Credentials
+        # failure_nodes:
+        #   - node1103
+        # success_nodes:
+        #   - node999
   #     - unified_job_template: Add Domain Controller to Forest
   #       identifier: node104
   #       inventory: "{{ inventory }}"
