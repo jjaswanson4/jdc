@@ -1,0 +1,4 @@
+---
+
+- name: get-netbox-token.yml
+- name: get-ip-address.yml

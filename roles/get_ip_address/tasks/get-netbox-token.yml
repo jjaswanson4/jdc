@@ -1,0 +1,20 @@
+---
+
+- name: run tasks from localhost
+  block:
+    - name: get auth token for netbox
+      ansible.builtin.uri:
+        url: "{{ netbox_url }}/api/users/tokens/provision/"
+        validate_certs: "{{ netbox_validate_certs | default(omit) }}"
+        method: POST
+        status_code: 201
+        body_format: json
+        body:
+          username: "{{ netbox_username }}"
+          password: "{{ netbox_password }}"
+      register: netbox_auth_token_raw
+      throttle: 5
+    - name: set netbox token fact
+      ansible.builtin.set_fact:
+        netbox_token: "{{ netbox_auth_token_raw.json.key }}"
+  delegate_to: localhost
