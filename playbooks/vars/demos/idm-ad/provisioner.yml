@@ -376,6 +376,7 @@ controller_groups:
               - 10.15.108.101
               - 10.15.108.102
             type: static
+            connected: yes
         customization:
           dns_servers:
             - 10.15.108.101
