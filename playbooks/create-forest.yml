@@ -15,7 +15,7 @@
     - name: create AD forest and domain
       ansible.windows.win_domain:
         dns_domain_name: "{{ dns_zone }}"
-        safe_mode_password: "{{ ansible_password }}"
+        safe_mode_password: "{{ admin_password }}"
       register: forest_creation
   post_tasks:
     - name: reboot if needed
