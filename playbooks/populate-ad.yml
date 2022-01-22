@@ -6,7 +6,7 @@
   gather_facts: no
   vars:
     ou_path: "{{ ['DC='] | product(dns_zone | upper | split('.')) | map('join') | join(',') }}"
-    groups_ou: "OU=Groups,{{ OU_Path }}"
+    groups_ou: "OU=Groups,{{ ou_path }}"
   tasks:
     - name: create OU in AD
       ansible.windows.win_powershell:
