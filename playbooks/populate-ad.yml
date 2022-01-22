@@ -5,8 +5,8 @@
     - all
   gather_facts: no
   vars:
-    OU_Path: "{{ ['DC='] | product(dns_zone | upper | split('.')) | map('join') | join(',') }}"
-    Group_OU: "OU=Groups,{{ OU_Path }}"
+    ou_path: "{{ ['DC='] | product(dns_zone | upper | split('.')) | map('join') | join(',') }}"
+    groups_ou: "OU=Groups,{{ OU_Path }}"
   tasks:
     - name: create OU in AD
       ansible.windows.win_powershell:
@@ -14,15 +14,15 @@
           [CmdletBinding()]
           param (
               [String]
-              $OU_Path
+              $groups_ou
           )
-          New-ADOrganizationalUnit -Name "Groups" -Path $OU_Path
+          New-ADOrganizationalUnit -Name "Groups" -Path $groups_ou
         parameters:
-          OU_Path: "{{ OU_Path }}"
+          groups_ou: "{{ groups_ou }}"
     - name: create groups in AD
       community.windows.win_domain_group:
         name: "{{ group.name }}"
-        ou: "{{ Group_OU }}"
+        ou: "{{ groups_ou }}"
         scope: "{{ group.scope | default('global') }}"
       loop: "{{ ad.groups }}"
       loop_control:
