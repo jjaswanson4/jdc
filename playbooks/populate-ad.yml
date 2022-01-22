@@ -14,11 +14,11 @@
           [CmdletBinding()]
           param (
               [String]
-              $groups_ou
+              $ou_path
           )
-          New-ADOrganizationalUnit -Name "Groups" -Path $groups_ou
+          New-ADOrganizationalUnit -Name "Groups" -Path $ou_path
         parameters:
-          groups_ou: "{{ groups_ou }}"
+          ou_path: "{{ ou_path }}"
     - name: create groups in AD
       community.windows.win_domain_group:
         name: "{{ group.name }}"
