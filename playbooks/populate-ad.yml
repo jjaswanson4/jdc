@@ -4,15 +4,9 @@
   hosts:
     - all
   gather_facts: no
-  pre_tasks:
-    - name: get ip addresses from cmdb
-      ansible.builtin.include_role:
-        name: ../roles/get_ip_address
-    - name: set AD login username
-      ansible.builtin.set_fact:
-        ansible_user: "Administrator@{{ dns_zone }}"
-    - name: run the setup module
-      ansible.builtin.setup:
+  vars:
+    OU_Path: "{{ ['DC='] | product(dns_zone | upper | split('.')) | map('join') | join(',') }}"
+    Group_OU: "OU=Groups,{{ OU_Path }}"
   tasks:
     - name: create OU in AD
       ansible.windows.win_powershell:
@@ -20,15 +14,15 @@
           [CmdletBinding()]
           param (
               [String]
-              $LDAP_Path
+              $OU_Path
           )
-          New-ADOrganizationalUnit -Name "Groups" -Path $Path
+          New-ADOrganizationalUnit -Name "Groups" -Path $OU_Path
         parameters:
-          LDAP_Path: "{{ ['DC='] | product(dns_zone | upper | split('.')) | map('join') | join(',') }}"
+          OU_Path: "{{ OU_Path }}"
     - name: create groups in AD
       community.windows.win_domain_group:
         name: "{{ group.name }}"
-        ou: "{{ group.ou | default(['DC='] | product(dns_zone | upper | split('.')) | map('join') | join(',')) }}"
+        ou: "{{ Group_OU }}"
         scope: "{{ group.scope | default('global') }}"
       loop: "{{ ad.groups }}"
       loop_control:
@@ -38,7 +32,7 @@
         name: "{{ user.name }}"
         upn: "{{ user.name }}@{{ dns_zone }}"
         groups: "{{ user.groups | default(omit) }}"
-        password: "{{ user.password | default(ansible_password) }}"
+        password: "{{ user.password | default(admin_password) }}"
         password_never_expires: yes
       loop: "{{ ad.users }}"
       loop_control:
