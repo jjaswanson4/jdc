@@ -26,3 +26,37 @@ controller_license:
 
 controller_organizations:
   - name: "{  { audience }}"
+
+controller_credentials:
+  - name: RHEL Root Credentials
+    credential_type: Machine
+    organization: "{  { audience }}"
+    inputs:
+      username: root
+      password: "{  { admin_password }}"
+  - name: Active Directory Domain Administrator Credentials
+    organization: "{  { audience }}"
+    credential_type: Machine
+    inputs:
+      username: AD\Administrator
+      password: "{  { admin_password }}"
+  - name: Automation Hub Image Registry Credentials
+    organization: "{  { audience }}"
+    credential_type: Container Registry
+    inputs:
+      host: hub.lab.msp.redhat.com
+      username: "{  { admin_username }}"
+      password: "{  { admin_password }}"
+      verify_ssl: no
+
+controller_execution_environments:
+  - name: Josh's Demos Collection EE
+    image: 'hub.lab.msp.redhat.com/joshs-demos-collection-ee:latest'
+    organization: "{  { audience }}"
+    credential: Automation Hub Image Registry Credentials
+    pull: always
+
+controller_inventories:
+  - name: "{  { audience }} Infrastructure"
+    organization: "{  { audience }}"
+
