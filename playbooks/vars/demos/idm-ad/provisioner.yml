@@ -712,7 +712,7 @@ controller_workflows:
           failed_at_step: Provision Demo Systems
       - identifier: Apply Standard Config to Demo Hosts
         unified_job_template: Apply Standard Configuration
-        limit: demo_hosts
+        limit: rhel
         credentials:
           - Demo Provisioner Root Account
         success_nodes:
@@ -747,7 +747,7 @@ controller_workflows:
           - Cleanup DNS Records
       - identifier: Unregister from Insights
         unified_job_template: Unregister from Insights
-        limit: 'demo_hosts:controller'
+        limit: rhel
         credentials:
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
@@ -755,7 +755,7 @@ controller_workflows:
           - Teardown RHEL Hosts
       - identifier: Teardown RHEL Hosts
         unified_job_template: Teardown Systems
-        limit: 'demo_hosts:controller'
+        limit: rhel
         credentials:
           - Demo Provisioner Satellite Credentials
           - Demo Provisioner Admin Credentials
