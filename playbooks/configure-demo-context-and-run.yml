@@ -138,6 +138,7 @@
             variables:
               ansible_connection: local
               ansible_python_interpreter: '{  { ansible_playbook_python }}'
+              custom_dns_zones: "{{ custom_dns_zones | default(omit) }}"
     - name: add localhost to hosts list
       ansible.builtin.set_fact:
         controller_hosts_to_add: "{{ controller_hosts_to_add + localhost_host }}"
