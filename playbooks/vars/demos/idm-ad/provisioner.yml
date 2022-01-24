@@ -582,7 +582,6 @@ controller_workflows:
           - Demo Provisioner IDM Credentials
         success_nodes:
           - Provision Domain Controllers
-        #   - Provision Controller
         failure_nodes:
           - Send Failure Email About 'Create DNS Records'
       - identifier: Send Failure Email About 'Create DNS Records'
@@ -628,10 +627,10 @@ controller_workflows:
         credentials:
           - Demo Provisioner Domain Administrator
           - Demo Provisioner Admin Credentials
-        # failure_nodes:
-        #   - node1103
-        # success_nodes:
-        #   - node999
+        success_nodes:
+          - Send Success Email
+        failure_nodes:
+          - Send Failure Email About 'Populate Active Directory'
       - identifier: Send Failure Email About 'Populate Active Directory'
         unified_job_template: Send Provisioner Email
         extra_data:
@@ -643,21 +642,30 @@ controller_workflows:
           - Demo Provisioner Netbox Credentials
           - Demo Provisioner Local Administrator
           - Demo Provisioner Admin Credentials          
-  #       failure_nodes:
-  #         - node1104
-  #       success_nodes:
-  #         - node999
-  #     - unified_job_template: Provision Systems
-  #       identifier: node201
-  #       inventory: "{{ inventory }}"
-  #       limit: controller
-  #       credentials:
-  #         - "{{ demo_prefix }} Peripheral Credentials"
-  #         - "{{ demo_prefix }} Root Account"
+        success_nodes:
+          - Send Success Email
+        failure_nodes:
+          - Send Failure Email About 'Add Domain Controller to Forest'
+      - identifier: Send Failure Email About 'Add Domain Controller to Forest'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Add Domain Controller to Forest
+      - identifier: Provision Controller
+        unified_job_template: Provision Systems
+        limit: controller
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner Satellite Credentials
+          - Demo Provisioner vCenter Credentials
+          - Demo Provisioner Root Account
   #       success_nodes:
   #         - node202
-  #       failure_nodes:
-  #         - node1201
+        failure_nodes:
+          - Send Failure Email About 'Provision Controller'
+      - identifier: Send Failure Email About 'Provision Controller'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Provision Controller
   #     - unified_job_template: Install Ansible Controller
   #       identifier: node202
   #       inventory: "{{ inventory }}"
@@ -679,54 +687,27 @@ controller_workflows:
   #         - node999
   #       failure_nodes:
   #         - node1203
-  #     - unified_job_template: Provision Systems
-  #       identifier: node301
-  #       inventory: "{{ inventory }}"
-  #       limit: rhel
-  #       credentials:
-  #         - "{{ demo_prefix }} Peripheral Credentials"
-  #         - "{{ demo_prefix }} Root Account"
-  #       success_nodes:
-  #         - node999
-  #       failure_nodes:
-  #         - node1301
-  #     - unified_job_template: Send Provisioner Email
-  #       identifier: node999
-  #       all_parents_must_converge: yes
-  #       extra_data:
-  #         provisioner_status: success
-  #     - unified_job_template: Send Provisioner Email
-  #       identifier: node1101
-  #       extra_data:
-  #         provisioner_status: failed
-  #     - unified_job_template: Send Provisioner Email
-  #       identifier: node1102
-  #       extra_data:
-  #         provisioner_status: failed
-  #     - unified_job_template: Send Provisioner Email
-  #       identifier: node1103
-  #       extra_data:
-  #         provisioner_status: failed
-  #     - unified_job_template: Send Provisioner Email
-  #       identifier: node1104
-  #       extra_data:
-  #         provisioner_status: failed
-  #     - unified_job_template: Send Provisioner Email
-  #       identifier: node1201
-  #       extra_data:
-  #         provisioner_status: failed
-  #     - unified_job_template: Send Provisioner Email
-  #       identifier: node1202
-  #       extra_data:
-  #         provisioner_status: failed
-  #     - unified_job_template: Send Provisioner Email
-  #       identifier: node1203
-  #       extra_data:
-  #         provisioner_status: failed
-  #     - unified_job_template: Send Provisioner Email
-  #       identifier: node1301
-  #       extra_data:
-  #         provisioner_status: failed
+      - identifier: Provision Demo Systems
+        unified_job_template: Provision Systems
+        limit: rhel
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner Satellite Credentials
+          - Demo Provisioner vCenter Credentials
+          - Demo Provisioner Root Account
+        success_nodes:
+          - Send Success Email
+        failure_nodes:
+          - Send Failure Email About 'Provision Demo Systems'
+      - identifier: Send Failure Email About 'Provision Demo Systems'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Provision Demo Systems
+      - identifier: Send Success Email
+        unified_job_template: Send Provisioner Email
+        all_parents_must_converge: yes
+        extra_data:
+          provisioner_status: success
 
   # - name: Teardown IDM-AD Integration Demo
   #   organization: Demo Provisioner
