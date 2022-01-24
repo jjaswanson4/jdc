@@ -69,11 +69,10 @@ controller_groups:
   - name: domain_controllers
     hosts:
       - "ad-dc2.ad.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    variables:
-      pdc_ip_address: "{  { hostvars['ad-dc1.ad. + demo_uuid + '.' + base_dns_suffix]['ip_address'] }}"
+    children:
+      - domain_controllers
   - name: active_directory
     children:
-      - pdc
       - domain_controllers
     variables:
       ad:
@@ -427,7 +426,7 @@ controller_groups:
     variables:
       cpus: 2
       memory_mb: 4096
-      ipaclient_domain: idm.josh.lab.msp.redhat.com
+      ipaclient_domain: "idm.{  { demo_uuid }}.{  { base_dns_suffix }}" 
       dns_resolv:
         search_domains:
           - idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
@@ -616,7 +615,7 @@ controller_workflows:
           - Demo Provisioner Netbox Credentials
         success_nodes:
           - Populate Active Directory
-        #   - Add Domain Controller to Forest
+          - Add Domain Controller to Forest
         failure_nodes:
           - Send Failure Email About 'Create Active Directory Forest'
       - identifier: Send Failure Email About 'Create Active Directory Forest'
@@ -627,20 +626,23 @@ controller_workflows:
         unified_job_template: Populate Active Directory
         limit: pdc
         credentials:
-          - Demo Provisioner Local Administrator
+          - Demo Provisioner Domain Administrator
           - Demo Provisioner Admin Credentials
-          - Demo Provisioner vCenter Credentials
-          - Demo Provisioner Netbox Credentials
         # failure_nodes:
         #   - node1103
         # success_nodes:
         #   - node999
-  #     - unified_job_template: Add Domain Controller to Forest
-  #       identifier: node104
-  #       inventory: "{{ inventory }}"
-  #       limit: domain_controllers
-  #       credentials:
-  #         - "{{ demo_prefix }} Local Administrator"
+      - identifier: Send Failure Email About 'Populate Active Directory'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Populate Active Directory
+      - identifier: Add Domain Controller to Forest
+        unified_job_template: Add Domain Controller to Forest
+        limit: domain_controllers
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner Local Administrator
+          - Demo Provisioner Admin Credentials          
   #       failure_nodes:
   #         - node1104
   #       success_nodes:
