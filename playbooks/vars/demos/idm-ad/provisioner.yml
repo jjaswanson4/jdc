@@ -510,14 +510,6 @@ controller_groups:
       - windows
 
 controller_templates:
-  - name: Provision Windows Systems
-    inventory: Demo Inventory
-    ask_inventory_on_launch: yes
-    ask_limit_on_launch: yes
-    project: "{{ project }}"
-    playbook: playbooks/provision-windows.yml
-    execution_environment: "{{ execution_environment.name }}"
-    ask_credential_on_launch: yes
   - name: Create Active Directory Forest
     inventory: Demo Inventory
     ask_inventory_on_launch: yes
@@ -542,15 +534,7 @@ controller_templates:
     playbook: playbooks/populate-ad.yml
     execution_environment: "{{ execution_environment.name }}"
     ask_credential_on_launch: yes
-  - name: Teardown Windows Systems
-    inventory: Demo Inventory
-    ask_inventory_on_launch: yes
-    ask_limit_on_launch: yes
-    project: "{{ project }}"
-    playbook: playbooks/teardown-windows.yml
-    execution_environment: "{{ execution_environment.name }}"
-    ask_credential_on_launch: yes 
-
+ 
 controller_workflows:
   - name: Provision IDM-AD Integration Demo
     organization: "{{ controller_organization }}"
@@ -732,50 +716,67 @@ controller_workflows:
         extra_data:
           provisioner_status: success
 
-  # - name: Teardown IDM-AD Integration Demo
-  #   organization: Demo Provisioner
-  #   state: "{{ controller_state | default('present') }}"
-  #   extra_vars:
-  #     demo: idm-ad
-  #   survey_enabled: yes
-  #   survey:
-  #     name: ''
-  #     description: ''
-  #     spec:
-  #       - type: text
-  #         question_name: "Demo Audience?"
-  #         question_description: "Who is the audience for this demo"
-  #         variable: audience
-  #         required: yes
-  #   simplified_workflow_nodes:
-  #     - unified_job_template: Unregister from Insights
-  #       identifier: node101
-  #       inventory: "{{ inventory }}"
-  #       limit: 'rhel:controller'
-  #       credentials:
-  #         - "{{ demo_prefix }} Root Account"
-  #       always_nodes:
-  #         - node102
-  #     - unified_job_template: Teardown Systems
-  #       identifier: node102
-  #       inventory: "{{ inventory }}"
-  #       limit: 'rhel:controller'
-  #       credentials:
-  #         - "{{ demo_prefix }} Peripheral Credentials"
-  #       always_nodes:
-  #         - node999
-  #     - unified_job_template: Teardown Windows Systems
-  #       identifier: node201
-  #       inventory: "{{ inventory }}"
-  #       limit: windows
-  #       credentials:
-  #         - "{{ demo_prefix }} Peripheral Credentials"
-  #       always_nodes:
-  #         - node999
-  #     - unified_job_template: Cleanup DNS Records
-  #       identifier: node999
-  #       inventory: "{{ inventory }}"
-  #       limit: 'rhel:controller:windows'
-  #       credentials:
-  #         - "{{ demo_prefix }} Peripheral Credentials"
-  #       all_parents_must_converge: yes
+  - name: Teardown IDM-AD Integration Demo
+    organization: Demo Provisioner
+    ask_inventory_on_launch: yes
+    ask_variables_on_launch: yes
+    state: "{{ controller_state | default('present') }}"
+    extra_vars:
+      demo: idm-ad
+    simplified_workflow_nodes:
+      - identifier: Teardown Windows Systems
+        unified_job_template: Teardown Windows Systems
+        limit: windows
+        credentials:
+          - Demo Provisioner vCenter Credentials
+          - Demo Provisioner Admin Credentials
+        always_nodes:
+          - Cleanup DNS Records
+      - identifier: Unregister from Insights
+        unified_job_template: Unregister from Insights
+        limit: 'demo_hosts:controller'
+        credentials:
+          - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
+        always_nodes:
+          - Teardown RHEL Hosts
+      - identifier: Teardown RHEL Hosts
+        unified_job_template: Teardown Systems
+        limit: 'demo_hosts:controller'
+        credentials:
+          - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
+        always_nodes:
+          - Cleanup DNS Records
+      - identifier: Cleanup DNS Records
+        unified_job_template: Manage DNS Records
+        limit: 'demo_hosts:management_plane'
+        credentials:
+          - Demo Provisioner Admin Credentials
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner IDM Credentials
+        extra_data:
+          dns_records_state: absent
+        always_nodes:
+          - Remove CMDB Records
+        all_parents_must_converge: yes
+      - identifier: Remove CMDB Records
+        unified_job_template: Manage CMDB Records
+        limit: 'demo_hosts:management_plane'
+        credentials:
+          - Demo Provisioner Admin Credentials
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner vCenter Credentials
+        extra_data:
+          cmdb_record_state: absent
+        always_nodes:
+          - Remove Demo Context
+      - identifier: Remove Demo Context
+        unified_job_template: Configure Demo Context
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner vCenter Credentials
+          - Demo Provisioner IDM Credentials
+          - Demo Provisioner Satellite Credentials
+        extra_data:
+          demo_context_state: absent
