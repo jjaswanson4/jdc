@@ -70,7 +70,7 @@ controller_groups:
     hosts:
       - "ad-dc2.ad.{{ demo_uuid }}.{{ base_dns_suffix }}"
     children:
-      - domain_controllers
+      - pdc
   - name: active_directory
     children:
       - domain_controllers
