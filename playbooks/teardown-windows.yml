@@ -9,20 +9,20 @@
       block:
         - name: power-off windows vm
           community.vmware.vmware_guest:
-            hostname: "{{ vcenter.server }}"
-            username: "{{ vcenter.username }}"
+            hostname: "{{ vcenter_server }}"
+            username: "{{ vcenter_username }}"
             password: "{{ vcenter_password }}"
             validate_certs: no
-            datacenter: "{{ vm.datacenter }}"
+            datacenter: "{{ vcenter_datacenter }}"
             name: "{{ inventory_hostname }}"
             state: powered-off
         - name: teardown windows vm
           community.vmware.vmware_guest:
-            hostname: "{{ vcenter.server }}"
-            username: "{{ vcenter.username }}"
+            hostname: "{{ vcenter_server }}"
+            username: "{{ vcenter_username }}"
             password: "{{ vcenter_password }}"
             validate_certs: no
-            datacenter: "{{ vm.datacenter }}"
+            datacenter: "{{ vcenter_datacenter }}"
             name: "{{ inventory_hostname }}"
             state: absent
       throttle: 2
