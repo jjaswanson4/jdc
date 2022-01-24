@@ -276,6 +276,24 @@
   ask_credential_on_launch: yes
   extra_vars:
     ansible_become: no
+- name: Provision Windows Systems
+  inventory: Demo Inventory
+  ask_inventory_on_launch: yes
+  ask_limit_on_launch: yes
+  project: "{{ project }}"
+  allow_simultaneous: yes
+  playbook: playbooks/provision-windows.yml
+  execution_environment: "{{ execution_environment.name }}"
+  ask_credential_on_launch: yes
+- name: Teardown Windows Systems
+  inventory: Demo Inventory
+  ask_inventory_on_launch: yes
+  ask_limit_on_launch: yes
+  project: "{{ project }}"
+  allow_simultaneous: yes
+  playbook: playbooks/teardown-windows.yml
+  execution_environment: "{{ execution_environment.name }}"
+  ask_credential_on_launch: yes
 - name: Provision Demo
   organization: "{{ controller_organization }}"
   inventory: Demo Inventory
