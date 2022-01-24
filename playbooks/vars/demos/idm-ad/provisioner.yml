@@ -757,7 +757,7 @@ controller_workflows:
         unified_job_template: Teardown Systems
         limit: 'demo_hosts:controller'
         credentials:
-          - Demo Provisioner Root Account
+          - Demo Provisioner Satellite Credentials
           - Demo Provisioner Admin Credentials
         always_nodes:
           - Cleanup DNS Records
