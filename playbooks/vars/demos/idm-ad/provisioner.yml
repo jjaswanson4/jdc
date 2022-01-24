@@ -411,7 +411,6 @@ controller_groups:
         search_domains:
           - lab.msp.redhat.com
         nameservers:
-          - "{  { hostvars['idm01.idm.' + demo_uuid + '.' + base_dns_suffix]['ansible_primary_ipv4']['address'] }}"
           - 10.15.108.101
           - 10.15.108.102
         options:
@@ -432,9 +431,8 @@ controller_groups:
           - idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
           - lab.msp.redhat.com
         nameservers:
-          - "{  { hostvars['ad-dc1.ad.' + demo_uuid + '.' + base_dns_suffix]['ansible_primary_ipv4']['address'] }}"
-          - "{  { hostvars['ad-dc2.ad.' + demo_uuid + '.' + base_dns_suffix]['ansible_primary_ipv4']['address'] }}"
           - 10.15.108.101
+          - 10.15.108.102
         options:
           - 'timeout:1'
   - name: infra
