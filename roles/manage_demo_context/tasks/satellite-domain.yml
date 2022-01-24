@@ -12,3 +12,22 @@
     locations:
       - "{{ satellite_location }}"
     state: "{{ demo_context_state }}"
+
+- name: create custom domain for demo
+  community.general.ipa_dnszone:
+  redhat.satellite.domain:
+    server_url: "{{ satellite_url }}"
+    username: "{{ satellite_username }}"
+    password: "{{ satellite_password }}"
+    validate_certs: "{{ satellite_validate_certs | default(false) }}"
+    name: "{{ dns_zone }}"
+    organizations:
+      - "{{ satellite_organization }}"
+    locations:
+      - "{{ satellite_location }}"
+    state: "{{ demo_context_state }}"
+  loop_control:
+    loop_var: dns_zone
+  loop: "{{ custom_dns_zones }}"
+  when:
+    - custom_dns_zones is defined
