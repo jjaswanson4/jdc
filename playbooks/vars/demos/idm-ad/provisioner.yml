@@ -582,6 +582,8 @@ controller_workflows:
           - Demo Provisioner IDM Credentials
         success_nodes:
           - Provision Domain Controllers
+          - Provision Controller
+          - Provision Demo Hosts
         failure_nodes:
           - Send Failure Email About 'Create DNS Records'
       - identifier: Send Failure Email About 'Create DNS Records'
@@ -687,7 +689,7 @@ controller_workflows:
   #         - node999
   #       failure_nodes:
   #         - node1203
-      - identifier: Provision Demo Systems
+      - identifier: Provision Demo Hosts
         unified_job_template: Provision Systems
         limit: rhel
         credentials:
