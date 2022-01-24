@@ -1,22 +1,30 @@
 ---
 
+- name: get IP address of the pdc
+  hosts:
+    - pdc
+  tasks:
+    - name: get ip addresses from cmdb
+      ansible.builtin.include_role:
+        name: ../roles/get_ip_address
+
 - name: add domain controller to forest
   hosts:
-    - all
+    - 'domain_controllers:!pdc'
   pre_tasks:
-     - name: set DNS client settings
-       ansible.windows.win_dns_client:
-        adapter_names: 'Ethernet*'
-        dns_servers:
-          - "{{ pdc_ip_address }}"
-          - 127.0.0.1
+    - name: set DNS client settings
+      ansible.windows.win_dns_client:
+      adapter_names: 'Ethernet*'
+      dns_servers:
+        - "{{ hostvars['ad-dc1.ad.' + demo_uuid + '.' + base_dns_suffix]['ip_address'] }}"
+        - 127.0.0.1
   tasks:
     - name: confgure domain controllers
       ansible.windows.win_domain_controller:
         dns_domain_name: "{{ dns_zone }}"
         domain_admin_user: "{{ ansible_user }}@{{ dns_zone }}"
-        domain_admin_password: "{{ ansible_password }}"
-        safe_mode_password: "{{ ansible_password }}"
+        domain_admin_password: "{{ admin_password }}"
+        safe_mode_password: "{{ admin_password }}"
         state: domain_controller
       notify: reboot
   handlers:
