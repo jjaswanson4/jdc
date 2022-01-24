@@ -470,7 +470,7 @@ controller_groups:
       satellite_organization: "{  { audience }}"
       satellite_location: "{  { audience }}"
       provisioning:
-        host_group: "{  { os }}"
+        host_group: "{  { os }}/vlan146"
         organization: "{  { audience }}"
         location: "{  { audience }}"
         method: bootdisk
