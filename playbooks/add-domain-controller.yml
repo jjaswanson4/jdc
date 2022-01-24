@@ -14,10 +14,10 @@
   pre_tasks:
     - name: set DNS client settings
       ansible.windows.win_dns_client:
-      adapter_names: 'Ethernet*'
-      dns_servers:
-        - "{{ hostvars['ad-dc1.ad.' + demo_uuid + '.' + base_dns_suffix]['ip_address'] }}"
-        - 127.0.0.1
+        adapter_names: 'Ethernet*'
+        dns_servers:
+          - "{{ hostvars['ad-dc1.ad.' + demo_uuid + '.' + base_dns_suffix]['ip_address'] }}"
+          - 127.0.0.1
   tasks:
     - name: confgure domain controllers
       ansible.windows.win_domain_controller:
