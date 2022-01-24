@@ -703,13 +703,26 @@ controller_workflows:
           - Demo Provisioner vCenter Credentials
           - Demo Provisioner Root Account
         success_nodes:
-          - Send Success Email
+          - Apply Standard Config to Demo Hosts
         failure_nodes:
           - Send Failure Email About 'Provision Demo Systems'
       - identifier: Send Failure Email About 'Provision Demo Systems'
         unified_job_template: Send Provisioner Email
         extra_data:
           failed_at_step: Provision Demo Systems
+      - identifier: Apply Standard Config to Demo Hosts
+        unified_job_template: Apply Standard Configuration
+        limit: demo_hosts
+        credentials:
+          - Demo Provisioner Root Account
+        success_nodes:
+          - Send Success Email
+        failure_nodes:
+          - Send Failure Email About 'Apply Standard Config to Demo Hosts'
+      - identifier: Send Failure Email About 'Apply Standard Config to Demo Hosts'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Apply Standard Config to Demo Hosts
       - identifier: Send Success Email
         unified_job_template: Send Provisioner Email
         all_parents_must_converge: yes
