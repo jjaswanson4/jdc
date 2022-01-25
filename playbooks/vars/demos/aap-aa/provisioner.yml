@@ -34,9 +34,6 @@ controller_configuration_file: "{{ vars_files_path }}/controller.yml"
 satellite_configuration_file: "{{ vars_files_path }}/satellite.yml"
 
 base_dns_suffix: demos.lcl
-custom_dns_zones:
-  - "ad.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  - "idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
 
 # This toggles secure logging, for example: when configuring credentials on Ansible Controller.
 # Since I'm using my own instance, secure logging isn't a requirement.
@@ -211,7 +208,7 @@ controller_workflows:
     ask_inventory_on_launch: yes
     ask_variables_on_launch: yes
     extra_vars:
-      demo: patching
+      demo: aap-aa
     simplified_workflow_nodes:
       - identifier: Create CMDB Records
         unified_job_template: Manage CMDB Records
