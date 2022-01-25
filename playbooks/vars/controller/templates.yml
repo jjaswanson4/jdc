@@ -324,6 +324,7 @@
           - s4hana-deployment
           - compliance
           - idm-ad
+          - aap-aa
         required: yes
       - type: text
         question_name: "Demo Audience?"
