@@ -1,0 +1,12 @@
+---
+
+- name: setup trust between AD and IDM
+  hosts:
+    - all
+  tasks:
+    - name: create one-way trust with AD
+      freeipa.ansible_freeipa.ipatrust:
+        ipaadmin_password: "{{ ipaadmin_password }}"
+        realm: "{{ dns_suffix }}"
+        admin: "Administrator@{{ dns_suffix }}"
+        password: "{{ ansible_password }}"

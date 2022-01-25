@@ -1,0 +1,7 @@
+---
+
+- name: install Red Hat IDM replica
+  hosts:
+    - all
+  roles:
+    - freeipa.ansible_freeipa.ipareplica

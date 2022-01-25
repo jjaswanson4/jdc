@@ -1,0 +1,18 @@
+---
+
+- name: perform setup steps on IDM for trust with AD
+  hosts:
+    - all
+  pre_tasks:
+    - name: debug documentation
+      ansible.builtin.debug:
+        msg: "These steps are based on this documentation: https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/installing_identity_management/installing-trust-between-idm-and-ad_installing-identity-management"
+  tasks:
+    - name: setup forward zone
+      freeipa.ansible_freeipa.ipadnsforwardzone:
+        ipaadmin_password: "{{ ipaadmin_password }}"
+        name: "{{ hostvars['ad-dc1.ad.josh.lab.msp.redhat.com']['dns_zone'] }}"
+        forwarders:
+          - ip_address: "{{ hostvars['ad-dc1.ad.josh.lab.msp.redhat.com']['ansible_host'] }}"
+          - ip_address: "{{ hostvars['ad-dc2.ad.josh.lab.msp.redhat.com']['ansible_host'] }}"
+        forwardpolicy: first

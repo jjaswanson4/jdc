@@ -1,0 +1,23 @@
+---
+
+- name: perform setup steps on AD for trust with IDM
+  hosts:
+    - all
+  tasks:
+    - name: Create conditional forwards in AD
+      ansible.windows.win_powershell:
+        script: |
+          [CmdletBinding()]
+          param (
+              [String]
+              $DNS_Zone,
+              [IPAddress]
+              $IDM_Master,
+              [IPAddress]
+              $IDM_Replica
+          )        
+          Add-DnsServerConditionalForwarderZone -Name $DNS_Zone -ReplicationScope Forest -MasterServers $IDM_Master,$IDM_Replica
+        parameters:
+          DNS_Zone: "idm.{{ demo_uuid | upper }}.{{ base_dns_suffix | upper }}"
+          IDM_Master: "{{ hostvars['idm01.idm.josh.lab.msp.redhat.com']['ansible_host'] }}"
+          IDM_Replica: "{{ hostvars['idm02.idm.josh.lab.msp.redhat.com']['ansible_host'] }}"

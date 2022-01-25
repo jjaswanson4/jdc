@@ -1,0 +1,7 @@
+---
+
+- name: setup hosts for IDM with AD trust
+  hosts:
+    - all
+  roles:
+    - redhat.rhel_system_roles.crypto_policies

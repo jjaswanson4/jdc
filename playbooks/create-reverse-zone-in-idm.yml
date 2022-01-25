@@ -1,0 +1,10 @@
+---
+
+- name: create reverse zone in IDM DNS
+  hosts:
+    - all
+  tasks:
+    - name: create reverse zone for {{ reverse_zone_ip }}
+      freeipa.ansible_freeipa.ipadnszone:
+        ipaadmin_password: "{{ ipaadmin_password }}"
+        name_from_ip: "{{ reverse_zone_ip }}"

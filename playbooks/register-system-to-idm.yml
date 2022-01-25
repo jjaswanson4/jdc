@@ -1,0 +1,7 @@
+---
+
+- name: register client system to Red Hat IDM
+  hosts:
+    - all
+  roles:
+    - freeipa.ansible_freeipa.ipaclient
