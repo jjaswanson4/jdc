@@ -80,7 +80,10 @@ controller_hosts:
 controller_groups:
   - name: database_nodes
     hosts:
-      - "database-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}"   
+      - "database-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: aap_installer_node
+    hosts:
+      - "control-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}"   
   - name: control_nodes
     hosts:
       - "control-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
@@ -159,6 +162,17 @@ controller_groups:
     variables:
       cpus: 4
       memory_mb: 16384
+      aap_download_url: http://satellite.lab.msp.redhat.com/pub/ansible-automation-platform-setup-2.1.0-1.tar.gz
+      aap_bundle: ansible-automation-platform-setup-2.1.0-1.tar.gz
+      controller_install:
+        admin_password: "{  { admin_password }}"
+        pg:
+          password: "{  { admin_password }}"
+      bootstrap_controller: yes
+      controller_hostname: "{  { inventory_hostname }}"
+      controller_username: "{  { admin_username }}"
+      controller_password: "{  { admin_password }}"
+      controller_validate_certs: no
   - name: demo_hosts
     children:
       - aap_infrastructure
@@ -247,12 +261,111 @@ controller_workflows:
           - Demo Provisioner Netbox Credentials
           - Demo Provisioner Root Account
           - Demo Provisioner Satellite Credentials
-        # success_nodes:
-        #   - Apply Standard Config to Demo Hosts
-        #   - Configure Ansible Controller
+        success_nodes:
+          - Apply Standard Config to Demo Hosts
         failure_nodes:
           - Send Failure Email About 'Provision Demo Systems'
       - identifier: Send Failure Email About 'Provision Demo Systems'
         unified_job_template: Send Provisioner Email
         extra_data:
           failed_at_step: Provision Demo Systems
+      - identifier: Apply Standard Config to Demo Hosts
+        unified_job_template: Apply Standard Configuration
+        limit: demo_hosts
+        credentials:
+          - Demo Provisioner Root Account
+        success_nodes:
+          - Install Ansible Automation Platform
+        failure_nodes:
+          - Send Failure Email About 'Apply Standard Config to Demo Hosts'
+      - identifier: Send Failure Email About 'Apply Standard Config to Demo Hosts'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Apply Standard Config to Demo Hosts
+      - identifier: Install Ansible Automation Platform
+        unified_job_template: Install Ansible Controller
+        limit: aap_installer_node
+        credentials:
+          - Demo Provisioner Red Hat Registry Credentials
+          - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
+        extra_data:
+          use_advanced_inventory: yes
+        success_nodes:
+          - Configure Ansible Controller
+        failure_nodes:
+          - Send Failure Email About 'Install Ansible Controller'
+      - identifier: Send Failure Email About 'Install Ansible Controller'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Install Ansible Controller
+      - identifier: Configure Ansible Controller
+        unified_job_template: Configure Ansible Controller
+        limit: aap_installer_node
+        credentials:
+          - Demo Provisioner Admin Credentials
+        success_nodes:
+          - Send Success Email
+        failure_nodes:
+          - Send Failure Email About 'Configure Ansible Controller'
+      - identifier: Send Failure Email About 'Configure Ansible Controller'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Configure Ansible Controller    
+
+  - name: Teardown AAP Advanced Architecture Demo
+    organization: Demo Provisioner
+    ask_inventory_on_launch: yes
+    ask_variables_on_launch: yes
+    state: "{{ controller_state | default('present') }}"
+    extra_vars:
+      demo: aap-aa
+    simplified_workflow_nodes:
+      - identifier: Unregister from Insights
+        unified_job_template: Unregister from Insights
+        limit: demo_hosts
+        credentials:
+          - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
+        always_nodes:
+          - Teardown Demo Hosts
+      - identifier: Teardown Demo Hosts
+        unified_job_template: Teardown Systems
+        limit: demo_hosts
+        credentials:
+          - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
+          - Demo Provisioner Satellite Credentials
+        always_nodes:
+          - Cleanup DNS Records
+      - identifier: Cleanup DNS Records
+        unified_job_template: Manage DNS Records
+        limit: demo_hosts
+        credentials:
+          - Demo Provisioner Admin Credentials
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner IDM Credentials
+        extra_data:
+          dns_records_state: absent
+        always_nodes:
+          - Remove CMDB Records
+      - identifier: Remove CMDB Records
+        unified_job_template: Manage CMDB Records
+        limit: 'demo_hosts:management_plane'
+        credentials:
+          - Demo Provisioner Admin Credentials
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner vCenter Credentials
+        extra_data:
+          cmdb_record_state: absent
+        always_nodes:
+          - Remove Demo Context
+      - identifier: Remove Demo Context
+        unified_job_template: Configure Demo Context
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner vCenter Credentials
+          - Demo Provisioner IDM Credentials
+          - Demo Provisioner Satellite Credentials
+        extra_data:
+          demo_context_state: absent
