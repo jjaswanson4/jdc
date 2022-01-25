@@ -2,5 +2,5 @@ extra-vars.yml
 execution-environment/context
 *tmp
 *swp
-*ansible.cfg
+execution-environment/ansible.cfg
 testing*
