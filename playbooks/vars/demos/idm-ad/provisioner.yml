@@ -744,7 +744,7 @@ controller_workflows:
           - Cleanup DNS Records
       - identifier: Unregister from Insights
         unified_job_template: Unregister from Insights
-        limit: rhel
+        limit: 'rhel:controller'
         credentials:
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
@@ -752,7 +752,7 @@ controller_workflows:
           - Teardown RHEL Hosts
       - identifier: Teardown RHEL Hosts
         unified_job_template: Teardown Systems
-        limit: rhel
+        limit: 'rhel:controller'
         credentials:
           - Demo Provisioner Satellite Credentials
           - Demo Provisioner Admin Credentials
