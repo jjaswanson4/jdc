@@ -9,3 +9,5 @@ available_demos:
     display_name: Compliance
   - name: idm-ad
     display_name: IDM-AD Integration
+  - name: aap-aa
+    display_name: AAP Advanced Atchitecture
