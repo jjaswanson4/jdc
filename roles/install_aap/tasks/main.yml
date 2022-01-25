@@ -6,7 +6,7 @@
   ignore_errors: true
   changed_when: false
   when:
-    - "'controller' in group_names"
+    - "'controller' in group_names or 'aap_installer_node' in group_names"
 
 - name: include install tasks
   ansible.builtin.include_tasks:
