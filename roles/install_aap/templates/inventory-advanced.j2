@@ -87,7 +87,6 @@ ansible_user={{ ansible_user }}
 ansible_password='{{ ansible_password }}'
 
 pg_host='database-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}'
-pg_host='{{ controller_install.pg.host | default('') }}'
 pg_port='{{ controller_install.pg.port | default('') }}'
 pg_database='{{ controller_install.pg.database | default('awx') }}'
 pg_username='{{ controller_install.pg.username | default('awx') }}'
