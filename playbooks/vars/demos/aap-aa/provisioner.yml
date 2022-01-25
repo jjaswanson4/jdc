@@ -1,0 +1,261 @@
+---
+
+# By default, the org 'Demo Provisioner' is created and resources are configured there,
+# Use this variable to override this behavior.
+# For example, overriding to 'Default' will put the resources into the default controller organization.
+controller_organization: Demo Provisioner
+
+# This is the default project name. It is a var so demos can import specific job templates and override the project locally.
+# Change this to change the name of the project for the provisioner job templates.
+project: Josh's Demos Collection
+
+# This is the default prefix for assets created for this demo.
+# Change this variable to use a different prefix.
+demo_prefix: AAP Advanced Automation
+
+# This is the realitive path to the vars files for this demo.
+# Typically this contains a vars file for the provisioner, Satellite, and Controller.
+vars_files_path: "vars/demos/{{ demo }}"
+
+# This is the execution environment used for this demo provisioner.
+# This execution environment will automatically be configured in Controller.
+execution_environment:
+  name: Josh's Demos Collection EE
+  registry: "{{ ee.registry }}"
+  image: joshs-demos-collection-ee
+  credential: "{{ ee.credential }}"
+
+# This is the information used for the instance of Controller for the demo.
+# This can be the same instance as where the provisioner is deployed, but it's not recommended.
+controller_configuration_file: "{{ vars_files_path }}/controller.yml"
+
+# This is the information used for the instance of Satellite for the demo.
+# This can be the same instance as where the provisioner is deployed, but it's not recommended.
+satellite_configuration_file: "{{ vars_files_path }}/satellite.yml"
+
+base_dns_suffix: demos.lcl
+custom_dns_zones:
+  - "ad.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - "idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
+
+# This toggles secure logging, for example: when configuring credentials on Ansible Controller.
+# Since I'm using my own instance, secure logging isn't a requirement.
+controller_configuration_credentials_secure_logging: no
+
+# These are where demo specific components are defined, in hash form. These will automatically be added to the common resources.
+# If there is no need for a specific, resource, simply define an empty var, such as `controller_organizations: []`
+controller_organizations: []
+controller_credential_types: []
+controller_execution_environments: []
+controller_inventories: []
+controller_projects: []
+controller_credentials: []
+controller_templates: []
+
+controller_hosts:
+  - name: "database-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "control-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "control-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "control-node-3.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "execution-node-azure-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "execution-node-azure-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "execution-node-aws-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "execution-node-aws-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "execution-node-dc1-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "execution-node-dc1-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "execution-node-dc2-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "execution-node-dc2-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "hop-node-mfgplant1-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "hop-node-mfgplant1-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "execution-node-mfgplant-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "execution-node-mfgplant-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "endpoint-node-azure-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "endpoint-node-azure-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "endpoint-node-aws-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "endpoint-node-aws-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "endpoint-node-dc1-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "endpoint-node-dc1-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "endpoint-node-dc2-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "endpoint-node-dc2-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "endpoint-node-mfgplant1-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "endpoint-node-mfgplant1-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+
+controller_groups:
+  - name: database_nodes
+    hosts:
+      - "database-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}"   
+  - name: control_nodes
+    hosts:
+      - "control-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "control-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "control-node-3.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    variables:
+      node_type: control
+  - name: execution_nodes
+    hosts:
+      - "execution-node-azure-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "execution-node-azure-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "execution-node-aws-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "execution-node-aws-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "execution-node-dc1-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "execution-node-dc1-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "execution-node-dc2-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "execution-node-dc2-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "execution-node-mfgplant-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "execution-node-mfgplant-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    variables:
+      node_type: execution
+  - name: hop_nodes
+    hosts:
+      - "hop-node-mfgplant1-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "hop-node-mfgplant1-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: managed_endpoints
+    hosts:
+      - "endpoint-node-azure-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "endpoint-node-azure-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "endpoint-node-aws-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "endpoint-node-aws-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "endpoint-node-dc1-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "endpoint-node-dc1-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "endpoint-node-dc2-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "endpoint-node-dc2-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "endpoint-node-mfgplant1-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "endpoint-node-mfgplant1-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: azure
+    hosts:
+      - "execution-node-azure-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "execution-node-azure-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "endpoint-node-azure-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "endpoint-node-azure-2.{{ demo_uuid }}.{{ base_dns_suffix }}"  
+  - name: aws
+    hosts:
+      - "execution-node-aws-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "execution-node-aws-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "endpoint-node-aws-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "endpoint-node-aws-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: dc1
+    hosts:
+      - "execution-node-dc1-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "execution-node-dc1-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "endpoint-node-dc1-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "endpoint-node-dc1-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: dc2
+    hosts:
+      - "execution-node-dc2-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "execution-node-dc2-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "endpoint-node-dc2-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "endpoint-node-dc2-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: mfgplant1
+    hosts:
+      - "hop-node-mfgplant1-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "hop-node-mfgplant1-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "execution-node-mfgplant-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "execution-node-mfgplant-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "endpoint-node-mfgplant1-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "endpoint-node-mfgplant1-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: aap_infrastructure
+    children:
+      - control_nodes
+      - execution_nodes
+      - hop_nodes
+      - database_nodes
+    variables:
+      cpus: 4
+      memory_mb: 16384
+  - name: demo_hosts
+    children:
+      - aap_infrastructure
+      - managed_endpoints
+    variables:
+      run_additional_roles: yes
+      htop_url: https://dl.fedoraproject.org/pub/epel/8/Everything/x86_64/Packages/h/htop-3.0.5-1.el8.x86_64.rpm
+      firewall:
+        name: firewalld
+        state: stopped
+        enabled: no
+      cockpit_packages:
+        - cockpit-storaged
+        - cockpit-pcp
+        - cockpit-sosreport    
+        - cockpit-networkmanager
+        - cockpit-packagekit
+      cpus: 2
+      memory_mb: 4096
+      os: rhel8
+      application: general
+      lifecycle_environment: production
+      provisioning:
+        host_group: "{  { os }}"
+        method: bootdisk
+        dns_domain: "{  { demo_uuid }}.{  { base_dns_suffix }}"
+        cpus: "{  { cpus }}"
+        memory_mb: "{  { memory_mb }}"
+        activation_keys: "ak-{  { application }}-{  { os }}-{  { lifecycle_environment }}"
+      config_files:
+        - hosts
+        - resolv.conf
+      timesync_ntp_servers:
+        - hostname: 0.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 1.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 2.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 3.rhel.pool.ntp.org
+          iburst: yes
+
+controller_workflows:
+  - name: Provision AAP Advanced Architecture Demo
+    organization: "{{ controller_organization }}"
+    state: "{{ controller_state | default('present') }}"
+    ask_inventory_on_launch: yes
+    ask_variables_on_launch: yes
+    extra_vars:
+      demo: patching
+    simplified_workflow_nodes:
+      - identifier: Create CMDB Records
+        unified_job_template: Manage CMDB Records
+        limit: demo_hosts
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner vCenter Credentials
+        success_nodes:
+          - Create DNS Records
+        failure_nodes:
+          - Send Failure Email About 'Create CMDB Records'
+      - identifier: Send Failure Email About 'Create CMDB Records'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Create CMDB Records
+      - identifier: Create DNS Records
+        unified_job_template: Manage DNS Records
+        limit: demo_hosts
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner IDM Credentials
+        success_nodes:
+          - Provision Demo Systems
+        failure_nodes:
+          - Send Failure Email About 'Create DNS Records'
+      - identifier: Send Failure Email About 'Create DNS Records'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Create DNS Records
+      - identifier: Provision Demo Systems
+        unified_job_template: Provision Systems
+        limit: demo_hosts
+        credentials:
+          - Demo Provisioner vCenter Credentials
+          - Demo Provisioner Admin Credentials
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner Root Account
+          - Demo Provisioner Satellite Credentials
+        # success_nodes:
+        #   - Apply Standard Config to Demo Hosts
+        #   - Configure Ansible Controller
+        failure_nodes:
+          - Send Failure Email About 'Provision Demo Systems'
+      - identifier: Send Failure Email About 'Provision Demo Systems'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Provision Demo Systems
