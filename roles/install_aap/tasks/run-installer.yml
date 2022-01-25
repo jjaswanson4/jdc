@@ -12,6 +12,26 @@
     src: templates/inventory.j2
     dest: "{{ installer_directory | json_query('files[0].path') }}/inventory"
     mode: '0644'
+  when:
+    - use_advanced_inventory is not defined
+
+- name: push advanced inventory file (mostly for aap-aa demo)
+  ansible.builtin.template:
+    src: templates/inventory-advanced.j2
+    dest: "{{ installer_directory | json_query('files[0].path') }}/inventory"
+    mode: '0644'
+  when:
+    - use_advanced_inventory is defined
+    - use_advanced_inventory
+
+- name: push ansible cfg for advanced installs
+  ansible.builtin.copy:
+    src: files/ansible.cfg
+    dest: "{{ installer_directory | json_query('files[0].path') }}/ansible.cfg"
+    mode: '0644'
+  when:
+    - use_advanced_inventory is defined
+    - use_advanced_inventory
 
 - name: run the setup playbook
   ansible.builtin.shell:
