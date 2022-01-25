@@ -13,3 +13,13 @@ There are three main pieces to this codebase:
 
 # Getting Started
 First, you can check the list of available demos [here](DEMOS.md).
+
+# Demo Statuses
+
+| Demo | Provisions | Teardown | Runs |
+| ---- | ---------- | -------- | ---- |
+| Patching | :heavy_check_mark: | :heavy_check_mark: | :grey_question: |
+| IDM-AD Integration | :heavy_check_mark: | :heavy_check_mark: | :x: |
+| S4/HANA Deployment | :x: | :x: | :x: |
+| Compliance | :x: | :x: | :x: |
+| AAP Advanced Architecture | :x: | :x: | :x: |
