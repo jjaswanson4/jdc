@@ -182,7 +182,7 @@ controller_groups:
       application: general
       lifecycle_environment: production
       provisioning:
-        host_group: "{  { os }}"
+        host_group: "{  { os }}/vlan146"
         method: bootdisk
         dns_domain: "{  { demo_uuid }}.{  { base_dns_suffix }}"
         cpus: "{  { cpus }}"
