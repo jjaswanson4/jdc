@@ -60,3 +60,297 @@ controller_inventories:
   - name: "{  { audience }} Infrastructure"
     organization: "{  { audience }}"
 
+controller_hosts:
+  - name: "ad-dc1.ad.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "ad-dc2.ad.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "idm01.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "idm02.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "trust-client-1.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "trust-client-2.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "trust-client-3.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "trust-client-4.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "trust-client-5.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
+
+controller_groups:
+  - name: pdc
+    hosts:
+      - "ad-dc1.ad.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: domain_controllers
+    hosts:
+      - "ad-dc2.ad.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    children:
+      - pdc
+  - name: active_directory
+    children:
+      - domain_controllers
+  - name: windows
+    children:
+      - active_directory
+    variables:
+      ansible_connection: winrm
+      ansible_winrm_transport: ntlm
+      ansible_winrm_server_cert_validation: ignore
+      dns_zone: "ad.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: master
+    hosts:
+      - "idm01.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    variables:
+      ipaserver_setup_dns: yes
+      ipaserver_allow_zone_overlap: yes
+      ipaserver_setup_firewalld: no
+      ipaserver_forwarders:
+        - 10.11.5.19
+        - 10.2.32.1
+      ipaserver_setup_adtrust: yes
+  - name: replicas
+    hosts:
+      - "idm02.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
+    variables:
+      ipareplica_setup_dns: yes
+      ipareplica_allow_zone_overlap: yes
+      ipareplica_setup_firewalld: no
+      ipareplica_forwarders:
+        - 10.11.5.19
+        - 10.2.32.1
+      ipareplica_setup_adtrust: yes
+      ipareplica_setup_ca: yes
+      dns_resolv:
+        search_domains:
+          - lab.msp.redhat.com
+        nameservers:
+          - 10.15.108.101
+          - 10.15.108.102
+        options:
+          - 'timeout:1'
+  - name: clients
+    hosts:
+      - "trust-client-1.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
+      - "trust-client-2.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
+      - "trust-client-3.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
+      - "trust-client-4.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
+      - "trust-client-5.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
+    variables:
+      cpus: 2
+      memory_mb: 4096
+      ipaclient_domain: "idm.{  { demo_uuid }}.{  { base_dns_suffix }}" 
+      dns_resolv:
+        search_domains:
+          - idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
+          - lab.msp.redhat.com
+        nameservers:
+          - 10.15.108.101
+          - 10.15.108.102
+        options:
+          - 'timeout:1'
+  - name: infra
+    children:
+      - master
+      - replicas
+    variables:
+      crypto_policies_policy: DEFAULT:AD-SUPPORT
+      crypto_policies_reboot_ok: yes
+  - name: idm
+    children:
+      - infra
+      - clients
+    variables:
+      ipaadmin_principal: admin
+      ipaadmin_password: "{  { admin_password }}"
+      ipadm_password: "{  { admin_password }}"
+      ipaserver_domain: "idm.{{ demo_uuid | upper }}.{{ base_dns_suffix | upper }}" 
+      ipaserver_realm: "IDM.{{ demo_uuid | upper }}.{{ base_dns_suffix | upper }}"
+  - name: rhel
+    children:
+      - idm
+    variables:
+      cpus: 4
+      memory_mb: 8192
+      os: rhel8
+      firewall:
+        state: stopped
+        enabled: no
+      static_dns_entries:
+        - fqdn: satellite.lab.msp.redhat.com
+          short_name: satellite
+          ip_address: 10.15.108.104
+      config_files:
+        - hosts
+        - resolv.conf
+      timesync_ntp_servers:
+        - hostname: 0.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 1.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 2.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 3.rhel.pool.ntp.org
+          iburst: yes
+      run_additional_roles: yes
+      cockpit_packages:
+        - cockpit-storaged
+        - cockpit-pcp
+        - cockpit-sosreport
+        - cockpit-networkmanager
+        - cockpit-packagekit
+  - name: demo_hosts
+    children:
+      - rhel
+      - windows
+
+controller_projects:
+  - name: "{  { audience }} Code"
+    organization: "{  { audience }}"
+    scm_branch: main
+    scm_type: git
+    scm_url: https://github.com/jjaswanson4/jdc.git
+    wait: yes
+
+controller_templates:
+  - name: Setup for IDM Install
+    inventory: "{  { audience }} Infrastructure"
+    limit: infra
+    project: "{  { audience }} Code"
+    organization: "{  { audience }}"
+    playbook: playbooks/setup-for-idm.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - RHEL Root Credentials
+  - name: Install IDM Master
+    inventory: "{  { audience }} Infrastructure"
+    limit: master
+    project: "{  { audience }} Code"
+    organization: "{  { audience }}"
+    playbook: playbooks/install-idm-master.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - RHEL Root Credentials
+  - name: Install IDM Replicas
+    inventory: "{  { audience }} Infrastructure"
+    limit: replicas
+    project: "{  { audience }} Code"
+    organization: "{  { audience }}"
+    playbook: playbooks/install-idm-replica.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - RHEL Root Credentials
+  - name: Create Reverse Zone
+    inventory: "{  { audience }} Infrastructure"
+    limit: master
+    project: "{  { audience }} Code"
+    organization: "{  { audience }}"
+    playbook: playbooks/create-reverse-zone-in-idm.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - RHEL Root Credentials  
+  - name: Setup AD for Trust
+    inventory: "{  { audience }} Infrastructure"
+    limit: pdc
+    project: "{  { audience }} Code"
+    organization: "{  { audience }}"
+    playbook: playbooks/setup-ad-for-ad-trust.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - Active Directory Domain Administrator Credentials
+  - name: Setup IDM for Trust
+    inventory: "{  { audience }} Infrastructure"
+    limit: master
+    project: "{  { audience }} Code"
+    organization: "{  { audience }}"
+    playbook: playbooks/setup-idm-for-ad-trust.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - RHEL Root Credentials
+  - name: Create AD Trust
+    inventory: "{  { audience }} Infrastructure"
+    limit: master
+    project: "{  { audience }} Code"
+    organization: "{  { audience }}"
+    playbook: playbooks/create-ad-trust.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - RHEL Root Credentials
+  - name: Register Systems to IDM
+    inventory: "{  { audience }} Infrastructure"
+    limit: clients
+    project: "{  { audience }} Code"
+    organization: "{  { audience }}"
+    playbook: playbooks/register-system-to-idm.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - RHEL Root Credential
+
+controller_workflows:
+  - name: Integrate IDM with AD for Linux Authentication
+    organization: "{  { audience }}"
+    state: "{{ controller_state | default('present') }}"
+    simplified_workflow_nodes:
+      - approval_node:
+          name: Approve 'Setup for IDM Install'
+        identifier: Approve 'Setup for IDM Install'
+        success_nodes:
+          - Setup for IDM Install
+      - unified_job_template: Setup for IDM Install 
+        identifier: Setup for IDM Install 
+        success_nodes:
+          - Approve 'Install IDM Master'
+      - approval_node:
+          name: Approve 'Install IDM Master'
+        identifier: Approve 'Install IDM Master'
+        success_nodes:
+          - Install IDM Master
+      - unified_job_template: Install IDM Master
+        identifier: Install IDM Master
+        success_nodes:
+          - Approve 'Install IDM Replicas'
+      - approval_node:
+          name: Approve 'Install IDM Replicas'
+        identifier: Approve 'Install IDM Replicas'
+        success_nodes:
+          - Install IDM Replicas
+      - unified_job_template: Install IDM Replicas
+        identifier: Install IDM Replicas
+        success_nodes:
+          - Approve 'Create Reverse Zone'
+      - approval_node:
+          name: Approve 'Create Reverse Zone'
+        identifier: Approve 'Create Reverse Zone'
+        success_nodes:
+          - Create Reverse Zone
+      - unified_job_template: Create Reverse Zone
+        identifier: Create Reverse Zone
+        success_nodes:
+          - Approve 'Setup AD for Trust'
+      - approval_node:
+          name: Approve 'Setup AD for Trust'
+        identifier: Approve 'Setup AD for Trust'
+        success_nodes:
+          - Setup AD for Trust
+      - unified_job_template: Setup AD for Trust
+        identifier: Setup AD for Trust
+        success_nodes:
+          - Approve 'Setup IDM for Trust'
+      - approval_node:
+          name: Approve 'Setup IDM for Trust'
+        identifier: Approve 'Setup IDM for Trust'
+        success_nodes:
+          - Setup IDM for Trust
+      - unified_job_template: Setup IDM for Trust
+        identifier: Setup IDM for Trust
+        success_nodes:
+          - Approve 'Create AD Trust'
+      - approval_node:
+          name: Approve 'Create AD Trust'
+        identifier: Approve 'Create AD Trust'
+        success_nodes:
+          - Create AD Trust
+      - unified_job_template: Create AD Trust
+        identifier: Create AD Trust
+        success_nodes:
+          - Approve 'Register Systems to IDM'
+      - approval_node:
+          name: Approve 'Register Systems to IDM'
+        identifier: Approve 'Register Systems to IDM'
+        success_nodes:
+          - Register Systems to IDM
+      - unified_job_template: Register Systems to IDM
+        identifier: Register Systems to IDM
