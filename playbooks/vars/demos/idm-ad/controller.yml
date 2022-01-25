@@ -59,6 +59,10 @@ controller_execution_environments:
 controller_inventories:
   - name: "{  { audience }} Infrastructure"
     organization: "{  { audience }}"
+    variables:
+      demo_uuid: "{{ demo_uuid }}"
+      audience: "{{ audience }}"
+      dns_suffix: "{{ demo_uuid }}.{{ base_dns_suffix }}"
 
 controller_hosts:
   - name: "ad-dc1.ad.{{ demo_uuid }}.{{ base_dns_suffix }}"
