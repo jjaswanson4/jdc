@@ -19,6 +19,8 @@
             extra_vars:
               demo: "{{ demo }}"
               audience: Github-Actions
+              provisioner: Github Actions
+              provisioner_email: joshswanson@redhat.com
   tasks:
     - name: run role to launch job
       ansible.builtin.include_role:
