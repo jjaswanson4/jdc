@@ -1,0 +1,14 @@
+---
+
+- name: test specified demo
+  hosts:
+    - localhost
+  gather_facts: no
+  vars:
+    ansible_connection: local
+  vars_files:
+    - /home/gitlab-runner/gitlab-runner-extra-vars.yml
+  pre_tasks:
+    - name: print out specified demo to test
+      ansible.builtin.debug:
+        msg: "Demo to test: {{ demo }}"
