@@ -12,5 +12,5 @@ jobs:
         run: |
           ls ${{ github.workspace }}
       - name: kick off test playbook
-        run: ansible-playbook ${{ github.workspace }} --extra-vars "demo=patching"
+        run: ansible-playbook ${{ github.workspace }}/tests/test-demo.yml --extra-vars "demo=patching"
       - run: echo "Job Status == ${{ job.status }}."
