@@ -15,10 +15,10 @@
     - name: set dict for role
       ansible.builtin.set_fact:
         controller_launch_jobs:
-          name: Provision Demo
-          extra_vars:
-            demo: "{{ demo }}"
-            audience: Github-Actions
+          - name: Provision Demo
+            extra_vars:
+              demo: "{{ demo }}"
+              audience: Github-Actions
   tasks:
     - name: run role to launch job
       ansible.builtin.include_role:
