@@ -158,6 +158,8 @@
               demo_context_state: "{{ demo_context_state | default('present') }}"
               provisioner: "{{ provisioner }}"
               provisioner_email: "{{ provisioner_email }}"
+              wait: yes
+              timeout: 21600
     - name: get auth token for netbox
       ansible.builtin.uri:
         url: "{{ netbox_url }}/api/users/tokens/provision/"
