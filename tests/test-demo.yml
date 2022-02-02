@@ -16,14 +16,15 @@
       ansible.builtin.set_fact:
         controller_launch_jobs:
           - name: Provision Demo
+            wait: yes
+            timeout: 28800
             extra_vars:
               demo: "{{ demo }}"
               audience: Github-Actions
               provisioner: Github Actions
               provisioner_email: joshswanson@redhat.com
               demo_uuid: "{{ demo_uuid }}"
-              wait: yes
-              timeout: 28800
+
   tasks:
     - name: run role to launch job
       ansible.builtin.include_role:
