@@ -12,8 +12,11 @@
     - name: print out specified demo to test
       ansible.builtin.debug:
         msg: "Demo to test: {{ demo }}"
-    - name: set dict for role
+    - name: set facts
       ansible.builtin.set_fact:
+        controller_projects:
+          - name: Josh's Demos Collection
+            wait: yes
         controller_launch_jobs:
           - name: Provision Demo
             wait: yes
@@ -26,6 +29,9 @@
               demo_uuid: "{{ demo_uuid }}"
 
   tasks:
+    - name: sync project in controller
+      ansible.builtin.include_role:
+        name: redhat_cop.controller_configuration.project_update
     - name: run role to launch job
       ansible.builtin.include_role:
         name: redhat_cop.controller_configuration.job_launch
