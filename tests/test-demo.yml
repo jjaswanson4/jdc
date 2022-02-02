@@ -21,7 +21,11 @@
               audience: Github-Actions
               provisioner: Github Actions
               provisioner_email: joshswanson@redhat.com
+              demo_uuid: "{{ demo_uuid }}"
   tasks:
     - name: run role to launch job
       ansible.builtin.include_role:
         name: redhat_cop.controller_configuration.job_launch
+    - name: print out launched jobs
+      ansible.builtin.debug:
+        msg: "{{ launched_controller_jobs }}"
