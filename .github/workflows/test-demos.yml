@@ -1,0 +1,16 @@
+---
+
+name: Test Demos
+on: [push]
+jobs:
+  Test-Patching-Demo:
+    runs-on: self-hosted
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}
+      - name: kick off test playbook
+        run: ansible-playbook ${{ github.workspace }} --extra-vars "demo=patching"
+      - run: echo "Job Status == ${{ job.status }}."
