@@ -20,6 +20,6 @@ jobs:
         run: echo "Provisioning successful."
       - name: Teardown demo
         run: >
-          ansible-playbook ${{ github.workspace }}/tests/test-demo.yml
+          ansible-playbook ${{ github.workspace }}/tests/teardown.yml
           --extra-vars "demo=patching"
           --extra-vars "demo_uuid=${{ github.run_id }}"
