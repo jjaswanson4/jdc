@@ -11,9 +11,15 @@ jobs:
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
-      - name: kick off test playbook
+      - name: Test provisioning demo (check controller for details)
         run: >
           ansible-playbook ${{ github.workspace }}/tests/test-demo.yml
           --extra-vars "demo=patching"
           --extra-vars "demo_uuid=${{ github.run_id }}"
-      - run: echo "Job Status == ${{ job.status }}."
+      - name: Report provisioning success
+        run: echo "Provisioning successful."
+      - name: Teardown demo
+        run: >
+          ansible-playbook ${{ github.workspace }}/tests/test-demo.yml
+          --extra-vars "demo=patching"
+          --extra-vars "demo_uuid=${{ github.run_id }}"
