@@ -108,36 +108,6 @@ satellite:
         locations:
           - name: "{  { audience }}"
     compute_profiles:
-      - name: general-rhel7-vlan146
-        compute_resource: "{  { vcenter_hostname }}"
-        vm_attrs:
-          cpus: 2
-          corespersocket: 4
-          memory_mb: 4096
-          firmware: bios
-          cluster: General
-          resource_pool: Resources
-          path: "/Datacenters/{  { vcenter_datacenter }}/vm/Demos/{  { demo_uuid }}"
-          guest_id: rhel7_64Guest
-          hardware_version: vmx-17
-          memoryHotAddEnabled: 1
-          cpuHotAddEnabled: 1
-          add_cdrom: 0
-          scsi_controllers:
-          - type: ParaVirtualSCSIController
-            key: 1000
-          interfaces_attributes:
-            0:
-              type: VirtualVmxnet3
-              network: dvportgroup-34
-          volumes_attributes:
-            0:
-              thin: true
-              name: Hard disk
-              mode: persistent
-              controller_key: 1000
-              size_gb: 100
-              datastore: storage04-nfs-lun0
       - name: general-rhel8-vlan146
         compute_resource: "{  { vcenter_hostname }}"
         vm_attrs:
