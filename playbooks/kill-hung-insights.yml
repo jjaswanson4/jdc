@@ -1,0 +1,13 @@
+---
+
+- name: kill stuck process on old versions of the insights-client
+  hosts:
+    - all
+  gather_facts: no
+  tasks:
+    - name: kill hung pid
+      ansible.builtin.shell:
+        cmd: kill $(ps aux | grep insights | grep run | awk '{print $2}')
+      failed_when: no
+      ignore_errors: yes
+      changed_when: no

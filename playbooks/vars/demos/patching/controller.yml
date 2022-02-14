@@ -286,6 +286,15 @@ controller_templates:
         - Production
     credentials:
       - Patching Credentials
+  - name: Kill Stuck Insights Process
+    inventory: "{  { audience }} Infrastructure"
+    limit: 'non_production:&normal_patch'
+    project: "{  { audience }} Patching Code"
+    organization: "{  { audience }}"
+    playbook: playbooks/kill-hung-insights.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - Patching Credentials
 
 controller_workflows:
   - name: Pre-Patching | Non_Production | Security
