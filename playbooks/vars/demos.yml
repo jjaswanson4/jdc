@@ -4,7 +4,7 @@ available_demos:
   - name: patching
     display_name: Patching
   - name: s4hana-deployment
-    display_name: S4/HANA Deployment
+    display_name: S/4HANA Deployment
   - name: compliance
     display_name: Compliance
   - name: idm-ad
