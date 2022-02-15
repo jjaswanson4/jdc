@@ -21,9 +21,9 @@ vars_files_path: "vars/demos/{{ demo }}"
 # This execution environment will automatically be configured in Controller.
 execution_environment:
   name: Josh's Demos Collection EE
-  registry: "{{ ee.registry }}"
+  registry: "{{ ee_registry.host }}"
   image: joshs-demos-collection-ee
-  credential: "{{ ee.credential }}"
+  credential: Demo Provisioner EE Image Registry Credentials
 
 # This is the information used for the instance of Controller for the demo.
 # This can be the same instance as where the provisioner is deployed, but it's not recommended.
