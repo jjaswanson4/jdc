@@ -1,0 +1,230 @@
+---
+
+# By default, the org 'Demo Provisioner' is created and resources are configured there,
+# Use this variable to override this behavior.
+# For example, overriding to 'Default' will put the resources into the default controller organization.
+controller_organization: Demo Provisioner
+
+# This is the default project name. It is a var so demos can import specific job templates and override the project locally.
+# Change this to change the name of the project for the provisioner job templates.
+project: Josh's Demos Collection
+
+# This is the default prefix for assets created for this demo.
+# Change this variable to use a different prefix.
+demo_prefix: Patching Demo
+
+# This is the realitive path to the vars files for this demo.
+# Typically this contains a vars file for the provisioner, Satellite, and Controller.
+vars_files_path: "vars/demos/{{ demo }}"
+
+# This is the execution environment used for this demo provisioner.
+# This execution environment will automatically be configured in Controller.
+execution_environment:
+  name: Josh's Demos Collection EE
+  registry: "{{ ee_registry.host }}"
+  image: joshs-demos-collection-ee
+  credential: Demo Provisioner EE Image Registry Credentials
+
+# This is the information used for the instance of Controller for the demo.
+# This can be the same instance as where the provisioner is deployed, but it's not recommended.
+controller_configuration_file: "{{ vars_files_path }}/controller.yml"
+
+# This is the information used for the instance of Satellite for the demo.
+# This can be the same instance as where the provisioner is deployed, but it's not recommended.
+satellite_configuration_file: "{{ vars_files_path }}/satellite.yml"
+
+base_dns_suffix: demos.lcl
+
+# This toggles secure logging, for example: when configuring credentials on Ansible Controller.
+# Since I'm using my own instance, secure logging isn't a requirement.
+controller_configuration_credentials_secure_logging: no
+
+controller_organizations: []
+controller_credential_types: []
+controller_credentials: []
+controller_execution_environments: []
+controller_inventories: []
+controller_projects: []
+controller_templates: []
+
+controller_hosts:
+  - name: "sapddhdb1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    variables:
+      sap_hana_hsr_alias: DC1
+  - name: "sapddhdb2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    variables:
+      sap_hana_hsr_alias: DC2
+  - name: "sapddapp1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+
+controller_groups:
+  - name: demo_hosts
+    hosts:
+      - "sapddhdb1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "sapddhdb2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "sapddapp1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+
+controller_workflows:
+  - name: Provision S/4HANA Deployment Demo
+    organization: "{{ controller_organization }}"
+    state: "{{ controller_state | default('present') }}"
+    ask_inventory_on_launch: yes
+    ask_variables_on_launch: yes
+    extra_vars:
+      demo: s4hana-deployment
+################################TO-DO
+    simplified_workflow_nodes:
+      - unified_job_template: Provision Systems
+        identifier: node101
+        inventory: "{{ inventory }}"
+        limit: satellite
+        credentials:
+          - "{{ demo_prefix }} Peripheral Credentials"
+          - "{{ demo_prefix }} Root Account"
+        success_nodes:
+          - node102
+        failure_nodes:
+          - node1101
+      - unified_job_template: Install Red Hat Satellite
+        identifier: node102
+        inventory: "{{ inventory }}"
+        limit: satellite
+        credentials:
+          - "{{ demo_prefix }} Peripheral Credentials"
+          - "{{ demo_prefix }} Root Account"
+        success_nodes:
+          - node103
+        failure_nodes:
+          - node1102
+      - unified_job_template: Configure Red Hat Satellite
+        identifier: node103
+        inventory: "{{ inventory }}"
+        limit: satellite
+        credentials:
+          - "{{ demo_prefix }} Peripheral Credentials"
+          - "{{ demo_prefix }} Root Account"
+        success_nodes:
+          - node104
+        failure_nodes:
+          - node1103
+      - unified_job_template: Run Remote Execution Jobs
+        identifier: node104
+        inventory: "{{ inventory }}"
+        limit: satellite
+        credentials:
+          - "{{ demo_prefix }} Peripheral Credentials"
+        success_nodes:
+          - node999
+        failure_nodes:
+          - node1104
+      - unified_job_template: Provision Systems
+        identifier: node201
+        inventory: "{{ inventory }}"
+        limit: controller
+        credentials:
+          - "{{ demo_prefix }} Peripheral Credentials"
+          - "{{ demo_prefix }} Root Account"
+        success_nodes:
+          - node202
+        failure_nodes:
+          - node1201
+      - unified_job_template: Install Ansible Controller
+        identifier: node202
+        inventory: "{{ inventory }}"
+        limit: controller
+        credentials:
+          - "{{ demo_prefix }} Peripheral Credentials"
+          - "{{ demo_prefix }} Root Account"
+        success_nodes:
+          - node203
+        failure_nodes:
+          - node1202
+      - unified_job_template: Configure Ansible Controller
+        identifier: node203
+        inventory: "{{ inventory }}"
+        limit: controller
+        credentials:
+          - "{{ demo_prefix }} Peripheral Credentials"
+          - "{{ demo_prefix }} Root Account"
+        success_nodes:
+          - node999
+        failure_nodes:
+          - node1203    
+      - unified_job_template: Send Provisioner Email
+        identifier: node999
+        all_parents_must_converge: yes
+        extra_data:
+          provisioner_status: success
+      - unified_job_template: Send Provisioner Email
+        identifier: node1101
+        extra_data:
+          provisioner_status: failed
+      - unified_job_template: Send Provisioner Email
+        identifier: node1102
+        extra_data:
+          provisioner_status: failed
+      - unified_job_template: Send Provisioner Email
+        identifier: node1103
+        extra_data:
+          provisioner_status: failed
+      - unified_job_template: Send Provisioner Email
+        identifier: node1104
+        extra_data:
+          provisioner_status: failed
+      - unified_job_template: Send Provisioner Email
+        identifier: node1201
+        extra_data:
+          provisioner_status: failed
+      - unified_job_template: Send Provisioner Email
+        identifier: node1202
+        extra_data:
+          provisioner_status: failed
+      - unified_job_template: Send Provisioner Email
+        identifier: node1203
+        extra_data:
+          provisioner_status: failed
+  - name: Teardown S4HANA Deployment Demo
+    organization: Demo Provisioner
+    state: "{{ controller_state | default('present') }}"
+    extra_vars:
+      demo: s4hana-deployment
+    survey_enabled: yes
+    survey:
+      name: ''
+      description: ''
+      spec:
+        - type: text
+          question_name: "Demo Audience?"
+          question_description: "Who is the audience for this demo"
+          variable: audience
+          required: yes
+    simplified_workflow_nodes:
+      - unified_job_template: Unregister from Insights
+        identifier: node996
+        inventory: "{{ inventory }}"
+        limit: 'demo_hosts'
+        credentials:
+          - "{{ demo_prefix }} Root Account"
+        always_nodes:
+          - node997
+      - unified_job_template: Teardown Systems
+        identifier: node997
+        inventory: "{{ inventory }}"
+        limit: demo_hosts
+        credentials:
+          - "{{ demo_prefix }} Peripheral Credentials"
+        always_nodes:
+          - node998
+      - unified_job_template: Teardown Systems
+        identifier: node998
+        inventory: "{{ inventory }}"
+        limit: management_plane
+        credentials:
+          - "{{ demo_prefix }} Peripheral Credentials"
+        always_nodes:
+          - node999
+      - unified_job_template: Cleanup DNS Records
+        identifier: node999
+        inventory: "{{ inventory }}"
+        limit: 'demo_hosts:management_plane'
+        credentials:
+          - "{{ demo_prefix }} Peripheral Credentials"
