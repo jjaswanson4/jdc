@@ -304,14 +304,14 @@ controller_workflows:
         limit: aap_installer_node
         credentials:
           - Demo Provisioner Admin Credentials
-        success_nodes:
-          - Send Success Email
+        # success_nodes:
+        #   - Send Success Email
         failure_nodes:
           - Send Failure Email About 'Configure Ansible Controller'
       - identifier: Send Failure Email About 'Configure Ansible Controller'
         unified_job_template: Send Provisioner Email
         extra_data:
-          failed_at_step: Configure Ansible Controller    
+          failed_at_step: Configure Ansible Controller
 
   - name: Teardown AAP Advanced Architecture Demo
     organization: Demo Provisioner
