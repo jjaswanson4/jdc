@@ -10,3 +10,4 @@
     datacenter: "{{ vcenter_datacenter }}"
     disk: "{{ additional_storage }}"
   delegate_to: localhost
+  become: false
