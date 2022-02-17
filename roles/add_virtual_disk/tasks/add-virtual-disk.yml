@@ -9,4 +9,4 @@
     name: "{{ inventory_hostname }}"
     datacenter: "{{ vcenter_datacenter }}"
     disk: "{{ additional_storage }}"
-  delegate_to: localhost
+  delegate_to: "{{ delegate_host }}"
