@@ -6,7 +6,6 @@
   become: no
   roles:
     - ../roles/mount_nfs_shares
-    - ../roles/add_virtual_disk
     - redhat.rhel_system_roles.storage
     - sap.rhel.preconfigure
     - redhat_sap.sap_hostagent

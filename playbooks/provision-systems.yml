@@ -6,3 +6,9 @@
   gather_facts: no
   roles:
     - ../roles/manage_systems_with_satellite
+  post_tasks:
+    - name: add storage to systems
+      ansible.builtin.include_role:
+        name: ../roles/add_virtual_disk
+      when:
+        - additional_storage is defined
