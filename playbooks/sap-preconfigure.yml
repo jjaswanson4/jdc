@@ -3,6 +3,7 @@
 - name: initial setup of SAP hosts
   hosts:
     - all
+  become: no
   roles:
     - ../roles/mount_nfs_shares
     - ../roles/add_virtual_disk
