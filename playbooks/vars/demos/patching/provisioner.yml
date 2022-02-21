@@ -682,6 +682,7 @@ controller_workflows:
         credentials:
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
+          - Demo Provisioner EE Python Libraries Env Vars
         always_nodes:
           - Teardown Management Plane
       - identifier: Teardown Management Plane
