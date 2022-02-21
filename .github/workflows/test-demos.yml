@@ -14,6 +14,8 @@ jobs:
       - name: create a directory for roles/collections
         run: |
           mkdir .ansible
+      - run: >
+          cat ${{ github.workspace }}/execution-environment/requirements.yml
       - name: Install required roles
         run: >
          export ANSIBLE_CONFIG=~/ansible.cfg &&
