@@ -5,3 +5,4 @@ execution-environment/context
 execution-environment/ansible.cfg
 testing*
 scratch
+plugins/README.md
