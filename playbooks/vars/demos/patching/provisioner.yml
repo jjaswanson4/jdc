@@ -402,6 +402,7 @@ controller_workflows:
           - Demo Provisioner vCenter Credentials
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
+          - Demo Provisioner EE Python Libraries Env Vars
         success_nodes:
           - Provision Demo Systems
         failure_nodes:
@@ -418,6 +419,7 @@ controller_workflows:
           - Demo Provisioner Admin Credentials
           - Demo Provisioner Netbox Credentials
           - Demo Provisioner Root Account
+          - Demo Provisioner EE Python Libraries Env Vars
         success_nodes:
           - Apply Standard Config to Demo Hosts
           - Configure Ansible Controller
@@ -642,6 +644,7 @@ controller_workflows:
           - Demo Provisioner Admin Credentials
           - Demo Provisioner Netbox Credentials
           - Demo Provisioner Root Account
+          - Demo Provisioner EE Python Libraries Env Vars
         all_parents_must_converge: yes
         success_nodes:
           - Send Success Email
