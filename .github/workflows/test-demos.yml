@@ -18,16 +18,14 @@ jobs:
           cat ${{ github.workspace }}/execution-environment/requirements.yml
       - name: Install required roles
         run: >
-         export ANSIBLE_CONFIG=~/ansible.cfg &&
-          ansible-galaxy install
-          --role-file ${{ github.workspace }}/execution-environment/requirements.yml
-          --roles-path ${{ github.workspace }}/.ansible/
-      - name: Install required collections
-        run: >
-         export ANSIBLE_CONFIG=~/ansible.cfg &&
-          ansible-galaxy collection install
-          --requirements-file ${{ github.workspace }}/execution-environment/requirements.yml
-          --collections-path ${{ github.workspace }}/.ansible/
+          export ANSIBLE_CONFIG=~/ansible.cfg &&
+          ansible-galaxy install --role-file ${{ github.workspace }}/execution-environment/requirements.yml --roles-path ${{ github.workspace }}/.ansible/
+      # - name: Install required collections
+      #   run: >
+      #    export ANSIBLE_CONFIG=~/ansible.cfg &&
+      #     ansible-galaxy collection install
+      #     --requirements-file ${{ github.workspace }}/execution-environment/requirements.yml
+      #     --collections-path ${{ github.workspace }}/.ansible/
       # - name: Test provisioning demo (check controller for details)
       #   run: >
       #     ansible-playbook ${{ github.workspace }}/tests/test-demo.yml
