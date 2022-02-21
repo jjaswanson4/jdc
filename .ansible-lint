@@ -1,0 +1,48 @@
+---
+
+warn_list:
+  - internal-error
+  - syntax-check
+
+mock_modules:
+  - ansible.windows.win_reboot
+  - freeipa.ansible_freeipa.ipatrust
+  - ansible.windows.win_dns_client
+  - freeipa.ansible_freeipa.ipadnszone
+  - community.general.ipa_dnsrecord
+  - redhat.satellite.host_info
+  - community.general.lvol
+  - ansible.windows.win_powershell
+  - redhat.satellite.content_view_filter
+  - redhat.satellite.content_view_version
+  - community.vmware.vmware_guest
+  - redhat.satellite.content_view_filter
+  - redhat.satellite.content_view_version
+  - redhat.satellite.job_invocation
+  - community.general.mail
+  - ansible.windows.win_powershell
+  - freeipa.ansible_freeipa.ipadnsforwardzone
+  - redhat.satellite.host
+  - community.vmware.vmware_guest
+  - netbox.netbox.netbox_virtual_machine
+  - community.general.ipa_dnsrecord
+  - redhat.satellite.host_info
+
+mock_roles:
+  - redhat.rhel_system_roles.selinux
+  - redhat_cop.controller_configuration.inventories
+  - jjaswanson4.configure_satellite.configure_satellite_foreman
+  - sap.rhel.hana_preconfigure
+  - freeipa.ansible_freeipa.ipaserver
+  - freeipa.ansible_freeipa.ipareplica
+  - jjaswanson4.setup_rhel_for_satellite.setup_storage
+  - redhat_cop.controller_configuration.project_update
+  - sap.rhel.netweaver_preconfigure
+  - freeipa.ansible_freeipa.ipaclient
+  - redhat_cop.controller_configuration.workflow_job_templates
+  - redhat_cop.controller_configuration.inventories
+  - redhat_cop.controller_configuration.job_launch
+  - redhat_cop.controller_configuration.workflow_launch
+  - redhat.rhel_system_roles.storage
+  - redhat.rhel_system_roles.crypto_policies
+  - redhat_cop.controller_configuration.organizations
