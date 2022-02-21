@@ -19,13 +19,13 @@ jobs:
           export ANSIBLE_CONFIG=~/ansible.cfg &&
           ansible-galaxy install
           --role-file ${{ github.workspace }}/execution-environment/requirements.yml
-          --roles-path ${{ github.workspace }}/.ansible/
+          --roles-path ${{ github.workspace }}/.ansible/roles
       - name: Install required collections
         run: >
           export ANSIBLE_CONFIG=~/ansible.cfg &&
           ansible-galaxy collection install
           --requirements-file ${{ github.workspace }}/execution-environment/requirements.yml
-          --collections-path ${{ github.workspace }}/.ansible/
+          --collections-path ${{ github.workspace }}/.ansible/collections
       - name: run ansible-lint
         run: >
           export DEFAULT_ROLES_PATH=${{ github.workspace }}/.ansible/roles &&
