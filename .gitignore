@@ -6,3 +6,4 @@ execution-environment/ansible.cfg
 testing*
 scratch
 plugins/README.md
+demo-configuration.yml
