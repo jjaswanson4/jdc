@@ -26,16 +26,13 @@ jobs:
           ansible-galaxy collection install
           --requirements-file ${{ github.workspace }}/execution-environment/requirements.yml
           --collections-path ${{ github.workspace }}/.ansible/
-      - name: Lint Ansible Playbook
-        uses: ansible/ansible-lint-action@master
-        with:
-          targets: |
-            playbooks/*    
-      # - name: run ansible-lint
-      #   run: >
-      #     export DEFAULT_ROLES_PATH=${{ github.workspace }}/.ansible/roles &&
-      #     export COLLECTIONS_PATHS=${{ github.workspace }}/.ansible/collections &&
-      #     ansible-lint -p ${{ github.workspace }}/playbooks/* ${{ github.workspace }}/roles/*
+      - name: run ansible-lint
+        run: >
+          export DEFAULT_ROLES_PATH=${{ github.workspace }}/.ansible/roles &&
+          export COLLECTIONS_PATHS=${{ github.workspace }}/.ansible/collections &&
+          ls -l $DEFAULT_ROLES_PATH &&
+          ls -l $COLLECTIONS_PATHS &&
+          ansible-lint -p ${{ github.workspace }}/playbooks/* ${{ github.workspace }}/roles/*
       # - name: Test provisioning demo (check controller for details)
       #   run: >
       #     ansible-playbook ${{ github.workspace }}/tests/test-demo.yml
