@@ -18,7 +18,7 @@ First, you can check the list of available demos [here](DEMOS.md).
 
 | Demo | Provisions | Teardown | Runs |
 | ---- | ---------- | -------- | ---- |
-| Patching | :heavy_check_mark: | :heavy_check_mark: | :grey_question: |
+| Patching | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | IDM-AD Integration | :heavy_check_mark: | :heavy_check_mark: | :x: |
 | S4/HANA Deployment | :x: | :x: | :x: |
 | Compliance | :x: | :x: | :x: |
