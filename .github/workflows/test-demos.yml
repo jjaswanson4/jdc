@@ -4,6 +4,7 @@ name: Test Demos
 on: [push]
 jobs:
   ansible-lint:
+    name: Use ansible-lint to check code
     runs-on: self-hosted
     steps:
       - name: Check out repository code
@@ -36,7 +37,10 @@ jobs:
           -c ${{ github.workspace }}/.ansible-lint
           -p ${{ github.workspace }}/playbooks ${{ github.workspace }}/roles
   cicd-complete:
+    name: Report CI/CD completed successfully
     runs-on: self-hosted
+    needs:
+      - ansible-lint
     steps:
       - name: Report success
         run: >
