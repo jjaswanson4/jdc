@@ -1,0 +1,15 @@
+---
+
+galaxy_info:
+  author: Josh Swanson
+  description: manage the "context" for a demo
+  license: GPL-3.0
+  min_ansible_version: 2.9
+  galaxy_tags:
+    - cmdb
+    - netbox
+    - vmware
+    - satellite
+    - idm
+
+dependencies: []
