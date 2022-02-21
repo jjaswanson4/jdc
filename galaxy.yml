@@ -36,4 +36,4 @@ issues: https://github.com/jjaswanson4/jdc/issues
 build_ignore:
   - execution-environment
   - .github
-  
+  - tmp
