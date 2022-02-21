@@ -7,3 +7,4 @@ testing*
 scratch
 plugins/README.md
 demo-configuration.yml
+*.tar.gz
