@@ -32,7 +32,7 @@ Example Playbook
 ----------------
 
 ```yaml
-- name: manage storage
+- name: get IP address
   hosts:
     - all
   roles:
