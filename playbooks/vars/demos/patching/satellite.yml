@@ -247,9 +247,9 @@ satellite:
               product: Red Hat Enterprise Linux for x86_64
               releasever: 8.4
           filters:
-            - name: 07-01-2021
+            - name: 01-01-2022
               filter_type: erratum
-              end_date: '2021-07-01'
+              end_date: '2022-01-01'
         - name: cv-ansible-rhel8
           repos:
             - repo: Red Hat Ansible Engine 2 for RHEL 8 x86_64 (RPMs)
@@ -260,18 +260,18 @@ satellite:
               product: Red Hat Enterprise Linux Server - Update Services for SAP Solutions
               releasever: 8.4
           filters:
-            - name: 07-01-2021
+            - name: 01-01-2022
               filter_type: erratum
-              end_date: '2021-07-01'
+              end_date: '2022-01-01'
         - name: cv-e4s-appstream-rhel8.4
           repos:
             - repo: Red Hat Enterprise Linux 8 for x86_64 - AppStream - Update Services for SAP Solutions (RPMs)
               product: Red Hat Enterprise Linux Server - Update Services for SAP Solutions
               releasever: 8.4       
           filters:
-            - name: 07-01-2021
+            - name: 01-01-2022
               filter_type: erratum
-              end_date: '2021-07-01'
+              end_date: '2022-01-01'
         - name: cv-r4s-netweaver-rhel8.4
           repos:
             - repo: Red Hat Enterprise Linux 8 for x86_64 - SAP NetWeaver - Update Services for SAP Solutions (RPMs)
@@ -288,18 +288,18 @@ satellite:
               product: Red Hat Enterprise Linux Server - Update Services for SAP Solutions
               releasever: 8.4
           filters:
-            - name: 07-01-2021
+            - name: 01-01-2022
               filter_type: erratum
-              end_date: '2021-07-01'
+              end_date: '2022-01-01'
         - name: cv-e4s-highavailability-rhel8.4
           repos:
             - repo: Red Hat Enterprise Linux 8 for x86_64 - High Availability - Update Services for SAP Solutions (RPMs)
               product: Red Hat Enterprise Linux High Availability - Update Services for SAP Solutions
               releasever: 8.4
           filters:
-            - name: 07-01-2021
+            - name: 01-01-2022
               filter_type: erratum
-              end_date: '2021-07-01'
+              end_date: '2022-01-01'
         - name: cv-server-rhel8
           repos:
             - repo: Red Hat Enterprise Linux 8 for x86_64 - BaseOS (RPMs)
