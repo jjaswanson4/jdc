@@ -56,7 +56,7 @@ Example Playbook
 ----------------
 
 ```yaml
-- name: manage storage
+- name: manage common config
   hosts:
     - all
   roles:
