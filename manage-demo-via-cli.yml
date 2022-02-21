@@ -1,0 +1,52 @@
+---
+
+- name: sync project and provision demo
+  hosts:
+    - localhost
+  gather_facts: no
+  vars:
+    ansible_connection: local
+    controller_hostname: "{{ controller.hostname }}"
+    controller_username: "{{ controller.username }}"
+    controller_password: "{{ controller.password }}"
+    controller_validate_certs: no
+
+    controller_projects:
+      - name: Josh's Demos Collection
+        wait: yes
+
+  pre_tasks:
+    - name: set launch job | provision
+      ansible.builtin.set_fact:
+        controller_launch_jobs:
+          - name: Provision Demo
+            extra_vars:
+              audience: "{{ audience }}"
+              demo: "{{ demo }}"
+              provisioner: "{{ provisioner }}"
+              provisioner_email: "{{ provisioner_email }}"
+              demo_uuid: "{{ demo_uuid | default(omit) }}"
+              wait: no
+      when:
+        - provision_demo is defined
+        - provision_demo
+
+    - name: set launch job | teardown
+      ansible.builtin.set_fact:
+        controller_workflow_launch_jobs:
+          - name: Teardown Demo
+            extra_vars:
+              audience: "{{ audience }}"
+              demo: "{{ demo }}"
+              provisioner: "{{ provisioner }}"
+              provisioner_email: "{{ provisioner_email }}"
+              demo_uuid: "{{ demo_uuid }}"
+            wait: no
+      when:
+        - teardown_demo is defined
+        - teardown_demo     
+
+  roles:
+    - redhat_cop.controller_configuration.project_update
+    - redhat_cop.controller_configuration.job_launch
+    - redhat_cop.controller_configuration.workflow_launch
