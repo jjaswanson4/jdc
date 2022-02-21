@@ -27,7 +27,7 @@ jobs:
           --requirements-file ${{ github.workspace }}/execution-environment/requirements.yml
           --collections-path ${{ github.workspace }}/.ansible/
       - name: Lint Ansible Playbook
-        uses: ansible/ansible-lint-action
+        uses: ansible/ansible-lint-action@master
         with:
           targets: |
             playbooks/*    
