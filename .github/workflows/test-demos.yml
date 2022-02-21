@@ -32,7 +32,9 @@ jobs:
           export COLLECTIONS_PATHS=${{ github.workspace }}/.ansible/collections &&
           ls -l $DEFAULT_ROLES_PATH &&
           ls -l $COLLECTIONS_PATHS &&
-          ansible-lint -p ${{ github.workspace }}/playbooks/* ${{ github.workspace }}/roles/*
+          ansible-lint
+          -c ${{ github.workspace }}/.ansible-lint
+          -p ${{ github.workspace }}/playbooks ${{ github.workspace }}/roles
       # - name: Test provisioning demo (check controller for details)
       #   run: >
       #     ansible-playbook ${{ github.workspace }}/tests/test-demo.yml
