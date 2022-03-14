@@ -47,107 +47,107 @@ controller_credential_types:
         controller_username: "{  { controller_username }}"
         controller_password: "{  { controller_password }}"
         controller_validate_certs: "no"
-  # - name: Demo Provisioner Netbox Credentials
-  #   kind: cloud
-  #   inputs:
-  #     fields:
-  #       - id: netbox_url
-  #         type: string
-  #         label: Netbox URL
-  #       - id: netbox_username
-  #         type: string
-  #         label: Netbox Username
-  #       - id: netbox_password
-  #         type: string
-  #         label: Netbox Password
-  #         secret: yes
-  #   injectors:
-  #     extra_vars:
-  #       netbox_url: "{  { netbox_url }}"
-  #       netbox_username: "{  { netbox_username }}"
-  #       netbox_password: "{  { netbox_password }}"
-  #       netbox_validate_certs: "no"
-  # - name: Demo Provisioner vCenter Credentials
-  #   kind: cloud
-  #   inputs:
-  #     fields:
-  #       - id: vcenter_hostname
-  #         type: string
-  #         label: vCenter Hostname
-  #       - id: vcenter_username
-  #         type: string
-  #         label: vCenter Username
-  #       - id: vcenter_password
-  #         type: string
-  #         label: vCenter Password
-  #         secret: yes
-  #       - id: vcenter_datacenter
-  #         type: string
-  #         label: vCenter Datacenter
-  #       - id: vcenter_cluster
-  #         type: string
-  #         label: vCenter Cluster
-  #   injectors:
-  #     extra_vars:
-  #       vcenter_hostname: "{  { vcenter_hostname }}"
-  #       vcenter_username: "{  { vcenter_username }}"
-  #       vcenter_password: "{  { vcenter_password }}"
-  #       vcenter_validate_certs: "no"
-  #       vcenter_datacenter: "{  { vcenter_datacenter }}"
-  #       vcenter_cluster: "{  { vcenter_cluster }}"
-  # - name: Demo Provisioner IDM Credentials
-  #   kind: cloud
-  #   inputs:
-  #     fields:
-  #       - id: idm_host
-  #         type: string
-  #         label: IDM Host
-  #       - id: idm_password
-  #         type: string
-  #         label: IDM Password
-  #         secret: yes
-  #   injectors:
-  #     extra_vars:
-  #       idm_host: "{  { idm_host }}"
-  #       idm_password: "{  { idm_password }}"
-  #       idm_validate_certs: "no"
-  # - name: Demo Provisioner Satellite Credentials
-  #   kind: cloud
-  #   inputs:
-  #     fields:
-  #       - id: satellite_url
-  #         type: string
-  #         label: Satellite URL
-  #       - id: satellite_username
-  #         type: string
-  #         label: Satellite Username
-  #       - id: satellite_password
-  #         type: string
-  #         label: Satellite Password
-  #         secret: yes
-  #       - id: satellite_organization
-  #         type: string
-  #         label: Satellite Organization
-  #       - id: satellite_location
-  #         type: string
-  #         label: Satellite Location
-  #   injectors:
-  #     extra_vars:
-  #       satellite_url: "{  { satellite_url }}"
-  #       satellite_username: "{  { satellite_username }}"
-  #       satellite_password: "{  { satellite_password }}"
-  #       satellite_validate_certs: "no"
-  #       satellite_organization: "{  { satellite_organization }}"
-  #       satellite_location: "{  { satellite_location }}"
-  #     env:
-  #       XDG_CACHE_HOME: /tmp/.cache
+  - name: Demo Provisioner Netbox Credentials
+    kind: cloud
+    inputs:
+      fields:
+        - id: netbox_url
+          type: string
+          label: Netbox URL
+        - id: netbox_username
+          type: string
+          label: Netbox Username
+        - id: netbox_password
+          type: string
+          label: Netbox Password
+          secret: yes
+    injectors:
+      extra_vars:
+        netbox_url: "{  { netbox_url }}"
+        netbox_username: "{  { netbox_username }}"
+        netbox_password: "{  { netbox_password }}"
+        netbox_validate_certs: "no"
+  - name: Demo Provisioner vCenter Credentials
+    kind: cloud
+    inputs:
+      fields:
+        - id: vcenter_hostname
+          type: string
+          label: vCenter Hostname
+        - id: vcenter_username
+          type: string
+          label: vCenter Username
+        - id: vcenter_password
+          type: string
+          label: vCenter Password
+          secret: yes
+        - id: vcenter_datacenter
+          type: string
+          label: vCenter Datacenter
+        - id: vcenter_cluster
+          type: string
+          label: vCenter Cluster
+    injectors:
+      extra_vars:
+        vcenter_hostname: "{  { vcenter_hostname }}"
+        vcenter_username: "{  { vcenter_username }}"
+        vcenter_password: "{  { vcenter_password }}"
+        vcenter_validate_certs: "no"
+        vcenter_datacenter: "{  { vcenter_datacenter }}"
+        vcenter_cluster: "{  { vcenter_cluster }}"
+  - name: Demo Provisioner IDM Credentials
+    kind: cloud
+    inputs:
+      fields:
+        - id: idm_host
+          type: string
+          label: IDM Host
+        - id: idm_password
+          type: string
+          label: IDM Password
+          secret: yes
+    injectors:
+      extra_vars:
+        idm_host: "{  { idm_host }}"
+        idm_password: "{  { idm_password }}"
+        idm_validate_certs: "no"
+  - name: Demo Provisioner Satellite Credentials
+    kind: cloud
+    inputs:
+      fields:
+        - id: satellite_url
+          type: string
+          label: Satellite URL
+        - id: satellite_username
+          type: string
+          label: Satellite Username
+        - id: satellite_password
+          type: string
+          label: Satellite Password
+          secret: yes
+        - id: satellite_organization
+          type: string
+          label: Satellite Organization
+        - id: satellite_location
+          type: string
+          label: Satellite Location
+    injectors:
+      extra_vars:
+        satellite_url: "{  { satellite_url }}"
+        satellite_username: "{  { satellite_username }}"
+        satellite_password: "{  { satellite_password }}"
+        satellite_validate_certs: "no"
+        satellite_organization: "{  { satellite_organization }}"
+        satellite_location: "{  { satellite_location }}"
+      env:
+        XDG_CACHE_HOME: /tmp/.cache
 
 controller_credentials:
   - name: Ansible Controller Credentials
     organization: "{  { audience }}"
     credential_type: Ansible Controller Credentials
     inputs:
-      controller_hostname: "{  { controller_hostname }}"
+      controller_hostname: "{  { inventory_hostname }}"
       controller_username: "{  { controller_username }}"
       controller_password: "{  { controller_password }}"
 #   - name: MSP Lab AAP20 Automation Hub
