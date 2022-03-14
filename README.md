@@ -24,3 +24,5 @@ First, you can check the list of available demos [here](DEMOS.md).
 | Compliance | :x: | :x: | :x: |
 | AAP Advanced Architecture | :x: | :x: | :x: |
 | AAP1.2 to AAP2.1 Migration | :x: | :x: | :x: |
+| RHEL for Edge | :x: | :x: | :x: |
+| CI/CD with Ansible | :x: | :x: | :x: |
