@@ -196,7 +196,6 @@ controller_workflows:
         limit: controller
         credentials:
           - Demo Provisioner Admin Credentials
-          - Demo Provisioner Controller Credentials
         success_nodes:
           - Send Success Email
         failure_nodes:
