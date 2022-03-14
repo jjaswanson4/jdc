@@ -196,6 +196,9 @@ controller_workflows:
         limit: controller
         credentials:
           - Demo Provisioner Admin Credentials
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner vCenter Credentials
+          - Demo Provisioner IDM Credentials
         success_nodes:
           - Send Success Email
         failure_nodes:
