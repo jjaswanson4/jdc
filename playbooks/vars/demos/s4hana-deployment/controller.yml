@@ -1,0 +1,574 @@
+---
+
+cpus: 4
+memory_mb: 16384
+os: rhel8
+application: general
+
+aap_download_url: http://satellite.lab.msp.redhat.com/pub/ansible-automation-platform-setup-2.1.0-1.tar.gz
+aap_bundle: ansible-automation-platform-setup-2.1.0-1.tar.gz
+
+controller_install:
+  admin_password: "{  { admin_password }}"
+  pg:
+    password: "{  { admin_password }}"
+
+bootstrap_controller: yes
+
+controller_hostname: "{  { inventory_hostname }}"
+controller_username: "{  { admin_username }}"
+controller_password: "{  { admin_password }}"
+controller_validate_certs: no
+
+controller_license:
+  manifest: /tmp/controller-manifest.zip
+
+controller_organizations:
+  - name: "{  { audience }}"
+
+controller_credential_types:
+  - name: Ansible Controller Credentials
+    kind: cloud
+    inputs:
+      fields:
+        - id: controller_hostname
+          type: string
+          label: Controller Hostname
+        - id: controller_username
+          type: string
+          label: Controller Username
+        - id: controller_password
+          type: string
+          label: Controller Password
+          secret: yes
+    injectors:
+      extra_vars:
+        controller_hostname: "{  { controller_hostname }}"
+        controller_username: "{  { controller_username }}"
+        controller_password: "{  { controller_password }}"
+        controller_validate_certs: "no"
+  # - name: Demo Provisioner Netbox Credentials
+  #   kind: cloud
+  #   inputs:
+  #     fields:
+  #       - id: netbox_url
+  #         type: string
+  #         label: Netbox URL
+  #       - id: netbox_username
+  #         type: string
+  #         label: Netbox Username
+  #       - id: netbox_password
+  #         type: string
+  #         label: Netbox Password
+  #         secret: yes
+  #   injectors:
+  #     extra_vars:
+  #       netbox_url: "{  { netbox_url }}"
+  #       netbox_username: "{  { netbox_username }}"
+  #       netbox_password: "{  { netbox_password }}"
+  #       netbox_validate_certs: "no"
+  # - name: Demo Provisioner vCenter Credentials
+  #   kind: cloud
+  #   inputs:
+  #     fields:
+  #       - id: vcenter_hostname
+  #         type: string
+  #         label: vCenter Hostname
+  #       - id: vcenter_username
+  #         type: string
+  #         label: vCenter Username
+  #       - id: vcenter_password
+  #         type: string
+  #         label: vCenter Password
+  #         secret: yes
+  #       - id: vcenter_datacenter
+  #         type: string
+  #         label: vCenter Datacenter
+  #       - id: vcenter_cluster
+  #         type: string
+  #         label: vCenter Cluster
+  #   injectors:
+  #     extra_vars:
+  #       vcenter_hostname: "{  { vcenter_hostname }}"
+  #       vcenter_username: "{  { vcenter_username }}"
+  #       vcenter_password: "{  { vcenter_password }}"
+  #       vcenter_validate_certs: "no"
+  #       vcenter_datacenter: "{  { vcenter_datacenter }}"
+  #       vcenter_cluster: "{  { vcenter_cluster }}"
+  # - name: Demo Provisioner IDM Credentials
+  #   kind: cloud
+  #   inputs:
+  #     fields:
+  #       - id: idm_host
+  #         type: string
+  #         label: IDM Host
+  #       - id: idm_password
+  #         type: string
+  #         label: IDM Password
+  #         secret: yes
+  #   injectors:
+  #     extra_vars:
+  #       idm_host: "{  { idm_host }}"
+  #       idm_password: "{  { idm_password }}"
+  #       idm_validate_certs: "no"
+  # - name: Demo Provisioner Satellite Credentials
+  #   kind: cloud
+  #   inputs:
+  #     fields:
+  #       - id: satellite_url
+  #         type: string
+  #         label: Satellite URL
+  #       - id: satellite_username
+  #         type: string
+  #         label: Satellite Username
+  #       - id: satellite_password
+  #         type: string
+  #         label: Satellite Password
+  #         secret: yes
+  #       - id: satellite_organization
+  #         type: string
+  #         label: Satellite Organization
+  #       - id: satellite_location
+  #         type: string
+  #         label: Satellite Location
+  #   injectors:
+  #     extra_vars:
+  #       satellite_url: "{  { satellite_url }}"
+  #       satellite_username: "{  { satellite_username }}"
+  #       satellite_password: "{  { satellite_password }}"
+  #       satellite_validate_certs: "no"
+  #       satellite_organization: "{  { satellite_organization }}"
+  #       satellite_location: "{  { satellite_location }}"
+  #     env:
+  #       XDG_CACHE_HOME: /tmp/.cache
+
+controller_credentials:
+  - name: Ansible Controller Credentials
+    organization: "{  { audience }}"
+    credential_type: Ansible Controller Credentials
+    inputs:
+      controller_hostname: "{  { controller_hostname }}"
+      controller_username: "{  { controller_username }}"
+      controller_password: "{  { controller_password }}"
+#   - name: MSP Lab AAP20 Automation Hub
+#     organization: "{  { audience }}"
+#     credential_type: Container Registry
+#     inputs:
+#       host: aap20-hub.josh.lab.msp.redhat.com
+#       username: admin
+#       password: "{  { ansible_password }}"
+#       verify_ssl: no
+#   - name: Root Credentials
+#     credential_type: Machine
+#     organization: "{  { audience }}"
+#     inputs:
+#       username: root
+#       password: "{  { ansible_password }}"
+
+# controller_execution_environments:
+#   - name: S4HANA Deployment Demo EE
+#     image: aap20-hub.josh.lab.msp.redhat.com/s4hana-deployment-demo-ee:latest
+#     organization: "{  { audience }}"
+#     credential: MSP Lab AAP20 Automation Hub
+#     pull: always
+
+# controller_teams:
+#   - name: "{  { audience }} SAP Infrastructure Team"
+#     description: infrastructure team
+#     organization: "{  { audience }}"
+#   - name: "{  { audience }} BASIS Team"
+#     description: BASIS team
+#     organization: "{  { audience }}"
+#   - name: "{  { audience }} Business Analyst Team"
+#     description: BASIS team
+#     organization: "{  { audience }}"
+
+# controller_user_accounts:
+#   - username: "{  { audience }}_admin"
+#     password: "{{ ansible_password }}"
+#     email: dont@email.me
+#     update_secrets: no
+#   - username: "{  { audience }}_infrastructure"
+#     password: "{{ ansible_password }}"
+#     email: dont@email.me
+#     update_secrets: no
+#   - username: "{  { audience }}_basis"
+#     password: "{{ ansible_password }}"
+#     email: dont@email.me
+#     update_secrets: no
+#   - username: "{  { audience }}_business_analyst"
+#     password: "{{ ansible_password }}"
+#     email: dont@email.me
+#     update_secrets: no
+
+# controller_inventories:
+#   - name: "{  { audience }} SAP Infrastructure"
+#     organization: "{  { audience }}"
+#     variables:
+#       company: "{  { audience }}"
+
+# controller_groups:
+#   - name: primary
+#     inventory: "{  { audience }} SAP Infrastructure"
+#     variables:
+#       sap_hana_hsr_role: primary
+#   - name: secondary
+#     inventory: "{  { audience }} SAP Infrastructure"
+#     variables:
+#       sap_hana_hsr_role: secondary
+#   - name: hana
+#     inventory: "{  { audience }} SAP Infrastructure"
+#     children:
+#       - primary
+#       - secondary
+#     variables:
+#       application: hana
+#   - name: netweaver
+#     inventory: "{  { audience }} SAP Infrastructure"
+#     variables:
+#       application: netweaver
+#   - name: s4hana
+#     inventory: "{  { audience }} SAP Infrastructure"
+#     children:
+#       - hana
+#       - netweaver
+#     variables:
+#       os: rhel8.4
+#   - name: production
+#     inventory: "{  { audience }} SAP Infrastructure"
+#     variables:
+#       lifecycle_environment: production
+
+# controller_projects:
+#   - name: "{  { audience }} S4HANA Deployment Code"
+#     organization: "{  { audience }}"
+#     scm_branch: main
+#     scm_type: git
+#     scm_url: https://github.com/jjaswanson4/patching-demo.git
+#     wait: yes
+
+# controller_templates:
+#   - name: Add Hosts to Controller Inventory
+#     organization: "{  { audience }}"
+#     inventory: Demo Inventory
+#     project: "{  { controller_projects[0].name }}"
+#     playbook: demos/s4hana-deployment/playbooks/add-hosts-to-controller.yml
+#     execution_environment: "{  { controller_execution_environments[0].name }}"
+#     credentials:
+#       - Peripheral Credentials
+#   - name: Provision Systems
+#     organization: "{  { audience }}"
+#     ask_inventory_on_launch: yes
+#     ask_limit_on_launch: yes
+#     forks: 10
+#     project: "{  { controller_projects[0].name }}"
+#     allow_simultaneous: yes
+#     playbook: provisioner/resources/playbooks/provision-systems.yml
+#     execution_environment: "{  { controller_execution_environments[0].name }}"
+#     ask_credential_on_launch: yes
+#     extra_vars:
+#       ansible_become: no
+#       provision_demo_hosts: yes
+#       run_additional_roles: no
+#   - name: Preconfigure for SAP
+#     organization: "{  { audience }}"
+#     ask_inventory_on_launch: yes
+#     ask_limit_on_launch: yes
+#     forks: 10
+#     project: "{  { controller_projects[0].name }}"
+#     allow_simultaneous: yes
+#     playbook: provisioner/resources/playbooks/sap-preconfigure.yml
+#     execution_environment: "{  { controller_execution_environments[0].name }}"
+#     ask_credential_on_launch: yes
+#   - name: Preconfigure for HANA
+#     organization: "{  { audience }}"
+#     ask_inventory_on_launch: yes
+#     ask_limit_on_launch: yes
+#     project: "{  { controller_projects[0].name }}"
+#     allow_simultaneous: yes
+#     playbook: provisioner/resources/playbooks/hana-preconfigure.yml
+#     execution_environment: "{  { controller_execution_environments[0].name }}"
+#     ask_credential_on_launch: yes
+#   - name: Preconfigure for Netweaver
+#     organization: "{  { audience }}"
+#     ask_inventory_on_launch: yes
+#     ask_limit_on_launch: yes
+#     project: "{  { controller_projects[0].name }}"
+#     allow_simultaneous: yes
+#     playbook: provisioner/resources/playbooks/netweaver-preconfigure.yml
+#     execution_environment: "{  { controller_execution_environments[0].name }}"
+#     ask_credential_on_launch: yes
+#   - name: Deploy SAP HANA
+#     organization: "{  { audience }}"
+#     ask_inventory_on_launch: yes
+#     ask_limit_on_launch: yes
+#     project: "{  { controller_projects[0].name }}"
+#     allow_simultaneous: yes
+#     playbook: provisioner/resources/playbooks/deploy-hana.yml
+#     execution_environment: "{  { controller_execution_environments[0].name }}"
+#     ask_credential_on_launch: yes
+#   - name: Install Netweaver
+#     organization: "{  { audience }}"
+#     ask_inventory_on_launch: yes
+#     ask_limit_on_launch: yes
+#     project: "{  { controller_projects[0].name }}"
+#     allow_simultaneous: yes
+#     playbook: provisioner/resources/playbooks/install-s4.yml
+#     execution_environment: "{  { controller_execution_environments[0].name }}"
+#     ask_credential_on_launch: yes
+#   - name: Reinstate HSR
+#     organization: "{  { audience }}"
+#     ask_inventory_on_launch: yes
+#     ask_limit_on_launch: yes
+#     project: "{  { controller_projects[0].name }}"
+#     allow_simultaneous: yes
+#     playbook: provisioner/resources/playbooks/reinstate-hsr.yml
+#     execution_environment: "{  { controller_execution_environments[0].name }}"
+#     ask_credential_on_launch: yes
+
+# controller_workflows:
+#   - name: Provision S4HANA SID
+#     organization: "{  { audience }}"
+#     state: "{{ controller_state | default('present') }}"
+#     extra_vars:
+#       company: "{  { audience }}"
+#     survey_enabled: yes
+#     survey:
+#       name: ''
+#       description: ''
+#       spec:
+#         - type: text
+#           question_name: "What is the desired SAP System Identification (SID)?"
+#           variable: sid
+#           required: yes
+#           default: DS4
+#         - type: text
+#           question_name: "What is the SAR file name?"
+#           variable: sap_hana_deployment_bundle_sar_file_name
+#           required: yes
+#           default: IMDB_SERVER20_046_0-80002031.SAR
+#         - type: text
+#           question_name: "What is the name of the SAPCAR file?"
+#           variable: sap_hana_deployment_sapcar_file_name
+#           required: yes
+#           default: SAPCAR_1010-70006178.EXE
+#         - type: text
+#           question_name: "What is the HANA env type?"
+#           variable: sap_hana_deployment_hana_env_type
+#           required: yes
+#           default: development
+#         - type: text
+#           question_name: "What is the HANA instance number?"
+#           variable: sap_hana_deployment_hana_instance_number
+#           required: yes
+#           default: "00"
+#         - type: text
+#           question_name: "What is the desired S4HANA product?"
+#           variable: sap_s4hana_deployment_product_id
+#           required: yes
+#           default: "NW_ABAP_OneHost:S4HANA1909.CORE.HDB.ABAP"
+#         - type: text
+#           question_name: "What is the S4HANA SAPCAR file name?"
+#           variable: sap_s4hana_deployment_sapcar_file_name
+#           required: yes
+#           default: SAPCAR_1010-70006178.EXE
+#         - type: text
+#           question_name: "What is the S4HANA swpm file name?"
+#           variable: sap_s4hana_deployment_swpm_sar_file_name
+#           required: yes
+#           default: SWPM20SP04_6-80003424.SAR
+#         - type: text
+#           question_name: "How many deployment parallel jobs should run?"
+#           variable: sap_s4hana_deployment_parallel_jobs_nr
+#           required: yes
+#           default: "30"
+#         - type: text
+#           question_name: "What is the S4HANA deployment igs file name?"
+#           variable: sap_s4hana_deployment_igs_file_name
+#           required: yes
+#           default: igsexe_9-80003187.sar
+#         - type: text
+#           question_name: "What is the S4HANA deployment igs helper file name?"
+#           variable: sap_s4hana_deployment_igs_helper_file_name
+#           required: yes
+#           default: igshelper_17-10010245.sar
+#         - type: text
+#           question_name: "What is the S4HANA deployment kernel dependent file name?"
+#           variable: sap_s4hana_deployment_kernel_dependent_file_name
+#           required: yes
+#           default: SAPEXEDB_201-80003385.SAR
+#         - type: text
+#           question_name: "What is the S4HANA deployment kernel independent file name?"
+#           variable: sap_s4hana_deployment_kernel_independent_file_name
+#           required: yes
+#           default: SAPEXE_201-80003386.SAR
+#     simplified_workflow_nodes:
+#       - unified_job_template: Add Hosts to Controller Inventory
+#         identifier: node101
+#         success_nodes:
+#           - node102
+#       - unified_job_template: Provision Systems
+#         identifier: node102
+#         inventory: "{  { controller_inventories[0].name }}"
+#         limit: sap
+#         credentials:
+#           - Peripheral Credentials
+#           - Root Credentials
+#         success_nodes:
+#           - node103
+#       - approval_node:
+#           name: Approve 'Preconfigure for SAP'
+#         identifier: node103
+#         success_nodes:
+#           - node104
+#       - unified_job_template: Preconfigure for SAP
+#         identifier: node104
+#         inventory: "{  { controller_inventories[0].name }}"
+#         limit: sap
+#         credentials:
+#           - Peripheral Credentials
+#           - Root Credentials
+#         success_nodes:
+#           - node105
+#           - node106
+#       - approval_node:
+#           name: Approve 'Preconfigure for HANA'
+#         identifier: node105
+#         success_nodes:
+#           - node107
+#       - unified_job_template: Preconfigure for HANA
+#         identifier: node107
+#         inventory: "{  { controller_inventories[0].name }}"
+#         limit: hana
+#         credentials:
+#           - Root Credentials
+#         success_nodes:
+#           - node109
+#       - approval_node:
+#           name: Approve 'Preconfigure for Netweaver'
+#         identifier: node106
+#         success_nodes:
+#           - node108
+#       - unified_job_template: Preconfigure for Netweaver
+#         identifier: node108
+#         inventory: "{  { controller_inventories[0].name }}"
+#         limit: netweaver
+#         credentials:
+#           - Root Credentials
+#         success_nodes:
+#           - node110
+#       - approval_node:
+#           name: Approve 'Deploy SAP HANA'
+#         identifier: node109
+#         success_nodes:
+#           - node111
+#       - unified_job_template: Deploy SAP HANA
+#         identifier: node111
+#         inventory: "{  { controller_inventories[0].name }}"
+#         limit: hana
+#         credentials:
+#           - Root Credentials
+#         success_nodes:
+#           - node110
+#       - approval_node:
+#           name: Approve 'Install Netweaver'
+#         identifier: node110
+#         all_parents_must_converge: yes
+#         success_nodes:
+#           - node112
+#       - unified_job_template: Install Netweaver
+#         identifier: node112
+#         inventory: "{  { controller_inventories[0].name }}"
+#         limit: netweaver
+#         credentials:
+#           - Root Credentials
+#         success_nodes:
+#           - node113
+#       - unified_job_template: Reinstate HSR
+#         identifier: node113
+#         inventory: "{  { controller_inventories[0].name }}"
+#         limit: 'hana:&primary'
+#         credentials:
+#           - Root Credentials
+
+# controller_roles:
+#   # admin account
+#   # - user: "{  { audience }}_admin"
+#   #   organization: "{  { audience }}"
+#   #   role: admin
+#   # Team Membership
+#   - user: "{  { audience }}_infrastructure"
+#     target_team: "{  { audience }} SAP Infrastructure Team"
+#     organization: "{  { audience }}"
+#     role: member
+#   - user: "{  { audience }}_basis"
+#     target_team: "{  { audience }} BASIS Team"
+#     organization: "{  { audience }}"
+#     role: member
+#   - user: "{  { audience }}_business_analyst"
+#     target_team: "{  { audience }} Business Analyst Team"
+#     organization: "{  { audience }}"
+#     role: member
+#   # Infrastructure Permissions
+#   - team: "{  { audience }} SAP Infrastructure Team"
+#     role: admin
+#     credentials:
+#       - Peripheral Credentials
+#       - Root Credentials
+#   # - team: "{  { audience }} Infrastructure Team"
+#   #   role: admin
+#   #   inventory: "{  { audience }} SAP Infrastructure"
+#   - team: "{  { audience }} SAP Infrastructure Team"
+#     role: admin
+#     project: "{  { audience }} S4HANA Deployment Code"
+#   - team: "{  { audience }} SAP Infrastructure Team"
+#     role: admin
+#     job_template: Add Hosts to Controller Inventory
+#   - team: "{  { audience }} SAP Infrastructure Team"
+#     role: admin
+#     job_template: Provision Systems
+#   # BASIS Permissions
+#   - team: "{  { audience }} BASIS Team"
+#     role: read
+#     credentials:
+#       - Peripheral Credentials
+#       - Root Credentials
+#   - team: "{  { audience }} BASIS Team"
+#     role: update
+#     inventory: "{  { audience }} SAP Infrastructure"
+#   - team: "{  { audience }} BASIS Team"
+#     role: update
+#     project: "{  { audience }} S4HANA Deployment Code"
+#   - team: "{  { audience }} BASIS Team"
+#     role: admin
+#     job_template: Preconfigure for SAP
+#   - team: "{  { audience }} BASIS Team"
+#     role: admin
+#     job_template: Preconfigure for HANA
+#   - team: "{  { audience }} BASIS Team"
+#     role: admin
+#     job_template: Preconfigure for Netweaver
+#   - team: "{  { audience }} BASIS Team"
+#     role: admin
+#     job_template: Deploy SAP HANA
+#   - team: "{  { audience }} BASIS Team"
+#     role: admin
+#     job_template: Install Netweaver
+#   - team: "{  { audience }} BASIS Team"
+#     role: admin
+#     job_template: Reinstate HSR
+#   # Business Analyst Permissions
+#   - team: "{  { audience }} Business Analyst Team"
+#     role: read
+#     credentials:
+#       - Peripheral Credentials
+#       - Root Credentials
+#   - team: "{  { audience }} Business Analyst Team"
+#     role: read
+#     inventory: "{  { audience }} SAP Infrastructure"
+#   - team: "{  { audience }} Business Analyst Team"
+#     role: read
+#     project: "{  { audience }} S4HANA Deployment Code"
+#   - team: "{  { audience }} Business Analyst Team"
+#     role: execute
+#     workflow: Provision S4HANA SID

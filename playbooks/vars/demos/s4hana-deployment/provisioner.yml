@@ -46,22 +46,8 @@ controller_execution_environments: []
 controller_inventories: []
 controller_projects: []
 controller_templates: []
-
-controller_hosts:
-  - name: "sapddhdb1.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    variables:
-      sap_hana_hsr_alias: DC1
-  - name: "sapddhdb2.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    variables:
-      sap_hana_hsr_alias: DC2
-  - name: "sapddapp1.{{ demo_uuid }}.{{ base_dns_suffix }}"
-
-controller_groups:
-  - name: demo_hosts
-    hosts:
-      - "sapddhdb1.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "sapddhdb2.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "sapddapp1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+controller_hosts: []
+controller_groups: []
 
 controller_workflows:
   - name: Provision S/4HANA Deployment Demo
@@ -71,160 +57,204 @@ controller_workflows:
     ask_variables_on_launch: yes
     extra_vars:
       demo: s4hana-deployment
-################################TO-DO
     simplified_workflow_nodes:
-      - unified_job_template: Provision Systems
-        identifier: node101
-        inventory: "{{ inventory }}"
+      - identifier: Create CMDB Records
+        unified_job_template: Manage CMDB Records
+        limit: management_plane
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner vCenter Credentials
+        success_nodes:
+          - Create DNS Records
+        failure_nodes:
+          - Send Failure Email About 'Create CMDB Records'
+      - identifier: Send Failure Email About 'Create CMDB Records'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Create CMDB Records
+      - identifier: Create DNS Records
+        unified_job_template: Manage DNS Records
+        limit: management_plane
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner IDM Credentials
+        success_nodes:
+          - Provision Satellite
+          - Provision Controller
+        failure_nodes:
+          - Send Failure Email About 'Create DNS Records'
+      - identifier: Send Failure Email About 'Create DNS Records'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Create DNS Records
+      - identifier: Provision Satellite
+        unified_job_template: Provision Systems
         limit: satellite
         credentials:
-          - "{{ demo_prefix }} Peripheral Credentials"
-          - "{{ demo_prefix }} Root Account"
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner Satellite Credentials
+          - Demo Provisioner vCenter Credentials
+          - Demo Provisioner Root Account
         success_nodes:
-          - node102
+          - Apply Standard Config to Satellite
         failure_nodes:
-          - node1101
-      - unified_job_template: Install Red Hat Satellite
-        identifier: node102
-        inventory: "{{ inventory }}"
+          - Send Failure Email About 'Provision Satellite'
+      - identifier: Send Failure Email About 'Provision Satellite'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Provision Satellite
+      - identifier: Apply Standard Config to Satellite
+        unified_job_template: Apply Standard Configuration
         limit: satellite
         credentials:
-          - "{{ demo_prefix }} Peripheral Credentials"
-          - "{{ demo_prefix }} Root Account"
+          - Demo Provisioner Root Account
         success_nodes:
-          - node103
+          - Install Red Hat Satellite
         failure_nodes:
-          - node1102
-      - unified_job_template: Configure Red Hat Satellite
-        identifier: node103
-        inventory: "{{ inventory }}"
+          - Send Failure Email About 'Apply Standard Config to Satellite'
+      - identifier: Send Failure Email About 'Apply Standard Config to Satellite'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Apply Standard Config to Satellite
+      - identifier: Install Red Hat Satellite
+        unified_job_template: Install Red Hat Satellite
         limit: satellite
         credentials:
-          - "{{ demo_prefix }} Peripheral Credentials"
-          - "{{ demo_prefix }} Root Account"
+          - Demo Provisioner vCenter Credentials
+          - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
         success_nodes:
-          - node104
+          - Configure Red Hat Satellite
         failure_nodes:
-          - node1103
-      - unified_job_template: Run Remote Execution Jobs
-        identifier: node104
-        inventory: "{{ inventory }}"
+          - Send Failure Email About 'Install Red Hat Satellite'
+      - identifier: Send Failure Email About 'Install Red Hat Satellite'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Install Red Hat Satellite
+      - identifier: Configure Red Hat Satellite
+        unified_job_template: Configure Red Hat Satellite
         limit: satellite
         credentials:
-          - "{{ demo_prefix }} Peripheral Credentials"
+          - Demo Provisioner vCenter Credentials
+          - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
+          - Demo Provisioner EE Python Libraries Env Vars
         success_nodes:
-          - node999
+          - Send Success Email
         failure_nodes:
-          - node1104
-      - unified_job_template: Provision Systems
-        identifier: node201
-        inventory: "{{ inventory }}"
+          - Send Failure Email About 'Configure Red Hat Satellite'
+      - identifier: Send Failure Email About 'Configure Red Hat Satellite'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Configure Red Hat Satellite
+      - identifier: Provision Controller
+        unified_job_template: Provision Systems
         limit: controller
         credentials:
-          - "{{ demo_prefix }} Peripheral Credentials"
-          - "{{ demo_prefix }} Root Account"
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner Satellite Credentials
+          - Demo Provisioner vCenter Credentials
+          - Demo Provisioner Root Account
         success_nodes:
-          - node202
+          - Apply Standard Config to Controller
         failure_nodes:
-          - node1201
-      - unified_job_template: Install Ansible Controller
-        identifier: node202
-        inventory: "{{ inventory }}"
+          - Send Failure Email About 'Provision Controller'
+      - identifier: Send Failure Email About 'Provision Controller'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Provision Controller
+      - identifier: Apply Standard Config to Controller
+        unified_job_template: Apply Standard Configuration
         limit: controller
         credentials:
-          - "{{ demo_prefix }} Peripheral Credentials"
-          - "{{ demo_prefix }} Root Account"
+          - Demo Provisioner Root Account
         success_nodes:
-          - node203
+          - Install Ansible Controller
         failure_nodes:
-          - node1202
-      - unified_job_template: Configure Ansible Controller
-        identifier: node203
-        inventory: "{{ inventory }}"
+          - Send Failure Email About 'Apply Standard Config to Controller'
+      - identifier: Send Failure Email About 'Apply Standard Config to Controller'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Apply Standard Config to Controller     
+      - identifier: Install Ansible Controller
+        unified_job_template: Install Ansible Controller
         limit: controller
         credentials:
-          - "{{ demo_prefix }} Peripheral Credentials"
-          - "{{ demo_prefix }} Root Account"
+          - Demo Provisioner Red Hat Registry Credentials
+          - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
         success_nodes:
-          - node999
+          - Configure Ansible Controller
         failure_nodes:
-          - node1203    
-      - unified_job_template: Send Provisioner Email
-        identifier: node999
+          - Send Failure Email About 'Install Ansible Controller'
+      - identifier: Send Failure Email About 'Install Ansible Controller'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Install Ansible Controller
+      - identifier: Configure Ansible Controller
+        unified_job_template: Configure Ansible Controller
+        limit: controller
+        credentials:
+          - Demo Provisioner Admin Credentials
+          - Demo Provisioner Controller Credentials
+        success_nodes:
+          - Send Success Email
+        failure_nodes:
+          - Send Failure Email About 'Configure Ansible Controller'
+        all_parents_must_converge: yes
+      - identifier: Send Failure Email About 'Configure Ansible Controller'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Configure Ansible Controller
+      - identifier: Send Success Email
+        unified_job_template: Send Provisioner Email
         all_parents_must_converge: yes
         extra_data:
           provisioner_status: success
-      - unified_job_template: Send Provisioner Email
-        identifier: node1101
-        extra_data:
-          provisioner_status: failed
-      - unified_job_template: Send Provisioner Email
-        identifier: node1102
-        extra_data:
-          provisioner_status: failed
-      - unified_job_template: Send Provisioner Email
-        identifier: node1103
-        extra_data:
-          provisioner_status: failed
-      - unified_job_template: Send Provisioner Email
-        identifier: node1104
-        extra_data:
-          provisioner_status: failed
-      - unified_job_template: Send Provisioner Email
-        identifier: node1201
-        extra_data:
-          provisioner_status: failed
-      - unified_job_template: Send Provisioner Email
-        identifier: node1202
-        extra_data:
-          provisioner_status: failed
-      - unified_job_template: Send Provisioner Email
-        identifier: node1203
-        extra_data:
-          provisioner_status: failed
-  - name: Teardown S4HANA Deployment Demo
-    organization: Demo Provisioner
-    state: "{{ controller_state | default('present') }}"
-    extra_vars:
-      demo: s4hana-deployment
-    survey_enabled: yes
-    survey:
-      name: ''
-      description: ''
-      spec:
-        - type: text
-          question_name: "Demo Audience?"
-          question_description: "Who is the audience for this demo"
-          variable: audience
-          required: yes
-    simplified_workflow_nodes:
-      - unified_job_template: Unregister from Insights
-        identifier: node996
-        inventory: "{{ inventory }}"
-        limit: 'demo_hosts'
-        credentials:
-          - "{{ demo_prefix }} Root Account"
-        always_nodes:
-          - node997
-      - unified_job_template: Teardown Systems
-        identifier: node997
-        inventory: "{{ inventory }}"
-        limit: demo_hosts
-        credentials:
-          - "{{ demo_prefix }} Peripheral Credentials"
-        always_nodes:
-          - node998
-      - unified_job_template: Teardown Systems
-        identifier: node998
-        inventory: "{{ inventory }}"
-        limit: management_plane
-        credentials:
-          - "{{ demo_prefix }} Peripheral Credentials"
-        always_nodes:
-          - node999
-      - unified_job_template: Cleanup DNS Records
-        identifier: node999
-        inventory: "{{ inventory }}"
-        limit: 'demo_hosts:management_plane'
-        credentials:
-          - "{{ demo_prefix }} Peripheral Credentials"
+
+  # - name: Teardown S4HANA Deployment Demo
+  #   organization: Demo Provisioner
+  #   state: "{{ controller_state | default('present') }}"
+  #   extra_vars:
+  #     demo: s4hana-deployment
+  #   survey_enabled: yes
+  #   survey:
+  #     name: ''
+  #     description: ''
+  #     spec:
+  #       - type: text
+  #         question_name: "Demo Audience?"
+  #         question_description: "Who is the audience for this demo"
+  #         variable: audience
+  #         required: yes
+  #   simplified_workflow_nodes:
+  #     - unified_job_template: Unregister from Insights
+  #       identifier: node996
+  #       inventory: "{{ inventory }}"
+  #       limit: 'demo_hosts'
+  #       credentials:
+  #         - "{{ demo_prefix }} Root Account"
+  #       always_nodes:
+  #         - node997
+  #     - unified_job_template: Teardown Systems
+  #       identifier: node997
+  #       inventory: "{{ inventory }}"
+  #       limit: demo_hosts
+  #       credentials:
+  #         - "{{ demo_prefix }} Peripheral Credentials"
+  #       always_nodes:
+  #         - node998
+  #     - unified_job_template: Teardown Systems
+  #       identifier: node998
+  #       inventory: "{{ inventory }}"
+  #       limit: management_plane
+  #       credentials:
+  #         - "{{ demo_prefix }} Peripheral Credentials"
+  #       always_nodes:
+  #         - node999
+  #     - unified_job_template: Cleanup DNS Records
+  #       identifier: node999
+  #       inventory: "{{ inventory }}"
+  #       limit: 'demo_hosts:management_plane'
+  #       credentials:
+  #         - "{{ demo_prefix }} Peripheral Credentials"
