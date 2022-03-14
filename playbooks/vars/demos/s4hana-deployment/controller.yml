@@ -155,106 +155,104 @@ controller_credentials:
   - name: IDM Credentials
     organization: "{  { audience }}"
     credential_type: IDM Credentials
-    # inputs:
-    #   controller_hostname: "{  { inventory_hostname }}"
-    #   controller_username: "{  { controller_username }}"
-    #   controller_password: "{  { controller_password }}"
-#   - name: MSP Lab AAP20 Automation Hub
-#     organization: "{  { audience }}"
-#     credential_type: Container Registry
-#     inputs:
-#       host: aap20-hub.josh.lab.msp.redhat.com
-#       username: admin
-#       password: "{  { ansible_password }}"
-#       verify_ssl: no
-#   - name: Root Credentials
-#     credential_type: Machine
-#     organization: "{  { audience }}"
-#     inputs:
-#       username: root
-#       password: "{  { ansible_password }}"
+  - name: Automation Hub Image Registry Credentials
+    organization: "{  { audience }}"
+    credential_type: Container Registry
+    inputs:
+      host: hub.lab.msp.redhat.com
+      username: "{  { admin_username }}"
+      password: "{  { admin_password }}"
+      verify_ssl: no
+  - name: Root Credentials
+    credential_type: Machine
+    organization: "{  { audience }}"
+    inputs:
+      username: root
+      password: "{  { admin_password }}"
 
-# controller_execution_environments:
-#   - name: S4HANA Deployment Demo EE
-#     image: aap20-hub.josh.lab.msp.redhat.com/s4hana-deployment-demo-ee:latest
-#     organization: "{  { audience }}"
-#     credential: MSP Lab AAP20 Automation Hub
-#     pull: always
+controller_execution_environments:
+  - name: Josh's Demos Collection EE
+    image: 'hub.lab.msp.redhat.com/joshs-demos-collection-ee:latest'
+    organization: "{  { audience }}"
+    credential: Automation Hub Image Registry Credentials
+    pull: always
 
-# controller_teams:
-#   - name: "{  { audience }} SAP Infrastructure Team"
-#     description: infrastructure team
-#     organization: "{  { audience }}"
-#   - name: "{  { audience }} BASIS Team"
-#     description: BASIS team
-#     organization: "{  { audience }}"
-#   - name: "{  { audience }} Business Analyst Team"
-#     description: BASIS team
-#     organization: "{  { audience }}"
+controller_teams:
+  - name: "{  { audience }} SAP Infrastructure Team"
+    description: infrastructure team
+    organization: "{  { audience }}"
+  - name: "{  { audience }} BASIS Team"
+    description: BASIS team
+    organization: "{  { audience }}"
+  - name: "{  { audience }} Business Analyst Team"
+    description: BASIS team
+    organization: "{  { audience }}"
 
-# controller_user_accounts:
-#   - username: "{  { audience }}_admin"
-#     password: "{{ ansible_password }}"
-#     email: dont@email.me
-#     update_secrets: no
-#   - username: "{  { audience }}_infrastructure"
-#     password: "{{ ansible_password }}"
-#     email: dont@email.me
-#     update_secrets: no
-#   - username: "{  { audience }}_basis"
-#     password: "{{ ansible_password }}"
-#     email: dont@email.me
-#     update_secrets: no
-#   - username: "{  { audience }}_business_analyst"
-#     password: "{{ ansible_password }}"
-#     email: dont@email.me
-#     update_secrets: no
+controller_user_accounts:
+  - username: "{  { audience }}_admin"
+    password: "{{ ansible_password }}"
+    email: dont@email.me
+    update_secrets: no
+  - username: "{  { audience }}_infrastructure"
+    password: "{{ ansible_password }}"
+    email: dont@email.me
+    update_secrets: no
+  - username: "{  { audience }}_basis"
+    password: "{{ ansible_password }}"
+    email: dont@email.me
+    update_secrets: no
+  - username: "{  { audience }}_business_analyst"
+    password: "{{ ansible_password }}"
+    email: dont@email.me
+    update_secrets: no
 
-# controller_inventories:
-#   - name: "{  { audience }} SAP Infrastructure"
-#     organization: "{  { audience }}"
-#     variables:
-#       company: "{  { audience }}"
+controller_inventories:
+  - name: "{  { audience }} SAP Infrastructure"
+    organization: "{  { audience }}"
+    variables:
+      company: "{  { audience }}"
+      demo_uuid: "{  { demo_uuid }}"
+      base_dns_suffix: "{  { base_dns_suffix }}"
 
-# controller_groups:
-#   - name: primary
-#     inventory: "{  { audience }} SAP Infrastructure"
-#     variables:
-#       sap_hana_hsr_role: primary
-#   - name: secondary
-#     inventory: "{  { audience }} SAP Infrastructure"
-#     variables:
-#       sap_hana_hsr_role: secondary
-#   - name: hana
-#     inventory: "{  { audience }} SAP Infrastructure"
-#     children:
-#       - primary
-#       - secondary
-#     variables:
-#       application: hana
-#   - name: netweaver
-#     inventory: "{  { audience }} SAP Infrastructure"
-#     variables:
-#       application: netweaver
-#   - name: s4hana
-#     inventory: "{  { audience }} SAP Infrastructure"
-#     children:
-#       - hana
-#       - netweaver
-#     variables:
-#       os: rhel8.4
-#   - name: production
-#     inventory: "{  { audience }} SAP Infrastructure"
-#     variables:
-#       lifecycle_environment: production
+controller_groups:
+  - name: primary
+    inventory: "{  { audience }} SAP Infrastructure"
+    variables:
+      sap_hana_hsr_role: primary
+  - name: secondary
+    inventory: "{  { audience }} SAP Infrastructure"
+    variables:
+      sap_hana_hsr_role: secondary
+  - name: hana
+    inventory: "{  { audience }} SAP Infrastructure"
+    children:
+      - primary
+      - secondary
+    variables:
+      application: hana
+  - name: netweaver
+    inventory: "{  { audience }} SAP Infrastructure"
+    variables:
+      application: netweaver
+  - name: s4hana
+    inventory: "{  { audience }} SAP Infrastructure"
+    children:
+      - hana
+      - netweaver
+    variables:
+      os: rhel8.4
+  - name: production
+    inventory: "{  { audience }} SAP Infrastructure"
+    variables:
+      lifecycle_environment: production
 
-# controller_projects:
-#   - name: "{  { audience }} S4HANA Deployment Code"
-#     organization: "{  { audience }}"
-#     scm_branch: main
-#     scm_type: git
-#     scm_url: https://github.com/jjaswanson4/patching-demo.git
-#     wait: yes
+controller_projects:
+  - name: "{  { audience }} S4HANA Deployment Code"
+    organization: "{  { audience }}"
+    scm_branch: main
+    scm_type: git
+    scm_url: https://github.com/jjaswanson4/jdc.git
+    wait: yes
 
 # controller_templates:
 #   - name: Add Hosts to Controller Inventory
