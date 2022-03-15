@@ -219,28 +219,209 @@ controller_groups:
     inventory: "{  { audience }} SAP Infrastructure"
     variables:
       sap_hana_hsr_role: primary
+      sap_hana_hsr_alias: DC1
   - name: secondary
     inventory: "{  { audience }} SAP Infrastructure"
     variables:
       sap_hana_hsr_role: secondary
+      sap_hana_hsr_alias: DC2
   - name: hana
     inventory: "{  { audience }} SAP Infrastructure"
-    children:
-      - primary
-      - secondary
     variables:
+      cpus: 8
+      memory_mb: 73728
       application: hana
+      os: rhel8.4
+      additional_storage:
+        - size: 600Gb
+          type: thin
+          scsi_controller: 0
+          unit_number: 1
+      storage_pools:
+        - name: sap
+          disks:
+            - sdb
+          volumes:
+            - name: data
+              size: "128 GiB"
+              mount_point: "/hana/data"
+              state: present
+            - name: log
+              size: "100 GiB"
+              mount_point: "/hana/log"
+              state: present
+            - name: shared
+              size: "256 GiB"
+              mount_point: "/hana/shared"
+              state: present
+            - name: sap
+              size: "50 GiB"
+              mount_point: "/usr/sap"
+              state: present
+      sap_hana_deployment_bundle_path: /software/HANA_installation
+      sap_hana_deployment_bundle_sar_file_name: "{  { sap_hana_deployment_bundle_sar_file_name }}"
+      sap_hana_deployment_sapcar_path: /software/SAPCAR
+      sap_hana_deployment_sapcar_file_name: "{  { sap_hana_deployment_sapcar_file_name }}"
+      sap_hana_deployment_root_password: "{  { ansible_password }}"
+      sap_hana_deployment_sapadm_password: "{  { ansible_password }}"
+      sap_hana_deployment_hana_instance_number: "{  { sap_hana_deployment_hana_instance_number }}"
+      sap_hana_deployment_hana_env_type: "{  { sap_hana_deployment_hana_env_type }}"
+      sap_hana_deployment_hana_mem_restrict: "n"
+      sap_hana_deployment_common_master_password: "{  { ansible_password }}"
+      sap_hana_deployment_sidadm_password: "{  { ansible_password }}"
+      sap_hana_deployment_hana_db_system_password: "{  { ansible_password }}"
+      sap_hana_deployment_ase_user_password: "{  { ansible_password }}"
+      sap_hana_deployment_apply_license: false
+      sap_hana_hsr_hana_instance_number: "{  { sap_hana_deployment_hana_instance_number }}"
+      sap_hana_hsr_hana_db_system_password: "{  { ansible_password }}"
+      sap_hana_preconfigure_fail_if_reboot_required: no
+      sap_hana_deployment_hana_sid: "{  { sid }}"
+      sap_hana_hsr_hana_sid: "{  { sid }}"
+      sap_hana_hsr_hana_primary_hostname: sapddhdb1
+      sap_hana_hsr_full_primary_hostname: "sapddhdb1.{  { demo_uuid }}.{  { base_dns_suffix }}"
+      sap_hana_hsr_full_secondary_hostname: "sapddhdb2.{  { demo_uuid }}.{  { base_dns_suffix }}"
+      sap_hana_ha_pacemaker_hana_sid: "{  { sid }}"
+      sap_hana_ha_pacemaker_hana_instance_number: "{  { sap_hana_deployment_hana_instance_number }}"
+      sap_hana_ha_pacemaker_hacluster_password: "{  { ansible_password }}"
+      sap_hana_ha_pacemaker_node1_fqdn: "sapddhdb1.{  { demo_uuid }}.{  { base_dns_suffix }}"
+      sap_hana_ha_pacemaker_node2_fqdn: "sapddhdb2.{  { demo_uuid }}.{  { base_dns_suffix }}"
+      sap_s4hana_deployment_db_host: "sapddhdb.{  { demo_uuid }}.{  { base_dns_suffix }}"
   - name: netweaver
     inventory: "{  { audience }} SAP Infrastructure"
     variables:
       application: netweaver
+      os: rhel8
+      cpus: 4
+      memory_mb: 16384
+      additional_storage:
+        - size: 100Gb
+          type: thin
+          scsi_controller: 0
+          unit_number: 1
+      storage_pools:
+        - name: sap
+          disks:
+            - sdb
+          volumes:
+            - name: sap
+              size: "50 GiB"
+              mount_point: "/usr/sap"
+              state: present
+            - name: sapmnt
+              size: "20 GiB"
+              mount_point: "/usr/sapmnt"
+              state: present
+            - name: swap
+              size: "20 GiB"
+              state: present
+      sap_s4hana_deployment_sid: "{  { sid }}"
+      sap_s4hana_deployment_db_host: sapddhdb.josh.lab.msp.redhat.com
+      sap_s4hana_deployment_db_sid: "{  { sid }}"
+      sap_netweaver_preconfigure_fail_if_not_enough_swap_space_configured: no
+      sap_s4hana_deployment_product_id: "NW_ABAP_OneHost:S4HANA1909.CORE.HDB.ABAP"
+      sap_s4hana_deployment_sapcar_path: "/software/{  { sap_s4hana_deployment_sid }}"
+      sap_s4hana_deployment_sapcar_file_name: "SAPCAR_1010-70006178.EXE"
+      sap_s4hana_deployment_swpm_path: "/software/S4HANA_installation"
+      sap_s4hana_deployment_swpm_sar_file_name: "SWPM20SP04_6-80003424.SAR"
+      sap_s4hana_deployment_db_schema_password: "{  { ansible_password }}"
+      sap_s4hana_deployment_db_schema_abap_password: "{  { ansible_password }}"
+      sap_s4hana_deployment_master_password: "{  { ansible_password }}"
+      sap_s4hana_deployment_hana_systemdb_password: "{  { ansible_password }}"
+      sap_s4hana_deployment_hana_instance_nr: "00"
+      sap_s4hana_deployment_hana_system_password: "{  { ansible_password }}"
+      sap_s4hana_deployment_parallel_jobs_nr: "30"
+      sap_s4hana_deployment_db_sidadm_password: "{  { ansible_password }}"
+      sap_s4hana_deployment_igs_path: "/software/S4HANA_installation"
+      sap_s4hana_deployment_igs_file_name: "igsexe_9-80003187.sar"
+      sap_s4hana_deployment_igs_helper_path: "/software/S4HANA_installation"
+      sap_s4hana_deployment_igs_helper_file_name: "igshelper_17-10010245.sar"
+      sap_s4hana_deployment_kernel_dependent_path: "/software/S4HANA_installation"
+      sap_s4hana_deployment_kernel_dependent_file_name: "SAPEXEDB_201-80003385.SAR"
+      sap_s4hana_deployment_kernel_independent_path: "/software/S4HANA_installation"
+      sap_s4hana_deployment_kernel_independent_file_name: "SAPEXE_201-80003386.SAR"
+      sap_s4hana_deployment_software_path: "/software/S4HANA_installation"
+      sap_s4hana_deployment_sapadm_password: "{  { ansible_password }}"
+      sap_s4hana_deployment_sap_sidadm_password: "{  { ansible_password }}"
   - name: s4hana
     inventory: "{  { audience }} SAP Infrastructure"
     children:
       - hana
       - netweaver
     variables:
-      os: rhel8.4
+      ignore_virtual_disk_errors: yes
+      remove_cdrom: no
+      lifecycle_environment: production
+      sap_preconfigure_modify_etc_hosts: yes
+      sap_domain: "josh.lab.msp.redhat.com"
+      sap_hostagent_installation_type: "rpm"
+      sap_hostagent_rpm_remote_path: "/software/SAPHOSTAGENT"
+      sap_hostagent_rpm_file_name: "saphostagentrpm_44-20009394.rpm"
+      sap_preconfigure_fail_if_reboot_required: no
+      sap_preconfigure_selinux_state: permissive
+      manage_lvm: no
+      nfs_shares:
+        - src: 10.15.108.14:/mnt/data01/sap
+          path: /software
+      dns_zone: josh.lab.msp.redhat.com
+      dns:
+        server: idm05.lab.msp.redhat.com
+        password: "{  { dns_pass }}"
+        records:
+          - name: "{  { inventory_hostname.split('.')[0] }}"
+            zone: josh.lab.msp.redhat.com
+            type: A
+            value: "{  { ip_address }}"
+          - name: "{  { ip_address.split('.')[-1] }}"
+            zone: "{  { ip_address.split('.')[2] }}.15.10.in-addr.arpa."
+            type: PTR
+            value: "{  { inventory_hostname }}."
+      config_files:
+        - hosts
+        - resolv.conf
+      timesync_ntp_servers:
+        - hostname: 0.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 1.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 2.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 3.rhel.pool.ntp.org
+          iburst: yes
+      selinux_policy: targeted
+      selinux_state: permissive
+      dns_resolv:
+        search_domains:
+          - josh.lab.msp.redhat.com
+          - lab.msp.redhat.com
+        nameservers:
+          - 10.15.120.4
+          - 10.15.108.5
+        options:
+          - 'timeout:1'
+      base_packages:
+        disable_gpg_check: yes
+        packages:
+          - lsof
+          - vim
+          - sos
+          - redhat-support-tool
+      firewall:
+        name: firewalld
+        state: stopped
+        enabled: no
+      provisioning:
+        satellite:
+          server: "{{ audience | lower }}-{{ demo }}-satellite.{{ demo_uuid }}.{{ base_dns_suffix }}"
+          username: admin
+          password: "{  { ansible_password }}"
+        host_group: "{  { os }}"
+        organization: "{  { company }}"
+        location: "{  { company }}"
+        method: bootdisk
+        dns_domain: "{{ base_dns_suffix }}"
+        cpus: "{  { cpus }}"
+        memory_mb: "{  { memory_mb }}"
+        activation_keys: "ak-{  { application }}-{  { os }}-{  { lifecycle_environment }}"
   - name: production
     inventory: "{  { audience }} SAP Infrastructure"
     variables:
@@ -254,15 +435,26 @@ controller_projects:
     scm_url: https://github.com/jjaswanson4/jdc.git
     wait: yes
 
-# controller_templates:
-#   - name: Add Hosts to Controller Inventory
-#     organization: "{  { audience }}"
-#     inventory: Demo Inventory
-#     project: "{  { controller_projects[0].name }}"
-#     playbook: demos/s4hana-deployment/playbooks/add-hosts-to-controller.yml
-#     execution_environment: "{  { controller_execution_environments[0].name }}"
-#     credentials:
-#       - Peripheral Credentials
+controller_templates:
+  - name: Add Hosts to Controller Inventory
+    organization: "{  { audience }}"
+    inventory: Demo Inventory
+    project: "{  { controller_projects[0].name }}"
+    playbook: playbooks/add-hosts-to-controller.yml
+    execution_environment: "{  { controller_execution_environments[0].name }}"
+    credentials:
+      - Ansible Controller Credentials
+  # - name: Manage CMDB Records
+  #   organization: "{  { audience }}"
+  #   ask_inventory_on_launch: yes
+  #   inventory: Demo Inventory
+  #   project: "{{ project }}"
+  #   allow_simultaneous: yes
+  #   playbook: playbooks/manage-cmdb-records.yml
+  #   execution_environment: "{{ execution_environment.name }}"
+  #   ask_credential_on_launch: yes
+  #   ask_variables_on_launch: yes
+  #   ask_limit_on_launch: yes
 #   - name: Provision Systems
 #     organization: "{  { audience }}"
 #     ask_inventory_on_launch: yes
