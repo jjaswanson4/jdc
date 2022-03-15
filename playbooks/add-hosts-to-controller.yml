@@ -1,0 +1,16 @@
+---
+
+- name: add hosts to Ansible Controller
+  hosts:
+    - all
+  gather_facts: no
+  vars:
+    controller_hosts:
+      - name: "sapddapp1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+        inventory: "{{ company }} SAP Infrastructure"
+      - name: "sapddhdb1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+        inventory: "{{ company }} SAP Infrastructure"
+      - name: "sapddhdb2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+        inventory: "{{ company }} SAP Infrastructure"
+  roles:
+    - redhat_cop.controller_configuration.hosts
