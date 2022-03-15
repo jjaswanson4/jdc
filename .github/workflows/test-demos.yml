@@ -36,50 +36,12 @@ jobs:
           ansible-lint
           -c ${{ github.workspace }}/.ansible-lint
           -p ${{ github.workspace }}/playbooks ${{ github.workspace }}/roles
-  test-patching-demo:
-    name: Test Patching demo
-    runs-on: self-hosted
-    needs:
-      - ansible-lint
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v2
-      - name: List files in the repository
-        run: |
-          ls ${{ github.workspace }}
-      - name: Test provisioning demo (check controller for details)
-        run: >
-          ansible-playbook ${{ github.workspace }}/tests/test-demo.yml
-          --extra-vars "demo=patching"
-          --extra-vars "demo_uuid=${{ github.run_id }}"
-      - name: Report provisioning success
-        run: echo "Provisioning successful."
-      - name: Teardown demo
-        run: >
-          ansible-playbook ${{ github.workspace }}/tests/teardown.yml
-          --extra-vars "demo=patching"
-          --extra-vars "demo_uuid=${{ github.run_id }}"
-      - name: Report teardown success
-        run: echo "Teardown successful."
   cicd-complete:
     name: Report CI/CD completed successfully
     runs-on: self-hosted
     needs:
-      - test-patching-demo
+      - ansible-lint
     steps:
       - name: Report success
         run: >
           echo "CI/CD pipeline complete"
-
-
-
-  # Test-IDM-AD-Integration-Demo:
-  #   runs-on: self-hosted
-  #   steps:
-  #     - name: Check out repository code
-  #       uses: actions/checkout@v2
-  #     - name: List files in the repository
-  #       run: |
-  #         ls ${{ github.workspace }}
-  #     - name: Report success
-  #       run: "echo ${{ github.run_id }}"
