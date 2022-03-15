@@ -259,28 +259,28 @@ controller_groups:
               mount_point: "/usr/sap"
               state: present
       sap_hana_deployment_bundle_path: /software/HANA_installation
-      sap_hana_deployment_bundle_sar_file_name: "{  { sap_hana_deployment_bundle_sar_file_name }}"
+      sap_hana_deployment_bundle_sar_file_name: IMDB_SERVER20_046_0-80002031.SAR
       sap_hana_deployment_sapcar_path: /software/SAPCAR
-      sap_hana_deployment_sapcar_file_name: "{  { sap_hana_deployment_sapcar_file_name }}"
+      sap_hana_deployment_sapcar_file_name: SAPCAR_1010-70006178.EXE
       sap_hana_deployment_root_password: "{  { admin_password }}"
       sap_hana_deployment_sapadm_password: "{  { admin_password }}"
-      sap_hana_deployment_hana_instance_number: "{  { sap_hana_deployment_hana_instance_number }}"
-      sap_hana_deployment_hana_env_type: "{  { sap_hana_deployment_hana_env_type }}"
+      sap_hana_deployment_hana_instance_number: "00"
+      sap_hana_deployment_hana_env_type: development
       sap_hana_deployment_hana_mem_restrict: "n"
       sap_hana_deployment_common_master_password: "{  { admin_password }}"
       sap_hana_deployment_sidadm_password: "{  { admin_password }}"
       sap_hana_deployment_hana_db_system_password: "{  { admin_password }}"
       sap_hana_deployment_ase_user_password: "{  { admin_password }}"
       sap_hana_deployment_apply_license: false
-      sap_hana_hsr_hana_instance_number: "{  { sap_hana_deployment_hana_instance_number }}"
+      sap_hana_hsr_hana_instance_number: "00"
       sap_hana_hsr_hana_db_system_password: "{  { admin_password }}"
       sap_hana_preconfigure_fail_if_reboot_required: no
-      sap_hana_deployment_hana_sid: "{  { sid }}"
-      sap_hana_hsr_hana_sid: "{  { sid }}"
+      sap_hana_deployment_hana_sid: DS4
+      sap_hana_hsr_hana_sid: DS4
       sap_hana_hsr_hana_primary_hostname: sapddhdb1
       sap_hana_hsr_full_primary_hostname: "sapddhdb1.{  { demo_uuid }}.{  { base_dns_suffix }}"
       sap_hana_hsr_full_secondary_hostname: "sapddhdb2.{  { demo_uuid }}.{  { base_dns_suffix }}"
-      sap_hana_ha_pacemaker_hana_sid: "{  { sid }}"
+      sap_hana_ha_pacemaker_hana_sid: DS4
       sap_hana_ha_pacemaker_hana_instance_number: "{  { sap_hana_deployment_hana_instance_number }}"
       sap_hana_ha_pacemaker_hacluster_password: "{  { admin_password }}"
       sap_hana_ha_pacemaker_node1_fqdn: "sapddhdb1.{  { demo_uuid }}.{  { base_dns_suffix }}"
@@ -314,9 +314,9 @@ controller_groups:
             - name: swap
               size: "20 GiB"
               state: present
-      sap_s4hana_deployment_sid: "{  { sid }}"
-      sap_s4hana_deployment_db_host: sapddhdb.josh.lab.msp.redhat.com
-      sap_s4hana_deployment_db_sid: "{  { sid }}"
+      sap_s4hana_deployment_sid: DS4
+      sap_s4hana_deployment_db_host: "sapddhdb.{  { demo_uuid }}.{  { base_dns_suffix }}"
+      sap_s4hana_deployment_db_sid: DS4
       sap_netweaver_preconfigure_fail_if_not_enough_swap_space_configured: no
       sap_s4hana_deployment_product_id: "NW_ABAP_OneHost:S4HANA1909.CORE.HDB.ABAP"
       sap_s4hana_deployment_sapcar_path: "/software/{  { sap_s4hana_deployment_sid }}"
@@ -352,7 +352,7 @@ controller_groups:
       remove_cdrom: no
       lifecycle_environment: production
       sap_preconfigure_modify_etc_hosts: yes
-      sap_domain: "josh.lab.msp.redhat.com"
+      sap_domain: "{  { demo_uuid }}.{  { base_dns_suffix }}"
       sap_hostagent_installation_type: "rpm"
       sap_hostagent_rpm_remote_path: "/software/SAPHOSTAGENT"
       sap_hostagent_rpm_file_name: "saphostagentrpm_44-20009394.rpm"
@@ -362,7 +362,7 @@ controller_groups:
       nfs_shares:
         - src: 10.15.108.14:/mnt/data01/sap
           path: /software
-      dns_zone: josh.lab.msp.redhat.com
+      dns_zone: "{  { demo_uuid }}.{  { base_dns_suffix }}"
       dns:
         server: idm05.lab.msp.redhat.com
         password: "{  { dns_pass }}"
@@ -391,11 +391,10 @@ controller_groups:
       selinux_state: permissive
       dns_resolv:
         search_domains:
-          - josh.lab.msp.redhat.com
-          - lab.msp.redhat.com
+          - "{  { demo_uuid }}.{  { base_dns_suffix }}"
         nameservers:
-          - 10.15.120.4
-          - 10.15.108.5
+          - 10.15.108.101
+          - 10.15.108.102
         options:
           - 'timeout:1'
       base_packages:
