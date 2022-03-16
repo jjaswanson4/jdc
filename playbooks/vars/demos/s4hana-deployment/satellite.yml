@@ -168,8 +168,33 @@ satellite:
         pxe_loader: None
         root_pass: "{  { admin_password }}"
         kickstart_repository: Red Hat Enterprise Linux 8 for x86_64 - BaseOS Kickstart 8.4
+      - name: rhel8
+        architecture: x86_64
+        compute_profile: general-rhel8-vlan146
+        compute_resource: "{  { vcenter_hostname }}"
+        content_source: "{  { inventory_hostname }}"
+        content_view: composite-rhel8
+        domain: "{  { demo_uuid }}.{  { base_dns_suffix }}"
+        lifecycle_environment: Production
+        operatingsystem: RedHat 8.5
+        ptable: RHEL8 Kickstart Partition Table
+        organization_of_content_source: "{  { audience }}"
+        organizations:
+          - "{  { audience }}"
+        locations:
+          - "{  { audience }}"
+        subnet: vlan146
+        pxe_loader: None
+        root_pass: "{  { admin_password }}"
+        kickstart_repository: Red Hat Enterprise Linux 8 for x86_64 - BaseOS Kickstart 8.5
     operating_systems:
       - name: RedHat 8.4
+        ptable:
+          - name: Kickstart default
+          - name: RHEL8 Kickstart Partition Table
+        update_existing: true
+        update_args: --partition-tables "RHEL8 Kickstart Partition Table,Kickstart default"
+      - name: RedHat 8.5
         ptable:
           - name: Kickstart default
           - name: RHEL8 Kickstart Partition Table
@@ -194,6 +219,14 @@ satellite:
         - name: Production
           prior: Non_Production
       content_views:
+        - name: cv-kickstart-rhel8.5
+          repos:
+            - repo: Red Hat Enterprise Linux 8 for x86_64 - AppStream (Kickstart)
+              product: Red Hat Enterprise Linux for x86_64
+              releasever: 8.5
+            - repo: Red Hat Enterprise Linux 8 for x86_64 - BaseOS (Kickstart)
+              product: Red Hat Enterprise Linux for x86_64
+              releasever: 8.5
         - name: cv-kickstart-rhel8.4
           repos:
             - repo: Red Hat Enterprise Linux 8 for x86_64 - AppStream (Kickstart)
@@ -236,6 +269,20 @@ satellite:
             - repo: Red Hat Enterprise Linux 8 for x86_64 - High Availability - Update Services for SAP Solutions (RPMs)
               product: Red Hat Enterprise Linux High Availability - Update Services for SAP Solutions
               releasever: 8.4
+        - name: cv-server-rhel8
+          repos:
+            - repo: Red Hat Enterprise Linux 8 for x86_64 - BaseOS (RPMs)
+              product: Red Hat Enterprise Linux for x86_64
+              releasever: 8
+        - name: cv-appstream-rhel8
+          repos:
+            - repo: Red Hat Enterprise Linux 8 for x86_64 - AppStream (RPMs)
+              product: Red Hat Enterprise Linux for x86_64
+              releasever: 8
+        - name: cv-satellitetools6.10-rhel8
+          repos:
+            - repo: Red Hat Satellite Tools 6.10 for RHEL 8 x86_64 (RPMs)
+              product: Red Hat Enterprise Linux for x86_64
       composite_content_views:
         - name: composite-rhel8
           auto_publish: false
@@ -247,7 +294,11 @@ satellite:
             - name: cv-r4h-hana-rhel8.4
             - name: cv-e4s-satellitetools6.10-rhel8.4
             - name: cv-e4s-highavailability-rhel8.4
+            - name: cv-server-rhel8
+            - name: cv-appstream-rhel8
+            - name: cv-satellitetools6.10-rhel8
             - name: cv-kickstart-rhel8.4
+            - name: cv-kickstart-rhel8.5
       activation_keys:
         - name: ak-sap-rhel8.4-production
           lifecycle_environment: Production
