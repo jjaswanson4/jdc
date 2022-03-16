@@ -279,6 +279,11 @@ satellite:
             - repo: Red Hat Enterprise Linux 8 for x86_64 - AppStream (RPMs)
               product: Red Hat Enterprise Linux for x86_64
               releasever: 8
+        - name: cv-r4s-netweaver-rhel8
+          repos:
+            - repo: Red Hat Enterprise Linux 8 for x86_64 - SAP NetWeaver (RPMs)
+              product: Red Hat Enterprise Linux for SAP Applications for x86_64
+              releasever: 8
         - name: cv-satellitetools6.10-rhel8
           repos:
             - repo: Red Hat Satellite Tools 6.10 for RHEL 8 x86_64 (RPMs)
@@ -296,6 +301,7 @@ satellite:
             - name: cv-e4s-highavailability-rhel8.4
             - name: cv-server-rhel8
             - name: cv-appstream-rhel8
+            - name: cv-r4s-netweaver-rhel8
             - name: cv-satellitetools6.10-rhel8
             - name: cv-kickstart-rhel8.4
             - name: cv-kickstart-rhel8.5
