@@ -319,7 +319,7 @@ controller_groups:
       sap_s4hana_deployment_db_sid: DS4
       sap_netweaver_preconfigure_fail_if_not_enough_swap_space_configured: no
       sap_s4hana_deployment_product_id: "NW_ABAP_OneHost:S4HANA1909.CORE.HDB.ABAP"
-      sap_s4hana_deployment_sapcar_path: !unsafe '/software/{{ sap_s4hana_deployment_sid }}'
+      sap_s4hana_deployment_sapcar_path: /software/DS4
       sap_s4hana_deployment_sapcar_file_name: "SAPCAR_1010-70006178.EXE"
       sap_s4hana_deployment_swpm_path: "/software/S4HANA_installation"
       sap_s4hana_deployment_swpm_sar_file_name: "SWPM20SP04_6-80003424.SAR"
@@ -524,87 +524,87 @@ controller_templates:
 #     execution_environment: "{  { controller_execution_environments[0].name }}"
 #     ask_credential_on_launch: yes
 
-# controller_workflows:
-#   - name: Provision S4HANA SID
-#     organization: "{  { audience }}"
-#     state: "{{ controller_state | default('present') }}"
-#     extra_vars:
-#       company: "{  { audience }}"
-#     survey_enabled: yes
-#     survey:
-#       name: ''
-#       description: ''
-#       spec:
-#         - type: text
-#           question_name: "What is the desired SAP System Identification (SID)?"
-#           variable: sid
-#           required: yes
-#           default: DS4
-#         - type: text
-#           question_name: "What is the SAR file name?"
-#           variable: sap_hana_deployment_bundle_sar_file_name
-#           required: yes
-#           default: IMDB_SERVER20_046_0-80002031.SAR
-#         - type: text
-#           question_name: "What is the name of the SAPCAR file?"
-#           variable: sap_hana_deployment_sapcar_file_name
-#           required: yes
-#           default: SAPCAR_1010-70006178.EXE
-#         - type: text
-#           question_name: "What is the HANA env type?"
-#           variable: sap_hana_deployment_hana_env_type
-#           required: yes
-#           default: development
-#         - type: text
-#           question_name: "What is the HANA instance number?"
-#           variable: sap_hana_deployment_hana_instance_number
-#           required: yes
-#           default: "00"
-#         - type: text
-#           question_name: "What is the desired S4HANA product?"
-#           variable: sap_s4hana_deployment_product_id
-#           required: yes
-#           default: "NW_ABAP_OneHost:S4HANA1909.CORE.HDB.ABAP"
-#         - type: text
-#           question_name: "What is the S4HANA SAPCAR file name?"
-#           variable: sap_s4hana_deployment_sapcar_file_name
-#           required: yes
-#           default: SAPCAR_1010-70006178.EXE
-#         - type: text
-#           question_name: "What is the S4HANA swpm file name?"
-#           variable: sap_s4hana_deployment_swpm_sar_file_name
-#           required: yes
-#           default: SWPM20SP04_6-80003424.SAR
-#         - type: text
-#           question_name: "How many deployment parallel jobs should run?"
-#           variable: sap_s4hana_deployment_parallel_jobs_nr
-#           required: yes
-#           default: "30"
-#         - type: text
-#           question_name: "What is the S4HANA deployment igs file name?"
-#           variable: sap_s4hana_deployment_igs_file_name
-#           required: yes
-#           default: igsexe_9-80003187.sar
-#         - type: text
-#           question_name: "What is the S4HANA deployment igs helper file name?"
-#           variable: sap_s4hana_deployment_igs_helper_file_name
-#           required: yes
-#           default: igshelper_17-10010245.sar
-#         - type: text
-#           question_name: "What is the S4HANA deployment kernel dependent file name?"
-#           variable: sap_s4hana_deployment_kernel_dependent_file_name
-#           required: yes
-#           default: SAPEXEDB_201-80003385.SAR
-#         - type: text
-#           question_name: "What is the S4HANA deployment kernel independent file name?"
-#           variable: sap_s4hana_deployment_kernel_independent_file_name
-#           required: yes
-#           default: SAPEXE_201-80003386.SAR
-#     simplified_workflow_nodes:
-#       - unified_job_template: Add Hosts to Controller Inventory
-#         identifier: node101
-#         success_nodes:
-#           - node102
+controller_workflows:
+  - name: Provision S4HANA SID
+    organization: "{  { audience }}"
+    state: "{{ controller_state | default('present') }}"
+    extra_vars:
+      company: "{  { audience }}"
+    survey_enabled: yes
+    survey:
+      name: ''
+      description: ''
+      spec:
+        - type: text
+          question_name: "What is the desired SAP System Identification (SID)?"
+          variable: sid
+          required: yes
+          default: DS4
+        - type: text
+          question_name: "What is the SAR file name?"
+          variable: sap_hana_deployment_bundle_sar_file_name
+          required: yes
+          default: IMDB_SERVER20_046_0-80002031.SAR
+        - type: text
+          question_name: "What is the name of the SAPCAR file?"
+          variable: sap_hana_deployment_sapcar_file_name
+          required: yes
+          default: SAPCAR_1010-70006178.EXE
+        - type: text
+          question_name: "What is the HANA env type?"
+          variable: sap_hana_deployment_hana_env_type
+          required: yes
+          default: development
+        - type: text
+          question_name: "What is the HANA instance number?"
+          variable: sap_hana_deployment_hana_instance_number
+          required: yes
+          default: "00"
+        - type: text
+          question_name: "What is the desired S4HANA product?"
+          variable: sap_s4hana_deployment_product_id
+          required: yes
+          default: "NW_ABAP_OneHost:S4HANA1909.CORE.HDB.ABAP"
+        - type: text
+          question_name: "What is the S4HANA SAPCAR file name?"
+          variable: sap_s4hana_deployment_sapcar_file_name
+          required: yes
+          default: SAPCAR_1010-70006178.EXE
+        - type: text
+          question_name: "What is the S4HANA swpm file name?"
+          variable: sap_s4hana_deployment_swpm_sar_file_name
+          required: yes
+          default: SWPM20SP04_6-80003424.SAR
+        - type: text
+          question_name: "How many deployment parallel jobs should run?"
+          variable: sap_s4hana_deployment_parallel_jobs_nr
+          required: yes
+          default: "30"
+        - type: text
+          question_name: "What is the S4HANA deployment igs file name?"
+          variable: sap_s4hana_deployment_igs_file_name
+          required: yes
+          default: igsexe_9-80003187.sar
+        - type: text
+          question_name: "What is the S4HANA deployment igs helper file name?"
+          variable: sap_s4hana_deployment_igs_helper_file_name
+          required: yes
+          default: igshelper_17-10010245.sar
+        - type: text
+          question_name: "What is the S4HANA deployment kernel dependent file name?"
+          variable: sap_s4hana_deployment_kernel_dependent_file_name
+          required: yes
+          default: SAPEXEDB_201-80003385.SAR
+        - type: text
+          question_name: "What is the S4HANA deployment kernel independent file name?"
+          variable: sap_s4hana_deployment_kernel_independent_file_name
+          required: yes
+          default: SAPEXE_201-80003386.SAR
+    simplified_workflow_nodes:
+      - identifier: Add Hosts to Controller Inventory
+        unified_job_template: Add Hosts to Controller Inventory
+        # success_nodes:
+        #   - node102
 #       - unified_job_template: Provision Systems
 #         identifier: node102
 #         inventory: "{  { controller_inventories[0].name }}"
