@@ -460,6 +460,17 @@ controller_templates:
     ask_credential_on_launch: yes
     ask_variables_on_launch: yes
     ask_limit_on_launch: yes
+  - name: Manage DNS Records
+    organization: "{{ controller_organization }}"
+    ask_inventory_on_launch: yes
+    inventory: Demo Inventory
+    project: "{  { controller_projects[0].name }}"
+    allow_simultaneous: yes
+    playbook: playbooks/manage-dns-records.yml
+    execution_environment: "{{ controller_execution_environments[0].name }}"
+    ask_credential_on_launch: yes
+    ask_variables_on_launch: yes
+    ask_limit_on_launch: yes
 #   - name: Provision Systems
 #     organization: "{  { audience }}"
 #     ask_inventory_on_launch: yes
@@ -620,10 +631,14 @@ controller_workflows:
         credentials:
           - Netbox Credentials
           - vCenter Credentials
-        # success_nodes:
-        #   - Create DNS Records
-        # failure_nodes:
-        #   - Send Failure Email About 'Create CMDB Records'        
+        success_nodes:
+          - Create DNS Records
+      - identifier: Create DNS Records
+        unified_job_template: Manage DNS Records
+        limit: s4hana
+        credentials:
+          - Netbox Credentials
+          - IDM Credentials  
 #       - unified_job_template: Provision Systems
 #         identifier: node102
 #         inventory: "{  { controller_inventories[0].name }}"
