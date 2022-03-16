@@ -402,8 +402,8 @@ controller_groups:
           username: admin
           password: "{  { admin_password }}"
         host_group: "{  { os }}"
-        organization: "{  { company }}"
-        location: "{  { company }}"
+        organization: "{  { controller_projects[0].name }}"
+        location: "{  { controller_projects[0].name }}"
         method: bootdisk
         dns_domain: "{{ base_dns_suffix }}"
         cpus: "{  { cpus }}"
