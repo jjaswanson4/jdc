@@ -133,7 +133,7 @@ controller_credential_types:
           label: Satellite Location
     injectors:
       extra_vars:
-        satellite_url: "{  { audience | lower }}-{  { demo }}-satellite.{  { demo_uuid }}.{  { base_dns_suffix }}"
+        satellite_url: "https://{  { audience | lower }}-{  { demo }}-satellite.{  { demo_uuid }}.{  { base_dns_suffix }}"
         satellite_username: "{  { satellite_username }}"
         satellite_password: "{  { satellite_password }}"
         satellite_validate_certs: "no"
