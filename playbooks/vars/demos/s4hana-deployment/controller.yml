@@ -471,7 +471,7 @@ controller_templates:
     ask_credential_on_launch: yes
     ask_variables_on_launch: yes
     ask_limit_on_launch: yes
-  - name: Provision SAP Systems
+  - name: Provision Systems
     organization: "{  { audience }}"
     ask_inventory_on_launch: yes
     inventory: Demo Inventory
