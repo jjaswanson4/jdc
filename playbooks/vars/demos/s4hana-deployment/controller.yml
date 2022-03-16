@@ -534,6 +534,7 @@ controller_workflows:
   - name: Provision S/4HANA SID
     organization: "{  { audience }}"
     state: "{{ controller_state | default('present') }}"
+    inventory: "{  { audience }} SAP Infrastructure"
     extra_vars:
       company: "{  { audience }}"
       demo_uuid: "{  { demo_uuid }}"
