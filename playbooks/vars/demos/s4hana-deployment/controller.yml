@@ -461,7 +461,7 @@ controller_templates:
     ask_variables_on_launch: yes
     ask_limit_on_launch: yes
   - name: Manage DNS Records
-    organization: "{{ controller_organization }}"
+    organization: "{  { audience }}"
     ask_inventory_on_launch: yes
     inventory: Demo Inventory
     project: "{  { controller_projects[0].name }}"
