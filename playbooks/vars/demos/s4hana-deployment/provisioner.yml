@@ -199,6 +199,7 @@ controller_workflows:
           - Demo Provisioner Netbox Credentials
           - Demo Provisioner vCenter Credentials
           - Demo Provisioner IDM Credentials
+          - Demo Provisioner Satellite Credentials
         success_nodes:
           - Send Success Email
         failure_nodes:
