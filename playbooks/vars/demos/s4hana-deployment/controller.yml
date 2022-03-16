@@ -612,7 +612,7 @@ controller_workflows:
       - identifier: Add Hosts to Controller Inventory
         unified_job_template: Add Hosts to Controller Inventory
         success_nodes:
-          - Create CDMB Records
+          - Create CMDB Records
       - identifier: Create CMDB Records
         unified_job_template: Manage CMDB Records
         limit: s4hana
