@@ -456,7 +456,7 @@ controller_templates:
     project: "{  { controller_projects[0].name }}"
     allow_simultaneous: yes
     playbook: playbooks/manage-cmdb-records.yml
-    execution_environment: "{{ execution_environment.name }}"
+    execution_environment: "{{ controller_execution_environments[0].name }}"
     ask_credential_on_launch: yes
     ask_variables_on_launch: yes
     ask_limit_on_launch: yes
