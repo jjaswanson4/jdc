@@ -531,7 +531,7 @@ controller_templates:
 #     ask_credential_on_launch: yes
 
 controller_workflows:
-  - name: Provision S4HANA SID
+  - name: Provision S/4HANA SID
     organization: "{  { audience }}"
     state: "{{ controller_state | default('present') }}"
     extra_vars:
