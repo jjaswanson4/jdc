@@ -518,6 +518,8 @@ controller_workflows:
     state: "{{ controller_state | default('present') }}"
     extra_vars:
       company: "{  { audience }}"
+      demo_uuid: "{  { demo_uuid }}"
+      base_dns_suffix: "{  { base_dns_suffix }}"
     survey_enabled: yes
     survey:
       name: ''
