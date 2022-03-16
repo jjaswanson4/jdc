@@ -213,6 +213,40 @@ controller_inventories:
       company: "{  { audience }}"
       demo_uuid: "{  { demo_uuid }}"
       base_dns_suffix: "{  { base_dns_suffix }}"
+      network_prefix: 10.15.120.0/22
+      config_files:
+        - hosts
+        - resolv.conf
+      timesync_ntp_servers:
+        - hostname: 0.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 1.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 2.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 3.rhel.pool.ntp.org
+          iburst: yes
+      selinux_policy: targeted
+      selinux_state: permissive
+      dns_resolv:
+        search_domains:
+          - "{  { demo_uuid }}.{  { base_dns_suffix }}"
+          - lab.msp.redhat.com
+        nameservers:
+          - 10.15.108.102
+          - 10.15.108.101
+        options:
+          - 'timeout:1'
+      base_packages:
+        disable_gpg_check: yes
+        packages:
+          - lsof
+          - vim
+          - sos
+          - redhat-support-tool
+          - open-vm-tools
+      ignore_virtual_disk_errors: yes
+      remove_cdrom: no
 
 controller_groups:
   - name: primary
@@ -362,40 +396,6 @@ controller_groups:
       nfs_shares:
         - src: 10.15.108.14:/mnt/data01/sap
           path: /software
-      dns_zone: "{  { demo_uuid }}.{  { base_dns_suffix }}"
-      config_files:
-        - hosts
-        - resolv.conf
-      timesync_ntp_servers:
-        - hostname: 0.rhel.pool.ntp.org
-          iburst: yes
-        - hostname: 1.rhel.pool.ntp.org
-          iburst: yes
-        - hostname: 2.rhel.pool.ntp.org
-          iburst: yes
-        - hostname: 3.rhel.pool.ntp.org
-          iburst: yes
-      selinux_policy: targeted
-      selinux_state: permissive
-      dns_resolv:
-        search_domains:
-          - "{  { demo_uuid }}.{  { base_dns_suffix }}"
-        nameservers:
-          - 10.15.108.101
-          - 10.15.108.102
-        options:
-          - 'timeout:1'
-      base_packages:
-        disable_gpg_check: yes
-        packages:
-          - lsof
-          - vim
-          - sos
-          - redhat-support-tool
-      firewall:
-        name: firewalld
-        state: stopped
-        enabled: no
       provisioning:
         satellite:
           server: "{{ audience | lower }}-{{ demo }}-satellite.{{ demo_uuid }}.{{ base_dns_suffix }}"
