@@ -449,17 +449,17 @@ controller_templates:
           inventory: "{  { audience }} SAP Infrastructure"
           hosts:
             - "sapddapp1.{  { demo_uuid }}.{  { base_dns_suffix }}"
-  # - name: Manage CMDB Records
-  #   organization: "{  { audience }}"
-  #   ask_inventory_on_launch: yes
-  #   inventory: Demo Inventory
-  #   project: "{{ project }}"
-  #   allow_simultaneous: yes
-  #   playbook: playbooks/manage-cmdb-records.yml
-  #   execution_environment: "{{ execution_environment.name }}"
-  #   ask_credential_on_launch: yes
-  #   ask_variables_on_launch: yes
-  #   ask_limit_on_launch: yes
+  - name: Manage CMDB Records
+    organization: "{  { audience }}"
+    ask_inventory_on_launch: yes
+    inventory: Demo Inventory
+    project: "{{ project }}"
+    allow_simultaneous: yes
+    playbook: playbooks/manage-cmdb-records.yml
+    execution_environment: "{{ execution_environment.name }}"
+    ask_credential_on_launch: yes
+    ask_variables_on_launch: yes
+    ask_limit_on_launch: yes
 #   - name: Provision Systems
 #     organization: "{  { audience }}"
 #     ask_inventory_on_launch: yes
@@ -611,8 +611,18 @@ controller_workflows:
     simplified_workflow_nodes:
       - identifier: Add Hosts to Controller Inventory
         unified_job_template: Add Hosts to Controller Inventory
+        success_nodes:
+          - Create CDMB Records
+      - identifier: Create CMDB Records
+        unified_job_template: Manage CMDB Records
+        limit: s4hana
+        credentials:
+          - Netbox Credentials
+        #  - Demo Provisioner vCenter Credentials
         # success_nodes:
-        #   - node102
+        #   - Create DNS Records
+        # failure_nodes:
+        #   - Send Failure Email About 'Create CMDB Records'        
 #       - unified_job_template: Provision Systems
 #         identifier: node102
 #         inventory: "{  { controller_inventories[0].name }}"
