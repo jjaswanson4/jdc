@@ -434,19 +434,19 @@ controller_templates:
     extra_vars:
       controller_hosts:
         - name: "sapddapp1.{  { demo_uuid }}.{  { base_dns_suffix }}"
-          inventory: "{  { company }} SAP Infrastructure"
+          inventory: "{  { audience }} SAP Infrastructure"
         - name: "sapddhdb1.{  { demo_uuid }}.{  { base_dns_suffix }}"
-          inventory: "{  { company }} SAP Infrastructure"
+          inventory: "{  { audience }} SAP Infrastructure"
         - name: "sapddhdb2.{  { demo_uuid }}.{  { base_dns_suffix }}"
-          inventory: "{  { company }} SAP Infrastructure"
+          inventory: "{  { audience }} SAP Infrastructure"
       controller_groups:
         - name: hana
-          inventory: "{  { company }} SAP Infrastructure"
+          inventory: "{  { audience }} SAP Infrastructure"
           hosts:
             - "sapddhdb1.{  { demo_uuid }}.{  { base_dns_suffix }}"
             - "sapddhdb2.{  { demo_uuid }}.{  { base_dns_suffix }}"
         - name: netweaver
-          inventory: "{  { company }} SAP Infrastructure"
+          inventory: "{  { audience }} SAP Infrastructure"
           hosts:
             - "sapddapp1.{  { demo_uuid }}.{  { base_dns_suffix }}"
   # - name: Manage CMDB Records
