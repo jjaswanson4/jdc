@@ -363,18 +363,6 @@ controller_groups:
         - src: 10.15.108.14:/mnt/data01/sap
           path: /software
       dns_zone: "{  { demo_uuid }}.{  { base_dns_suffix }}"
-      dns:
-        server: idm05.lab.msp.redhat.com
-        password: "{  { dns_pass }}"
-        records:
-          - name: "{  { inventory_hostname.split('.')[0] }}"
-            zone: josh.lab.msp.redhat.com
-            type: A
-            value: "{  { ip_address }}"
-          - name: "{  { ip_address.split('.')[-1] }}"
-            zone: "{  { ip_address.split('.')[2] }}.15.10.in-addr.arpa."
-            type: PTR
-            value: "{  { inventory_hostname }}."
       config_files:
         - hosts
         - resolv.conf
