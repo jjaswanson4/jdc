@@ -453,7 +453,7 @@ controller_templates:
     organization: "{  { audience }}"
     ask_inventory_on_launch: yes
     inventory: Demo Inventory
-    project: "{{ project }}"
+    project: "{  { controller_projects[0].name }}"
     allow_simultaneous: yes
     playbook: playbooks/manage-cmdb-records.yml
     execution_environment: "{{ execution_environment.name }}"
