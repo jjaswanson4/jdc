@@ -471,20 +471,20 @@ controller_templates:
     ask_credential_on_launch: yes
     ask_variables_on_launch: yes
     ask_limit_on_launch: yes
-#   - name: Provision Systems
-#     organization: "{  { audience }}"
-#     ask_inventory_on_launch: yes
-#     ask_limit_on_launch: yes
-#     forks: 10
-#     project: "{  { controller_projects[0].name }}"
-#     allow_simultaneous: yes
-#     playbook: provisioner/resources/playbooks/provision-systems.yml
-#     execution_environment: "{  { controller_execution_environments[0].name }}"
-#     ask_credential_on_launch: yes
-#     extra_vars:
-#       ansible_become: no
-#       provision_demo_hosts: yes
-#       run_additional_roles: no
+  - name: Provision SAP Systems
+    organization: "{  { audience }}"
+    ask_inventory_on_launch: yes
+    inventory: Demo Inventory
+    forks: 10
+    project: "{  { controller_projects[0].name }}"
+    allow_simultaneous: yes
+    playbook: playbooks/provision-systems.yml
+    execution_environment: "{  { controller_execution_environments[0].name }}"
+    ask_credential_on_launch: yes
+    ask_limit_on_launch: yes
+    ask_variables_on_launch: yes
+    extra_vars:
+      run_additional_roles: no
 #   - name: Preconfigure for SAP
 #     organization: "{  { audience }}"
 #     ask_inventory_on_launch: yes
@@ -638,7 +638,17 @@ controller_workflows:
         limit: s4hana
         credentials:
           - Netbox Credentials
-          - IDM Credentials  
+          - IDM Credentials
+        success_nodes:
+          - Provision SAP Systems
+      - identifier: Provision SAP Systems
+        unified_job_template: Provision Systems
+        limit: s4hana
+        credentials:
+          - Netbox Credentials
+          - Satellite Credentials
+          - vCenter Credentials
+          - Root Credentials
 #       - unified_job_template: Provision Systems
 #         identifier: node102
 #         inventory: "{  { controller_inventories[0].name }}"
