@@ -405,7 +405,7 @@ controller_groups:
         organization: "{  { audience }}"
         location: "{  { audience }}"
         method: bootdisk
-        dns_domain: "{{ base_dns_suffix }}"
+        dns_domain: "{  { base_dns_suffix }}"
         cpus: "{  { cpus }}"
         memory_mb: "{  { memory_mb }}"
         activation_keys: "ak-{  { application }}-{  { os }}-{  { lifecycle_environment }}"
@@ -431,6 +431,24 @@ controller_templates:
     execution_environment: "{  { controller_execution_environments[0].name }}"
     credentials:
       - Ansible Controller Credentials
+    extra_vars:
+      controller_hosts:
+        - name: "sapddapp1.{  { demo_uuid }}.{  { base_dns_suffix }}"
+          inventory: "{  { company }} SAP Infrastructure"
+        - name: "sapddhdb1.{  { demo_uuid }}.{  { base_dns_suffix }}"
+          inventory: "{  { company }} SAP Infrastructure"
+        - name: "sapddhdb2.{  { demo_uuid }}.{  { base_dns_suffix }}"
+          inventory: "{  { company }} SAP Infrastructure"
+      controller_groups:
+        - name: hana
+          inventory: "{  { company }} SAP Infrastructure"
+          hosts:
+            - "sapddhdb1.{  { demo_uuid }}.{  { base_dns_suffix }}"
+            - "sapddhdb2.{  { demo_uuid }}.{  { base_dns_suffix }}"
+        - name: netweaver
+          inventory: "{  { company }} SAP Infrastructure"
+          hosts:
+            - "sapddapp1.{  { demo_uuid }}.{  { base_dns_suffix }}"
   # - name: Manage CMDB Records
   #   organization: "{  { audience }}"
   #   ask_inventory_on_launch: yes
