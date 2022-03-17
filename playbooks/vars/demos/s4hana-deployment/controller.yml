@@ -489,7 +489,6 @@ controller_templates:
     organization: "{  { audience }}"
     ask_inventory_on_launch: yes
     inventory: Demo Inventory
-    forks: 10
     project: "{  { controller_projects[0].name }}"
     allow_simultaneous: yes
     playbook: playbooks/provision-systems.yml
@@ -499,34 +498,36 @@ controller_templates:
     ask_variables_on_launch: yes
     extra_vars:
       run_additional_roles: no
-#   - name: Preconfigure for SAP
-#     organization: "{  { audience }}"
-#     ask_inventory_on_launch: yes
-#     ask_limit_on_launch: yes
-#     forks: 10
-#     project: "{  { controller_projects[0].name }}"
-#     allow_simultaneous: yes
-#     playbook: provisioner/resources/playbooks/sap-preconfigure.yml
-#     execution_environment: "{  { controller_execution_environments[0].name }}"
-#     ask_credential_on_launch: yes
-#   - name: Preconfigure for HANA
-#     organization: "{  { audience }}"
-#     ask_inventory_on_launch: yes
-#     ask_limit_on_launch: yes
-#     project: "{  { controller_projects[0].name }}"
-#     allow_simultaneous: yes
-#     playbook: provisioner/resources/playbooks/hana-preconfigure.yml
-#     execution_environment: "{  { controller_execution_environments[0].name }}"
-#     ask_credential_on_launch: yes
-#   - name: Preconfigure for Netweaver
-#     organization: "{  { audience }}"
-#     ask_inventory_on_launch: yes
-#     ask_limit_on_launch: yes
-#     project: "{  { controller_projects[0].name }}"
-#     allow_simultaneous: yes
-#     playbook: provisioner/resources/playbooks/netweaver-preconfigure.yml
-#     execution_environment: "{  { controller_execution_environments[0].name }}"
-#     ask_credential_on_launch: yes
+  - name: Preconfigure for SAP
+    organization: "{  { audience }}"
+    ask_inventory_on_launch: yes
+    inventory: Demo Inventory
+    project: "{  { controller_projects[0].name }}"
+    allow_simultaneous: yes
+    playbook: playbooks/sap-preconfigure.yml
+    execution_environment: "{  { controller_execution_environments[0].name }}"
+    ask_credential_on_launch: yes
+    ask_limit_on_launch: yes
+  - name: Preconfigure for HANA
+    organization: "{  { audience }}"
+    ask_inventory_on_launch: yes
+    inventory: Demo Inventory
+    ask_limit_on_launch: yes
+    project: "{  { controller_projects[0].name }}"
+    allow_simultaneous: yes
+    playbook: playbooks/hana-preconfigure.yml
+    execution_environment: "{  { controller_execution_environments[0].name }}"
+    ask_credential_on_launch: yes
+  - name: Preconfigure for Netweaver
+    organization: "{  { audience }}"
+    ask_inventory_on_launch: yes
+    inventory: Demo Inventory
+    ask_limit_on_launch: yes
+    project: "{  { controller_projects[0].name }}"
+    allow_simultaneous: yes
+    playbook: playbooks/netweaver-preconfigure.yml
+    execution_environment: "{  { controller_execution_environments[0].name }}"
+    ask_credential_on_launch: yes
 #   - name: Deploy SAP HANA
 #     organization: "{  { audience }}"
 #     ask_inventory_on_launch: yes
@@ -564,6 +565,8 @@ controller_workflows:
       company: "{  { audience }}"
       demo_uuid: "{  { demo_uuid }}"
       base_dns_suffix: "{  { base_dns_suffix }}"
+      provisioner: "{  { provisioner }}"
+      provisioner_email: "{  { provisioner_email }}"
     survey_enabled: yes
     survey:
       name: ''
@@ -639,6 +642,12 @@ controller_workflows:
         unified_job_template: Add Hosts to Controller Inventory
         success_nodes:
           - Create CMDB Records
+        failure_nodes:
+          - Send Failure Email About 'Add Hosts to Controller Inventory'
+      - identifier: Send Failure Email About 'Add Hosts to Controller Inventory'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Add Hosts to Controller Inventory
       - identifier: Create CMDB Records
         unified_job_template: Manage CMDB Records
         limit: s4hana
@@ -647,6 +656,12 @@ controller_workflows:
           - vCenter Credentials
         success_nodes:
           - Create DNS Records
+        failure_nodes:
+          - Send Failure Email About 'Create CMDB Records'
+      - identifier: Send Failure Email About 'Create CMDB Records'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Create CMDB Records
       - identifier: Create DNS Records
         unified_job_template: Manage DNS Records
         limit: s4hana
@@ -655,6 +670,12 @@ controller_workflows:
           - IDM Credentials
         success_nodes:
           - Provision SAP Systems
+        failure_nodes:
+          - Send Failure Email About 'Create DNS Records'
+      - identifier: Send Failure Email About 'Create DNS Records'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Create DNS Records
       - identifier: Provision SAP Systems
         unified_job_template: Provision Systems
         limit: s4hana
@@ -663,30 +684,20 @@ controller_workflows:
           - Satellite Credentials
           - vCenter Credentials
           - Root Credentials
-#       - unified_job_template: Provision Systems
-#         identifier: node102
-#         inventory: "{  { controller_inventories[0].name }}"
-#         limit: sap
-#         credentials:
-#           - Peripheral Credentials
-#           - Root Credentials
-#         success_nodes:
-#           - node103
-#       - approval_node:
-#           name: Approve 'Preconfigure for SAP'
-#         identifier: node103
-#         success_nodes:
-#           - node104
-#       - unified_job_template: Preconfigure for SAP
-#         identifier: node104
-#         inventory: "{  { controller_inventories[0].name }}"
-#         limit: sap
-#         credentials:
-#           - Peripheral Credentials
-#           - Root Credentials
-#         success_nodes:
-#           - node105
-#           - node106
+        success_nodes:
+          - Preconfigure for SAP
+        failure_nodes:
+          - Send Failure Email About 'Provision SAP Systems'
+      - identifier: Send Failure Email About 'Provision SAP Systems'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Provision SAP Systems   
+      - identifier: Preconfigure for SAP
+        unified_job_template: Preconfigure for SAP
+        limit: s4hana
+        credentials:
+          - Root Credentials
+
 #       - approval_node:
 #           name: Approve 'Preconfigure for HANA'
 #         identifier: node105
