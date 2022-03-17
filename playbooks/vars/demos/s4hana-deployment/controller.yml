@@ -137,8 +137,8 @@ controller_credential_types:
         satellite_username: "{  { satellite_username }}"
         satellite_password: "{  { satellite_password }}"
         satellite_validate_certs: "no"
-        satellite_organization: "{  { satellite_organization }}"
-        satellite_location: "{  { satellite_location }}"
+        satellite_organization: "{  { audience }}"
+        satellite_location: "{  { audience }}"
       env:
         XDG_CACHE_HOME: /tmp/.cache
 
