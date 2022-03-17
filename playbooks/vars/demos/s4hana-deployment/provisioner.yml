@@ -204,7 +204,6 @@ controller_workflows:
           - Send Success Email
         failure_nodes:
           - Send Failure Email About 'Configure Ansible Controller'
-        all_parents_must_converge: yes
       - identifier: Send Failure Email About 'Configure Ansible Controller'
         unified_job_template: Send Provisioner Email
         extra_data:
