@@ -336,3 +336,21 @@ satellite:
               override: disabled
             - label: rhel-8-for-x86_64-appstream-rpms
               override: disabled
+        - name: ak-sap-rhel8-production
+          lifecycle_environment: Production
+          content_view: composite-rhel8
+          release_version: 8.4
+          content_overrides:
+            - label: satellite-tools-6.10-for-rhel-8-x86_64-e4s-rpms
+            - label: rhel-8-for-x86_64-sap-netweaver-rpms
+            - label: rhel-8-for-x86_64-baseos-rpms
+            - label: rhel-8-for-x86_64-appstream-rpms
+        - name: ak-sap-rhel8-non_production
+          lifecycle_environment: Non_Production
+          content_view: composite-rhel8
+          release_version: 8.4
+          content_overrides:
+            - label: satellite-tools-6.10-for-rhel-8-x86_64-e4s-rpms
+            - label: rhel-8-for-x86_64-sap-netweaver-rpms
+            - label: rhel-8-for-x86_64-baseos-rpms
+            - label: rhel-8-for-x86_64-appstream-rpms
