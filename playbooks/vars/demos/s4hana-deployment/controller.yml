@@ -269,6 +269,15 @@ controller_groups:
       memory_mb: 73728
       application: hana
       os: rhel8.4
+      provisioning:
+        host_group: rhel8.4
+        organization: "{  { audience }}"
+        location: "{  { audience }}"
+        method: bootdisk
+        dns_domain: "{  { demo_uuid }}.{  { base_dns_suffix }}"
+        cpus: 8
+        memory_mb: 73728
+        activation_keys: ak-hana-rhel8.4-production
       additional_storage:
         - size: 600Gb
           type: thin
@@ -330,6 +339,15 @@ controller_groups:
       os: rhel8
       cpus: 4
       memory_mb: 16384
+      provisioning:
+        host_group: rhel8
+        organization: "{  { audience }}"
+        location: "{  { audience }}"
+        method: bootdisk
+        dns_domain: "{  { demo_uuid }}.{  { base_dns_suffix }}"
+        cpus: 4
+        memory_mb: 16384
+        activation_keys: ak-netweaver-rhel8-production
       additional_storage:
         - size: 100Gb
           type: thin
@@ -399,15 +417,6 @@ controller_groups:
       nfs_shares:
         - src: 10.15.108.14:/mnt/data01/sap
           path: /software
-      provisioning:
-        host_group: "{  { os }}"
-        organization: "{  { audience }}"
-        location: "{  { audience }}"
-        method: bootdisk
-        dns_domain: "{  { demo_uuid }}.{  { base_dns_suffix }}"
-        cpus: "{  { cpus }}"
-        memory_mb: "{  { memory_mb }}"
-        activation_keys: "ak-{  { application }}-{  { os }}-{  { lifecycle_environment }}"
   - name: production
     inventory: "{  { audience }} SAP Infrastructure"
     variables:
