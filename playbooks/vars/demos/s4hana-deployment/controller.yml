@@ -706,6 +706,37 @@ controller_workflows:
         limit: s4hana
         credentials:
           - Root Credentials
+        success_nodes:
+          - Preconfigure for HANA
+          - Preconfigure for Netweaver
+        failure_nodes:
+          - Send Failure Email About 'Preconfigure for SAP'
+      - identifier: Send Failure Email About 'Preconfigure for SAP'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Preconfigure for SAP
+      - identifier: Preconfigure for HANA
+        unified_job_template: Preconfigure for HANA
+        limit: hana
+        credentials:
+          - Root Credentials
+        failure_nodes:
+          - Send Failure Email About 'Preconfigure for HANA'
+      - identifier: Send Failure Email About 'Preconfigure for HANA'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Preconfigure for HANA   
+      - identifier: Preconfigure for Netweaver
+        unified_job_template: Preconfigure for Netweaver
+        limit: netweaver
+        credentials:
+          - Root Credentials
+        failure_nodes:
+          - Send Failure Email About 'Preconfigure for Netweaver'
+      - identifier: Send Failure Email About 'Preconfigure for Netweaver'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Preconfigure for Netweaver  
 
 #       - approval_node:
 #           name: Approve 'Preconfigure for HANA'
