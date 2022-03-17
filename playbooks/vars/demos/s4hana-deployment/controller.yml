@@ -326,7 +326,7 @@ controller_groups:
   - name: netweaver
     inventory: "{  { audience }} SAP Infrastructure"
     variables:
-      application: netweaver
+      application: sap
       os: rhel8
       cpus: 4
       memory_mb: 16384
@@ -400,15 +400,11 @@ controller_groups:
         - src: 10.15.108.14:/mnt/data01/sap
           path: /software
       provisioning:
-        satellite:
-          server: "{{ audience | lower }}-{{ demo }}-satellite.{{ demo_uuid }}.{{ base_dns_suffix }}"
-          username: admin
-          password: "{  { admin_password }}"
         host_group: "{  { os }}"
         organization: "{  { audience }}"
         location: "{  { audience }}"
         method: bootdisk
-        dns_domain: "{  { base_dns_suffix }}"
+        dns_domain: "{  { demo_uuid }}.{  { base_dns_suffix }}"
         cpus: "{  { cpus }}"
         memory_mb: "{  { memory_mb }}"
         activation_keys: "ak-{  { application }}-{  { os }}-{  { lifecycle_environment }}"
@@ -451,6 +447,12 @@ controller_templates:
         - name: netweaver
           inventory: "{  { audience }} SAP Infrastructure"
           hosts:
+            - "sapddapp1.{  { demo_uuid }}.{  { base_dns_suffix }}"
+        - name: production
+          inventory: "{  { audience }} SAP Infrastructure"
+          hosts:
+            - "sapddhdb1.{  { demo_uuid }}.{  { base_dns_suffix }}"
+            - "sapddhdb2.{  { demo_uuid }}.{  { base_dns_suffix }}"
             - "sapddapp1.{  { demo_uuid }}.{  { base_dns_suffix }}"
   - name: Manage CMDB Records
     organization: "{  { audience }}"
