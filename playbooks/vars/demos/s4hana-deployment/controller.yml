@@ -555,6 +555,15 @@ controller_templates:
 #     playbook: provisioner/resources/playbooks/reinstate-hsr.yml
 #     execution_environment: "{  { controller_execution_environments[0].name }}"
 #     ask_credential_on_launch: yes
+  - name: Send Provisioner Email
+    organization: "{  { audience }}"
+    inventory: Demo Inventory
+    limit: localhost
+    project: "{  { controller_projects[0].name }}"
+    allow_simultaneous: yes
+    playbook: playbooks/send-email.yml
+    execution_environment: "{  { controller_execution_environments[0].name }}"
+    ask_variables_on_launch: yes
 
 controller_workflows:
   - name: Provision S/4HANA SID
