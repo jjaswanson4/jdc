@@ -767,84 +767,84 @@ controller_workflows:
 #         credentials:
 #           - Root Credentials
 
-# controller_roles:
-#   # admin account
-#   # - user: "{  { audience }}_admin"
-#   #   organization: "{  { audience }}"
-#   #   role: admin
-#   # Team Membership
-#   - user: "{  { audience }}_infrastructure"
-#     target_team: "{  { audience }} SAP Infrastructure Team"
-#     organization: "{  { audience }}"
-#     role: member
-#   - user: "{  { audience }}_basis"
-#     target_team: "{  { audience }} BASIS Team"
-#     organization: "{  { audience }}"
-#     role: member
-#   - user: "{  { audience }}_business_analyst"
-#     target_team: "{  { audience }} Business Analyst Team"
-#     organization: "{  { audience }}"
-#     role: member
-#   # Infrastructure Permissions
-#   - team: "{  { audience }} SAP Infrastructure Team"
-#     role: admin
-#     credentials:
-#       - Peripheral Credentials
-#       - Root Credentials
-#   # - team: "{  { audience }} Infrastructure Team"
-#   #   role: admin
-#   #   inventory: "{  { audience }} SAP Infrastructure"
-#   - team: "{  { audience }} SAP Infrastructure Team"
-#     role: admin
-#     project: "{  { audience }} S4HANA Deployment Code"
-#   - team: "{  { audience }} SAP Infrastructure Team"
-#     role: admin
-#     job_template: Add Hosts to Controller Inventory
-#   - team: "{  { audience }} SAP Infrastructure Team"
-#     role: admin
-#     job_template: Provision Systems
-#   # BASIS Permissions
-#   - team: "{  { audience }} BASIS Team"
-#     role: read
-#     credentials:
-#       - Peripheral Credentials
-#       - Root Credentials
-#   - team: "{  { audience }} BASIS Team"
-#     role: update
-#     inventory: "{  { audience }} SAP Infrastructure"
-#   - team: "{  { audience }} BASIS Team"
-#     role: update
-#     project: "{  { audience }} S4HANA Deployment Code"
-#   - team: "{  { audience }} BASIS Team"
-#     role: admin
-#     job_template: Preconfigure for SAP
-#   - team: "{  { audience }} BASIS Team"
-#     role: admin
-#     job_template: Preconfigure for HANA
-#   - team: "{  { audience }} BASIS Team"
-#     role: admin
-#     job_template: Preconfigure for Netweaver
-#   - team: "{  { audience }} BASIS Team"
-#     role: admin
-#     job_template: Deploy SAP HANA
-#   - team: "{  { audience }} BASIS Team"
-#     role: admin
-#     job_template: Install Netweaver
-#   - team: "{  { audience }} BASIS Team"
-#     role: admin
-#     job_template: Reinstate HSR
-#   # Business Analyst Permissions
-#   - team: "{  { audience }} Business Analyst Team"
-#     role: read
-#     credentials:
-#       - Peripheral Credentials
-#       - Root Credentials
-#   - team: "{  { audience }} Business Analyst Team"
-#     role: read
-#     inventory: "{  { audience }} SAP Infrastructure"
-#   - team: "{  { audience }} Business Analyst Team"
-#     role: read
-#     project: "{  { audience }} S4HANA Deployment Code"
-#   - team: "{  { audience }} Business Analyst Team"
-#     role: execute
-#     workflow: Provision S4HANA SID
+controller_roles:
+  # admin account
+  - user: "{  { audience }}_admin"
+    organization: "{  { audience }}"
+    role: admin
+  # Team Membership
+  - user: "{  { audience }}_infrastructure"
+    target_team: "{  { audience }} SAP Infrastructure Team"
+    organization: "{  { audience }}"
+    role: member
+  - user: "{  { audience }}_basis"
+    target_team: "{  { audience }} BASIS Team"
+    organization: "{  { audience }}"
+    role: member
+  - user: "{  { audience }}_business_analyst"
+    target_team: "{  { audience }} Business Analyst Team"
+    organization: "{  { audience }}"
+    role: member
+  # # Infrastructure Permissions
+  # - team: "{  { audience }} SAP Infrastructure Team"
+  #   role: admin
+  #   credentials:
+  #     - Peripheral Credentials
+  #     - Root Credentials
+  # - team: "{  { audience }} Infrastructure Team"
+  #   role: admin
+  #   inventory: "{  { audience }} SAP Infrastructure"
+  # - team: "{  { audience }} SAP Infrastructure Team"
+  #   role: admin
+  #   project: "{  { audience }} S4HANA Deployment Code"
+  # - team: "{  { audience }} SAP Infrastructure Team"
+  #   role: admin
+  #   job_template: Add Hosts to Controller Inventory
+  # - team: "{  { audience }} SAP Infrastructure Team"
+  #   role: admin
+  #   job_template: Provision Systems
+  # # BASIS Permissions
+  # - team: "{  { audience }} BASIS Team"
+  #   role: read
+  #   credentials:
+  #     - Peripheral Credentials
+  #     - Root Credentials
+  # - team: "{  { audience }} BASIS Team"
+  #   role: update
+  #   inventory: "{  { audience }} SAP Infrastructure"
+  # - team: "{  { audience }} BASIS Team"
+  #   role: update
+  #   project: "{  { audience }} S4HANA Deployment Code"
+  # - team: "{  { audience }} BASIS Team"
+  #   role: admin
+  #   job_template: Preconfigure for SAP
+  # - team: "{  { audience }} BASIS Team"
+  #   role: admin
+  #   job_template: Preconfigure for HANA
+  # - team: "{  { audience }} BASIS Team"
+  #   role: admin
+  #   job_template: Preconfigure for Netweaver
+  # - team: "{  { audience }} BASIS Team"
+  #   role: admin
+  #   job_template: Deploy SAP HANA
+  # - team: "{  { audience }} BASIS Team"
+  #   role: admin
+  #   job_template: Install Netweaver
+  # - team: "{  { audience }} BASIS Team"
+  #   role: admin
+  #   job_template: Reinstate HSR
+  # # Business Analyst Permissions
+  # - team: "{  { audience }} Business Analyst Team"
+  #   role: read
+  #   credentials:
+  #     - Peripheral Credentials
+  #     - Root Credentials
+  # - team: "{  { audience }} Business Analyst Team"
+  #   role: read
+  #   inventory: "{  { audience }} SAP Infrastructure"
+  # - team: "{  { audience }} Business Analyst Team"
+  #   role: read
+  #   project: "{  { audience }} S4HANA Deployment Code"
+  # - team: "{  { audience }} Business Analyst Team"
+  #   role: execute
+  #   workflow: Provision S4HANA SID
