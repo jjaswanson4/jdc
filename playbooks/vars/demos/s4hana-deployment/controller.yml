@@ -447,7 +447,7 @@ controller_templates:
           inventory: "{  { audience }} SAP Infrastructure"
           variables:
             virtual_ip:
-              dns_record: "sapdnhdb.{{ demo_uuid }}.{{ base_dns_suffix }}"
+              dns_record: "sapddhdb.{  { demo_uuid }}.{  { base_dns_suffix }}"
         - name: "sapddhdb2.{  { demo_uuid }}.{  { base_dns_suffix }}"
           inventory: "{  { audience }} SAP Infrastructure"
       controller_groups:
