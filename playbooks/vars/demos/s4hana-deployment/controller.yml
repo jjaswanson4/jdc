@@ -445,6 +445,9 @@ controller_templates:
           inventory: "{  { audience }} SAP Infrastructure"
         - name: "sapddhdb1.{  { demo_uuid }}.{  { base_dns_suffix }}"
           inventory: "{  { audience }} SAP Infrastructure"
+          variables:
+            virtual_ip:
+              dns_record: "sapdnhdb.{{ demo_uuid }}.{{ base_dns_suffix }}"
         - name: "sapddhdb2.{  { demo_uuid }}.{  { base_dns_suffix }}"
           inventory: "{  { audience }} SAP Infrastructure"
       controller_groups:
@@ -528,33 +531,46 @@ controller_templates:
     playbook: playbooks/netweaver-preconfigure.yml
     execution_environment: "{  { controller_execution_environments[0].name }}"
     ask_credential_on_launch: yes
-#   - name: Deploy SAP HANA
-#     organization: "{  { audience }}"
-#     ask_inventory_on_launch: yes
-#     ask_limit_on_launch: yes
-#     project: "{  { controller_projects[0].name }}"
-#     allow_simultaneous: yes
-#     playbook: provisioner/resources/playbooks/deploy-hana.yml
-#     execution_environment: "{  { controller_execution_environments[0].name }}"
-#     ask_credential_on_launch: yes
-#   - name: Install Netweaver
-#     organization: "{  { audience }}"
-#     ask_inventory_on_launch: yes
-#     ask_limit_on_launch: yes
-#     project: "{  { controller_projects[0].name }}"
-#     allow_simultaneous: yes
-#     playbook: provisioner/resources/playbooks/install-s4.yml
-#     execution_environment: "{  { controller_execution_environments[0].name }}"
-#     ask_credential_on_launch: yes
-#   - name: Reinstate HSR
-#     organization: "{  { audience }}"
-#     ask_inventory_on_launch: yes
-#     ask_limit_on_launch: yes
-#     project: "{  { controller_projects[0].name }}"
-#     allow_simultaneous: yes
-#     playbook: provisioner/resources/playbooks/reinstate-hsr.yml
-#     execution_environment: "{  { controller_execution_environments[0].name }}"
-#     ask_credential_on_launch: yes
+  - name: Install SAP HANA
+    organization: "{  { audience }}"
+    ask_inventory_on_launch: yes
+    inventory: Demo Inventory
+    ask_limit_on_launch: yes
+    project: "{  { controller_projects[0].name }}"
+    allow_simultaneous: yes
+    playbook: playbooks/deploy-hana.yml
+    execution_environment: "{  { controller_execution_environments[0].name }}"
+    ask_credential_on_launch: yes
+  - name: Configure HSR and Pacemaker
+    organization: "{  { audience }}"
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: "{  { controller_projects[0].name }}"
+    allow_simultaneous: yes
+    playbook: playbooks/setup-hsr-pacemaker.yml
+    execution_environment: "{  { controller_execution_environments[0].name }}"
+    ask_credential_on_launch: yes
+  - name: Install Netweaver
+    organization: "{  { audience }}"
+    ask_inventory_on_launch: yes
+    inventory: Demo Inventory
+    ask_limit_on_launch: yes
+    project: "{  { controller_projects[0].name }}"
+    allow_simultaneous: yes
+    playbook: playbooks/install-s4.yml
+    execution_environment: "{  { controller_execution_environments[0].name }}"
+    ask_credential_on_launch: yes
+  - name: Reinstate HSR
+    organization: "{  { audience }}"
+    ask_inventory_on_launch: yes
+    inventory: Demo Inventory
+    ask_limit_on_launch: yes
+    project: "{  { controller_projects[0].name }}"
+    allow_simultaneous: yes
+    playbook: playbooks/reinstate-hsr.yml
+    execution_environment: "{  { controller_execution_environments[0].name }}"
+    ask_credential_on_launch: yes
   - name: Send Provisioner Email
     organization: "{  { audience }}"
     inventory: Demo Inventory
@@ -736,67 +752,68 @@ controller_workflows:
       - identifier: Send Failure Email About 'Preconfigure for Netweaver'
         unified_job_template: Send Provisioner Email
         extra_data:
-          failed_at_step: Preconfigure for Netweaver  
-
-#       - approval_node:
-#           name: Approve 'Preconfigure for HANA'
-#         identifier: node105
-#         success_nodes:
-#           - node107
-#       - unified_job_template: Preconfigure for HANA
-#         identifier: node107
-#         inventory: "{  { controller_inventories[0].name }}"
-#         limit: hana
-#         credentials:
-#           - Root Credentials
-#         success_nodes:
-#           - node109
-#       - approval_node:
-#           name: Approve 'Preconfigure for Netweaver'
-#         identifier: node106
-#         success_nodes:
-#           - node108
-#       - unified_job_template: Preconfigure for Netweaver
-#         identifier: node108
-#         inventory: "{  { controller_inventories[0].name }}"
-#         limit: netweaver
-#         credentials:
-#           - Root Credentials
-#         success_nodes:
-#           - node110
-#       - approval_node:
-#           name: Approve 'Deploy SAP HANA'
-#         identifier: node109
-#         success_nodes:
-#           - node111
-#       - unified_job_template: Deploy SAP HANA
-#         identifier: node111
-#         inventory: "{  { controller_inventories[0].name }}"
-#         limit: hana
-#         credentials:
-#           - Root Credentials
-#         success_nodes:
-#           - node110
-#       - approval_node:
-#           name: Approve 'Install Netweaver'
-#         identifier: node110
-#         all_parents_must_converge: yes
-#         success_nodes:
-#           - node112
-#       - unified_job_template: Install Netweaver
-#         identifier: node112
-#         inventory: "{  { controller_inventories[0].name }}"
-#         limit: netweaver
-#         credentials:
-#           - Root Credentials
-#         success_nodes:
-#           - node113
-#       - unified_job_template: Reinstate HSR
-#         identifier: node113
-#         inventory: "{  { controller_inventories[0].name }}"
-#         limit: 'hana:&primary'
-#         credentials:
-#           - Root Credentials
+          failed_at_step: Preconfigure for Netweaver
+      - identifier: Install SAP HANA
+        unified_job_template: Install SAP HANA
+        limit: hana
+        credentials:
+          - Root Account
+        success_nodes:
+          - Configure HSR and Pacemaker
+        failure_nodes:
+          - Send Failure Email About 'Install SAP HANA'
+      - identifier: Send Failure Email About 'Install SAP HANA'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Install SAP HANA
+      - identifier: Configure HSR and Pacemaker
+        unified_job_template: Configure HSR and Pacemaker
+        limit: hana
+        credentials:
+          - Root Account
+          - Netbox Credentials
+        success_nodes:
+          - Install Netweaver
+        failure_nodes:
+          - Send Failure Email About 'Configure HSR and Pacemaker'
+      - identifier: Send Failure Email About 'Configure HSR and Pacemaker'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Configure HSR and Pacemaker
+      - identifier: Install Netweaver
+        unified_job_template: Install Netweaver
+        limit: netweaver
+        credentials:
+          - Root Account
+        success_nodes:
+          - Reinstate HSR
+        failure_nodes:
+          - Send Failure Email About 'Install Netweaver'
+        all_parents_must_converge: yes
+      - identifier: Send Failure Email About 'Install Netweaver'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Install Netweaver
+        all_parents_must_converge: yes
+      - identifier: Reinstate HSR
+        unified_job_template: Reinstate HSR
+        limit: 'hana:&primary'
+        credentials:
+          - Root Account
+        success_nodes:
+          - Send Success Email
+        failure_nodes:
+          - Send Failure Email About 'Reinstate HSR'
+        all_parents_must_converge: yes
+      - identifier: Send Failure Email About 'Reinstate HSR'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Reinstate HSR
+      - identifier: Send Success Email
+        unified_job_template: Send Provisioner Email
+        all_parents_must_converge: yes
+        extra_data:
+          provisioner_status: success
 
 controller_roles:
   # admin account
