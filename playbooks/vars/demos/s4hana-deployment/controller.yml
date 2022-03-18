@@ -757,7 +757,7 @@ controller_workflows:
         unified_job_template: Install SAP HANA
         limit: hana
         credentials:
-          - Root Account
+          - Root Credentials
         success_nodes:
           - Configure HSR and Pacemaker
         failure_nodes:
@@ -770,7 +770,7 @@ controller_workflows:
         unified_job_template: Configure HSR and Pacemaker
         limit: hana
         credentials:
-          - Root Account
+          - Root Credentials
           - Netbox Credentials
         success_nodes:
           - Install Netweaver
@@ -784,7 +784,7 @@ controller_workflows:
         unified_job_template: Install Netweaver
         limit: netweaver
         credentials:
-          - Root Account
+          - Root Credentials
         success_nodes:
           - Reinstate HSR
         failure_nodes:
@@ -799,7 +799,7 @@ controller_workflows:
         unified_job_template: Reinstate HSR
         limit: 'hana:&primary'
         credentials:
-          - Root Account
+          - Root Credentials
         success_nodes:
           - Send Success Email
         failure_nodes:
