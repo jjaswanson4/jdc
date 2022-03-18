@@ -58,9 +58,9 @@ controller_hosts:
 controller_groups:
   - name: demo_hosts
     hosts:
-      - name: "sapddapp1.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - name: "sapddhdb1.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - name: "sapddhdb2.{{ demo_uuid }}.{{ base_dns_suffix }}"   
+      - "sapddapp1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "sapddhdb1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "sapddhdb2.{{ demo_uuid }}.{{ base_dns_suffix }}"   
     variables:
       satellite_url: "https://{  { groups['satellite'][0] }}"
       satellite_username: "{  { admin_username }}"
@@ -68,15 +68,6 @@ controller_groups:
       satellite_validate_certs: no
       satellite_organization: "{  { audience }}"
       satellite_location: "{  { audience }}"
-      provisioning:
-        host_group: "{  { os }}"
-        organization: "{  { audience }}"
-        location: "{  { audience }}"
-        method: bootdisk
-        dns_domain: "{  { demo_uuid }}.{  { base_dns_suffix }}"
-        cpus: "{  { cpus }}"
-        memory_mb: "{  { memory_mb }}"
-        activation_keys: "ak-{  { application }}-{  { os }}-{  { lifecycle_environment }}"
 
 controller_workflows:
   - name: Provision S/4HANA Deployment Demo
