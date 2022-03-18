@@ -736,6 +736,8 @@ controller_workflows:
         limit: hana
         credentials:
           - Root Credentials
+        success_nodes:
+          - Install SAP HANA
         failure_nodes:
           - Send Failure Email About 'Preconfigure for HANA'
       - identifier: Send Failure Email About 'Preconfigure for HANA'
@@ -747,6 +749,8 @@ controller_workflows:
         limit: netweaver
         credentials:
           - Root Credentials
+        success_nodes:
+          - Install Netweaver
         failure_nodes:
           - Send Failure Email About 'Preconfigure for Netweaver'
       - identifier: Send Failure Email About 'Preconfigure for Netweaver'
