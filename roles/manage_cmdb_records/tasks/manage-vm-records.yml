@@ -2,6 +2,11 @@
 
 - name: run from {{ delegate_host }}
   block:
+    - name: set cpu float fact
+      ansible.builtin.set_fact:
+        vcpus: "{{ cpus | float }}"
+      when:
+        - cpus is defined
     - name: manage vm entry in cmdb
       netbox.netbox.netbox_virtual_machine:
         netbox_url: "{{ netbox_url }}"
@@ -9,7 +14,7 @@
         validate_certs: "{{ (netbox_validate_certs | bool) | default(omit) }}"
         data:
           name: "{{ inventory_hostname }}"
-          vcpus: "{{ (cpus | float) | default(omit) }}"
+          vcpus: "{{ cpus | default(omit) }}"
           memory: "{{ memory_mb | default(omit) }}"
           disk: 100
           tenant: "{{ demo_uuid }}"
