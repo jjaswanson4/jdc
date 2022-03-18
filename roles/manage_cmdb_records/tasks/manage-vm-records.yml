@@ -9,8 +9,8 @@
         validate_certs: "{{ (netbox_validate_certs | bool) | default(omit) }}"
         data:
           name: "{{ inventory_hostname }}"
-          vcpus: "{{ cpus | float }}"
-          memory: "{{ memory_mb }}"
+          vcpus: "{{ (cpus | float) | default(omit) }}"
+          memory: "{{ memory_mb | default(omit) }}"
           disk: 100
           tenant: "{{ demo_uuid }}"
           cluster: "{{ vcenter_cluster }}"
