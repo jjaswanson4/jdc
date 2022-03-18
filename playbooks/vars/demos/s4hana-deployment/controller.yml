@@ -264,6 +264,9 @@ controller_groups:
       sap_hana_hsr_alias: DC2
   - name: hana
     inventory: "{  { audience }} SAP Infrastructure"
+    children:
+      - primary
+      - secondary
     variables:
       cpus: 8
       memory_mb: 73728
@@ -451,10 +454,13 @@ controller_templates:
         - name: "sapddhdb2.{  { demo_uuid }}.{  { base_dns_suffix }}"
           inventory: "{  { audience }} SAP Infrastructure"
       controller_groups:
-        - name: hana
+        - name: primary
           inventory: "{  { audience }} SAP Infrastructure"
           hosts:
             - "sapddhdb1.{  { demo_uuid }}.{  { base_dns_suffix }}"
+        - name: secondary
+          inventory: "{  { audience }} SAP Infrastructure"
+          hosts:            
             - "sapddhdb2.{  { demo_uuid }}.{  { base_dns_suffix }}"
         - name: netweaver
           inventory: "{  { audience }} SAP Infrastructure"
