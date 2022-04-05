@@ -1,0 +1,368 @@
+---
+
+cpus: 8
+memory_mb: 24576
+os: rhel7
+application: general
+
+htop_url: https://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/h/htop-2.2.0-3.el7.x86_64.rpm
+
+additional_storage:
+  - size: 1000Gb
+    type: thin
+    scsi_controller: 0
+    unit_number: 1
+
+lvm:
+  vg: os
+  pvs: /dev/sda2,/dev/sdb
+
+ignore_compute_resource_errors: true
+
+satellite:
+  admin_username: admin
+  admin_password: "{  { admin_password }}"
+  version: '6.10'
+  logical_volumes:
+    - name: cache
+      size: 20
+      path: /var/cache/pulp
+    - name: pulp
+      size: 500
+      path: /var/lib/pulp
+    - name: mongodb
+      size: 100
+      path: /var/lib/mongodb
+    - name: qpidd
+      size: 20
+      path: /var/lib/qpidd
+    - name: varlog
+      size: 10
+      path: /var/log
+    - name: pqsql
+      size: 100
+      path: /var/opt/rh/rh-postgresql12/lib/pgsql
+    - name: squid
+      size: 10
+      path: /var/spool/squid
+    - name: usr
+      size: 8
+      path: /usr
+    - name: opt
+      size: 8
+      path: /opt
+    - name: puppetlabs
+      size: 1
+      path: /opt/puppetlabs
+    - name: var
+      size: 12
+      path: /var
+  installer_options:
+    - "--foreman-proxy-plugin-remote-execution-ssh-install-key true"
+    - "--foreman-proxy-dns true"
+  foreman:
+    organizations:
+      - name: "{  { audience }}"
+        initial_organization: yes
+    locations:
+      - name: "{  { audience }}"
+        initial_location: yes
+        organizations:
+          - name: "{  { audience }}"
+    settings:
+      - name: sync_connect_timeout
+        value: 3600
+      - name: default_proxy_download_policy
+        value: on_demand
+      - name: unregister_delete_host
+        value: true
+      - name: entries_per_page
+        value: 100
+      - name: allow_auto_inventory_upload
+        value: yes
+      - name: destroy_vm_on_host_delete
+        value: yes
+      - name: idle_timeout
+        value: 1440
+    compute_resources:
+      - name: vcenter.lab.msp.redhat.com
+        provider: vmware
+        provider_params:
+          url: "{  { vcenter_hostname }}"
+          user: "{  { vcenter_username }}"
+          password: "{  { vcenter_password }}"
+          datacenter: "{  { vcenter_datacenter }}"
+        organizations:
+          - name: "{  { audience }}"
+        locations:
+          - name: "{  { audience }}"
+    compute_profiles:
+      - name: general-rhel8-vlan146
+        compute_resource: "{  { vcenter_hostname }}"
+        vm_attrs:
+          cpus: 4
+          corespersocket: 4
+          memory_mb: 4096
+          firmware: efi
+          cluster: General
+          resource_pool: Resources
+          path: "/Datacenters/{  { vcenter_datacenter }}/vm/Demos/{  { demo_uuid }}"
+          guest_id: rhel8_64Guest
+          hardware_version: vmx-17
+          memoryHotAddEnabled: 1
+          cpuHotAddEnabled: 1
+          add_cdrom: 0
+          scsi_controllers:
+          - type: ParaVirtualSCSIController
+            key: 1000
+          interfaces_attributes:
+            0:
+              type: VirtualVmxnet3
+              network: dvportgroup-34
+          volumes_attributes:
+            0:
+              thin: true
+              name: Hard disk
+              mode: persistent
+              controller_key: 1000
+              size_gb: 100
+              datastore: storage04-nfs-lun0
+    domains:
+      - name: "{  { demo_uuid }}.{  { base_dns_suffix }}"
+        organizations:
+          - name: "{  { audience }}"
+        locations:
+          - name: "{  { audience }}"
+    subnets:
+      - name: vlan146
+        network: 10.15.120.0
+        mask: 255.255.252.0
+        gateway: 10.15.123.254
+        dns_primary: 10.15.108.102
+        dns_secondary: 10.15.108.101
+        ipam: None
+        boot_mode: Static
+        organizations:
+          - name: "{  { audience }}"
+        locations:
+          - name: "{  { audience }}"
+        domains:
+          - name: "{  { demo_uuid }}.{  { base_dns_suffix }}"
+    hostgroups:
+      - name: rhel8.4
+        architecture: x86_64
+        compute_profile: general-rhel8-vlan146
+        compute_resource: "{  { vcenter_hostname }}"
+        content_source: "{  { inventory_hostname }}"
+        content_view: composite-rhel8
+        domain: "{{ demo_uuid }}.{{ base_dns_suffix }}"
+        lifecycle_environment: Production
+        operatingsystem: RedHat 8.4
+        ptable: RHEL8 Kickstart Partition Table
+        organization_of_content_source: "{  { audience }}"
+        organizations:
+          - "{  { audience }}"
+        locations:
+          - "{  { audience }}"
+        subnet: vlan146
+        pxe_loader: None
+        root_pass: "{  { admin_password }}"
+        kickstart_repository: Red Hat Enterprise Linux 8 for x86_64 - BaseOS Kickstart 8.4
+      - name: rhel8
+        architecture: x86_64
+        compute_profile: general-rhel8-vlan146
+        compute_resource: "{  { vcenter_hostname }}"
+        content_source: "{  { inventory_hostname }}"
+        content_view: composite-rhel8
+        domain: "{  { demo_uuid }}.{  { base_dns_suffix }}"
+        lifecycle_environment: Production
+        operatingsystem: RedHat 8.5
+        ptable: RHEL8 Kickstart Partition Table
+        organization_of_content_source: "{  { audience }}"
+        organizations:
+          - "{  { audience }}"
+        locations:
+          - "{  { audience }}"
+        subnet: vlan146
+        pxe_loader: None
+        root_pass: "{  { admin_password }}"
+        kickstart_repository: Red Hat Enterprise Linux 8 for x86_64 - BaseOS Kickstart 8.5
+    operating_systems:
+      - name: RedHat 8.4
+        ptable:
+          - name: Kickstart default
+          - name: RHEL8 Kickstart Partition Table
+        update_existing: true
+        update_args: --partition-tables "RHEL8 Kickstart Partition Table,Kickstart default"
+      - name: RedHat 8.5
+        ptable:
+          - name: Kickstart default
+          - name: RHEL8 Kickstart Partition Table
+        update_existing: true
+        update_args: --partition-tables "RHEL8 Kickstart Partition Table,Kickstart default"
+    partition_tables:
+      - name: RHEL8 Kickstart Partition Table
+        file: files/rhel8-ptable.erb
+        os_family: Redhat
+        organizations:
+          - name: "{  { audience }}"
+        locations:
+          - name: "{  { audience }}"
+  katello:
+    - organization_name: "{  { audience }}"
+      state: present
+      manifest: "/tmp/satellite-manifest.zip"
+      repo_sync_attempts: 3
+      lifecycle_environments:
+        - name: Non_Production
+          prior: Library
+        - name: Production
+          prior: Non_Production
+      content_views:
+        - name: cv-kickstart-rhel8.5
+          repos:
+            - repo: Red Hat Enterprise Linux 8 for x86_64 - AppStream (Kickstart)
+              product: Red Hat Enterprise Linux for x86_64
+              releasever: 8.5
+            - repo: Red Hat Enterprise Linux 8 for x86_64 - BaseOS (Kickstart)
+              product: Red Hat Enterprise Linux for x86_64
+              releasever: 8.5
+        - name: cv-kickstart-rhel8.4
+          repos:
+            - repo: Red Hat Enterprise Linux 8 for x86_64 - AppStream (Kickstart)
+              product: Red Hat Enterprise Linux for x86_64
+              releasever: 8.4
+            - repo: Red Hat Enterprise Linux 8 for x86_64 - BaseOS (Kickstart)
+              product: Red Hat Enterprise Linux for x86_64
+              releasever: 8.4
+          filters:
+            - name: 01-01-2022
+              filter_type: erratum
+              end_date: '2022-01-01'
+        - name: cv-ansible-rhel8
+          repos:
+            - repo: Red Hat Ansible Engine 2 for RHEL 8 x86_64 (RPMs)
+              product: Red Hat Ansible Engine
+        - name: cv-e4s-server-rhel8.4
+          repos:
+            - repo: Red Hat Enterprise Linux 8 for x86_64 - BaseOS - Update Services for SAP Solutions (RPMs)
+              product: Red Hat Enterprise Linux Server - Update Services for SAP Solutions
+              releasever: 8.4
+          filters:
+            - name: 01-01-2022
+              filter_type: erratum
+              end_date: '2022-01-01'
+        - name: cv-e4s-appstream-rhel8.4
+          repos:
+            - repo: Red Hat Enterprise Linux 8 for x86_64 - AppStream - Update Services for SAP Solutions (RPMs)
+              product: Red Hat Enterprise Linux Server - Update Services for SAP Solutions
+              releasever: 8.4       
+          filters:
+            - name: 01-01-2022
+              filter_type: erratum
+              end_date: '2022-01-01'
+        - name: cv-r4s-netweaver-rhel8.4
+          repos:
+            - repo: Red Hat Enterprise Linux 8 for x86_64 - SAP NetWeaver - Update Services for SAP Solutions (RPMs)
+              product: RHEL for SAP - Update Services for SAP Solutions
+              releasever: 8.4
+        - name: cv-r4h-hana-rhel8.4
+          repos:
+            - repo: Red Hat Enterprise Linux 8 for x86_64 - SAP Solutions - Update Services for SAP Solutions (RPMs)
+              product: RHEL for SAP HANA - Update Services for SAP Solutions
+              releasever: 8.4
+        - name: cv-e4s-satellitetools6.10-rhel8.4
+          repos:
+            - repo: Red Hat Satellite Tools 6.10 for RHEL 8 x86_64 - Update Services SAP Solutions (RPMs)
+              product: Red Hat Enterprise Linux Server - Update Services for SAP Solutions
+              releasever: 8.4
+          filters:
+            - name: 01-01-2022
+              filter_type: erratum
+              end_date: '2022-01-01'
+        - name: cv-e4s-highavailability-rhel8.4
+          repos:
+            - repo: Red Hat Enterprise Linux 8 for x86_64 - High Availability - Update Services for SAP Solutions (RPMs)
+              product: Red Hat Enterprise Linux High Availability - Update Services for SAP Solutions
+              releasever: 8.4
+          filters:
+            - name: 01-01-2022
+              filter_type: erratum
+              end_date: '2022-01-01'
+        - name: cv-server-rhel8
+          repos:
+            - repo: Red Hat Enterprise Linux 8 for x86_64 - BaseOS (RPMs)
+              product: Red Hat Enterprise Linux for x86_64
+              releasever: 8
+        - name: cv-appstream-rhel8
+          repos:
+            - repo: Red Hat Enterprise Linux 8 for x86_64 - AppStream (RPMs)
+              product: Red Hat Enterprise Linux for x86_64
+              releasever: 8
+        - name: cv-satellitetools6.10-rhel8
+          repos:
+            - repo: Red Hat Satellite Tools 6.10 for RHEL 8 x86_64 (RPMs)
+              product: Red Hat Enterprise Linux for x86_64
+      composite_content_views:
+        - name: composite-rhel8
+          auto_publish: false
+          component_content_views:
+            - name: cv-ansible-rhel8
+            - name: cv-e4s-server-rhel8.4
+            - name: cv-e4s-appstream-rhel8.4
+            - name: cv-r4s-netweaver-rhel8.4
+            - name: cv-r4h-hana-rhel8.4
+            - name: cv-e4s-satellitetools6.10-rhel8.4
+            - name: cv-e4s-highavailability-rhel8.4
+            - name: cv-server-rhel8
+            - name: cv-appstream-rhel8
+            - name: cv-satellitetools6.10-rhel8
+            - name: cv-kickstart-rhel8.4
+            - name: cv-kickstart-rhel8.5
+      activation_keys:
+        - name: ak-sap-rhel8.4-production
+          lifecycle_environment: Production
+          content_view: composite-rhel8
+          release_version: 8.4
+          content_overrides:
+            - label: rhel-8-for-x86_64-baseos-e4s-rpms
+            - label: rhel-8-for-x86_64-appstream-e4s-rpms
+            - label: satellite-tools-6.10-for-rhel-8-x86_64-e4s-rpms
+            - label: rhel-8-for-x86_64-sap-netweaver-e4s-rpms
+            - label: rhel-8-for-x86_64-sap-solutions-e4s-rpms
+            - label: rhel-8-for-x86_64-highavailability-e4s-rpms
+            - label: rhel-8-for-x86_64-baseos-rpms
+              override: disabled
+            - label: rhel-8-for-x86_64-appstream-rpms
+              override: disabled
+        - name: ak-sap-rhel8.4-non_production
+          lifecycle_environment: Non_Production
+          content_view: composite-rhel8
+          release_version: 8.4
+          content_overrides:
+            - label: rhel-8-for-x86_64-baseos-e4s-rpms
+            - label: rhel-8-for-x86_64-appstream-e4s-rpms
+            - label: satellite-tools-6.10-for-rhel-8-x86_64-e4s-rpms
+            - label: rhel-8-for-x86_64-sap-netweaver-e4s-rpms
+            - label: rhel-8-for-x86_64-sap-solutions-e4s-rpms
+            - label: rhel-8-for-x86_64-highavailability-e4s-rpms
+            - label: rhel-8-for-x86_64-baseos-rpms
+              override: disabled
+            - label: rhel-8-for-x86_64-appstream-rpms
+              override: disabled
+        - name: ak-general-rhel8-production
+          lifecycle_environment: Production
+          content_view: composite-rhel8
+          release_version: 8
+          content_overrides:
+            - label: satellite-tools-6.10-for-rhel-8-x86_64-rpms
+            - label: rhel-8-for-x86_64-baseos-rpms
+            - label: rhel-8-for-x86_64-appstream-rpms
+        - name: ak-general-rhel8-non_production
+          lifecycle_environment: Non_Production
+          content_view: composite-rhel8
+          release_version: 8
+          content_overrides:
+            - label: satellite-tools-6.10-for-rhel-8-x86_64-rpms
+            - label: rhel-8-for-x86_64-baseos-rpms
+            - label: rhel-8-for-x86_64-appstream-rpms
