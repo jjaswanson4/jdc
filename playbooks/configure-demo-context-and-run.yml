@@ -21,6 +21,19 @@
             demo_uuid: "{{ demo_uuid_raw.stdout }}"
       when:
         - demo_uuid is not defined
+    - name: create vlan number (and associated vars)
+      block:
+        - name: set demo vlan
+          ansible.builtin.set_fact:
+            demo_vlan: "{{ 251 | random(205) }}"
+        - name: set demo subnet and gateway
+          ansible.builtin.set_fact:
+            demo_subnet: "172.16.{{ demo_vlan }}.0/24"
+            demo_gateway: "172.16.{{ demo_vlan }}.1/24"
+      when:
+        - needs_vlan is defined
+        - needs_vlan
+        - demo_vlan is not defined
     - name: match demo to display name
       ansible.builtin.set_fact:
         demo_display_name: "{{ demos.display_name }}"
@@ -159,6 +172,9 @@
               demo_context_state: "{{ demo_context_state | default('present') }}"
               provisioner: "{{ provisioner }}"
               provisioner_email: "{{ provisioner_email }}"
+              demo_vlan: "{{ demo_vlan | default(omit) }}"
+              demo_subnet: "{{ demo_subnet | default(omit) }}"
+              demo_gateway: "{{ demo_gateway | default(omit) }}"
     - name: get auth token for netbox
       ansible.builtin.uri:
         url: "{{ netbox_url }}/api/users/tokens/provision/"
