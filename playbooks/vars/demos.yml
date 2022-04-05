@@ -11,3 +11,5 @@ available_demos:
     display_name: IDM-AD Integration
   - name: aap-aa
     display_name: AAP Advanced Architecture
+  - name: satellite-aa
+    display_name: Satellite Advanced Architecture
