@@ -16,6 +16,6 @@ logvol /tmp --vgname=os --fstype=xfs --size=4096 --name=tmp
 logvol /usr --vgname=os --fstype=xfs --size=4096 --name=usr
 logvol /opt --vgname=os --fstype=xfs --size=4096 --name=opt
 logvol /home --vgname=os --fstype=xfs --size=4096 --name=home
-logvol /var/log --vgname=os --fstype=xfs --size=4096 --name=varlog
+logvol /var/log --vgname=os --fstype=xfs --size=2048 --name=varlog
 logvol /var/log/audit --vgname=os --fstype=xfs --size=1024 --name=varlogaudit
-logvol /var/cache/yum --vgname=os --fstype=xfs --size=4096 --name=varcachednf
+logvol /var/cache/dnf --vgname=os --fstype=xfs --size=2048 --name=varcachednf
