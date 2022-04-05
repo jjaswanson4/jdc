@@ -137,17 +137,7 @@ controller_workflows:
     extra_vars:
       demo: satellite-aa
     simplified_workflow_nodes:
-      - identifier: Create CMDB Records
-        unified_job_template: Manage CMDB Records
-        limit: 'demo_hosts:management_plane'
-        credentials:
-          - Demo Provisioner Netbox Credentials
-          - Demo Provisioner vCenter Credentials
-        # success_nodes:
-        #   - Create DNS Records
-        failure_nodes:
-          - Send Failure Email About 'Create CMDB Records'
-      - identifier: Send Failure Email About 'Create CMDB Records'
+      - identifier: Send Success Email
         unified_job_template: Send Provisioner Email
         extra_data:
-          failed_at_step: Create CMDB Records
+          provisioner_status: success
