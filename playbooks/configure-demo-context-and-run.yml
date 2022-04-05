@@ -21,20 +21,6 @@
             demo_uuid: "{{ demo_uuid_raw.stdout }}"
       when:
         - demo_uuid is not defined
-    - name: create vlan number
-      ansible.builtin.set_fact:
-        demo_vlan: "{{ 251 | random(205) }}"
-      when:
-        - needs_vlan is defined
-        - needs_vlan
-        - demo_vlan is not defined
-    - name: set demo subnet and gateway
-      ansible.builtin.set_fact:
-        demo_subnet: "172.16.{{ demo_vlan }}.0/24"
-        demo_gateway: "172.16.{{ demo_vlan }}.1/24"
-      when:
-        - needs_vlan is defined
-        - needs_vlan
     - name: match demo to display name
       ansible.builtin.set_fact:
         demo_display_name: "{{ demos.display_name }}"
@@ -64,6 +50,20 @@
     - name: load demo provisioner vars into tmp var
       ansible.builtin.include_vars:
         file: "vars/demos/{{ demo }}/provisioner.yml"
+    - name: create vlan number
+      ansible.builtin.set_fact:
+        demo_vlan: "{{ 251 | random(205) }}"
+      when:
+        - needs_vlan is defined
+        - needs_vlan
+        - demo_vlan is not defined
+    - name: set demo subnet and gateway
+      ansible.builtin.set_fact:
+        demo_subnet: "172.16.{{ demo_vlan }}.0/24"
+        demo_gateway: "172.16.{{ demo_vlan }}.1/24"
+      when:
+        - needs_vlan is defined
+        - needs_vlan
     - name: set inventories facts
       ansible.builtin.set_fact:
         controller_inventories:
