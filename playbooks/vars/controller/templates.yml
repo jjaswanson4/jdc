@@ -349,3 +349,8 @@
         question_description: "If this demo exists, what is the unique ID?"
         variable: demo_uuid
         required: no
+      - type: text
+        question_name: Demo VLAN?
+        question_description: If this demo exists, what vlan was it built on?
+        variable: demo_vlan
+        required: no
