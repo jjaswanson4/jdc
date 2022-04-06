@@ -34,7 +34,10 @@ controller_configuration_file: "{{ vars_files_path }}/controller.yml"
 satellite_configuration_file: "{{ vars_files_path }}/satellite.yml"
 
 base_dns_suffix: demos.lcl
-needs_vlan: yes
+custom_vlans:
+  - network: "172.16.{{ demo_vlan }}.0"
+    netmask: 255.255.255.0
+    gateway: "172.16.{{ demo_vlan }}.1"
 
 # This toggles secure logging, for example: when configuring credentials on Ansible Controller.
 # Since I'm using my own instance, secure logging isn't a requirement.
