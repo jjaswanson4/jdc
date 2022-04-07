@@ -168,9 +168,8 @@
               demo_context_state: "{{ demo_context_state | default('present') }}"
               provisioner: "{{ provisioner }}"
               provisioner_email: "{{ provisioner_email }}"
-              demo_vlan: "{{ demo_vlan | default(omit) }}"
-              demo_subnet: "{{ demo_subnet | default(omit) }}"
-              demo_gateway: "{{ demo_gateway | default(omit) }}"
+              base_dns_suffix: "{{ base_dns_suffix }}"
+              demo_uuid: "{{ demo_uuid }}"
     - name: get auth token for netbox
       ansible.builtin.uri:
         url: "{{ netbox_url }}/api/users/tokens/provision/"
