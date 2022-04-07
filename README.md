@@ -20,9 +20,10 @@ First, you can check the list of available demos [here](DEMOS.md).
 | ---- | ---------- | -------- | ---- |
 | Patching | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | IDM-AD Integration | :heavy_check_mark: | :heavy_check_mark: | :x: |
-| S4/HANA Deployment | :heavy_check_mark: | :x: | :x: |
+| S4/HANA Deployment | :heavy_check_mark: | :x: | :heavy_check_mark: |
 | Compliance | :x: | :x: | :x: |
 | AAP Advanced Architecture | :x: | :x: | :x: |
 | AAP1.2 to AAP2.1 Migration | :x: | :x: | :x: |
 | RHEL for Edge | :x: | :x: | :x: |
 | CI/CD with Ansible | :x: | :x: | :x: |
+| Satellite Advanced Architecture | :x: | :x: | :x: |
