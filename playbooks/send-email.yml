@@ -16,7 +16,7 @@
         - name: build success message parts
           ansible.builtin.set_fact:
             satellite_url: "https://{{ audience | lower }}-{{ demo }}-satellite.{{ demo_uuid }}.{{ base_dns_suffix }}"
-            controller_url: "{{ audience | lower }}-{{ demo }}-controller.{{ demo_uuid }}.{{ base_dns_suffix }}"
+            controller_url: "https://{{ audience | lower }}-{{ demo }}-controller.{{ demo_uuid }}.{{ base_dns_suffix }}"
         - name: build success message from parts
           ansible.builtin.set_fact:
             success_message: |
