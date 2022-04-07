@@ -19,7 +19,7 @@
             controller_url: "{{ audience | lower }}-{{ demo }}-controller.{{ demo_uuid }}.{{ base_dns_suffix }}"
         - name: build success message from parts
           ansible.builtin.set_fact:
-            success_message: >
+            success_message: |
               Demo information:
               ---
               Demo UUID: {{ demo_uuid }}
