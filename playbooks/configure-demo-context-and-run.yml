@@ -64,7 +64,7 @@
         controller_inventories:
           - name: "Demo {{ demo_uuid }} Inventory"
             organization: "{{ controller_organization }}"
-            variables: "{{ inventory_vars + additional_inventory_vars }}"
+            variables: "{{ inventory_vars | combine(additional_inventory_vars) }}"
     - name: add inventory to hosts
       ansible.builtin.set_fact:
         controller_hosts_to_add: "{{ controller_hosts_to_add + [ host | combine( { 'inventory': 'Demo ' + demo_uuid + ' Inventory' } ) ] }}"
