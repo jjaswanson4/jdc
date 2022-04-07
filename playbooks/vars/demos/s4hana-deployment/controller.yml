@@ -418,7 +418,7 @@ controller_groups:
       sap_preconfigure_selinux_state: permissive
       manage_lvm: no
       nfs_shares:
-        - src: 10.15.108.40:/mnt/data01/sap
+        - src: 10.15.120.250:/mnt/data01/sap
           path: /software
   - name: production
     inventory: "{  { audience }} SAP Infrastructure"
