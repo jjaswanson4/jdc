@@ -170,6 +170,7 @@
               provisioner_email: "{{ provisioner_email }}"
               base_dns_suffix: "{{ base_dns_suffix }}"
               demo_uuid: "{{ demo_uuid }}"
+              demo_display_name: "{{ demo_display_name }}"
     - name: get auth token for netbox
       ansible.builtin.uri:
         url: "{{ netbox_url }}/api/users/tokens/provision/"

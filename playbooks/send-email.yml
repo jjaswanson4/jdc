@@ -38,7 +38,7 @@
         body: >
           Hello {{ provisioner }},
 
-          {{ demo }} demo for {{ audience }} has completed with state: {{ provisioner_status }}
+          {{ demo_display_name }} demo for {{ audience }} has completed with state: {{ provisioner_status }}
 
           {{ failure_message | default(success_message) }}
 
