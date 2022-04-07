@@ -5,12 +5,29 @@
     - all
   gather_facts: false
   pre_tasks:
-    - name: build failure message if needed
+    - name: build failure message
       ansible.builtin.set_fact:
         provisioner_status: failed
         failure_message: "Provisioning failed at step: {{ failed_at_step }}"
       when:
         - failed_at_step is defined
+    - name: build success message
+      block:
+        - name: build success message parts
+          ansible.builtin.set_fact:
+            satellite_url: "https://{{ audience | lower }}-{{ demo }}-satellite.{{ demo_uuid }}.{{ base_dns_suffix }}"
+            controller_url: "{{ audience | lower }}-{{ demo }}-controller.{{ demo_uuid }}.{{ base_dns_suffix }}"
+        - name: build success message from parts
+          ansible.builtin.set_fact:
+            success_message: >
+              Demo information:
+              ---
+              Demo UUID: {{ demo_uuid }}
+              Demo Satellite URL: {{ satellite_url }}
+              Demo Controller URL: {{ controller_url }}
+      when:
+        - failed_at_step is not defined
+        - provisioner_status == 'success'
   tasks:
     - name: send email with the provisioner status of "{{ provisioner_status }}"
       community.general.mail: 
@@ -23,6 +40,6 @@
 
           {{ demo }} demo for {{ audience }} has completed with state: {{ provisioner_status }}
 
-          {{ failure_message | default(omit) }}
+          {{ failure_message | default(success_message) }}
 
           - The Demo Provisioner
