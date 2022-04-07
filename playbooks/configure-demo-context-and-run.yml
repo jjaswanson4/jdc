@@ -21,12 +21,6 @@
             demo_uuid: "{{ demo_uuid_raw.stdout }}"
       when:
         - demo_uuid is not defined
-    - name: create vlan number
-      ansible.builtin.set_fact:
-        demo_vlan: "{{ 251 | random(205) }}"
-      when:
-        - custom_vlans is defined
-        - demo_vlan is not defined
     - name: match demo to display name
       ansible.builtin.set_fact:
         demo_display_name: "{{ demos.display_name }}"
@@ -64,7 +58,6 @@
         additional_inventory_vars:
           demo_uuid: "{{ demo_uuid }}"
           audience: "{{ audience }}"
-          custom_vlans: "{{ custom_vlans | default(omit) }}"
           custom_dns_zones: "{{ custom_dns_zones | default(omit) }}"
     - name: set inventories facts
       ansible.builtin.set_fact:
