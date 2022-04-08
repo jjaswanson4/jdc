@@ -108,7 +108,7 @@ controller_groups:
       ansible_winrm_transport: ntlm
       ansible_winrm_server_cert_validation: ignore
       dns_zone: "ad.{  { demo_uuid }}.{  { base_dns_suffix }}"
-  - name: master
+  - name: server
     inventory: "{  { audience }} Infrastructure"
     hosts:
       - "idm01.idm.{  { demo_uuid }}.{  { base_dns_suffix }}"
@@ -165,7 +165,7 @@ controller_groups:
   - name: infra
     inventory: "{  { audience }} Infrastructure"
     children:
-      - master
+      - server
       - replicas
     variables:
       crypto_policies_policy: DEFAULT:AD-SUPPORT
@@ -240,12 +240,12 @@ controller_templates:
     execution_environment: Josh's Demos Collection EE
     credentials:
       - RHEL Root Credentials
-  - name: Install IDM Master
+  - name: Install IDM Server
     inventory: "{  { audience }} Infrastructure"
     limit: master
     project: "{  { audience }} Code"
     organization: "{  { audience }}"
-    playbook: playbooks/install-idm-master.yml
+    playbook: playbooks/install-idm-server.yml
     execution_environment: Josh's Demos Collection EE
     credentials:
       - RHEL Root Credentials
