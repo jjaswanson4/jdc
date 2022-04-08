@@ -1,5 +1,25 @@
 ---
 
+- name: set IP address of primary
+  hosts:
+    - primary
+  tasks:
+    - name: set the primary IP address fact
+      ansible.builtin.set_fact:
+        sap_hana_ha_pacemaker_node1_ip: "{{ ansible_facts['ansible_default_ipv4']['address'] }}"
+      when:
+        - sap_hana_ha_pacemaker_node1_ip is not defined
+
+- name: set IP address of secondary
+  hosts:
+    - secondary
+  tasks:
+    - name: set the primary IP address fact
+      ansible.builtin.set_fact:
+        sap_hana_ha_pacemaker_node2_ip: "{{ ansible_facts['ansible_default_ipv4']['address'] }}"
+      when:
+        - sap_hana_ha_pacemaker_node2_ip is not defined
+
 - name: setup HSR and Pacemaker between two HANA nodes
   hosts:
     - all
@@ -19,7 +39,6 @@
     - name: enable the ruby 2.5 module stream
       ansible.builtin.yum:
         name: '@ruby:2.5/common'
-
   tasks:
     - name: run tasks from localhost
       block:
