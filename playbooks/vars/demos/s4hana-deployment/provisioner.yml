@@ -55,7 +55,7 @@ controller_hosts:
   - name: "sapddhdb2.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "{{ audience }} SAP Infrastructure"
 
-controller_group_tiers: 1
+number_of_group_tiers: 1
 controller_groups_tier1:
   - name: demo_hosts
     hosts:
