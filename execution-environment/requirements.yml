@@ -40,9 +40,9 @@ collections:
   - name: redhat.satellite
   - name: jjaswanson4.setup_rhel_for_satellite
   - name: jjaswanson4.install_satellite
-    version: 1.2.7
+    version: '>=1.2.7'
   - name: jjaswanson4.configure_satellite
-    version: 2.2.0
+    version: '>=2.2.0'
   
   # controller ansible collections
   - name: awx.awx
@@ -50,6 +50,10 @@ collections:
 
   # sap ansible collections
   - name: sap.rhel
+  - name: redhat.sap_install
 
   # netbox collections
   - name: netbox.netbox
+
+  # IDM collections
+  - name: redhat.rhel_idm
