@@ -1,0 +1,7 @@
+---
+
+- name: install Red Hat IDM server
+  hosts:
+    - all
+  roles:
+    - redhat.rhel_idm.ipaserver

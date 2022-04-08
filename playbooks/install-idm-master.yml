@@ -1,7 +1,0 @@
----
-
-- name: install Red Hat IDM master
-  hosts:
-    - all
-  roles:
-    - freeipa.ansible_freeipa.ipaserver
