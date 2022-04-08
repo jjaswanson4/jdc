@@ -8,3 +8,4 @@ scratch
 plugins/README.md
 demo-configuration.yml
 *.tar.gz
+ansible.cfg
