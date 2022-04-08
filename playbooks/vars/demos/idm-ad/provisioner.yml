@@ -62,7 +62,7 @@ controller_hosts:
   - name: "trust-client-4.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: "trust-client-5.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
 
-number_of_group_tiers: 5
+controller_group_tiers: 5
 controller_groups_tier1:
   - name: pdc
     hosts:

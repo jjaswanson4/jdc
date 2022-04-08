@@ -85,7 +85,7 @@ controller_hosts:
     inventory: "{  { audience }} Infrastructure"
 
 
-number_of_group_tiers: 5
+controller_group_tiers: 5
 controller_groups_tier1:
   - name: pdc
     inventory: "{  { audience }} Infrastructure"

@@ -69,7 +69,7 @@ controller_hosts:
   - name: "sapdpapp1.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: "sap-metrics.{{ demo_uuid }}.{{ base_dns_suffix }}"
 
-controller_group_tiers: 12
+controller_group_tiers: 4
 controller_groups_tier1:
   - name: primary
     hosts:

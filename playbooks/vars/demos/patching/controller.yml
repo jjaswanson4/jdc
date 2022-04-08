@@ -105,7 +105,6 @@ controller_inventory_sources:
     wait: yes
 
 controller_group_tiers: 3
-
 controller_groups_tier1:
   - name: primary
     inventory: "{  { audience }} Infrastructure"
