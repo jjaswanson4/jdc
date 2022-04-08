@@ -60,44 +60,58 @@ controller_inventories:
   - name: "{  { audience }} Infrastructure"
     organization: "{  { audience }}"
     variables:
-      demo_uuid: "{{ demo_uuid }}"
-      audience: "{{ audience }}"
-      dns_suffix: "{{ demo_uuid }}.{{ base_dns_suffix }}"
+      demo_uuid: "{  { demo_uuid }}"
+      audience: "{  { audience }}"
+      dns_suffix: "{  { demo_uuid }}.{  { base_dns_suffix }}"
 
 controller_hosts:
-  - name: "ad-dc1.ad.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  - name: "ad-dc2.ad.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  - name: "idm01.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  - name: "idm02.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  - name: "trust-client-1.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  - name: "trust-client-2.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  - name: "trust-client-3.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  - name: "trust-client-4.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  - name: "trust-client-5.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "ad-dc1.ad.{  { demo_uuid }}.{  { base_dns_suffix }}"
+    inventory: "{  { audience }} Infrastructure"
+  - name: "ad-dc2.ad.{  { demo_uuid }}.{  { base_dns_suffix }}"
+    inventory: "{  { audience }} Infrastructure"
+  - name: "idm01.idm.{  { demo_uuid }}.{  { base_dns_suffix }}"
+    inventory: "{  { audience }} Infrastructure"
+  - name: "idm02.idm.  {{ demo_uuid }}.{  { base_dns_suffix }}"
+    inventory: "{  { audience }} Infrastructure"
+  - name: "trust-client-1.idm.{  { demo_uuid }}.{  { base_dns_suffix }}"
+    inventory: "{  { audience }} Infrastructure"
+  - name: "trust-client-2.idm.{  { demo_uuid }}.{  { base_dns_suffix }}"
+    inventory: "{  { audience }} Infrastructure"
+  - name: "trust-client-3.idm.{  { demo_uuid }}.{  { base_dns_suffix }}"
+    inventory: "{  { audience }} Infrastructure"
+  - name: "trust-client-4.idm.{  { demo_uuid }}.{  { base_dns_suffix }}"
+    inventory: "{  { audience }} Infrastructure"
+  - name: "trust-client-5.idm.{  { demo_uuid }}.{  { base_dns_suffix }}"
+    inventory: "{  { audience }} Infrastructure"
 
 controller_groups:
   - name: pdc
+    inventory: "{  { audience }} Infrastructure"
     hosts:
-      - "ad-dc1.ad.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "ad-dc1.ad.{  { demo_uuid }}.{  { base_dns_suffix }}"
   - name: domain_controllers
+    inventory: "{  { audience }} Infrastructure"
     hosts:
-      - "ad-dc2.ad.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "ad-dc2.ad.{  { demo_uuid }}.{  { base_dns_suffix }}"
     children:
       - pdc
   - name: active_directory
+    inventory: "{  { audience }} Infrastructure"
     children:
       - domain_controllers
   - name: windows
+    inventory: "{  { audience }} Infrastructure"
     children:
       - active_directory
     variables:
       ansible_connection: winrm
       ansible_winrm_transport: ntlm
       ansible_winrm_server_cert_validation: ignore
-      dns_zone: "ad.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      dns_zone: "ad.{  { demo_uuid }}.{  { base_dns_suffix }}"
   - name: master
+    inventory: "{  { audience }} Infrastructure"
     hosts:
-      - "idm01.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "idm01.idm.{  { demo_uuid }}.{  { base_dns_suffix }}"
     variables:
       ipaserver_setup_dns: yes
       ipaserver_allow_zone_overlap: yes
@@ -107,8 +121,9 @@ controller_groups:
         - 10.2.32.1
       ipaserver_setup_adtrust: yes
   - name: replicas
+    inventory: "{  { audience }} Infrastructure"
     hosts:
-      - "idm02.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
+      - "idm02.idm.{  { demo_uuid }}.{  { base_dns_suffix }}" 
     variables:
       ipareplica_setup_dns: yes
       ipareplica_allow_zone_overlap: yes
@@ -127,19 +142,20 @@ controller_groups:
         options:
           - 'timeout:1'
   - name: clients
+    inventory: "{  { audience }} Infrastructure"
     hosts:
-      - "trust-client-1.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
-      - "trust-client-2.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
-      - "trust-client-3.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
-      - "trust-client-4.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
-      - "trust-client-5.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
+      - "trust-client-1.idm.{  { demo_uuid }}.{  { base_dns_suffix }}" 
+      - "trust-client-2.idm.{  { demo_uuid }}.{  { base_dns_suffix }}" 
+      - "trust-client-3.idm.{  { demo_uuid }}.{  { base_dns_suffix }}" 
+      - "trust-client-4.idm.{  { demo_uuid }}.{  { base_dns_suffix }}" 
+      - "trust-client-5.idm.{  { demo_uuid }}.{  { base_dns_suffix }}" 
     variables:
       cpus: 2
       memory_mb: 4096
       ipaclient_domain: "idm.{  { demo_uuid }}.{  { base_dns_suffix }}" 
       dns_resolv:
         search_domains:
-          - idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
+          - idm.{  { demo_uuid }}.{  { base_dns_suffix }}" 
           - lab.msp.redhat.com
         nameservers:
           - 10.15.108.101
@@ -147,6 +163,7 @@ controller_groups:
         options:
           - 'timeout:1'
   - name: infra
+    inventory: "{  { audience }} Infrastructure"
     children:
       - master
       - replicas
@@ -154,6 +171,7 @@ controller_groups:
       crypto_policies_policy: DEFAULT:AD-SUPPORT
       crypto_policies_reboot_ok: yes
   - name: idm
+    inventory: "{  { audience }} Infrastructure"
     children:
       - infra
       - clients
@@ -161,9 +179,10 @@ controller_groups:
       ipaadmin_principal: admin
       ipaadmin_password: "{  { admin_password }}"
       ipadm_password: "{  { admin_password }}"
-      ipaserver_domain: "idm.{{ demo_uuid | upper }}.{{ base_dns_suffix | upper }}" 
-      ipaserver_realm: "IDM.{{ demo_uuid | upper }}.{{ base_dns_suffix | upper }}"
+      ipaserver_domain: "idm.{  { demo_uuid | lower }}.{  { base_dns_suffix | lower }}" 
+      ipaserver_realm: "IDM.{  { demo_uuid | upper }}.{  { base_dns_suffix | upper }}"
   - name: rhel
+    inventory: "{  { audience }} Infrastructure"
     children:
       - idm
     variables:
@@ -173,6 +192,7 @@ controller_groups:
       firewall:
         state: stopped
         enabled: no
+      # this should probably come from credentials
       static_dns_entries:
         - fqdn: satellite.lab.msp.redhat.com
           short_name: satellite
@@ -197,6 +217,7 @@ controller_groups:
         - cockpit-networkmanager
         - cockpit-packagekit
   - name: demo_hosts
+    inventory: "{  { audience }} Infrastructure"
     children:
       - rhel
       - windows
