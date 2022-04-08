@@ -45,7 +45,7 @@ collections:
     version: '>=2.2.0'
   
   # controller ansible collections
-  - name: awx.awx
+  - name: ansible.controller
   - name: redhat_cop.controller_configuration
 
   # sap ansible collections
