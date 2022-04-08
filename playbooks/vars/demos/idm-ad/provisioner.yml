@@ -384,7 +384,7 @@ controller_groups:
           hostname: "{  { inventory_hostname.split('.')[0] }}"
           password: "{  { admin_password }}"
           timezone: '020'
-  - name: master
+  - name: server
     hosts:
       - "idm01.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
     variables:
@@ -437,7 +437,7 @@ controller_groups:
           - 'timeout:1'
   - name: infra
     children:
-      - master
+      - server
       - replicas
     variables:
       crypto_policies_policy: DEFAULT:AD-SUPPORT
