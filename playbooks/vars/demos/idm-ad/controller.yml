@@ -84,30 +84,13 @@ controller_hosts:
   - name: "trust-client-5.idm.{  { demo_uuid }}.{  { base_dns_suffix }}"
     inventory: "{  { audience }} Infrastructure"
 
-controller_groups:
+
+number_of_group_tiers: 5
+controller_groups_tier1:
   - name: pdc
     inventory: "{  { audience }} Infrastructure"
     hosts:
       - "ad-dc1.ad.{  { demo_uuid }}.{  { base_dns_suffix }}"
-  - name: domain_controllers
-    inventory: "{  { audience }} Infrastructure"
-    hosts:
-      - "ad-dc2.ad.{  { demo_uuid }}.{  { base_dns_suffix }}"
-    children:
-      - pdc
-  - name: active_directory
-    inventory: "{  { audience }} Infrastructure"
-    children:
-      - domain_controllers
-  - name: windows
-    inventory: "{  { audience }} Infrastructure"
-    children:
-      - active_directory
-    variables:
-      ansible_connection: winrm
-      ansible_winrm_transport: ntlm
-      ansible_winrm_server_cert_validation: ignore
-      dns_zone: "ad.{  { demo_uuid }}.{  { base_dns_suffix }}"
   - name: server
     inventory: "{  { audience }} Infrastructure"
     hosts:
@@ -162,6 +145,14 @@ controller_groups:
           - 10.15.108.102
         options:
           - 'timeout:1'
+
+controller_groups_tier2:
+  - name: domain_controllers
+    inventory: "{  { audience }} Infrastructure"
+    hosts:
+      - "ad-dc2.ad.{  { demo_uuid }}.{  { base_dns_suffix }}"
+    children:
+      - pdc
   - name: infra
     inventory: "{  { audience }} Infrastructure"
     children:
@@ -170,6 +161,12 @@ controller_groups:
     variables:
       crypto_policies_policy: DEFAULT:AD-SUPPORT
       crypto_policies_reboot_ok: yes
+
+controller_groups_tier3:
+  - name: active_directory
+    inventory: "{  { audience }} Infrastructure"
+    children:
+      - domain_controllers
   - name: idm
     inventory: "{  { audience }} Infrastructure"
     children:
@@ -181,6 +178,17 @@ controller_groups:
       ipadm_password: "{  { admin_password }}"
       ipaserver_domain: "idm.{  { demo_uuid | lower }}.{  { base_dns_suffix | lower }}" 
       ipaserver_realm: "IDM.{  { demo_uuid | upper }}.{  { base_dns_suffix | upper }}"
+
+controller_groups_tier4:
+  - name: windows
+    inventory: "{  { audience }} Infrastructure"
+    children:
+      - active_directory
+    variables:
+      ansible_connection: winrm
+      ansible_winrm_transport: ntlm
+      ansible_winrm_server_cert_validation: ignore
+      dns_zone: "ad.{  { demo_uuid }}.{  { base_dns_suffix }}"
   - name: rhel
     inventory: "{  { audience }} Infrastructure"
     children:
@@ -216,6 +224,7 @@ controller_groups:
         - cockpit-sosreport
         - cockpit-networkmanager
         - cockpit-packagekit
+controller_groups_tier5:
   - name: demo_hosts
     inventory: "{  { audience }} Infrastructure"
     children:

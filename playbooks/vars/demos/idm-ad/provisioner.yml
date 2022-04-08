@@ -62,15 +62,78 @@ controller_hosts:
   - name: "trust-client-4.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: "trust-client-5.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
 
-controller_groups:
+number_of_group_tiers: 5
+controller_groups_tier1:
   - name: pdc
     hosts:
       - "ad-dc1.ad.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: server
+    hosts:
+      - "idm01.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    variables:
+      ipaserver_setup_dns: yes
+      ipaserver_allow_zone_overlap: yes
+      ipaserver_setup_firewalld: no
+      ipaserver_forwarders:
+        - 10.11.5.19
+        - 10.2.32.1
+      ipaserver_setup_adtrust: yes
+  - name: replicas
+    hosts:
+      - "idm02.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
+    variables:
+      ipareplica_setup_dns: yes
+      ipareplica_allow_zone_overlap: yes
+      ipareplica_setup_firewalld: no
+      ipareplica_forwarders:
+        - 10.11.5.19
+        - 10.2.32.1
+      ipareplica_setup_adtrust: yes
+      ipareplica_setup_ca: yes
+      dns_resolv:
+        search_domains:
+          - lab.msp.redhat.com
+        nameservers:
+          - 10.15.108.101
+          - 10.15.108.102
+        options:
+          - 'timeout:1'
+  - name: clients
+    hosts:
+      - "trust-client-1.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
+      - "trust-client-2.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
+      - "trust-client-3.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
+      - "trust-client-4.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
+      - "trust-client-5.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
+    variables:
+      cpus: 2
+      memory_mb: 4096
+      ipaclient_domain: "idm.{  { demo_uuid }}.{  { base_dns_suffix }}" 
+      dns_resolv:
+        search_domains:
+          - idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
+          - lab.msp.redhat.com
+        nameservers:
+          - 10.15.108.101
+          - 10.15.108.102
+        options:
+          - 'timeout:1'
+
+controller_groups_tier2:
   - name: domain_controllers
     hosts:
       - "ad-dc2.ad.{{ demo_uuid }}.{{ base_dns_suffix }}"
     children:
       - pdc
+  - name: infra
+    children:
+      - server
+      - replicas
+    variables:
+      crypto_policies_policy: DEFAULT:AD-SUPPORT
+      crypto_policies_reboot_ok: yes
+
+controller_groups_tier3:
   - name: active_directory
     children:
       - domain_controllers
@@ -350,6 +413,18 @@ controller_groups:
               - app-team-3
               - app-team-4
               - app-team-5    
+  - name: idm
+    children:
+      - infra
+      - clients
+    variables:
+      ipaadmin_principal: admin
+      ipaadmin_password: "{  { ansible_password }}"
+      ipadm_password: "{  { ansible_password }}"
+      ipaserver_domain: "idm.{{ demo_uuid | upper }}.{{ base_dns_suffix | upper }}" 
+      ipaserver_realm: "IDM.{{ demo_uuid | upper }}.{{ base_dns_suffix | upper }}"
+
+controller_groups_tier4:
   - name: windows
     children:
       - active_directory
@@ -384,74 +459,6 @@ controller_groups:
           hostname: "{  { inventory_hostname.split('.')[0] }}"
           password: "{  { admin_password }}"
           timezone: '020'
-  - name: server
-    hosts:
-      - "idm01.idm.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    variables:
-      ipaserver_setup_dns: yes
-      ipaserver_allow_zone_overlap: yes
-      ipaserver_setup_firewalld: no
-      ipaserver_forwarders:
-        - 10.11.5.19
-        - 10.2.32.1
-      ipaserver_setup_adtrust: yes
-  - name: replicas
-    hosts:
-      - "idm02.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
-    variables:
-      ipareplica_setup_dns: yes
-      ipareplica_allow_zone_overlap: yes
-      ipareplica_setup_firewalld: no
-      ipareplica_forwarders:
-        - 10.11.5.19
-        - 10.2.32.1
-      ipareplica_setup_adtrust: yes
-      ipareplica_setup_ca: yes
-      dns_resolv:
-        search_domains:
-          - lab.msp.redhat.com
-        nameservers:
-          - 10.15.108.101
-          - 10.15.108.102
-        options:
-          - 'timeout:1'
-  - name: clients
-    hosts:
-      - "trust-client-1.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
-      - "trust-client-2.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
-      - "trust-client-3.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
-      - "trust-client-4.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
-      - "trust-client-5.idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
-    variables:
-      cpus: 2
-      memory_mb: 4096
-      ipaclient_domain: "idm.{  { demo_uuid }}.{  { base_dns_suffix }}" 
-      dns_resolv:
-        search_domains:
-          - idm.{{ demo_uuid }}.{{ base_dns_suffix }}" 
-          - lab.msp.redhat.com
-        nameservers:
-          - 10.15.108.101
-          - 10.15.108.102
-        options:
-          - 'timeout:1'
-  - name: infra
-    children:
-      - server
-      - replicas
-    variables:
-      crypto_policies_policy: DEFAULT:AD-SUPPORT
-      crypto_policies_reboot_ok: yes
-  - name: idm
-    children:
-      - infra
-      - clients
-    variables:
-      ipaadmin_principal: admin
-      ipaadmin_password: "{  { ansible_password }}"
-      ipadm_password: "{  { ansible_password }}"
-      ipaserver_domain: "idm.{{ demo_uuid | upper }}.{{ base_dns_suffix | upper }}" 
-      ipaserver_realm: "IDM.{{ demo_uuid | upper }}.{{ base_dns_suffix | upper }}"
   - name: rhel
     children:
       - idm
@@ -502,6 +509,8 @@ controller_groups:
         - cockpit-sosreport
         - cockpit-networkmanager
         - cockpit-packagekit
+
+controller_groups_tier5:
   - name: demo_hosts
     children:
       - rhel

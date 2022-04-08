@@ -61,11 +61,19 @@
 
         - name: include post-inventory sync configuration roles
           ansible.builtin.include_role:
+            name: redhat_cop.controller_configuration.groups
+          vars:
+            controller_groups: "{{ lookup('vars', controller_groups_tier' ~ tier) }}"
+          loop_control:
+            loop_var: tier
+          loop: "{{ range(1, number_of_group_tiers, 1) | list }}"
+
+        - name: include post-inventory sync/groups configuration roles
+          ansible.builtin.include_role:
             name: "{{ role }}"
           loop_control:
             loop_var: role
-          loop:      
-            - redhat_cop.controller_configuration.groups
+          loop: 
             - redhat_cop.controller_configuration.projects
             - redhat_cop.controller_configuration.job_templates
             - redhat_cop.controller_configuration.workflow_job_templates
