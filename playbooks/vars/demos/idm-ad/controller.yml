@@ -302,7 +302,7 @@ controller_templates:
     playbook: playbooks/register-system-to-idm.yml
     execution_environment: Josh's Demos Collection EE
     credentials:
-      - RHEL Root Credential
+      - RHEL Root Credentials
 
 controller_workflows:
   - name: Integrate IDM with AD for Linux Authentication
