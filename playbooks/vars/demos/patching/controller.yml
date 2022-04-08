@@ -104,7 +104,9 @@ controller_inventory_sources:
     organization: "{  { audience }}"
     wait: yes
 
-controller_groups:
+controller_group_tiers: 3
+
+controller_groups_tier1:
   - name: primary
     inventory: "{  { audience }} Infrastructure"
     hosts:
@@ -119,24 +121,11 @@ controller_groups:
       - "sapdphdb2.{  { demo_uuid }}.{  { base_dns_suffix }}"
     variables:
       sap_hana_hsr_role: secondary
-  - name: hana
-    inventory: "{  { audience }} Infrastructure"
-    children:
-      - primary
-      - secondary
   - name: netweaver
     inventory: "{  { audience }} Infrastructure"
     hosts:
       - "sapdnapp1.{  { demo_uuid }}.{  { base_dns_suffix }}"
       - "sapdpapp1.{  { demo_uuid }}.{  { base_dns_suffix }}"
-  - name: sap
-    inventory: "{  { audience }} Infrastructure"
-    children:
-      - hana
-      - netweaver
-    variables:
-      os: rhel8.4
-      application: sap
   - name: non_production
     inventory: "{  { audience }} Infrastructure"
     hosts:
@@ -153,6 +142,25 @@ controller_groups:
       - "sapdphdb2.{  { demo_uuid }}.{  { base_dns_suffix }}"
     variables:
       lifecycle_environment: production
+  - name: satellite
+    inventory: "{  { audience }} Infrastructure"
+    hosts:
+      - "{  { groups['satellite'][0] }}"
+    variables:
+      satellite:
+        username: "{  { admin_username }}"
+        password: "{  { admin_password }}"
+        url: "https://{  { groups['satellite'][0] }}"
+        organization: "{  { audience }}"
+        composite_content_view: composite-rhel8
+        content_view_filter_name: '07-01-2021'
+
+controller_groups_tier2:
+  - name: hana
+    inventory: "{  { audience }} Infrastructure"
+    children:
+      - primary
+      - secondary
   - name: kpatch_patch
     inventory: "{  { audience }} Infrastructure"
     children:
@@ -166,18 +174,16 @@ controller_groups:
       - secondary
     variables:
       patching_strategy: normal
-  - name: satellite
+
+controller_groups_tier3:
+  - name: sap
     inventory: "{  { audience }} Infrastructure"
-    hosts:
-      - "{  { groups['satellite'][0] }}"
+    children:
+      - hana
+      - netweaver
     variables:
-      satellite:
-        username: "{  { admin_username }}"
-        password: "{  { admin_password }}"
-        url: "https://{  { groups['satellite'][0] }}"
-        organization: "{  { audience }}"
-        composite_content_view: composite-rhel8
-        content_view_filter_name: '07-01-2021'
+      os: rhel8.4
+      application: sap
 
 controller_projects:
   - name: "{  { audience }} Patching Code"

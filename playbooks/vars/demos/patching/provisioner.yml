@@ -69,7 +69,8 @@ controller_hosts:
   - name: "sapdpapp1.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: "sap-metrics.{{ demo_uuid }}.{{ base_dns_suffix }}"
 
-controller_groups:
+controller_group_tiers: 12
+controller_groups_tier1:
   - name: primary
     hosts:
       - "sapdnhdb1.{{ demo_uuid }}.{{ base_dns_suffix }}"
@@ -82,56 +83,6 @@ controller_groups:
       - "sapdphdb2.{{ demo_uuid }}.{{ base_dns_suffix }}"
     variables:
       sap_hana_hsr_role: secondary
-  - name: hana
-    children:
-      - primary
-      - secondary
-    variables:
-      cpus: 8
-      memory_mb: 73728
-      additional_storage:
-        - size: 600Gb
-          type: thin
-          scsi_controller: 0
-          unit_number: 1
-      storage_pools:
-        - name: sap
-          disks:
-            - sdb
-          volumes:
-            - name: data
-              size: "128 GiB"
-              mount_point: "/hana/data"
-              state: present
-            - name: log
-              size: "100 GiB"
-              mount_point: "/hana/log"
-              state: present
-            - name: shared
-              size: "256 GiB"
-              mount_point: "/hana/shared"
-              state: present
-            - name: sap
-              size: "50 GiB"
-              mount_point: "/usr/sap"
-              state: present
-      sap_hana_deployment_bundle_path: /software/HANA_installation
-      sap_hana_deployment_bundle_sar_file_name: IMDB_SERVER20_046_0-80002031.SAR
-      sap_hana_deployment_sapcar_path: /software/SAPCAR
-      sap_hana_deployment_sapcar_file_name: SAPCAR_1010-70006178.EXE
-      sap_hana_deployment_root_password: "{  { admin_password }}"
-      sap_hana_deployment_sapadm_password: "{  { admin_password }}"
-      sap_hana_deployment_hana_instance_number: "00"
-      sap_hana_deployment_hana_env_type: development
-      sap_hana_deployment_hana_mem_restrict: "n"
-      sap_hana_deployment_common_master_password: "{  { admin_password }}"
-      sap_hana_deployment_sidadm_password: "{  { admin_password }}"
-      sap_hana_deployment_hana_db_system_password: "{  { admin_password }}"
-      sap_hana_deployment_ase_user_password: "{  { admin_password }}"
-      sap_hana_deployment_apply_license: false
-      sap_hana_hsr_hana_instance_number: "00"
-      sap_hana_hsr_hana_db_system_password: "{  { admin_password }}"
-      sap_hana_preconfigure_fail_if_reboot_required: no
   - name: netweaver
     hosts:
       - "sapdnapp1.{{ demo_uuid }}.{{ base_dns_suffix }}"
@@ -229,6 +180,73 @@ controller_groups:
       sap_s4hana_deployment_sid: PS4
       sap_s4hana_deployment_db_host: "sapdphdb.{{ demo_uuid }}.{{ base_dns_suffix }}"
       sap_s4hana_deployment_db_sid: PS4
+  - name: peripheral
+    hosts:
+      - "sap-metrics.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    variables:
+      cpus: 4
+      memory_mb: 8192
+      application: general
+      os: rhel8
+      lifecycle_environment: production
+      metrics_graph_service: yes
+      metrics_query_service: yes
+      metrics_rention_days: 14
+      metrics_monitored_hosts:  "{  { groups['sap'] }}"
+
+controller_groups_tier2:
+  - name: hana
+    children:
+      - primary
+      - secondary
+    variables:
+      cpus: 8
+      memory_mb: 73728
+      additional_storage:
+        - size: 600Gb
+          type: thin
+          scsi_controller: 0
+          unit_number: 1
+      storage_pools:
+        - name: sap
+          disks:
+            - sdb
+          volumes:
+            - name: data
+              size: "128 GiB"
+              mount_point: "/hana/data"
+              state: present
+            - name: log
+              size: "100 GiB"
+              mount_point: "/hana/log"
+              state: present
+            - name: shared
+              size: "256 GiB"
+              mount_point: "/hana/shared"
+              state: present
+            - name: sap
+              size: "50 GiB"
+              mount_point: "/usr/sap"
+              state: present
+      sap_hana_deployment_bundle_path: /software/HANA_installation
+      sap_hana_deployment_bundle_sar_file_name: IMDB_SERVER20_046_0-80002031.SAR
+      sap_hana_deployment_sapcar_path: /software/SAPCAR
+      sap_hana_deployment_sapcar_file_name: SAPCAR_1010-70006178.EXE
+      sap_hana_deployment_root_password: "{  { admin_password }}"
+      sap_hana_deployment_sapadm_password: "{  { admin_password }}"
+      sap_hana_deployment_hana_instance_number: "00"
+      sap_hana_deployment_hana_env_type: development
+      sap_hana_deployment_hana_mem_restrict: "n"
+      sap_hana_deployment_common_master_password: "{  { admin_password }}"
+      sap_hana_deployment_sidadm_password: "{  { admin_password }}"
+      sap_hana_deployment_hana_db_system_password: "{  { admin_password }}"
+      sap_hana_deployment_ase_user_password: "{  { admin_password }}"
+      sap_hana_deployment_apply_license: false
+      sap_hana_hsr_hana_instance_number: "00"
+      sap_hana_hsr_hana_db_system_password: "{  { admin_password }}"
+      sap_hana_preconfigure_fail_if_reboot_required: no
+
+controller_groups_tier3:
   - name: sap
     children:
       - hana
@@ -247,19 +265,8 @@ controller_groups:
       nfs_shares:
         - src: 10.15.120.250:/mnt/data01/sap
           path: /software
-  - name: peripheral
-    hosts:
-      - "sap-metrics.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    variables:
-      cpus: 4
-      memory_mb: 8192
-      application: general
-      os: rhel8
-      lifecycle_environment: production
-      metrics_graph_service: yes
-      metrics_query_service: yes
-      metrics_rention_days: 14
-      metrics_monitored_hosts:  "{  { groups['sap'] }}"
+
+controller_groups_tier4:
   - name: demo_hosts
     children:
       - sap
