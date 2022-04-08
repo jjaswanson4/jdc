@@ -251,7 +251,12 @@ controller_inventories:
       ignore_virtual_disk_errors: yes
       remove_cdrom: no
 
-controller_groups:
+controller_group_tiers: 3
+controller_groups_tier1:
+  - name: production
+    inventory: "{  { audience }} SAP Infrastructure"
+    variables:
+      lifecycle_environment: production
   - name: primary
     inventory: "{  { audience }} SAP Infrastructure"
     variables:
@@ -262,6 +267,73 @@ controller_groups:
     variables:
       sap_hana_hsr_role: secondary
       sap_hana_hsr_alias: DC2
+  - name: netweaver
+    inventory: "{  { audience }} SAP Infrastructure"
+    variables:
+      application: sap
+      os: rhel8
+      cpus: 4
+      memory_mb: 16384
+      provisioning:
+        host_group: rhel8
+        organization: "{  { audience }}"
+        location: "{  { audience }}"
+        method: bootdisk
+        dns_domain: "{  { demo_uuid }}.{  { base_dns_suffix }}"
+        cpus: 4
+        memory_mb: 16384
+        activation_keys: ak-netweaver-rhel8-production
+      additional_storage:
+        - size: 100Gb
+          type: thin
+          scsi_controller: 0
+          unit_number: 1
+      storage_pools:
+        - name: sap
+          disks:
+            - sdb
+          volumes:
+            - name: sap
+              size: "50 GiB"
+              mount_point: "/usr/sap"
+              state: present
+            - name: sapmnt
+              size: "20 GiB"
+              mount_point: "/usr/sapmnt"
+              state: present
+            - name: swap
+              size: "20 GiB"
+              state: present
+      sap_s4hana_deployment_sid: DS4
+      sap_s4hana_deployment_db_host: "sapddhdb.{  { demo_uuid }}.{  { base_dns_suffix }}"
+      sap_s4hana_deployment_db_sid: DS4
+      sap_netweaver_preconfigure_fail_if_not_enough_swap_space_configured: no
+      sap_s4hana_deployment_product_id: "NW_ABAP_OneHost:S4HANA1909.CORE.HDB.ABAP"
+      sap_s4hana_deployment_sapcar_path: /software/DS4
+      sap_s4hana_deployment_sapcar_file_name: "SAPCAR_1010-70006178.EXE"
+      sap_s4hana_deployment_swpm_path: "/software/S4HANA_installation"
+      sap_s4hana_deployment_swpm_sar_file_name: "SWPM20SP04_6-80003424.SAR"
+      sap_s4hana_deployment_db_schema_password: "{  { admin_password }}"
+      sap_s4hana_deployment_db_schema_abap_password: "{  { admin_password }}"
+      sap_s4hana_deployment_master_password: "{  { admin_password }}"
+      sap_s4hana_deployment_hana_systemdb_password: "{  { admin_password }}"
+      sap_s4hana_deployment_hana_instance_nr: "00"
+      sap_s4hana_deployment_hana_system_password: "{  { admin_password }}"
+      sap_s4hana_deployment_parallel_jobs_nr: "30"
+      sap_s4hana_deployment_db_sidadm_password: "{  { admin_password }}"
+      sap_s4hana_deployment_igs_path: "/software/S4HANA_installation"
+      sap_s4hana_deployment_igs_file_name: "igsexe_9-80003187.sar"
+      sap_s4hana_deployment_igs_helper_path: "/software/S4HANA_installation"
+      sap_s4hana_deployment_igs_helper_file_name: "igshelper_17-10010245.sar"
+      sap_s4hana_deployment_kernel_dependent_path: "/software/S4HANA_installation"
+      sap_s4hana_deployment_kernel_dependent_file_name: "SAPEXEDB_201-80003385.SAR"
+      sap_s4hana_deployment_kernel_independent_path: "/software/S4HANA_installation"
+      sap_s4hana_deployment_kernel_independent_file_name: "SAPEXE_201-80003386.SAR"
+      sap_s4hana_deployment_software_path: "/software/S4HANA_installation"
+      sap_s4hana_deployment_sapadm_password: "{  { admin_password }}"
+      sap_s4hana_deployment_sap_sidadm_password: "{  { admin_password }}"
+
+controller_groups_tier_2:
   - name: hana
     inventory: "{  { audience }} SAP Infrastructure"
     children:
@@ -335,71 +407,8 @@ controller_groups:
       sap_hana_ha_pacemaker_node1_fqdn: "sapddhdb1.{  { demo_uuid }}.{  { base_dns_suffix }}"
       sap_hana_ha_pacemaker_node2_fqdn: "sapddhdb2.{  { demo_uuid }}.{  { base_dns_suffix }}"
       sap_s4hana_deployment_db_host: "sapddhdb.{  { demo_uuid }}.{  { base_dns_suffix }}"
-  - name: netweaver
-    inventory: "{  { audience }} SAP Infrastructure"
-    variables:
-      application: sap
-      os: rhel8
-      cpus: 4
-      memory_mb: 16384
-      provisioning:
-        host_group: rhel8
-        organization: "{  { audience }}"
-        location: "{  { audience }}"
-        method: bootdisk
-        dns_domain: "{  { demo_uuid }}.{  { base_dns_suffix }}"
-        cpus: 4
-        memory_mb: 16384
-        activation_keys: ak-netweaver-rhel8-production
-      additional_storage:
-        - size: 100Gb
-          type: thin
-          scsi_controller: 0
-          unit_number: 1
-      storage_pools:
-        - name: sap
-          disks:
-            - sdb
-          volumes:
-            - name: sap
-              size: "50 GiB"
-              mount_point: "/usr/sap"
-              state: present
-            - name: sapmnt
-              size: "20 GiB"
-              mount_point: "/usr/sapmnt"
-              state: present
-            - name: swap
-              size: "20 GiB"
-              state: present
-      sap_s4hana_deployment_sid: DS4
-      sap_s4hana_deployment_db_host: "sapddhdb.{  { demo_uuid }}.{  { base_dns_suffix }}"
-      sap_s4hana_deployment_db_sid: DS4
-      sap_netweaver_preconfigure_fail_if_not_enough_swap_space_configured: no
-      sap_s4hana_deployment_product_id: "NW_ABAP_OneHost:S4HANA1909.CORE.HDB.ABAP"
-      sap_s4hana_deployment_sapcar_path: /software/DS4
-      sap_s4hana_deployment_sapcar_file_name: "SAPCAR_1010-70006178.EXE"
-      sap_s4hana_deployment_swpm_path: "/software/S4HANA_installation"
-      sap_s4hana_deployment_swpm_sar_file_name: "SWPM20SP04_6-80003424.SAR"
-      sap_s4hana_deployment_db_schema_password: "{  { admin_password }}"
-      sap_s4hana_deployment_db_schema_abap_password: "{  { admin_password }}"
-      sap_s4hana_deployment_master_password: "{  { admin_password }}"
-      sap_s4hana_deployment_hana_systemdb_password: "{  { admin_password }}"
-      sap_s4hana_deployment_hana_instance_nr: "00"
-      sap_s4hana_deployment_hana_system_password: "{  { admin_password }}"
-      sap_s4hana_deployment_parallel_jobs_nr: "30"
-      sap_s4hana_deployment_db_sidadm_password: "{  { admin_password }}"
-      sap_s4hana_deployment_igs_path: "/software/S4HANA_installation"
-      sap_s4hana_deployment_igs_file_name: "igsexe_9-80003187.sar"
-      sap_s4hana_deployment_igs_helper_path: "/software/S4HANA_installation"
-      sap_s4hana_deployment_igs_helper_file_name: "igshelper_17-10010245.sar"
-      sap_s4hana_deployment_kernel_dependent_path: "/software/S4HANA_installation"
-      sap_s4hana_deployment_kernel_dependent_file_name: "SAPEXEDB_201-80003385.SAR"
-      sap_s4hana_deployment_kernel_independent_path: "/software/S4HANA_installation"
-      sap_s4hana_deployment_kernel_independent_file_name: "SAPEXE_201-80003386.SAR"
-      sap_s4hana_deployment_software_path: "/software/S4HANA_installation"
-      sap_s4hana_deployment_sapadm_password: "{  { admin_password }}"
-      sap_s4hana_deployment_sap_sidadm_password: "{  { admin_password }}"
+
+controller_groups_tier3:
   - name: s4hana
     inventory: "{  { audience }} SAP Infrastructure"
     children:
@@ -420,10 +429,6 @@ controller_groups:
       nfs_shares:
         - src: 10.15.120.250:/mnt/data01/sap
           path: /software
-  - name: production
-    inventory: "{  { audience }} SAP Infrastructure"
-    variables:
-      lifecycle_environment: production
 
 controller_projects:
   - name: "{  { audience }} S4HANA Deployment Code"
