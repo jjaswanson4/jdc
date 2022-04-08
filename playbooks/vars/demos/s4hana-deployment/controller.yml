@@ -334,6 +334,8 @@ controller_groups:
       sap_hana_ha_pacemaker_hacluster_password: "{  { admin_password }}"
       sap_hana_ha_pacemaker_node1_fqdn: "sapddhdb1.{  { demo_uuid }}.{  { base_dns_suffix }}"
       sap_hana_ha_pacemaker_node2_fqdn: "sapddhdb2.{  { demo_uuid }}.{  { base_dns_suffix }}"
+      sap_hana_ha_pacemaker_node1_ip: "{  { hostvars['sapdphdb1' + '.' + demo_uuid + '.' + base_dns_suffix ]['ansible_default_ipv4']['address'] }}"
+      sap_hana_ha_pacemaker_node2_ip: "{  { hostvars['sapdphdb2' + '.' + demo_uuid + '.' + base_dns_suffix ]['ansible_default_ipv4']['address'] }}"
       sap_s4hana_deployment_db_host: "sapddhdb.{  { demo_uuid }}.{  { base_dns_suffix }}"
   - name: netweaver
     inventory: "{  { audience }} SAP Infrastructure"
