@@ -63,7 +63,7 @@
           ansible.builtin.include_role:
             name: redhat_cop.controller_configuration.groups
           vars:
-            controller_groups: "{{ lookup('vars', controller_groups_tier' ~ tier) }}"
+            controller_groups: "{{ lookup('vars', 'controller_groups_tier' ~ tier) }}"
           loop_control:
             loop_var: tier
           loop: "{{ range(1, number_of_group_tiers, 1) | list }}"
