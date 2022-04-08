@@ -6,7 +6,7 @@
   tasks:
     - name: set the primary IP address fact
       ansible.builtin.set_fact:
-        sap_hana_ha_pacemaker_node1_ip: "{{ ansible_facts['ansible_default_ipv4']['address'] }}"
+        sap_hana_ha_pacemaker_node1_ip: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
       when:
         - sap_hana_ha_pacemaker_node1_ip is not defined
 
@@ -16,7 +16,7 @@
   tasks:
     - name: set the primary IP address fact
       ansible.builtin.set_fact:
-        sap_hana_ha_pacemaker_node2_ip: "{{ ansible_facts['ansible_default_ipv4']['address'] }}"
+        sap_hana_ha_pacemaker_node2_ip: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
       when:
         - sap_hana_ha_pacemaker_node2_ip is not defined
 
