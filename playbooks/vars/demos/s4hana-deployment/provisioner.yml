@@ -49,15 +49,16 @@ controller_templates: []
 
 controller_hosts:
   - name: "sapddapp1.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "{{ audience }} SAP Infrastructure"
+    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "sapddhdb1.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "{{ audience }} SAP Infrastructure"
+    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "sapddhdb2.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "{{ audience }} SAP Infrastructure"
+    inventory: "Demo {{ demo_uuid }} Inventory"
 
 controller_group_tiers: 1
 controller_groups_tier1:
   - name: demo_hosts
+    inventory: "Demo {{ demo_uuid }} Inventory"
     hosts:
       - "sapddapp1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "sapddhdb1.{{ demo_uuid }}.{{ base_dns_suffix }}"
