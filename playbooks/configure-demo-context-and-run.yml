@@ -6,10 +6,19 @@
   gather_facts: false
   vars:
     controller_hosts_to_add: []
-    controller_groups_to_add: []
   vars_files:
     - vars/demos.yml
   pre_tasks:
+    - name: match demo to display name
+      ansible.builtin.set_fact:
+        demo_display_name: "{{ demos.display_name }}"
+      when:
+        - demo == demos.name
+      loop_control:
+        loop_var: demos
+      loop: "{{ available_demos }}"
+    
+    # set demo_uuid
     - name: create unique id for demo if not existing
       block:
         - name: create unique id for demo instance
@@ -21,62 +30,52 @@
             demo_uuid: "{{ demo_uuid_raw.stdout }}"
       when:
         - demo_uuid is not defined
-    - name: match demo to display name
-      ansible.builtin.set_fact:
-        demo_display_name: "{{ demos.display_name }}"
-      when:
-        - demo == demos.name
-      loop_control:
-        loop_var: demos
-      loop: "{{ available_demos }}"
-    - name: set workflow to run | provision
-      ansible.builtin.set_fact:
-        workflow_to_run: Provision
-      when:
-        - demo_state is not defined or
-          demo_state == 'present'
-    - name: set workflow to run | teardown
-      ansible.builtin.set_fact:
-        workflow_to_run: Teardown
-      when:
-        - demo_state is defined
-        - demo_state == 'absent'
-    - name: set workflow to run | reset
-      ansible.builtin.set_fact:
-        workflow_to_run: Reset
-      when:
-        - demo_state is defined
-        - demo_state == 'reset'
-    - name: load demo provisioner vars into tmp var
-      ansible.builtin.include_vars:
-        file: "vars/demos/{{ demo }}/provisioner.yml"
-    - name: load in initial inventory vars
-      ansible.builtin.set_fact:
-        inventory_vars: "{{ lookup('file', 'vars/controller/inventories.yml') | from_yaml }}"
-    - name: collect up additional vars to add to inventory
-      ansible.builtin.set_fact:
-        additional_inventory_vars:
-          demo_uuid: "{{ demo_uuid }}"
-          audience: "{{ audience }}"
-          custom_dns_zones: "{{ custom_dns_zones | default(omit) }}"
-    - name: set inventories facts
-      ansible.builtin.set_fact:
-        controller_inventories:
-          - name: "Demo {{ demo_uuid }} Inventory"
-            organization: "{{ controller_organization }}"
-            variables: "{{ inventory_vars | combine(additional_inventory_vars) }}"
-    - name: add inventory to hosts
-      ansible.builtin.set_fact:
-        controller_hosts_to_add: "{{ controller_hosts_to_add + [ host | combine( { 'inventory': 'Demo ' + demo_uuid + ' Inventory' } ) ] }}"
-      loop_control:
-        loop_var: host
-      loop: "{{ controller_hosts }}"
-    - name: build list of groups
-      ansible.builtin.set_fact:
-        controller_groups_to_add: "{{ controller_groups_to_add | default('[]') + [ group | combine( { 'inventory': 'Demo ' + demo_uuid + ' Inventory' } ) ] }}"
-      loop_control:
-        loop_var: group
-      loop: "{{ controller_groups }}"
+
+    # set workflow to run
+    - name: set workflow to run
+      block:
+        - name: set workflow to run | provision
+          ansible.builtin.set_fact:
+            workflow_to_run: Provision
+          when:
+            - demo_state is not defined or
+              demo_state == 'present'
+        - name: set workflow to run | teardown
+          ansible.builtin.set_fact:
+            workflow_to_run: Teardown
+          when:
+            - demo_state is defined
+            - demo_state == 'absent'
+        - name: set workflow to run | reset
+          ansible.builtin.set_fact:
+            workflow_to_run: Reset
+          when:
+            - demo_state is defined
+            - demo_state == 'reset'
+    
+    # setup demo inventory
+    - name: set demo inventory
+      block:
+        - name: load demo provisioner vars into tmp var
+          ansible.builtin.include_vars:
+            file: "vars/demos/{{ demo }}/provisioner.yml"
+        - name: load in initial inventory vars
+          ansible.builtin.set_fact:
+            inventory_vars: "{{ lookup('file', 'vars/controller/inventories.yml') | from_yaml }}"
+        - name: collect up additional vars to add to inventory
+          ansible.builtin.set_fact:
+            additional_inventory_vars:
+              demo_uuid: "{{ demo_uuid }}"
+              audience: "{{ audience }}"
+              custom_dns_zones: "{{ custom_dns_zones | default(omit) }}"
+        - name: set inventories facts
+          ansible.builtin.set_fact:
+            controller_inventories:
+              - name: "Demo {{ demo_uuid }} Inventory"
+                organization: "{{ controller_organization }}"
+                variables: "{{ inventory_vars | combine(additional_inventory_vars) }}"
+
+    # setup satellite if defined
     - name: load in satellite vars and group
       block:
         - name: set satellite host and group facts
@@ -95,6 +94,15 @@
             controller_hosts_to_add: "{{ controller_hosts_to_add + satellite_host }}"
       when:
         - satellite_configuration_file is defined
+    - name: define satellite group even if empty
+      ansible.builtin.set_fact:
+        satellite_group:
+          - name: satellite
+            inventory: "Demo {{ demo_uuid }} Inventory"
+      when:
+        - satellite_configuration_file is not defined
+    
+    # setup controller if defined
     - name: load in controller vars and group
       block:
         - name: set controller host and group facts
@@ -113,13 +121,6 @@
             controller_hosts_to_add: "{{ controller_hosts_to_add + controller_host }}"
       when:
         - controller_configuration_file is defined
-    - name: define satellite group even if empty
-      ansible.builtin.set_fact:
-        satellite_group:
-          - name: satellite
-            inventory: "Demo {{ demo_uuid }} Inventory"
-      when:
-        - satellite_configuration_file is not defined
     - name: define controller group even if empty
       ansible.builtin.set_fact:
         controller_group:
@@ -127,6 +128,8 @@
             inventory: "Demo {{ demo_uuid }} Inventory"
       when:
         - controller_configuration_file is not defined
+
+    # setup management group
     - name: load in management_plane group
       ansible.builtin.set_fact:
         management_plane_group:
@@ -136,9 +139,8 @@
             children:
               - controller
               - satellite
-    - name: add up groups
-      ansible.builtin.set_fact:
-        controller_groups_to_add: "{{ controller_groups_to_add + satellite_group + controller_group + management_plane_group }}"
+
+    # setup localhost
     - name: create localhost host
       ansible.builtin.set_fact:
         localhost_host:
@@ -151,10 +153,26 @@
     - name: add localhost to hosts list
       ansible.builtin.set_fact:
         controller_hosts_to_add: "{{ controller_hosts_to_add + localhost_host }}"
-    - name: set vars for roles
+
+    # setup hosts var for controller config role
+    - name: set hosts var for controller config role
       ansible.builtin.set_fact:
         controller_hosts: "{{ controller_hosts_to_add }}"
-        controller_groups: "{{ controller_groups_to_add }}"
+
+    # add groups to correct group tiers
+    - name: override group tiers to atleast 2
+      ansible.builtin.set_fact:
+        controller_group_tiers: 2
+      when:
+        controller_group_tiers | int < 2
+    - name: add satellite and controller to tier1 groups
+      ansible.builtin.set_fact:
+        controller_groups_tier1: "{{ controller_groups_tier1 | default([]) + satellite_group + controller_group }}"
+    - name: add management group to tier2 groups
+      ansible.builtin.set_fact:
+        controller_groups_tier2: "{{ controller_groups_tier2 | default([]) + management_plane_group }}"
+
+    # set vars for workflow run
     - name: set demo provisioner workflow facts
       ansible.builtin.set_fact:
         controller_workflow_launch_jobs:
