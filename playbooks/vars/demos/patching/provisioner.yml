@@ -50,40 +50,50 @@ controller_projects: []
 
 controller_hosts:
   - name: "sapdnhdb1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
     variables:
       sap_hana_hsr_alias: DC1
       virtual_ip:
         dns_record: "sapdnhdb.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: "sapdnhdb2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
     variables:
       sap_hana_hsr_alias: DC2
   - name: "sapdnapp1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "sapdphdb1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
     variables:
       sap_hana_hsr_alias: DC1
       virtual_ip:
         dns_record: "sapdphdb.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: "sapdphdb2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
     variables:
       sap_hana_hsr_alias: DC2
   - name: "sapdpapp1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "sap-metrics.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
 
 controller_group_tiers: 4
 controller_groups_tier1:
   - name: primary
+    inventory: "Demo {{ demo_uuid }} Inventory"
     hosts:
       - "sapdnhdb1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "sapdphdb1.{{ demo_uuid }}.{{ base_dns_suffix }}"
     variables:
       sap_hana_hsr_role: primary
   - name: secondary
+    inventory: "Demo {{ demo_uuid }} Inventory"
     hosts:
       - "sapdnhdb2.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "sapdphdb2.{{ demo_uuid }}.{{ base_dns_suffix }}"
     variables:
       sap_hana_hsr_role: secondary
   - name: netweaver
+    inventory: "Demo {{ demo_uuid }} Inventory"
     hosts:
       - "sapdnapp1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "sapdpapp1.{{ demo_uuid }}.{{ base_dns_suffix }}"
@@ -137,6 +147,7 @@ controller_groups_tier1:
       sap_s4hana_deployment_sapadm_password: "{  { admin_password }}"
       sap_s4hana_deployment_sap_sidadm_password: "{  { admin_password }}"
   - name: non_production
+    inventory: "Demo {{ demo_uuid }} Inventory"
     hosts:
       - "sapdnapp1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "sapdnhdb1.{{ demo_uuid }}.{{ base_dns_suffix }}"
@@ -159,6 +170,7 @@ controller_groups_tier1:
       sap_s4hana_deployment_db_host: "sapdnhdb.{{ demo_uuid }}.{{ base_dns_suffix }}"
       sap_s4hana_deployment_db_sid: NS4
   - name: production
+    inventory: "Demo {{ demo_uuid }} Inventory"
     hosts:
       - "sapdpapp1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "sapdphdb1.{{ demo_uuid }}.{{ base_dns_suffix }}"
@@ -181,6 +193,7 @@ controller_groups_tier1:
       sap_s4hana_deployment_db_host: "sapdphdb.{{ demo_uuid }}.{{ base_dns_suffix }}"
       sap_s4hana_deployment_db_sid: PS4
   - name: peripheral
+    inventory: "Demo {{ demo_uuid }} Inventory"
     hosts:
       - "sap-metrics.{{ demo_uuid }}.{{ base_dns_suffix }}"
     variables:
@@ -196,6 +209,7 @@ controller_groups_tier1:
 
 controller_groups_tier2:
   - name: hana
+    inventory: "Demo {{ demo_uuid }} Inventory"
     children:
       - primary
       - secondary
@@ -248,6 +262,7 @@ controller_groups_tier2:
 
 controller_groups_tier3:
   - name: sap
+    inventory: "Demo {{ demo_uuid }} Inventory"
     children:
       - hana
       - netweaver
@@ -268,6 +283,7 @@ controller_groups_tier3:
 
 controller_groups_tier4:
   - name: demo_hosts
+    inventory: "Demo {{ demo_uuid }} Inventory"
     children:
       - sap
       - non_production
