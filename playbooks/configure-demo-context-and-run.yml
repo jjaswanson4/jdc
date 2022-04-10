@@ -216,7 +216,7 @@
 
     - name: setup groups
       ansible.builtin.include_role:
-        #name: redhat_cop.controller_configuration.groups
+        name: redhat_cop.controller_configuration.groups
       vars:
         controller_groups: "{{ lookup('vars', 'controller_groups_tier' ~ tier) }}"
       loop_control:
