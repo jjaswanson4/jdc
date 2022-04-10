@@ -157,7 +157,7 @@
     # setup hosts var for controller config role
     - name: set hosts var for controller config role
       ansible.builtin.set_fact:
-        controller_hosts: "{{ controller_hosts_to_add }}"
+        controller_hosts: "{{ controller_hosts | default([]) + controller_hosts_to_add }}"
 
     # add groups to correct group tiers
     - name: override group tiers to atleast 2
