@@ -66,7 +66,7 @@
             controller_groups: "{{ lookup('vars', 'controller_groups_tier' ~ tier) }}"
           loop_control:
             loop_var: tier
-          loop: "{{ range(1, controller_group_tiers, 1) | list }}"
+          loop: "{{ range(1, controller_group_tiers | int + 1, 1) | list }}"
 
         - name: include post-inventory sync/groups configuration roles
           ansible.builtin.include_role:
