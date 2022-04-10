@@ -216,12 +216,12 @@
 
     - name: setup groups
       ansible.builtin.include_role:
-        name: redhat_cop.controller_configuration.groups
+        #name: redhat_cop.controller_configuration.groups
       vars:
         controller_groups: "{{ lookup('vars', 'controller_groups_tier' ~ tier) }}"
       loop_control:
         loop_var: tier
-      loop: "{{ range(1, controller_group_tiers, 1) | list }}"
+      loop: "{{ range(1, controller_group_tiers | int + 1, 1) | list }}"
 
     - name: setup demo context and launch workflow
       ansible.builtin.include_role:
