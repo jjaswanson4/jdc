@@ -100,7 +100,7 @@ controller_workflows:
           - Demo Provisioner Netbox Credentials
           - Demo Provisioner IDM Credentials
         success_nodes:
-          - Provision Hub
+          - Provision Automation Hub
           - Provision Controller
         failure_nodes:
           - Send Failure Email About 'Create DNS Records'
@@ -136,15 +136,15 @@ controller_workflows:
       - identifier: Send Failure Email About 'Apply Standard Config to Automation Hub'
         unified_job_template: Send Provisioner Email
         extra_data:
-          failed_at_step: Apply Standard Config to Hub
+          failed_at_step: Apply Standard Config to Automation Hub
       - identifier: Install Automation Hub
-        unified_job_template: Install Automation Platform
+        unified_job_template: Install Ansible Automation Platform
         limit: hub
         credentials:
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
-        # success_nodes:
-        #   - Configure Red Hat Satellite
+        success_nodes:
+          - Configure Automation Hub
         failure_nodes:
           - Send Failure Email About 'Install Automation Hub'
       - identifier: Send Failure Email About 'Install Automation Hub'
@@ -153,7 +153,7 @@ controller_workflows:
           failed_at_step: Install Automation Hub
       - identifier: Configure Automation Hub
         unified_job_template: Configure Automation Hub
-        limit: satellite
+        limit: hub
         credentials:
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
