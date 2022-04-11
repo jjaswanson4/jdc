@@ -129,29 +129,28 @@ controller_workflows:
         limit: hub
         credentials:
           - Demo Provisioner Root Account
-        # success_nodes:
-        #   - Install Red Hat Hub
+        success_nodes:
+          - Install Ansible Automation Hub
         failure_nodes:
           - Send Failure Email About 'Apply Standard Config to Hub'
       - identifier: Send Failure Email About 'Apply Standard Config to Hub'
         unified_job_template: Send Provisioner Email
         extra_data:
           failed_at_step: Apply Standard Config to Hub
-  #     - identifier: Install Red Hat Satellite
-  #       unified_job_template: Install Red Hat Satellite
-  #       limit: satellite
-  #       credentials:
-  #         - Demo Provisioner vCenter Credentials
-  #         - Demo Provisioner Root Account
-  #         - Demo Provisioner Admin Credentials
-  #       success_nodes:
-  #         - Configure Red Hat Satellite
-  #       failure_nodes:
-  #         - Send Failure Email About 'Install Red Hat Satellite'
-  #     - identifier: Send Failure Email About 'Install Red Hat Satellite'
-  #       unified_job_template: Send Provisioner Email
-  #       extra_data:
-  #         failed_at_step: Install Red Hat Satellite
+      - identifier: Install Ansible Automation Hub
+        unified_job_template: Install Ansible Automation Platform
+        limit: hub
+        credentials:
+          - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
+        # success_nodes:
+        #   - Configure Red Hat Satellite
+        failure_nodes:
+          - Send Failure Email About 'Install Ansible Automation Hub'
+      - identifier: Send Failure Email About 'Install Ansible Automation Hub'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Install Ansible Automation Hub
   #     - identifier: Configure Red Hat Satellite
   #       unified_job_template: Configure Red Hat Satellite
   #       limit: satellite
