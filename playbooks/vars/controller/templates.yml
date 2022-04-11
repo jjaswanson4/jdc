@@ -11,6 +11,17 @@
   execution_environment: "{{ execution_environment.name }}"
   ask_credential_on_launch: yes
   ask_variables_on_launch: yes
+- name: Install Ansible Automation Platform
+  organization: "{{ controller_organization }}"
+  inventory: Demo Inventory
+  ask_inventory_on_launch: yes
+  ask_limit_on_launch: yes
+  project: "{{ project }}"
+  allow_simultaneous: yes
+  playbook: playbooks/install-aap.yml
+  execution_environment: "{{ execution_environment.name }}"
+  ask_credential_on_launch: yes
+  ask_variables_on_launch: yes
 - name: Configure Ansible Controller
   organization: "{{ controller_organization }}"
   inventory: Demo Inventory
