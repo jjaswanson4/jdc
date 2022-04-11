@@ -1,0 +1,12 @@
+---
+
+- name: configure ansible automation hub
+  hosts:
+    - all
+  gather_facts: no
+  vars:
+    ansible_python_interpreter: "{{ ansible_playbook_python }}"
+    ansible_connection: local
+  roles:
+    - redhat_cop.ah_configuration.group
+    - redhat_cop.ah_configuration.user
