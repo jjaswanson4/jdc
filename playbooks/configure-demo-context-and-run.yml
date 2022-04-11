@@ -162,6 +162,7 @@
         ansible_automation_platform_group:
           - name: ansible_automation_platform
             inventory: "Demo {{ demo_uuid }} Inventory"
+            variables: "{{ lookup('file', 'vars/controller/groups/ansible_automation_platform.yml') | from_yaml }}"
             children:
               - controller
               - hub
