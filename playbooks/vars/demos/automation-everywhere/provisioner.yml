@@ -33,6 +33,10 @@ controller_configuration_file: "{{ vars_files_path }}/controller.yml"
 # This can be the same instance as where the provisioner is deployed, but it's not recommended.
 satellite_configuration_file: "{{ vars_files_path }}/satellite.yml"
 
+# This is the information used for the instance of Hub for the demo.
+# This can be the same instance as where the provisioner is deployed, but it's not recommended.
+hub_configuration_file: "{{ vars_files_path }}/hub.yml"
+
 base_dns_suffix: demos.lcl
 
 # This toggles secure logging, for example: when configuring credentials on Ansible Controller.
