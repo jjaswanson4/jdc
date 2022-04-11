@@ -85,45 +85,45 @@ controller_workflows:
         credentials:
           - Demo Provisioner Netbox Credentials
           - Demo Provisioner vCenter Credentials
-  #       success_nodes:
-  #         - Create DNS Records
-  #       failure_nodes:
-  #         - Send Failure Email About 'Create CMDB Records'
-  #     - identifier: Send Failure Email About 'Create CMDB Records'
-  #       unified_job_template: Send Provisioner Email
-  #       extra_data:
-  #         failed_at_step: Create CMDB Records
-  #     - identifier: Create DNS Records
-  #       unified_job_template: Manage DNS Records
-  #       limit: management_plane
-  #       credentials:
-  #         - Demo Provisioner Netbox Credentials
-  #         - Demo Provisioner IDM Credentials
-  #       success_nodes:
-  #         - Provision Satellite
-  #         - Provision Controller
-  #       failure_nodes:
-  #         - Send Failure Email About 'Create DNS Records'
-  #     - identifier: Send Failure Email About 'Create DNS Records'
-  #       unified_job_template: Send Provisioner Email
-  #       extra_data:
-  #         failed_at_step: Create DNS Records
-  #     - identifier: Provision Satellite
-  #       unified_job_template: Provision Systems
-  #       limit: satellite
-  #       credentials:
-  #         - Demo Provisioner Netbox Credentials
-  #         - Demo Provisioner Satellite Credentials
-  #         - Demo Provisioner vCenter Credentials
-  #         - Demo Provisioner Root Account
+        success_nodes:
+          - Create DNS Records
+        failure_nodes:
+          - Send Failure Email About 'Create CMDB Records'
+      - identifier: Send Failure Email About 'Create CMDB Records'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Create CMDB Records
+      - identifier: Create DNS Records
+        unified_job_template: Manage DNS Records
+        limit: management_plane
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner IDM Credentials
+        success_nodes:
+          - Provision Hub
+          - Provision Controller
+        failure_nodes:
+          - Send Failure Email About 'Create DNS Records'
+      - identifier: Send Failure Email About 'Create DNS Records'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Create DNS Records
+      - identifier: Provision Hub
+        unified_job_template: Provision Systems
+        limit: hub
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner Satellite Credentials
+          - Demo Provisioner vCenter Credentials
+          - Demo Provisioner Root Account
   #       success_nodes:
   #         - Apply Standard Config to Satellite
-  #       failure_nodes:
-  #         - Send Failure Email About 'Provision Satellite'
-  #     - identifier: Send Failure Email About 'Provision Satellite'
-  #       unified_job_template: Send Provisioner Email
-  #       extra_data:
-  #         failed_at_step: Provision Satellite
+        failure_nodes:
+          - Send Failure Email About 'Provision Hub'
+      - identifier: Send Failure Email About 'Provision Hub'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Provision Hub
   #     - identifier: Apply Standard Config to Satellite
   #       unified_job_template: Apply Standard Configuration
   #       limit: satellite
@@ -168,22 +168,22 @@ controller_workflows:
   #       unified_job_template: Send Provisioner Email
   #       extra_data:
   #         failed_at_step: Configure Red Hat Satellite
-  #     - identifier: Provision Controller
-  #       unified_job_template: Provision Systems
-  #       limit: controller
-  #       credentials:
-  #         - Demo Provisioner Netbox Credentials
-  #         - Demo Provisioner Satellite Credentials
-  #         - Demo Provisioner vCenter Credentials
-  #         - Demo Provisioner Root Account
-  #       success_nodes:
-  #         - Apply Standard Config to Controller
-  #       failure_nodes:
-  #         - Send Failure Email About 'Provision Controller'
-  #     - identifier: Send Failure Email About 'Provision Controller'
-  #       unified_job_template: Send Provisioner Email
-  #       extra_data:
-  #         failed_at_step: Provision Controller
+      - identifier: Provision Controller
+        unified_job_template: Provision Systems
+        limit: controller
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner Satellite Credentials
+          - Demo Provisioner vCenter Credentials
+          - Demo Provisioner Root Account
+        # success_nodes:
+        #   - Apply Standard Config to Controller
+        failure_nodes:
+          - Send Failure Email About 'Provision Controller'
+      - identifier: Send Failure Email About 'Provision Controller'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Provision Controller
   #     - identifier: Apply Standard Config to Controller
   #       unified_job_template: Apply Standard Configuration
   #       limit: controller
