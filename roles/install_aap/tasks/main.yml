@@ -28,4 +28,4 @@
     - run-installer.yml
   when:
     - (controller_check.failed is defined and controller_check.failed) or
-      (hub_check.failed is defined and (hub_check.failed)
+      (hub_check.failed is defined and hub_check.failed)
