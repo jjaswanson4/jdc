@@ -4,3 +4,69 @@ hub_install:
   admin_password: "{  { admin_password }}"
   pg:
     password: "{  { admin_password }}"
+
+ah_hostname: "{  { inventory_hostname }}"
+ah_username: "{  { admin_username }}"
+ah_password: "{  { admin_password }}"
+validate_certs: no
+
+ah_groups:
+  - name: WebApp Automation Team
+  - name: Network Automation Team
+  - name: Virtualization Automation Team
+  - name: Security Automation Team
+  - name: Storage Automation Team
+  - name: RHEL Automation Team
+  - name: Automation Architecture Team
+
+ah_users:
+  - name: webapp_automation_admin
+    groups:
+      - WebApp Automation Team
+    first_name: WebApp
+    last_name: Automation
+    email: dont@email.me
+    password: "{  { admin_password }}"
+  - name: network_automation_admin
+    groups:
+      - Network Automation Team
+    first_name: Network
+    last_name: Automation
+    email: dont@email.me
+    password: "{  { admin_password }}"
+  - name: virtualization_automation_admin
+    groups:
+      - Virtualization Automation Team
+    first_name: Virtualization
+    last_name: Automation
+    email: dont@email.me
+    password: "{  { admin_password }}"
+  - name: security_automation_admin
+    groups:
+      - Security Automation Team
+    first_name: Security
+    last_name: Automation
+    email: dont@email.me
+    password: "{  { admin_password }}"
+  - name: storage_automation_admin
+    groups:
+      - Storage Automation Team
+    first_name: Storage
+    last_name: Automation
+    email: dont@email.me
+    password: "{  { admin_password }}"
+  - name: rhel_automation_admin
+    groups:
+      - RHEL Automation Team
+    first_name: WebApp
+    last_name: Automation
+    email: dont@email.me
+    password: "{  { admin_password }}"
+  - name: automation_admin
+    groups:
+      - Automation Architecture Team
+    first_name: Automation
+    last_name: Architecture
+    email: dont@email.me
+    password: "{  { admin_password }}"
+    is_superuser: yes
