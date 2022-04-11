@@ -27,3 +27,4 @@ First, you can check the list of available demos [here](DEMOS.md).
 | RHEL for Edge | :x: | :x: | :x: |
 | CI/CD with Ansible | :x: | :x: | :x: |
 | Satellite Advanced Architecture | :x: | :x: | :x: |
+| Automation Everywhere | :x: | :x: | :x: |
