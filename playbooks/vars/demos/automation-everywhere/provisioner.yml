@@ -126,7 +126,7 @@ controller_workflows:
           failed_at_step: Provision Hub
       - identifier: Apply Standard Config to Hub
         unified_job_template: Apply Standard Configuration
-        limit: Hub
+        limit: hub
         credentials:
           - Demo Provisioner Root Account
         # success_nodes:
