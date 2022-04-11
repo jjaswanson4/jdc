@@ -8,7 +8,7 @@ hub_install:
 ah_host: "{  { inventory_hostname }}"
 ah_username: "{  { admin_username }}"
 ah_password: "{  { admin_password }}"
-validate_certs: no
+ah_validate_certs: no
 
 ah_groups:
   - name: WebApp Automation Team
