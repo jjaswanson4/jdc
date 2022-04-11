@@ -35,6 +35,18 @@
   extra_vars:
     controller_state: present
     ansible_connection: local
+- name: Configure Automation Hub
+  organization: "{{ controller_organization }}"
+  inventory: Demo Inventory
+  ask_inventory_on_launch: yes
+  ask_limit_on_launch: yes
+  project: "{{ project }}"
+  allow_simultaneous: yes
+  playbook: playbooks/configure-automation-hub.yml
+  execution_environment: "{{ execution_environment.name }}"
+  ask_credential_on_launch: yes
+  extra_vars:
+    ansible_connection: local
 - name: Install Red Hat Satellite
   organization: "{{ controller_organization }}"
   inventory: Demo Inventory
