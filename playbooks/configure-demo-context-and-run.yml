@@ -129,15 +129,52 @@
       when:
         - controller_configuration_file is not defined
 
+    # setup hub if defined
+    - name: load in hub vars and group
+      block:
+        - name: set hub host and group facts
+          ansible.builtin.set_fact:
+            hub_host:
+              - name: "{{ audience | lower }}-{{ demo }}-hub.{{ demo_uuid }}.{{ base_dns_suffix }}"
+                inventory: "Demo {{ demo_uuid }} Inventory"
+                variables: "{{ lookup('file', 'vars/demos/' + demo + '/hub.yml') | from_yaml }}"
+            hub_group:
+              - name: hub
+                inventory: "Demo {{ demo_uuid }} Inventory"
+                hosts:
+                  - "{{ audience | lower }}-{{ demo }}-hub.{{ demo_uuid }}.{{ base_dns_suffix }}"
+        - name: add hub host to main list
+          ansible.builtin.set_fact:
+            controller_hosts_to_add: "{{ controller_hosts_to_add + hub_host }}"
+      when:
+        - hub_configuration_file is defined
+    - name: define hub group even if empty
+      ansible.builtin.set_fact:
+        hub_group:
+          - name: hub
+            inventory: "Demo {{ demo_uuid }} Inventory"
+      when:
+        - hub_configuration_file is not defined
+
+    # setup ansible_automation_platform group
+    - name: setup ansible_automation_platform group
+      ansible.builtin.set_fact:
+        ansible_automation_platform_group:
+          - name: ansible_automation_platform
+            inventory: "Demo {{ demo_uuid }} Inventory"
+            children:
+              - controller
+              - hub
+
     # setup management group
     - name: load in management_plane group
       ansible.builtin.set_fact:
         management_plane_group:
           - name: management_plane
             inventory: "Demo {{ demo_uuid }} Inventory"
-            variables: "{{ lookup('file', 'vars/controller/groups.yml') | from_yaml }}"
+            variables: "{{ lookup('file', 'vars/controller/groups/management_plane.yml') | from_yaml }}"
             children:
-              - controller
+              - ansible_automation_platform
               - satellite
 
     # setup localhost
@@ -160,17 +197,20 @@
         controller_hosts: "{{ controller_hosts | default([]) + controller_hosts_to_add }}"
 
     # add groups to correct group tiers
-    - name: override group tiers to atleast 2
+    - name: override group tiers to atleast 3
       ansible.builtin.set_fact:
-        controller_group_tiers: 2
+        controller_group_tiers: 3
       when:
-        controller_group_tiers | int < 2
-    - name: add satellite and controller to tier1 groups
+        controller_group_tiers | int < 3
+    - name: add satellite, controller, and hub groups to tier1
       ansible.builtin.set_fact:
-        controller_groups_tier1: "{{ controller_groups_tier1 | default([]) + satellite_group + controller_group }}"
-    - name: add management group to tier2 groups
+        controller_groups_tier1: "{{ controller_groups_tier1 | default([]) + satellite_group + controller_group + hub_group }}"
+    - name: add ansible_automation_platform group to tier2
       ansible.builtin.set_fact:
-        controller_groups_tier2: "{{ controller_groups_tier2 | default([]) + management_plane_group }}"
+        controller_groups_tier2: "{{ controller_groups_tier2 | default([]) + ansible_automation_platform_group }}"
+    - name: add management_plane group to tier3
+      ansible.builtin.set_fact:
+        controller_groups_tier3: "{{ controller_groups_tier3 | default([]) + management_plane_group }}"
 
     # set vars for workflow run
     - name: set demo provisioner workflow facts
