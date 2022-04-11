@@ -67,7 +67,7 @@ pg_sslmode='{{ controller_install.pg.sslmode | default('prefer') }}'
 # automationhub
 {% if 'hub' in groups %}
 {% if inventory_hostname in groups['hub'] %}
-automationhub_admin_password='{{ automationhub_install.admin_password | default('') }}'
+automationhub_admin_password='{{ hub_install.admin_password | default('') }}'
 {% endif %}
 {% endif %}
 automationhub_pg_host='{{ hub_install.pg.host | default('') }}'
