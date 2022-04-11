@@ -13,3 +13,5 @@ available_demos:
     display_name: AAP Advanced Architecture
   - name: satellite-aa
     display_name: Satellite Advanced Architecture
+  - name: automation-everywhere
+    display_name: Automation Everywhere
