@@ -58,6 +58,7 @@
 - name: Teardown Demo
   organization: "{{ controller_organization }}"
   state: "{{ controller_state | default('present') }}"
+  allow_simultaneous: yes
   survey_enabled: yes
   survey:
     name: ''
