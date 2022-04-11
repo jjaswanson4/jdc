@@ -333,7 +333,7 @@ controller_groups_tier1:
       sap_s4hana_deployment_sapadm_password: "{  { admin_password }}"
       sap_s4hana_deployment_sap_sidadm_password: "{  { admin_password }}"
 
-controller_groups_tier_2:
+controller_groups_tier2:
   - name: hana
     inventory: "{  { audience }} SAP Infrastructure"
     children:
