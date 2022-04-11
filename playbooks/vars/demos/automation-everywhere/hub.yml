@@ -1,3 +1,6 @@
 ---
 
-dummy_var: test123
+hub_install:
+  admin_password: "{  { admin_password }}"
+  pg:
+    password: "{  { admin_password }}"
