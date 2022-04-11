@@ -8,6 +8,15 @@
   when:
     - "'controller' in group_names or 'aap_installer_node' in group_names"
 
+- name: check for existing hub install
+  ansible.builtin.shell:
+    cmd: systemctl status pulp* nginx.service redis.service --no-pager
+  register: hub_check
+  ignore_errors: true
+  changed_when: false
+  when:
+    - "'hub' in group_names"
+
 - name: include install tasks
   ansible.builtin.include_tasks:
     file: "{{ task_file }}"
@@ -18,4 +27,5 @@
     - extract-installer.yml
     - run-installer.yml
   when:
-    - controller_check.failed
+    - (controller_check.failed is defined and controller_check.failed) or
+      (hub_check.failed is defined and (hub_check.failed)
