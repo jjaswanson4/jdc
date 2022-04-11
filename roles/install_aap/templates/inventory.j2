@@ -32,8 +32,8 @@ peers=execution_nodes
 [execution_nodes]
 
 [automationhub]
-{% if 'automationhub' in groups %}
-{% if inventory_hostname in groups['automationhub'] %}
+{% if 'hub' in groups %}
+{% if inventory_hostname in groups['hub'] %}
 {{ inventory_hostname }} ansible_connection=local
 {% endif %}
 {% endif %}
@@ -65,17 +65,17 @@ pg_password='{{ controller_install.pg.password | default('awx') }}'
 pg_sslmode='{{ controller_install.pg.sslmode | default('prefer') }}'
 
 # automationhub
-{% if 'automationhub' in groups %}
-{% if inventory_hostname in groups['automationhub'] %}
+{% if 'hub' in groups %}
+{% if inventory_hostname in groups['hub'] %}
 automationhub_admin_password='{{ automationhub_install.admin_password | default('') }}'
 {% endif %}
 {% endif %}
-automationhub_pg_host='{{ automationhub_install.pg.host | default('') }}'
-automationhub_pg_port='{{ automationhub_install.pg.port | default('') }}'
-automationhub_pg_database='{{ automationhub_install.pg.database | default('automationhub') }}'
-automationhub_pg_username='{{ automationhub_install.pg.username | default('automationhub') }}'
-automationhub_pg_password='{{ automationhub_install.pg.password | default('automationhub') }}'
-automationhub_pg_sslmode='{{ automationhub_install.pg.ssl_mode | default('prefer') }}'
+automationhub_pg_host='{{ hub_install.pg.host | default('') }}'
+automationhub_pg_port='{{ nhub_install.pg.port | default('') }}'
+automationhub_pg_database='{{ hub_install.pg.database | default('automationhub') }}'
+automationhub_pg_username='{{ hub_install.pg.username | default('automationhub') }}'
+automationhub_pg_password='{{ hub_install.pg.password | default('automationhub') }}'
+automationhub_pg_sslmode='{{ hub_install.pg.ssl_mode | default('prefer') }}'
 
 # Execution Environment Configuration
 # Credentials for container registry to pull execution environment images from,
