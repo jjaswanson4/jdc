@@ -108,7 +108,7 @@ controller_workflows:
         unified_job_template: Send Provisioner Email
         extra_data:
           failed_at_step: Create DNS Records
-      - identifier: Provision Hub
+      - identifier: Provision Automation Hub
         unified_job_template: Provision Systems
         limit: hub
         credentials:
@@ -117,23 +117,23 @@ controller_workflows:
           - Demo Provisioner vCenter Credentials
           - Demo Provisioner Root Account
         success_nodes:
-          - Apply Standard Config to Hub
+          - Apply Standard Config to Automation Hub
         failure_nodes:
-          - Send Failure Email About 'Provision Hub'
-      - identifier: Send Failure Email About 'Provision Hub'
+          - Send Failure Email About 'Provision Automation Hub'
+      - identifier: Send Failure Email About 'Provision Automation Hub'
         unified_job_template: Send Provisioner Email
         extra_data:
-          failed_at_step: Provision Hub
-      - identifier: Apply Standard Config to Hub
+          failed_at_step: Provision Automation Hub
+      - identifier: Apply Standard Config to Automation Hub
         unified_job_template: Apply Standard Configuration
         limit: hub
         credentials:
           - Demo Provisioner Root Account
         success_nodes:
-          - Install Ansible Automation Hub
+          - Install Automation Hub
         failure_nodes:
-          - Send Failure Email About 'Apply Standard Config to Hub'
-      - identifier: Send Failure Email About 'Apply Standard Config to Hub'
+          - Send Failure Email About 'Apply Standard Config to Automation Hub'
+      - identifier: Send Failure Email About 'Apply Standard Config to Automation Hub'
         unified_job_template: Send Provisioner Email
         extra_data:
           failed_at_step: Apply Standard Config to Hub
@@ -150,7 +150,7 @@ controller_workflows:
       - identifier: Send Failure Email About 'Install Automation Hub'
         unified_job_template: Send Provisioner Email
         extra_data:
-          failed_at_step: Install Ansible Automation Hub
+          failed_at_step: Install Automation Hub
       - identifier: Configure Automation Hub
         unified_job_template: Configure Automation Hub
         limit: satellite
