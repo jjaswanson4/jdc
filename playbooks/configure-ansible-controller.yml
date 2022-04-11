@@ -64,6 +64,8 @@
             name: redhat_cop.controller_configuration.groups
           vars:
             controller_groups: "{{ lookup('vars', 'controller_groups_tier' ~ tier) }}"
+          when:
+            - controller_groups_tier ~ tier is defined
           loop_control:
             loop_var: tier
           loop: "{{ range(1, controller_group_tiers | int + 1, 1) | list }}"
