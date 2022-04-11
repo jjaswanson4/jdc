@@ -20,49 +20,49 @@ ah_groups:
   - name: Automation Architecture Team
 
 ah_users:
-  - name: webapp_automation_admin
+  - username: webapp_automation_admin
     groups:
       - WebApp Automation Team
     first_name: WebApp
     last_name: Automation
     email: dont@email.me
     password: "{  { admin_password }}"
-  - name: network_automation_admin
+  - username: network_automation_admin
     groups:
       - Network Automation Team
     first_name: Network
     last_name: Automation
     email: dont@email.me
     password: "{  { admin_password }}"
-  - name: virtualization_automation_admin
+  - username: virtualization_automation_admin
     groups:
       - Virtualization Automation Team
     first_name: Virtualization
     last_name: Automation
     email: dont@email.me
     password: "{  { admin_password }}"
-  - name: security_automation_admin
+  - username: security_automation_admin
     groups:
       - Security Automation Team
     first_name: Security
     last_name: Automation
     email: dont@email.me
     password: "{  { admin_password }}"
-  - name: storage_automation_admin
+  - username: storage_automation_admin
     groups:
       - Storage Automation Team
     first_name: Storage
     last_name: Automation
     email: dont@email.me
     password: "{  { admin_password }}"
-  - name: rhel_automation_admin
+  - username: rhel_automation_admin
     groups:
       - RHEL Automation Team
     first_name: WebApp
     last_name: Automation
     email: dont@email.me
     password: "{  { admin_password }}"
-  - name: automation_admin
+  - username: automation_admin
     groups:
       - Automation Architecture Team
     first_name: Automation
@@ -70,3 +70,21 @@ ah_users:
     email: dont@email.me
     password: "{  { admin_password }}"
     is_superuser: yes
+
+ah_namespaces:
+  - name: network_automation
+    company: "{  { audience }}"
+    email: "network-automation@{  { audience | lower }}.com"
+    avatar_url: http://satellite.lab.msp.redhat.com/pub/network-switch.png
+    description: "{  { audience }} Network Automation"
+    resources: |
+      # Redhat
+      test namespace
+    links:
+      - name: "New_Google"
+        url: "http://www.google.com"
+    groups:
+      - name: system:Network Automation Team
+        object_permissions:
+          - "change_namespace"
+          - "upload_to_namespace"
