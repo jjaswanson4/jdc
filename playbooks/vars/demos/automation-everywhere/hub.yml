@@ -5,7 +5,7 @@ hub_install:
   pg:
     password: "{  { admin_password }}"
 
-ah_hostname: "{  { inventory_hostname }}"
+ah_host: "{  { inventory_hostname }}"
 ah_username: "{  { admin_username }}"
 ah_password: "{  { admin_password }}"
 validate_certs: no
