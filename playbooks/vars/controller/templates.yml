@@ -327,6 +327,7 @@
           - idm-ad
           - aap-aa
           - satellite-aa
+          - automation-everywhere
         required: yes
       - type: text
         question_name: "Demo Audience?"
