@@ -1,0 +1,6 @@
+---
+
+cpus: 4
+memory_mb: 16384
+os: rhel8
+application: general
