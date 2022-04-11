@@ -20,6 +20,8 @@ controller_username: "{  { admin_username }}"
 controller_password: "{  { admin_password }}"
 controller_validate_certs: no
 
+controller_configuration_projects_async_delay: 10
+
 controller_license:
   manifest: /tmp/controller-manifest.zip
 
