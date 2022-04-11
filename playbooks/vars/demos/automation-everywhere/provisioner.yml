@@ -116,27 +116,27 @@ controller_workflows:
           - Demo Provisioner Satellite Credentials
           - Demo Provisioner vCenter Credentials
           - Demo Provisioner Root Account
-  #       success_nodes:
-  #         - Apply Standard Config to Satellite
+        success_nodes:
+          - Apply Standard Config to Hub
         failure_nodes:
           - Send Failure Email About 'Provision Hub'
       - identifier: Send Failure Email About 'Provision Hub'
         unified_job_template: Send Provisioner Email
         extra_data:
           failed_at_step: Provision Hub
-  #     - identifier: Apply Standard Config to Satellite
-  #       unified_job_template: Apply Standard Configuration
-  #       limit: satellite
-  #       credentials:
-  #         - Demo Provisioner Root Account
-  #       success_nodes:
-  #         - Install Red Hat Satellite
-  #       failure_nodes:
-  #         - Send Failure Email About 'Apply Standard Config to Satellite'
-  #     - identifier: Send Failure Email About 'Apply Standard Config to Satellite'
-  #       unified_job_template: Send Provisioner Email
-  #       extra_data:
-  #         failed_at_step: Apply Standard Config to Satellite
+      - identifier: Apply Standard Config to Hub
+        unified_job_template: Apply Standard Configuration
+        limit: Hub
+        credentials:
+          - Demo Provisioner Root Account
+        # success_nodes:
+        #   - Install Red Hat Hub
+        failure_nodes:
+          - Send Failure Email About 'Apply Standard Config to Hub'
+      - identifier: Send Failure Email About 'Apply Standard Config to Hub'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Apply Standard Config to Hub
   #     - identifier: Install Red Hat Satellite
   #       unified_job_template: Install Red Hat Satellite
   #       limit: satellite
@@ -176,42 +176,42 @@ controller_workflows:
           - Demo Provisioner Satellite Credentials
           - Demo Provisioner vCenter Credentials
           - Demo Provisioner Root Account
-        # success_nodes:
-        #   - Apply Standard Config to Controller
+        success_nodes:
+          - Apply Standard Config to Controller
         failure_nodes:
           - Send Failure Email About 'Provision Controller'
       - identifier: Send Failure Email About 'Provision Controller'
         unified_job_template: Send Provisioner Email
         extra_data:
           failed_at_step: Provision Controller
-  #     - identifier: Apply Standard Config to Controller
-  #       unified_job_template: Apply Standard Configuration
-  #       limit: controller
-  #       credentials:
-  #         - Demo Provisioner Root Account
-  #       success_nodes:
-  #         - Install Ansible Controller
-  #       failure_nodes:
-  #         - Send Failure Email About 'Apply Standard Config to Controller'
-  #     - identifier: Send Failure Email About 'Apply Standard Config to Controller'
-  #       unified_job_template: Send Provisioner Email
-  #       extra_data:
-  #         failed_at_step: Apply Standard Config to Controller     
-  #     - identifier: Install Ansible Controller
-  #       unified_job_template: Install Ansible Controller
-  #       limit: controller
-  #       credentials:
-  #         - Demo Provisioner Red Hat Registry Credentials
-  #         - Demo Provisioner Root Account
-  #         - Demo Provisioner Admin Credentials
+      - identifier: Apply Standard Config to Controller
+        unified_job_template: Apply Standard Configuration
+        limit: controller
+        credentials:
+          - Demo Provisioner Root Account
+        success_nodes:
+          - Install Ansible Controller
+        failure_nodes:
+          - Send Failure Email About 'Apply Standard Config to Controller'
+      - identifier: Send Failure Email About 'Apply Standard Config to Controller'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Apply Standard Config to Controller
+      - identifier: Install Ansible Controller
+        unified_job_template: Install Ansible Controller
+        limit: controller
+        credentials:
+          - Demo Provisioner Red Hat Registry Credentials
+          - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
   #       success_nodes:
   #         - Configure Ansible Controller
-  #       failure_nodes:
-  #         - Send Failure Email About 'Install Ansible Controller'
-  #     - identifier: Send Failure Email About 'Install Ansible Controller'
-  #       unified_job_template: Send Provisioner Email
-  #       extra_data:
-  #         failed_at_step: Install Ansible Controller
+        failure_nodes:
+          - Send Failure Email About 'Install Ansible Controller'
+      - identifier: Send Failure Email About 'Install Ansible Controller'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Install Ansible Controller
   #     - identifier: Configure Ansible Controller
   #       unified_job_template: Configure Ansible Controller
   #       limit: controller
