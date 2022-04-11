@@ -48,6 +48,9 @@ collections:
   - name: ansible.controller
   - name: redhat_cop.controller_configuration
 
+  # hub ansible collections
+  - name: redhat_cop.ah_configuration
+
   # sap ansible collections
   - name: sap.rhel
   - name: redhat.sap_install
