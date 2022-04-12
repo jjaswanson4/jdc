@@ -316,7 +316,7 @@ controller_workflows:
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
         success_nodes:
-          - Configure Gitlab
+          - Configure GitLab
         failure_nodes:
           - Send Failure Email About 'Install GitLab'
       - identifier: Send Failure Email About 'Install GitLab'
