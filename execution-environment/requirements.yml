@@ -50,6 +50,7 @@ collections:
 
   # hub ansible collections
   - name: redhat_cop.ah_configuration
+  - name: jjaswanson4.ah_configuration
 
   # sap ansible collections
   - name: sap.rhel
