@@ -17,6 +17,10 @@ demo_prefix: Automation Everywhere Demo
 # Typically this contains a vars file for the provisioner, Satellite, and Controller.
 vars_files_path: "vars/demos/{{ demo }}"
 
+# This is the realitive path for files for this demo.
+# Typically this contains something copied out or uploaded.
+files_files_path: "files/demos/{{ demo }}"
+
 # This is the execution environment used for this demo provisioner.
 # This execution environment will automatically be configured in Controller.
 execution_environment:
