@@ -88,3 +88,8 @@ ah_namespaces:
         object_permissions:
           - "change_namespace"
           - "upload_to_namespace"
+
+ah_collections:
+  - name: ip_address_management
+    namespace: network_automation
+    path: "{  { playbook_dir }}/files/{  { demo }}/network_automation-ip_address_management-1.0.0.tar.gz"
