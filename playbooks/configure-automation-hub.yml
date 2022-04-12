@@ -14,6 +14,10 @@
   tasks:
     - name: upload collections
       jjaswanson4.ah_configuration.ah_collection:
+        ah_host: "{{ ah_host }}"
+        ah_username: "{{ ah_username }}"
+        ah_password: "{{ ah_password }}"
+        ah_validate_certs: "{{ ah_validate_certs }}"
         name: "{{ collection.name }}"
         namespace: "{{ collection.namespace }}"
         path: "{{ collection.path }}"
