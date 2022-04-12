@@ -52,8 +52,16 @@ controller_projects: []
 controller_templates: []
 
 controller_hosts:
-  - name: "provisioned-system-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "{{ audience | lower }}-gitlab.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "Demo {{ demo_uuid }} Inventory"
+    variables:
+      cpus: 4
+      memory_mb: 16384
+  - name: "automation-utils.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    variables:
+      cpus: 2
+      memory_mb: 4096
 
 controller_group_tiers: 1
 
@@ -63,12 +71,8 @@ controller_groups_tier1:
     hosts:
       - "provisioned-system-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
     variables:
-      satellite_url: "https://{  { groups['satellite'][0] }}"
-      satellite_username: "{  { admin_username }}"
-      satellite_password: "{  { admin_password }}"
-      satellite_validate_certs: no
-      satellite_organization: "{  { audience }}"
-      satellite_location: "{  { audience }}"
+      os: rhel8
+      application: general
 
 controller_workflows:
   - name: Provision Automation Everywhere Demo
