@@ -93,3 +93,5 @@ ah_collections:
   - name: ip_address_management
     namespace: network_automation
     path: "files/demos/{  { demo }}/network_automation-ip_address_management-1.0.0.tar.gz"
+    version: 1.0.0
+    auto_approve: yes

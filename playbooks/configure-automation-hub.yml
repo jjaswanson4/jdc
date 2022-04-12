@@ -21,6 +21,8 @@
         name: "{{ collection.name }}"
         namespace: "{{ collection.namespace }}"
         path: "{{ collection.path }}"
+        version: "{{ collection.version | default(omit) }}"
+        auto_approve: "{{ collection.auto_approve }}"
       loop_control:
         loop_var: collection
       loop: "{{ ah_collections }}"
