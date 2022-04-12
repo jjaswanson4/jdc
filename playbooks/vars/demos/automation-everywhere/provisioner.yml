@@ -86,7 +86,7 @@ controller_groups_tier2:
       application: general
       lifecycle_environment: production
       provisioning:
-        host_group: "{  { os }}"
+        host_group: "{  { os }}/vlan146"
         organization: "{  { audience }}"
         location: "{  { audience }}"
         method: bootdisk
