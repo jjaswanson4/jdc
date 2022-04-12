@@ -4,6 +4,8 @@
   hosts:
     - all
   gather_facts: no
+  vars:
+    ansible_connection: local
   tasks:
     - name: run api calls from localhost
       block:
@@ -36,4 +38,4 @@
           loop: "{{ gitlab_projects }}"
           when:
             - gitlab_projects is defined
-      delegate_to: localhost
+#      delegate_to: localhost
