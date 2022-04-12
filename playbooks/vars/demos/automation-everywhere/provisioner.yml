@@ -84,6 +84,15 @@ controller_groups_tier2:
       memory_mb: 4096
       os: rhel8
       application: general
+      provisioning:
+        host_group: "{  { os }}"
+        organization: "{  { audience }}"
+        location: "{  { audience }}"
+        method: bootdisk
+        dns_domain: "{  { demo_uuid }}.{  { base_dns_suffix }}"
+        cpus: "{  { cpus }}"
+        memory_mb: "{  { memory_mb }}"
+        activation_keys: "ak-{  { application }}-{  { os }}-{  { lifecycle_environment }}"
 
 controller_workflows:
   - name: Provision Automation Everywhere Demo
@@ -117,6 +126,8 @@ controller_workflows:
         success_nodes:
           - Provision Automation Hub
           - Provision Controller
+          - Provision GitLab
+          - Provision Automation Utils System
         failure_nodes:
           - Send Failure Email About 'Create DNS Records'
       - identifier: Send Failure Email About 'Create DNS Records'
