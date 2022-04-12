@@ -1,0 +1,24 @@
+---
+
+- name: install prerequisites
+  ansible.builtin.yum:
+    name:
+      - yum-utils
+      - policycoreutils
+      - openssh-server
+      - openssh-clients
+      - postfix
+  register: packages_installed
+
+- name: start/enable services
+  ansible.builtin.systemd:
+    name: "{{ service }}"
+    enabled: yes
+    state: running
+  loop_control:
+    loop_var: service
+  loop:
+    - sshd
+    - postfix
+  when:
+    - packages_installed.changed

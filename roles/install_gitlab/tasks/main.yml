@@ -1,0 +1,10 @@
+---
+
+- name: import pre-tasks
+  ansible.builtin.import_tasks: install-prerequisites.yml
+
+- name: setup gitlab repo
+  ansible.builtin.import_tasks: setup-gitlab-repo.yml
+
+- name: install gitlab
+  ansible.builtin.import_tasks: install-gitlab.yml

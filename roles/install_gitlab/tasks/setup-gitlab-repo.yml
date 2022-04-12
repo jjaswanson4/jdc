@@ -1,0 +1,16 @@
+---
+
+- name: push gitlab repo file
+  ansible.builtin.copy:
+    src: files/gitlab_gitlab-ce.repo
+    dest: /etc/yum.repos.d/gitlab_gitlab-ce.repo
+    owner: root
+    group: root
+    mode: '0644'
+  register: repo_file_pushed
+
+- name: clear yum cache
+  ansible.builtin.shell:
+    cmd: yum clean all
+  when:
+    - repo_file_pushed.changed
