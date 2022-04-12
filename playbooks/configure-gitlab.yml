@@ -15,7 +15,7 @@
             api_url: "{{ gitlab_api_url }}"
             api_username: "{{ gitlab_api_username }}"
             api_password: "{{ gitlab_api_password }}"
-            validate_certs: "{{ gitlab_api_validate_certs }}"
+            validate_certs: no
             name: "{{ group.name }}"
             path: "{{ group.path | default(omit) }}"
             state: "{{ group.state | default('present') }}"
@@ -30,7 +30,7 @@
             api_url: "{{ gitlab_api_url }}"
             api_username: "{{ gitlab_api_username }}"
             api_password: "{{ gitlab_api_password }}"
-            validate_certs: "{{ gitlab_api_validate_certs }}"
+            validate_certs: no
             name: "{{ project.name }}"
             path: "{{ project.path }}"
             group: "{{ project.group | default(omit) }}"
