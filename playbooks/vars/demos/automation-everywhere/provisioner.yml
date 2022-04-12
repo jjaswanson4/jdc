@@ -66,6 +66,10 @@ controller_hosts:
         - name: Network Automation
           path: network_automation
           visibility: public
+      gitlab_projects:
+        - name: IP Address Management
+          path: ip_address_management
+          group: Network Automation
 
   - name: "automation-utils.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "Demo {{ demo_uuid }} Inventory"
