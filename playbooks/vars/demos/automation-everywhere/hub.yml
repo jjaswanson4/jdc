@@ -92,4 +92,4 @@ ah_namespaces:
 ah_collections:
   - name: ip_address_management
     namespace: network_automation
-    path: "{  { playbook_dir }}/files/{  { demo }}/network_automation-ip_address_management-1.0.0.tar.gz"
+    path: "files/{  { demo }}/network_automation-ip_address_management-1.0.0.tar.gz"
