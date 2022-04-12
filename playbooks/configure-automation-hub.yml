@@ -11,3 +11,12 @@
     - redhat_cop.ah_configuration.group
     - redhat_cop.ah_configuration.user
     - redhat_cop.ah_configuration.namespace
+  tasks:
+    - name: upload collections
+      redhat_cop.ah_configuration.ah_collection:
+        name: "{{ collection.ip_address_management }}"
+        namespace: "{{ collection.network_automation }}"
+        path: "{{ collection.path }}"
+      loop_control:
+        loop_var: collection
+      loop: "{{ ah_collections }}"
