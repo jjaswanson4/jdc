@@ -58,7 +58,7 @@ controller_hosts:
   - name: "{{ audience | lower }}-gitlab.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "Demo {{ demo_uuid }} Inventory"
     variables:
-      gitlab_api_url: "https://{  { inventory_hostname }}"
+      gitlab_api_url: "https://{  { inventory_hostname }}/"
       gitlab_api_username: root
       gitlab_api_password: "{  {  admin_password }}"
       gitlab_api_validate_certs: no
