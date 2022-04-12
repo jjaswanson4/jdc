@@ -57,6 +57,16 @@ controller_projects: []
 controller_hosts:
   - name: "{{ audience | lower }}-gitlab.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "Demo {{ demo_uuid }} Inventory"
+    variables:
+      gitlab_api_url: "{  { inventory_hostname }}"
+      gitlab_api_username: root
+      gitlab_api_password: "{  {  admin_password }}"
+      gitlab_api_validate_certs: no
+      gitlab_groups:
+        - name: Network Automation
+          path: network_automation
+          visibility: public
+
   - name: "automation-utils.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "Demo {{ demo_uuid }} Inventory"
 
@@ -101,6 +111,14 @@ controller_templates:
     ask_limit_on_launch: yes
     project: "{{ project }}"
     playbook: playbooks/install-gitlab.yml
+    execution_environment: "{{ execution_environment.name }}"
+    ask_credential_on_launch: yes
+  - name: Configure GitLab
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: "{{ project }}"
+    playbook: playbooks/configure-gitlab.yml
     execution_environment: "{{ execution_environment.name }}"
     ask_credential_on_launch: yes
 
@@ -297,14 +315,28 @@ controller_workflows:
         credentials:
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
-        # success_nodes:
-        #   - Install Gitlab
+        success_nodes:
+          - Configure Gitlab
         failure_nodes:
           - Send Failure Email About 'Install GitLab'
       - identifier: Send Failure Email About 'Install GitLab'
         unified_job_template: Send Provisioner Email
         extra_data:
           failed_at_step: Install GitLab
+      - identifier: Configure GitLab
+        unified_job_template: Configure GitLab
+        limit: gitlab
+        credentials:
+          - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
+        # success_nodes:
+        #   - Send Success Email
+        failure_nodes:
+          - Send Failure Email About 'Configure GitLab'
+      - identifier: Send Failure Email About 'Configure GitLab'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Configure GitLab
 
       - identifier: Provision Automation Utils System
         unified_job_template: Provision Systems
