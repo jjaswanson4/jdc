@@ -9,7 +9,7 @@
       block:
         - name: create GitLab groups
           community.general.gitlab_group:
-            api_url: "{{ gitlab_url }}"
+            api_url: "{{ gitlab_api_url }}"
             api_username: "{{ gitlab_api_username }}"
             api_password: "{{ gitlab_api_password }}"
             validate_certs: "{{ gitlab_api_validate_certs }}"
@@ -24,7 +24,7 @@
             - gitlab_groups is defined
         - name: create GitLab projects
           community.general.gitlab_project:
-            api_url: "{{ gitlab_url }}"
+            api_url: "{{ gitlab_api_url }}"
             api_username: "{{ gitlab_api_username }}"
             api_password: "{{ gitlab_api_password }}"
             validate_certs: "{{ gitlab_api_validate_certs }}"
