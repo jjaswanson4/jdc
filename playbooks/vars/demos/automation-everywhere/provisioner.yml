@@ -53,7 +53,6 @@ controller_credentials: []
 controller_execution_environments: []
 controller_inventories: []
 controller_projects: []
-controller_templates: []
 
 controller_hosts:
   - name: "{{ audience | lower }}-gitlab.{{ demo_uuid }}.{{ base_dns_suffix }}"
@@ -94,6 +93,16 @@ controller_groups_tier2:
         cpus: "{  { cpus }}"
         memory_mb: "{  { memory_mb }}"
         activation_keys: "ak-{  { application }}-{  { os }}-{  { lifecycle_environment }}"
+
+controller_templates:
+  - name: Install GitLab
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: "{{ project }}"
+    playbook: playbooks/install-gitlab.yml
+    execution_environment: "{{ execution_environment.name }}"
+    ask_credential_on_launch: yes
 
 controller_workflows:
   - name: Provision Automation Everywhere Demo
@@ -274,14 +283,29 @@ controller_workflows:
         limit: gitlab
         credentials:
           - Demo Provisioner Root Account
-        # success_nodes:
-        #   - Install Ansible Controller
+        success_nodes:
+          - Install Gitlab
         failure_nodes:
           - Send Failure Email About 'Apply Standard Config to GitLab'
       - identifier: Send Failure Email About 'Apply Standard Config to GitLab'
         unified_job_template: Send Provisioner Email
         extra_data:
           failed_at_step: Apply Standard Config to GitLab
+      - identifier: Install GitLab
+        unified_job_template: Install GitLab
+        limit: gitlab
+        credentials:
+          - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
+        # success_nodes:
+        #   - Install Gitlab
+        failure_nodes:
+          - Send Failure Email About 'Install GitLab'
+      - identifier: Send Failure Email About 'Install GitLab'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Install GitLab
+
       - identifier: Provision Automation Utils System
         unified_job_template: Provision Systems
         limit: 'demo_hosts:!gitlab'
