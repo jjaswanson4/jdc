@@ -1,0 +1,25 @@
+---
+
+- name: configure GitLab
+  hosts:
+    - all
+  gather_facts: no
+  tasks:
+    - name: create GitLab groups
+      community.general.gitlab_group:
+        api_url: "{{ gitlab_url }}"
+        api_username: "{{ gitlab_api_username }}"
+        api_password: "{{ gitlab_api_password }}"
+        validate_certs: "{{ gitlab_api_validate_certs }}"
+        name: "{{ group.name }}"
+        path: "{{ group.path | default(omit) }}"
+        state: "{{ group.state | default('present') }}"
+        visibility: "{{ group.visibility }}"
+      loop_control:
+        loop_var: group
+      loop: "{{ gitlab_groups }}"
+      when:
+        - gitlab_groups is defined
+      delegate_to: localhost
+
+
