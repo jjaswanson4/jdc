@@ -54,23 +54,30 @@ controller_templates: []
 controller_hosts:
   - name: "{{ audience | lower }}-gitlab.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "automation-utils.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+
+controller_group_tiers: 2
+
+controller_groups_tier1:
+  - name: gitlab
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    hosts:
+      - "{{ audience | lower }}-gitlab.{{ demo_uuid }}.{{ base_dns_suffix }}"
     variables:
       cpus: 4
       memory_mb: 16384
-  - name: "automation-utils.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
-    variables:
-      cpus: 2
-      memory_mb: 4096
 
-controller_group_tiers: 1
-
-controller_groups_tier1:
+controller_groups_tier2:
   - name: demo_hosts
     inventory: "Demo {{ demo_uuid }} Inventory"
     hosts:
-      - "provisioned-system-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "automation-utils.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    children:
+      - gitlab
     variables:
+      cpus: 2
+      memory_mb: 4096
       os: rhel8
       application: general
 
@@ -230,7 +237,64 @@ controller_workflows:
   #       unified_job_template: Send Provisioner Email
   #       extra_data:
   #         failed_at_step: Configure Ansible Controller
-
+      - identifier: Provision GitLab
+        unified_job_template: Provision Systems
+        limit: gitlab
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner Satellite Credentials
+          - Demo Provisioner vCenter Credentials
+          - Demo Provisioner Root Account
+        success_nodes:
+          - Apply Standard Config to GitLab
+        failure_nodes:
+          - Send Failure Email About 'Provision GitLab'
+      - identifier: Send Failure Email About 'Provision GitLab'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Provision GitLab
+      - identifier: Apply Standard Config to GitLab
+        unified_job_template: Apply Standard Configuration
+        limit: gitlab
+        credentials:
+          - Demo Provisioner Root Account
+        # success_nodes:
+        #   - Install Ansible Controller
+        failure_nodes:
+          - Send Failure Email About 'Apply Standard Config to GitLab'
+      - identifier: Send Failure Email About 'Apply Standard Config to GitLab'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Apply Standard Config to GitLab
+      - identifier: Provision Automation Utils System
+        unified_job_template: Provision Systems
+        limit: 'demo_hosts:!gitlab'
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner Satellite Credentials
+          - Demo Provisioner vCenter Credentials
+          - Demo Provisioner Root Account
+        success_nodes:
+          - Apply Standard Config to Automation Utils System
+        failure_nodes:
+          - Send Failure Email About 'Provision Automation Utils System'
+      - identifier: Send Failure Email About 'Provision Automation Utils System'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Provision Automation Utils System
+      - identifier: Apply Standard Config to Automation Utils System
+        unified_job_template: Apply Standard Configuration
+        limit: 'demo_hosts:!gitlab'
+        credentials:
+          - Demo Provisioner Root Account
+        # success_nodes:
+        #   - Install Ansible Controller
+        failure_nodes:
+          - Send Failure Email About 'Apply Standard Config to Automation Utils System'
+      - identifier: Send Failure Email About 'Apply Standard Config to Automation Utils System'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Apply Standard Config to Automation Utils System
 
 
 
