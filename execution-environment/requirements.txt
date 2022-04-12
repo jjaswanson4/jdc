@@ -2,3 +2,4 @@ jmespath
 pywinrm
 requests
 pynetbox
+python-gitlab
