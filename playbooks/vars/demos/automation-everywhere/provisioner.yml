@@ -84,6 +84,7 @@ controller_groups_tier2:
       memory_mb: 4096
       os: rhel8
       application: general
+      lifecycle_environment: production
       provisioning:
         host_group: "{  { os }}"
         organization: "{  { audience }}"
