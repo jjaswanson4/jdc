@@ -284,7 +284,7 @@ controller_workflows:
         credentials:
           - Demo Provisioner Root Account
         success_nodes:
-          - Install Gitlab
+          - Install GitLab
         failure_nodes:
           - Send Failure Email About 'Apply Standard Config to GitLab'
       - identifier: Send Failure Email About 'Apply Standard Config to GitLab'
