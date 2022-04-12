@@ -14,7 +14,7 @@
   ansible.builtin.systemd:
     name: "{{ service }}"
     enabled: yes
-    state: running
+    state: started
   loop_control:
     loop_var: service
   loop:
