@@ -84,6 +84,10 @@ controller_groups_tier1:
     variables:
       cpus: 4
       memory_mb: 16384
+      firewall:
+        name: firewalld
+        state: stopped
+        enabled: no
 
 controller_groups_tier2:
   - name: demo_hosts
