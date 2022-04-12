@@ -13,7 +13,7 @@
     - redhat_cop.ah_configuration.namespace
   tasks:
     - name: upload collections
-      redhat_cop.ah_configuration.ah_collection:
+      jjaswanson4.ah_configuration.ah_collection:
         name: "{{ collection.ip_address_management }}"
         namespace: "{{ collection.network_automation }}"
         path: "{{ collection.path }}"
