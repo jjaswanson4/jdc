@@ -7,30 +7,14 @@
   vars:
     ansible_connection: local
     ansible_python_interpreter: "{{ ansible_playbook_python }}"
-  tasks:
-    # - name: create GitLab groups
-    #   community.general.gitlab_group:
-    #     api_url: "{{ gitlab_api_url }}"
-    #     api_username: "{{ gitlab_api_username | default(omit) }}"
-    #     api_password: "{{ gitlab_api_password | default(omit) }}"
-    #     api_token: "{{ gitlab_api_token | default(omit) }}"
-    #     validate_certs: "{{ gitlab_api_validate_certs }}"
-    #     name: "{{ group.name }}"
-    #     # path: "{{ group.path | default(omit) }}"
-    #     # state: "{{ group.state | default('present') }}"
-    #     # visibility: "{{ group.visibility }}"
-    #   loop_control:
-    #     loop_var: group
-    #   loop: "{{ gitlab_groups }}"
-    #   when:
-    #     - gitlab_groups is defined
+  pre_tasks:
     - name: group module doesn't work
       ansible.builtin.uri:
-        url: "{{ gitlab_api_url }}/api/v4/groups/"
-        user: "{{ gitlab_api_username | default(omit) }}"
-        password: "{{ gitlab_api_password | default(omit) }}"
-        force_basic_auth: yes
+        url: "{{ gitlab_api_url }}api/v4/groups/"
+        headers:
+          PRIVATE-TOKEN: "{{ admin_password }}"
         validate_certs: "{{ gitlab_api_validate_certs }}"
+        method: POST
         body_format: json
         body:
           name: "{{ group.name }}"
@@ -41,6 +25,31 @@
       loop: "{{ gitlab_groups }}"
       when:
         - gitlab_groups is defined
+      register: status_code
+      changed_when:
+        - status_code.status | int == 201
+      failed_when:
+        - status_code.status | int != 201
+        - status_code.status | int != 400
+  tasks:
+    # - name: create GitLab groups
+    #   community.general.gitlab_group:
+    #     api_url: "{{ gitlab_api_url }}"
+    #     api_username: "{{ gitlab_api_username | default(omit) }}"
+    #     api_password: "{{ gitlab_api_password | default(omit) }}"
+    #     validate_certs: "{{ gitlab_api_validate_certs }}"
+    #     name: :{{ group.name }}
+    #     path: "{{ group.path | default(omit) }}"
+    #     state: "{{ group.state | default('present') }}"
+    #     visibility: "{{ group.visibility }}"
+    #     description: group1
+    #   loop_control:
+    #     loop_var: group
+    #   loop: "{{ gitlab_groups }}"
+    #   when:
+    #     - gitlab_groups is defined
+    #   delegate_to: localhost
+    
     - name: create GitLab projects
       community.general.gitlab_project:
         api_url: "{{ gitlab_api_url }}"
