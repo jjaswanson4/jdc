@@ -1,9 +1,9 @@
 ---
 
 - name: push gitlab repo file
-  ansible.builtin.copy:
-    src: files/gitlab_gitlab-ce.repo
-    dest: /etc/yum.repos.d/gitlab_gitlab-ce.repo
+  ansible.builtin.template:
+    src: templates/gitlab.repo.j2
+    dest: "/etc/yum.repos.d/gitlab_gitlab-{{ edition_abbreviation }}.repo"
     owner: root
     group: root
     mode: '0644'

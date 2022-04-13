@@ -1,0 +1,6 @@
+---
+
+- name: set CE vars
+  ansible.builtin.set_fact:
+    edition_abbreviation: ce
+    gitlab_package: gitlab-ce

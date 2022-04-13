@@ -1,5 +1,17 @@
 ---
 
+- name: set vars for community edition
+  ansible.builtin.include_tasks:
+    file: set-ce-edition.yml
+  when:
+    - gitlab_edition == 'community'
+    
+- name: set vars for enterprise edition
+  ansible.builtin.include_tasks:
+    file: set-ee-edition.yml
+  when:
+    - gitlab_edition == 'enterprise'
+
 - name: import pre-tasks
   ansible.builtin.import_tasks: install-prerequisites.yml
 

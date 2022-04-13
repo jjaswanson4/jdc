@@ -1,0 +1,23 @@
+[gitlab_gitlab-{{ edition_abbreviation }}]
+name=gitlab_gitlab-{{ edition_abbreviation }}
+baseurl=https://packages.gitlab.com/gitlab/gitlab-{{ edition_abbreviation }}/el/8/$basearch
+repo_gpgcheck=1
+gpgcheck=1
+enabled=1
+gpgkey=https://packages.gitlab.com/gitlab/gitlab-{{ edition_abbreviation }}/gpgkey
+       https://packages.gitlab.com/gitlab/gitlab-{{ edition_abbreviation }}/gpgkey/gitlab-gitlab-{{ edition_abbreviation }}-3D645A26AB9FBD22.pub.gpg
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+metadata_expire=300
+
+[gitlab_gitlab-{{ edition_abbreviation }}-sour{{ edition_abbreviation }}]
+name=gitlab_gitlab-{{ edition_abbreviation }}-sour{{ edition_abbreviation }}
+baseurl=https://packages.gitlab.com/gitlab/gitlab-{{ edition_abbreviation }}/el/8/SRPMS
+repo_gpgcheck=1
+gpgcheck=1
+enabled=1
+gpgkey=https://packages.gitlab.com/gitlab/gitlab-{{ edition_abbreviation }}/gpgkey
+       https://packages.gitlab.com/gitlab/gitlab-{{ edition_abbreviation }}/gpgkey/gitlab-gitlab-{{ edition_abbreviation }}-3D645A26AB9FBD22.pub.gpg
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+metadata_expire=300
