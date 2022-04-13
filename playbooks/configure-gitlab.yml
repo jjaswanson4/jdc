@@ -11,8 +11,9 @@
     - name: create GitLab groups
       community.general.gitlab_group:
         api_url: "{{ gitlab_api_url }}"
-        api_username: "{{ gitlab_api_username }}"
-        api_password: "{{ gitlab_api_password }}"
+        # api_username: "{{ gitlab_api_username }}"
+        # api_password: "{{ gitlab_api_password }}"
+        api_token: "{{ gitlab_api_token }}"
         validate_certs: "{{ gitlab_api_validate_certs }}"
         name: "{{ group.name }}"
         path: "{{ group.path | default(omit) }}"
