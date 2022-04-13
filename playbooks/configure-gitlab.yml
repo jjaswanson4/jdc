@@ -8,22 +8,22 @@
     ansible_connection: local
     ansible_python_interpreter: "{{ ansible_playbook_python }}"
   tasks:
-    - name: create GitLab groups
-      community.general.gitlab_group:
-        api_url: "{{ gitlab_api_url }}"
-        api_username: "{{ gitlab_api_username | default(omit) }}"
-        api_password: "{{ gitlab_api_password | default(omit) }}"
-        api_token: "{{ gitlab_api_token | default(omit) }}"
-        validate_certs: "{{ gitlab_api_validate_certs }}"
-        name: "{{ group.name }}"
-        # path: "{{ group.path | default(omit) }}"
-        # state: "{{ group.state | default('present') }}"
-        # visibility: "{{ group.visibility }}"
-      loop_control:
-        loop_var: group
-      loop: "{{ gitlab_groups }}"
-      when:
-        - gitlab_groups is defined
+    # - name: create GitLab groups
+    #   community.general.gitlab_group:
+    #     api_url: "{{ gitlab_api_url }}"
+    #     api_username: "{{ gitlab_api_username | default(omit) }}"
+    #     api_password: "{{ gitlab_api_password | default(omit) }}"
+    #     api_token: "{{ gitlab_api_token | default(omit) }}"
+    #     validate_certs: "{{ gitlab_api_validate_certs }}"
+    #     name: "{{ group.name }}"
+    #     # path: "{{ group.path | default(omit) }}"
+    #     # state: "{{ group.state | default('present') }}"
+    #     # visibility: "{{ group.visibility }}"
+    #   loop_control:
+    #     loop_var: group
+    #   loop: "{{ gitlab_groups }}"
+    #   when:
+    #     - gitlab_groups is defined
     - name: create GitLab projects
       community.general.gitlab_project:
         api_url: "{{ gitlab_api_url }}"
@@ -32,7 +32,7 @@
         validate_certs: "{{ gitlab_api_validate_certs }}"
         name: "{{ project.name }}"
         path: "{{ project.path }}"
-        group: "{{ project.group | default(omit) }}"
+        #group: "{{ project.group | default(omit) }}"
       loop_control:
         loop_var: project
       loop: "{{ gitlab_projects }}"
