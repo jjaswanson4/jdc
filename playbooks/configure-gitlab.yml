@@ -24,6 +24,23 @@
     #   loop: "{{ gitlab_groups }}"
     #   when:
     #     - gitlab_groups is defined
+    - name: group module doesn't work
+      ansible.builtin.uri:
+        url: "{{ gitlab_api_url }}/api/v4/groups/"
+        user: "{{ gitlab_api_username | default(omit) }}"
+        password: "{{ gitlab_api_password | default(omit) }}"
+        force_basic_auth: yes
+        validate_certs: "{{ gitlab_api_validate_certs }}"
+        body_format: json
+        body:
+          name: "{{ group.name }}"
+          path: "{{ group.path | default(omit) }}"
+          visibility: "{{ group.visibility }}"
+      loop_control:
+        loop_var: group
+      loop: "{{ gitlab_groups }}"
+      when:
+        - gitlab_groups is defined
     - name: create GitLab projects
       community.general.gitlab_project:
         api_url: "{{ gitlab_api_url }}"
@@ -32,7 +49,7 @@
         validate_certs: "{{ gitlab_api_validate_certs }}"
         name: "{{ project.name }}"
         path: "{{ project.path }}"
-        #group: "{{ project.group | default(omit) }}"
+        group: "{{ project.group | default(omit) }}"
       loop_control:
         loop_var: project
       loop: "{{ gitlab_projects }}"
