@@ -64,7 +64,7 @@ controller_hosts:
       gitlab_api_password: "{  {  admin_password }}"
       gitlab_api_validate_certs: no
       gitlab_groups:
-        - name: Network Automation
+        - name: network_automation
           path: network_automation
           visibility: public
       gitlab_projects:

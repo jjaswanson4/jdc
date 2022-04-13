@@ -16,9 +16,9 @@
         api_token: "{{ gitlab_api_token | default(omit) }}"
         validate_certs: "{{ gitlab_api_validate_certs }}"
         name: "{{ group.name }}"
-        path: "{{ group.path | default(omit) }}"
-        state: "{{ group.state | default('present') }}"
-        visibility: "{{ group.visibility }}"
+        # path: "{{ group.path | default(omit) }}"
+        # state: "{{ group.state | default('present') }}"
+        # visibility: "{{ group.visibility }}"
       loop_control:
         loop_var: group
       loop: "{{ gitlab_groups }}"
