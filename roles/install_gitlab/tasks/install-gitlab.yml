@@ -6,3 +6,5 @@
   environment:
     EXTERNAL_URL: "https://{{ inventory_hostname }}"
     GITLAB_ROOT_PASSWORD: "{{ admin_password }}"
+  notify:
+    - setup_api_token
