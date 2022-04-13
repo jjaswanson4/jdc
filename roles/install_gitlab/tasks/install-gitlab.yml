@@ -2,7 +2,7 @@
 
 - name: install gitlab
   ansible.builtin.yum:
-    name: gitlab-ce
+    name: "{{ gitlab_package }}"
   environment:
     EXTERNAL_URL: "https://{{ inventory_hostname }}"
     GITLAB_ROOT_PASSWORD: "{{ admin_password }}"
