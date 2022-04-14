@@ -136,8 +136,7 @@ controller_groups_tier3:
     hosts:
       - "automation-utils.{{ demo_uuid }}.{{ base_dns_suffix }}"
     children:
-      - gitlab
-      - 
+      - source_control
     variables:
       cpus: 2
       memory_mb: 4096
