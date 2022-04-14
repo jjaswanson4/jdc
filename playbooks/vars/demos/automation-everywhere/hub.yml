@@ -81,8 +81,8 @@ ah_namespaces:
       # Redhat
       test namespace
     links:
-      - name: "New_Google"
-        url: "http://www.google.com"
+      - name: Code Repositories
+        url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/network_automation"
     groups:
       - name: Network Automation Team
         object_permissions:
