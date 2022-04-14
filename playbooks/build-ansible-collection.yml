@@ -1,0 +1,9 @@
+---
+
+- name: build an ansible collection
+  hosts:
+    - all
+  gather_facts: no
+  roles:
+    - ../roles/build_ansible_collection
+    
