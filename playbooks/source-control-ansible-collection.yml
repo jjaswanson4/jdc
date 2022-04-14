@@ -1,0 +1,8 @@
+---
+
+- name: source control an ansible collection
+  hosts:
+    - all
+  gather_facts: no
+  roles:
+    - ../roles/source_control_ansible_collection
