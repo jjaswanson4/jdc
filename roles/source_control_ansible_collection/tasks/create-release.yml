@@ -1,0 +1,36 @@
+---
+
+- name: fire API calls from localhost
+  block:
+    - name: find project
+      ansible.builtin.uri:
+        url: "{{ gitlab_api_url }}api/v4/projects/?search={{ collection.display_name | regex_replace(' ', '%20') }}"
+        headers:
+          PRIVATE-TOKEN: "{{ admin_password }}"
+        validate_certs: "{{ gitlab_api_validate_certs }}"
+        method: GET
+      register: projects
+
+    - name: set project ID
+      ansible.builtin.set_fact:
+        project_id: "{{ projects.json[0].id }}"
+
+    - name: create release {{ collection.version }}
+      ansible.builtin.uri:
+        url: "{{ gitlab_api_url }}api/v4/projects/{{ project_id }}/releases"
+        headers:
+          PRIVATE-TOKEN: "{{ admin_password }}"
+        validate_certs: "{{ gitlab_api_validate_certs }}"
+        method: POST
+        body_format: json
+        body:
+          name: "{{ collection.version }}"
+          tag_name: "{{ collection.version }}"
+          ref: main
+      register: create_release
+      changed_when:
+        - create_release.status | int == 201
+      failed_when:
+        - create_release.status | int != 201
+        - create_release.status | int != 409
+  delegate_to: localhost

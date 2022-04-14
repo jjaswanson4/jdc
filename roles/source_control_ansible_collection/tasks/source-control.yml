@@ -1,0 +1,55 @@
+---
+
+- name: check if git repo is initialized
+  ansible.builtin.stat:
+    path: "{{ demo_ansible_collections_working_directory }}/{{ collection.fqcn.split('.')[0] }}/{{ collection.fqcn.split('.')[1] }}/.git"
+  register: git_dir
+
+- name: block of tasks to run when git is not initialized
+  block:
+    - name: init git
+      ansible.builtin.shell:
+        cmd: git init
+        chdir: "{{ demo_ansible_collections_working_directory }}/{{ collection.fqcn.split('.')[0] }}/{{ collection.fqcn.split('.')[1] }}/"
+
+    - name: add remote origin
+      ansible.builtin.shell:
+        cmd: "git remote add origin https://root:{{ admin_password }}@{{ audience | lower }}-gitlab.{{ demo_uuid }}.{{ base_dns_suffix }}/{{ collection.fqcn.split('.')[0] }}/{{ collection.fqcn.split('.')[1] }}.git"
+        chdir: "{{ demo_ansible_collections_working_directory }}/{{ collection.fqcn.split('.')[0] }}/{{ collection.fqcn.split('.')[1] }}/"
+
+    - name: set git user.name
+      ansible.builtin.shell:
+        cmd: "git config user.name {{ collection.git.name }}"
+        chdir: "{{ demo_ansible_collections_working_directory }}/{{ collection.fqcn.split('.')[0] }}/{{ collection.fqcn.split('.')[1] }}/"
+
+    - name: set git user.email
+      ansible.builtin.shell:
+        cmd: "git config user.name {{ collection.git.email }}"
+        chdir: "{{ demo_ansible_collections_working_directory }}/{{ collection.fqcn.split('.')[0] }}/{{ collection.fqcn.split('.')[1] }}/"
+
+    - name: disable git ssl verification
+      ansible.builtin.shell:
+        cmd: git config http.sslVerify false
+        chdir: "{{ demo_ansible_collections_working_directory }}/{{ collection.fqcn.split('.')[0] }}/{{ collection.fqcn.split('.')[1] }}/"
+
+    - name: set branch to 'main'
+      ansible.builtin.shell:
+        cmd: git checkout -b main
+        chdir: "{{ demo_ansible_collections_working_directory }}/{{ collection.fqcn.split('.')[0] }}/{{ collection.fqcn.split('.')[1] }}/"
+
+    - name: add all files
+      ansible.builtin.shell:
+        cmd: git add .
+        chdir: "{{ demo_ansible_collections_working_directory }}/{{ collection.fqcn.split('.')[0] }}/{{ collection.fqcn.split('.')[1] }}/"
+
+    - name: commit all files
+      ansible.builtin.shell:
+        cmd: git commit -m "add collection files"
+        chdir: "{{ demo_ansible_collections_working_directory }}/{{ collection.fqcn.split('.')[0] }}/{{ collection.fqcn.split('.')[1] }}/"
+    
+    - name: push files to source control
+      ansible.builtin.shell:
+        cmd: git push -u origin main
+        chdir: "{{ demo_ansible_collections_working_directory }}/{{ collection.fqcn.split('.')[0] }}/{{ collection.fqcn.split('.')[1] }}/"      
+  when:
+    - not git_dir.stat.exists

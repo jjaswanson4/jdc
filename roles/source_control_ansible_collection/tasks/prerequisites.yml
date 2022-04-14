@@ -1,0 +1,5 @@
+---
+
+- name: ensure git is installed
+  ansible.builtin.yum:
+    name: git
