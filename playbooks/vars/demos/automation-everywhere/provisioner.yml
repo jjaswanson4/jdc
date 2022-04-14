@@ -330,7 +330,7 @@ controller_workflows:
         unified_job_template: Send Provisioner Email
         extra_data:
           failed_at_step: Build Ansible Collections
-      - name: Source Control Ansible Collections
+      - identifier: Source Control Ansible Collections
         unified_job_template: Source Control Ansible Collections
         limit: 'source_control:!gitlab'
         credentials:
