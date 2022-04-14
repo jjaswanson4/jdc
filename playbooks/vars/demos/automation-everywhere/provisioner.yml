@@ -71,11 +71,31 @@ controller_hosts:
         - name: IP Address Management
           path: ip_address_management
           group: network_automation
-
   - name: "automation-utils.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "Demo {{ demo_uuid }} Inventory"
+    variables:
+      demo_ansible_collections:
+        - fqcn: network_automation.ip_address_management
+          workding_directory: /tmp/network_automation/ip_address_management
+          source_control:
+            group:
+              name: Network Automation
+              path: network_automation
+              visibility: public
+            project:
+              name: IP Address Management
+              path: ip_address_management
+              group: network_automation
+          files:
+            - src: files/demos/automation-everywhere/collections/network_automation
+              dest: /tmp/network_automation/
+          templates:
+            - src: templates/demos/automation-everywhere/collection-readme.md.j2
+              dest: /tmp/network_automation/
+            - src: templates/demos/automation-everywhere/galaxy.yml.j2
+              dest: /tmp/network_automation/
 
-controller_group_tiers: 2
+controller_group_tiers: 3
 
 controller_groups_tier1:
   - name: gitlab
@@ -89,14 +109,38 @@ controller_groups_tier1:
         name: firewalld
         state: stopped
         enabled: no
+  
+  - name: source_control
+    hosts:
+      - "automation-utils.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    children:
+      - gitlab
+    vars:
+      demo_ansible_collections_working_directory: /tmp
+      gitlab_api_url: "https://{{ audience | lower }}-gitlab.{{ demo_uuid }}.{{ base_dns_suffix }}/"
+      gitlab_api_username: root
+      gitlab_api_password: "{  { admin_password }}"
+      gitlab_api_validate_certs: no
+      demo_ansible_collections:
+        - fqcn: network_automation.ip_address_management
+          version: 1.0.0
+          display_name: IP Address Management
+          git:
+            name: Network Automation
+            email: network-automation@company.com
+          files: files/demos/automation-everywhere/collections/network_automation/ip_address_management
+          templates:
+            - src: templates/demos/automation-everywhere/galaxy.yml.j2
+              dest: "{  { demo_ansible_collections_working_directory }}/network_automation/ip_address_management/galaxy.yml"    
 
-controller_groups_tier2:
+controller_groups_tier3:
   - name: demo_hosts
     inventory: "Demo {{ demo_uuid }} Inventory"
     hosts:
       - "automation-utils.{{ demo_uuid }}.{{ base_dns_suffix }}"
     children:
       - gitlab
+      - 
     variables:
       cpus: 2
       memory_mb: 4096
