@@ -1,0 +1,9 @@
+---
+
+- name: push collection templates
+  ansible.builtin.template:
+    src: "{{ template.src }}"
+    dest: "{{ template.dest }}"
+  loop_control:
+    loop_var: template
+  loop: "{{ collection.templates }}"

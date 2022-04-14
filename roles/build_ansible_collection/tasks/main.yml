@@ -1,0 +1,18 @@
+---
+
+- name: import pre-tasks
+  ansible.builtin.import_tasks: prerequisites.yml
+
+- name: push collection files out
+  ansible.builtin.include_tasks:
+    file: push-collection-files.yml
+  loop_control:
+    loop_var: collection
+  loop: "{{ demo_ansible_collections }}"
+
+- name: push collection templates out
+  ansible.builtin.include_tasks:
+    file: push-collection-templates.yml
+  loop_control:
+    loop_var: collection
+  loop: "{{ demo_ansible_collections }}"
