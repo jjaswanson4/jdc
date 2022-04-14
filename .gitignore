@@ -8,7 +8,7 @@ scratch
 plugins/README.md
 demo-configuration.yml
 ansible.cfg
-playbooks/files/demos/automation-everywhere/*
+#playbooks/files/demos/automation-everywhere/*
 roles/install_librenms
 roles/test
 jjaswanson4-jdc-*.tar.gz
