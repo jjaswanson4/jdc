@@ -320,7 +320,6 @@ controller_workflows:
           - Configure Automation Hub
         failure_nodes:
           - Send Failure Email About 'Source Control Ansible Collections'
-        all_parents_must_converge: yes
       - identifier: Send Failure Email About 'Source Control Ansible Collections'
         unified_job_template: Send Provisioner Email
         extra_data:
@@ -379,6 +378,7 @@ controller_workflows:
         #   - Send Success Email
         failure_nodes:
           - Send Failure Email About 'Configure Automation Hub'
+        all_parents_must_converge: yes
       - identifier: Send Failure Email About 'Configure Automation Hub'
         unified_job_template: Send Provisioner Email
         extra_data:
