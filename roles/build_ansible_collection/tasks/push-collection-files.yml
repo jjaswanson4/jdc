@@ -5,14 +5,7 @@
     path: "{{ demo_ansible_collections_working_directory }}/{{ collection.fqcn.split('.')[0] }}"
     state: directory
 
-- debug:
-    msg: "{{ collection }}"
-
-- debug:
-    msg: "{{ collection.files }}"
-
 - name: push collection files (recurse)
-  ansible.posix.synchronize:
+  ansible.builtin.copy:
     src: "{{ collection.files }}"
     dest: "{{ demo_ansible_collections_working_directory }}/{{ collection.fqcn.split('.')[0] }}/"
-    recursive: yes
