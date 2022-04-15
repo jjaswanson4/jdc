@@ -108,6 +108,7 @@ controller_groups_tier1:
 
 controller_groups_tier2: 
   - name: source_control
+    inventory: "Demo {{ demo_uuid }} Inventory"
     hosts:
       - "automation-utils.{{ demo_uuid }}.{{ base_dns_suffix }}"
     children:
@@ -339,7 +340,7 @@ controller_workflows:
         success_nodes:
           - Configure Automation Hub
         failure_nodes:
-          - Send Failure Email About 'Build Ansible Collections'
+          - Send Failure Email About 'Source Control Ansible Collections'
         all_parents_must_converge: yes
       - identifier: Send Failure Email About 'Source Control Ansible Collections'
         unified_job_template: Send Provisioner Email
