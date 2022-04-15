@@ -68,27 +68,6 @@ controller_hosts:
           group: network_automation
   - name: "automation-utils.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "Demo {{ demo_uuid }} Inventory"
-    variables:
-      demo_ansible_collections:
-        - fqcn: network_automation.ip_address_management
-          workding_directory: /tmp/network_automation/ip_address_management
-          source_control:
-            group:
-              name: Network Automation
-              path: network_automation
-              visibility: public
-            project:
-              name: IP Address Management
-              path: ip_address_management
-              group: network_automation
-          files:
-            - src: files/demos/automation-everywhere/collections/network_automation
-              dest: /tmp/network_automation/
-          templates:
-            - src: templates/demos/automation-everywhere/collection-readme.md.j2
-              dest: /tmp/network_automation/
-            - src: templates/demos/automation-everywhere/galaxy.yml.j2
-              dest: /tmp/network_automation/
 
 controller_group_tiers: 3
 
