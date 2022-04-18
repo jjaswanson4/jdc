@@ -1,0 +1,13 @@
+---
+
+- name: import download tasks
+  ansible.builtin.import_tasks:
+    file: download-collection.yml
+
+- name: use ansible-galaxy to package collection
+  ansible.builtin.import_tasks:
+    file: package-collection.yml
+
+- name: upload collection to automation hub
+  ansible.builtin.import_tasks:
+    file: upload-collection-to-hub.yml

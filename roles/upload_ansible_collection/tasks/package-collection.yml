@@ -1,0 +1,18 @@
+---
+
+- name: extract downloaded code
+  ansible.builtin.unarchive:
+    src: "{{ downloaded_collection.dest }}"
+    dest: "{{ tmp_dir }}/"
+    remote_src: yes
+
+- name: use ansible-galaxy to build collection
+  ansible.builtin.shell:
+    cmd: ansible-galaxy collection build
+    chdir: "{{ tmp_dir }}/{{ collection.name }}-{{ collection.version }}/"
+  register: extracted_collection
+  changed_when:
+    - "'Created collection' in extracted_collection.stdout"
+  failed_when:
+    - "'Created collection' not in extracted_collection.stdout"
+    - "'already exists' not in extracted_collection.stderr"

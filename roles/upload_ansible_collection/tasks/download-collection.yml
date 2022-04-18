@@ -1,0 +1,10 @@
+---
+
+- name: download collection to tmp location
+  ansible.builtin.get_url:
+    url: "{{ collection.url }}"
+    dest: "{{ tmp_dir }}/{{ collection.namespace }}-{{ collection.name }}-{{ collection.version }}.tar.gz"
+    headers:
+      PRIVATE-TOKEN: "{{ admin_password }}"
+    validate_certs: no
+  register: downloaded_collection

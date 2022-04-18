@@ -1,0 +1,13 @@
+---
+
+- name: upload collections to automation hub
+  jjaswanson4.ah_configuration.ah_collection:
+    ah_host: "{{ ah_host }}"
+    ah_username: "{{ ah_username }}"
+    ah_password: "{{ ah_password }}"
+    ah_verify_ssl: "{{ ah_validate_certs }}"
+    name: "{{ collection.name }}"
+    namespace: "{{ collection.namespace }}"
+    path: "{{ tmp_dir }}/{{ collection.name }}-{{ collection.version }}/{{ collection.namespace }}-{{ collection.name }}-{{ collection.version }}.tar.gz"
+    version: "{{ collection.version | default(omit) }}"
+    auto_approve: "{{ collection.auto_approve }}"
