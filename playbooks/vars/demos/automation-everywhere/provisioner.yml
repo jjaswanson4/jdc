@@ -363,7 +363,6 @@ controller_workflows:
           - Configure Automation Hub
         failure_nodes:
           - Send Failure Email About 'Install Automation Hub'
-        all_parents_must_converge: yes
       - identifier: Send Failure Email About 'Install Automation Hub'
         unified_job_template: Send Provisioner Email
         extra_data:
