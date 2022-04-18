@@ -12,6 +12,17 @@
     - redhat_cop.ah_configuration.user
     - redhat_cop.ah_configuration.namespace
   tasks:
+    - name: include role to upload collection directly from source control
+      ansible.builtin.include_role:
+        name: ../roles/upload_ansible_collection
+      vars:
+        collection: "{{ ansible_collection }}"
+      when:
+        - ansible_collection.url is defined
+      loop_control:
+        loop_var: ansible_collection
+      loop: "{{ ah_collections }}"
+
     - name: upload collections
       jjaswanson4.ah_configuration.ah_collection:
         ah_host: "{{ ah_host }}"
@@ -26,3 +37,5 @@
       loop_control:
         loop_var: collection
       loop: "{{ ah_collections }}"
+      when:
+        - collection.path is defined
