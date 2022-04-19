@@ -1,3 +1,4 @@
 ---
 
-- name: network_automation.ip_address_management
+collections:
+  - name: network_automation.ip_address_management
