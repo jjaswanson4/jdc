@@ -32,8 +32,8 @@ controller_license:
 controller_settings:
   - name: GALAXY_IGNORE_CERTS
     value: "true"
-  - name: GIT_SSL_NO_VERIFY
-    value: "true"
+  - name: AWX_TASK_ENV
+    value: '"GIT_SSL_NO_VERIFY": "True"'
     
 
 controller_organizations:
