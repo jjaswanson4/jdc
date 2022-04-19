@@ -39,8 +39,9 @@ controller_settings:
 
 controller_organizations:
   - name: "{  { audience }}"
-    credentials:
+    galaxy_credentials:
       - "{  { audience }} Automation Hub Credentials"
+      - Ansible Galaxy
 
 controller_credential_types:
   - name: Ansible Controller Credentials
