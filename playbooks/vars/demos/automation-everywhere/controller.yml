@@ -29,6 +29,13 @@ automation_hub:
 controller_license:
   manifest: /tmp/controller-manifest.zip
 
+controller_settings:
+  - name: GALAXY_IGNORE_CERTS
+    value: "true"
+  - name: GIT_SSL_NO_VERIFY
+    value: "true"
+    
+
 controller_organizations:
   - name: "{  { audience }}"
 
