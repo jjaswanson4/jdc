@@ -19,6 +19,13 @@ controller_validate_certs: no
 
 controller_configuration_projects_async_delay: 10
 
+setup_hub_credentials: yes
+automation_hub:
+  url: "https://{  { audience | lower }}-{  { demo }}-hub.{  { demo_uuid }}.{  { base_dns_suffix }}"
+  username: "{  { admin_username }}"
+  password: "{  { admin_password }}"
+  validate_certs: no
+
 controller_license:
   manifest: /tmp/controller-manifest.zip
 
@@ -429,15 +436,22 @@ controller_execution_environments:
 #         - src: 10.15.120.250:/mnt/data01/sap
 #           path: /software
 
-# controller_projects:
-#   - name: "{  { audience }} S4HANA Deployment Code"
-#     organization: "{  { audience }}"
-#     scm_branch: main
-#     scm_type: git
-#     scm_url: https://github.com/jjaswanson4/jdc.git
-#     #wait: yes
+controller_projects:
+  - name: Network Automation Codebase
+    organization: "{  { audience }}"
+    scm_branch: main
+    scm_type: git
+    scm_url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/network_automation/ip_address_management.git"
 
-# controller_templates:
+controller_templates:
+  - name: Get Available IP Address
+    organization: "{  { audience }}"
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: Network Automation Codebase
+    playbook: playbooks/assign-ip-address.yml
+    execution_environment: "{  { controller_execution_environments[0].name }}"
 #   - name: Add Hosts to Controller Inventory
 #     organization: "{  { audience }}"
 #     inventory: Demo Inventory
