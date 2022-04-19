@@ -59,6 +59,7 @@
         name: "{{ project.name }}"
         path: "{{ project.path }}"
         group: "{{ project.group | default(omit) }}"
+        visibility: "{{ project.visibility | default(omit) }}"
       loop_control:
         loop_var: project
       loop: "{{ gitlab_projects }}"
