@@ -66,6 +66,7 @@ controller_hosts:
         - name: IP Address Management
           path: ip_address_management
           group: network_automation
+          visibility: public
   - name: "automation-utils.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "Demo {{ demo_uuid }} Inventory"
 
@@ -435,8 +436,8 @@ controller_workflows:
           - Demo Provisioner vCenter Credentials
           - Demo Provisioner IDM Credentials
           - Demo Provisioner Satellite Credentials
-        success_nodes:
-          - Send Success Email
+        # success_nodes:
+        #   - Send Success Email
         failure_nodes:
           - Send Failure Email About 'Configure Ansible Controller'
         all_parents_must_converge: yes
