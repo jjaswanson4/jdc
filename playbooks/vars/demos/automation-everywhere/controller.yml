@@ -34,7 +34,7 @@ controller_settings:
     value: "true"
   - name: AWX_TASK_ENV
     value: 
-      GIT_SSL_NO_VERIFY: True
+      GIT_SSL_NO_VERIFY: 'True'
     
 
 controller_organizations:
