@@ -1,0 +1,7 @@
+---
+
+- name: grab IP address
+  hosts:
+    - all
+  roles:
+    - network_automation.ip_address_management.assign_address
