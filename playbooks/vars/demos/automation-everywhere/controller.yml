@@ -39,6 +39,8 @@ controller_settings:
 
 controller_organizations:
   - name: "{  { audience }}"
+    credentials:
+      - "{  { audience }} Automation Hub Credentials"
 
 controller_credential_types:
   - name: Ansible Controller Credentials
