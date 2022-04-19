@@ -54,6 +54,7 @@
           loop_control:
             loop_var: role
           loop:
+            - redhat_cop.ah_configuration.settings
             - redhat_cop.controller_configuration.organizations
             - redhat_cop.controller_configuration.credential_types
             - redhat_cop.controller_configuration.credentials
