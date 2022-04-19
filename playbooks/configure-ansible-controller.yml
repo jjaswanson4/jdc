@@ -20,7 +20,31 @@
       when:
         - bootstrap_controller is defined
         - bootstrap_controller
-
+    - name: create credentials for galaxy auth if needed
+      block:
+        - name: grab token from automation hub
+          ansible.builtin.uri:
+            url: "{{ automation_hub.url }}/api/galaxy/v3/auth/token/"
+            validate_certs: "{{ automation_hub.validate_certs | default('no') }}"
+            user: "{{ automation_hub.username }}"
+            password: "{{ automation_hub.password }}"
+            force_basic_auth: yes
+            method: POST
+          register: automation_hub_token
+        - name: create credential in ansible controller
+          ansible.builtin.include_role:
+            name: redhat_cop.controller_configuration.credentials
+          vars:
+            controller_credentials:
+              - name: "{{ audience }} Automation Hub Credentials"
+                organization: Default
+                credential_type: Ansible Galaxy/Automation Hub API Token
+                inputs:
+                  url: "{{ automation_hub.url }}"
+                  token: "{{ automation_hub_token.json.token }}"
+      when:
+        - setup_hub_credentials is defined
+        - setup_hub_credentials
   tasks:
     - name: ansible controller configuration block
       block:
