@@ -88,10 +88,26 @@ ah_namespaces:
         object_permissions:
           - "change_namespace"
           - "upload_to_namespace"
+  - name: cmdb_automation
+    company: "{  { audience }}"
+    email: "cmdb-automation@{  { audience | lower }}.com"
+    avatar_url: http://satellite.lab.msp.redhat.com/pub/cmdb-hi.png
+    description: "{  { audience }} Network Automation"
+    resources: |
+      # Redhat
+      test namespace
+    links:
+      - name: Code Repositories
+        url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/cmdb_automation"
 
 ah_collections:
   - name: ip_address_management
     namespace: network_automation
     url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/network_automation/ip_address_management/-/archive/1.0.0/ip_address_management-1.0.0.tar.gz"
+    version: 1.0.0
+    auto_approve: yes
+  - name: manage_records
+    namespace: cmdb_automation
+    url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/network_automation/ip_address_management/-/archive/1.0.0/manage_records-1.0.0.tar.gz"
     version: 1.0.0
     auto_approve: yes
