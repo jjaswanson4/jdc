@@ -312,7 +312,6 @@ controller_templates:
     ask_limit_on_launch: yes
     project: Network Automation | IP Address Management
     playbook: playbooks/assign-ip-address.yml
-    execution_environment: "{  { controller_execution_environments[0].name }}"
   - name: Update CMDB Records
     organization: "{  { audience }}"
     inventory: Demo Inventory
@@ -320,7 +319,6 @@ controller_templates:
     ask_limit_on_launch: yes
     project: CMDB Automation | Record Management
     playbook: playbooks/manage-cmdb-records.yml
-    execution_environment: "{  { controller_execution_environments[0].name }}"
   - name: Create DNS Records
     organization: "{  { audience }}"
     inventory: Demo Inventory
@@ -328,7 +326,6 @@ controller_templates:
     ask_limit_on_launch: yes
     project: Network Automation | DNS Record Management
     playbook: playbooks/create-dns-records.yml
-    execution_environment: "{  { controller_execution_environments[0].name }}"
   - name: Send Provisioner Email
     organization: "{  { audience }}"
     inventory: Demo Inventory
@@ -336,7 +333,6 @@ controller_templates:
     project: Automation Utilities
     allow_simultaneous: yes
     playbook: playbooks/send-email.yml
-    execution_environment: "{  { controller_execution_environments[0].name }}"
     ask_variables_on_launch: yes
 
 controller_workflows:
