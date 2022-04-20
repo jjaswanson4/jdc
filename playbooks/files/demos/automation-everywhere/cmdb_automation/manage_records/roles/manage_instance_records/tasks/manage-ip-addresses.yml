@@ -1,0 +1,35 @@
+---
+
+- name: run tasks from {{ delegate_host }}
+  block:
+    - name: request IP addresses from netbox
+      netbox.netbox.netbox_ip_address:
+        netbox_url: "{{ netbox_url }}"
+        netbox_token: "{{ netbox_token }}"
+        validate_certs: "{{ (netbox_validate_certs | bool) | default(omit) }}"
+        data:
+          prefix: "{{ network_prefix }}"
+          assigned_object:
+            virtual_machine: "{{ inventory_hostname }}"
+            name: ens192
+          dns_name: "{{ inventory_hostname }}"
+          tenant: "{{ demo_uuid }}"
+        state: new
+      register: allocated_ip_address
+    - name: request IP address for VIPs
+      netbox.netbox.netbox_ip_address:
+        netbox_url: "{{ netbox_url }}"
+        netbox_token: "{{ netbox_token }}"
+        validate_certs: "{{ (netbox_validate_certs | bool) | default(omit) }}"
+        data:
+          prefix: "{{ network_prefix }}"
+          dns_name: "{{ virtual_ip.dns_record }}"
+          assigned_object:
+            virtual_machine: "{{ inventory_hostname }}"
+          tenant: "{{ demo_uuid }}"
+          role: VIP
+        state: new
+      register: allocated_vip
+      when:
+        - virtual_ip is defined
+  delegate_to: "{{ delegate_host }}"
