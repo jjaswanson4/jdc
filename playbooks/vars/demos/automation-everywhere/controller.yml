@@ -283,16 +283,21 @@ controller_groups_tier2:
 
 
 controller_projects:
-  - name: Network Automation Codebase
+  - name: Network Automation | IP Address Management
     organization: "{  { audience }}"
     scm_branch: main
     scm_type: git
     scm_url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/network_automation/ip_address_management.git"
-  - name: CMDB Automation Codebase
+  - name: CMDB Automation | Record Management
     organization: "{  { audience }}"
     scm_branch: main
     scm_type: git
     scm_url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/cmdb_automation/manage_records.git"
+  - name: Network Automation | DNS Record Management
+    organization: "{  { audience }}"
+    scm_branch: main
+    scm_type: git
+    scm_url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/network_automation/manage_dns_records.git"
 
 controller_templates:
   - name: Get Available IP Address
@@ -300,169 +305,25 @@ controller_templates:
     inventory: Demo Inventory
     ask_inventory_on_launch: yes
     ask_limit_on_launch: yes
-    project: Network Automation Codebase
+    project: Network Automation | IP Address Management
     playbook: playbooks/assign-ip-address.yml
     execution_environment: "{  { controller_execution_environments[0].name }}"
-  - name: Get Available IP Address
+  - name: Update CMDB Records
     organization: "{  { audience }}"
     inventory: Demo Inventory
     ask_inventory_on_launch: yes
     ask_limit_on_launch: yes
-    project: Network Automation Codebase
-    playbook: playbooks/assign-ip-address.yml
+    project: CMDB Automation | Record Management
+    playbook: playbooks/manage-cmdb-records.yml
     execution_environment: "{  { controller_execution_environments[0].name }}"
-#   - name: Add Hosts to Controller Inventory
-#     organization: "{  { audience }}"
-#     inventory: Demo Inventory
-#     project: "{  { controller_projects[0].name }}"
-#     playbook: playbooks/add-hosts-to-controller.yml
-#     execution_environment: "{  { controller_execution_environments[0].name }}"
-#     credentials:
-#       - Ansible Controller Credentials
-#     extra_vars:
-#       controller_hosts:
-#         - name: "sapddapp1.{  { demo_uuid }}.{  { base_dns_suffix }}"
-#           inventory: "{  { audience }} SAP Infrastructure"
-#         - name: "sapddhdb1.{  { demo_uuid }}.{  { base_dns_suffix }}"
-#           inventory: "{  { audience }} SAP Infrastructure"
-#           variables:
-#             virtual_ip:
-#               dns_record: "sapddhdb.{  { demo_uuid }}.{  { base_dns_suffix }}"
-#         - name: "sapddhdb2.{  { demo_uuid }}.{  { base_dns_suffix }}"
-#           inventory: "{  { audience }} SAP Infrastructure"
-#       controller_groups:
-#         - name: primary
-#           inventory: "{  { audience }} SAP Infrastructure"
-#           hosts:
-#             - "sapddhdb1.{  { demo_uuid }}.{  { base_dns_suffix }}"
-#         - name: secondary
-#           inventory: "{  { audience }} SAP Infrastructure"
-#           hosts:            
-#             - "sapddhdb2.{  { demo_uuid }}.{  { base_dns_suffix }}"
-#         - name: netweaver
-#           inventory: "{  { audience }} SAP Infrastructure"
-#           hosts:
-#             - "sapddapp1.{  { demo_uuid }}.{  { base_dns_suffix }}"
-#         - name: production
-#           inventory: "{  { audience }} SAP Infrastructure"
-#           hosts:
-#             - "sapddhdb1.{  { demo_uuid }}.{  { base_dns_suffix }}"
-#             - "sapddhdb2.{  { demo_uuid }}.{  { base_dns_suffix }}"
-#             - "sapddapp1.{  { demo_uuid }}.{  { base_dns_suffix }}"
-#   - name: Manage CMDB Records
-#     organization: "{  { audience }}"
-#     ask_inventory_on_launch: yes
-#     inventory: Demo Inventory
-#     project: "{  { controller_projects[0].name }}"
-#     allow_simultaneous: yes
-#     playbook: playbooks/manage-cmdb-records.yml
-#     execution_environment: "{{ controller_execution_environments[0].name }}"
-#     ask_credential_on_launch: yes
-#     ask_variables_on_launch: yes
-#     ask_limit_on_launch: yes
-#   - name: Manage DNS Records
-#     organization: "{  { audience }}"
-#     ask_inventory_on_launch: yes
-#     inventory: Demo Inventory
-#     project: "{  { controller_projects[0].name }}"
-#     allow_simultaneous: yes
-#     playbook: playbooks/manage-dns-records.yml
-#     execution_environment: "{{ controller_execution_environments[0].name }}"
-#     ask_credential_on_launch: yes
-#     ask_variables_on_launch: yes
-#     ask_limit_on_launch: yes
-#   - name: Provision Systems
-#     organization: "{  { audience }}"
-#     ask_inventory_on_launch: yes
-#     inventory: Demo Inventory
-#     project: "{  { controller_projects[0].name }}"
-#     allow_simultaneous: yes
-#     playbook: playbooks/provision-systems.yml
-#     execution_environment: "{  { controller_execution_environments[0].name }}"
-#     ask_credential_on_launch: yes
-#     ask_limit_on_launch: yes
-#     ask_variables_on_launch: yes
-#     extra_vars:
-#       run_additional_roles: no
-#   - name: Preconfigure for SAP
-#     organization: "{  { audience }}"
-#     ask_inventory_on_launch: yes
-#     inventory: Demo Inventory
-#     project: "{  { controller_projects[0].name }}"
-#     allow_simultaneous: yes
-#     playbook: playbooks/sap-preconfigure.yml
-#     execution_environment: "{  { controller_execution_environments[0].name }}"
-#     ask_credential_on_launch: yes
-#     ask_limit_on_launch: yes
-#   - name: Preconfigure for HANA
-#     organization: "{  { audience }}"
-#     ask_inventory_on_launch: yes
-#     inventory: Demo Inventory
-#     ask_limit_on_launch: yes
-#     project: "{  { controller_projects[0].name }}"
-#     allow_simultaneous: yes
-#     playbook: playbooks/hana-preconfigure.yml
-#     execution_environment: "{  { controller_execution_environments[0].name }}"
-#     ask_credential_on_launch: yes
-#   - name: Preconfigure for Netweaver
-#     organization: "{  { audience }}"
-#     ask_inventory_on_launch: yes
-#     inventory: Demo Inventory
-#     ask_limit_on_launch: yes
-#     project: "{  { controller_projects[0].name }}"
-#     allow_simultaneous: yes
-#     playbook: playbooks/netweaver-preconfigure.yml
-#     execution_environment: "{  { controller_execution_environments[0].name }}"
-#     ask_credential_on_launch: yes
-#   - name: Install SAP HANA
-#     organization: "{  { audience }}"
-#     ask_inventory_on_launch: yes
-#     inventory: Demo Inventory
-#     ask_limit_on_launch: yes
-#     project: "{  { controller_projects[0].name }}"
-#     allow_simultaneous: yes
-#     playbook: playbooks/deploy-hana.yml
-#     execution_environment: "{  { controller_execution_environments[0].name }}"
-#     ask_credential_on_launch: yes
-#   - name: Configure HSR and Pacemaker
-#     organization: "{  { audience }}"
-#     inventory: Demo Inventory
-#     ask_inventory_on_launch: yes
-#     ask_limit_on_launch: yes
-#     project: "{  { controller_projects[0].name }}"
-#     allow_simultaneous: yes
-#     playbook: playbooks/setup-hsr-pacemaker.yml
-#     execution_environment: "{  { controller_execution_environments[0].name }}"
-#     ask_credential_on_launch: yes
-#   - name: Install Netweaver
-#     organization: "{  { audience }}"
-#     ask_inventory_on_launch: yes
-#     inventory: Demo Inventory
-#     ask_limit_on_launch: yes
-#     project: "{  { controller_projects[0].name }}"
-#     allow_simultaneous: yes
-#     playbook: playbooks/install-s4.yml
-#     execution_environment: "{  { controller_execution_environments[0].name }}"
-#     ask_credential_on_launch: yes
-#   - name: Reinstate HSR
-#     organization: "{  { audience }}"
-#     ask_inventory_on_launch: yes
-#     inventory: Demo Inventory
-#     ask_limit_on_launch: yes
-#     project: "{  { controller_projects[0].name }}"
-#     allow_simultaneous: yes
-#     playbook: playbooks/reinstate-hsr.yml
-#     execution_environment: "{  { controller_execution_environments[0].name }}"
-#     ask_credential_on_launch: yes
-#   - name: Send Provisioner Email
-#     organization: "{  { audience }}"
-#     inventory: Demo Inventory
-#     limit: localhost
-#     project: "{  { controller_projects[0].name }}"
-#     allow_simultaneous: yes
-#     playbook: playbooks/send-email.yml
-#     execution_environment: "{  { controller_execution_environments[0].name }}"
-#     ask_variables_on_launch: yes
+  - name: Create DNS Records
+    organization: "{  { audience }}"
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: Network Automation | DNS Record Management
+    playbook: playbooks/create-dns-records.yml
+    execution_environment: "{  { controller_execution_environments[0].name }}"
 
 # controller_workflows:
 #   - name: Provision S/4HANA SID
