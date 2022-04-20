@@ -359,7 +359,7 @@ controller_workflows:
           question_name: "How Many Instnaces Should Be Provisioned?"
           variable: num_instances
           required: yes
-          default: 1
+          default: '1'
         - type: multiplechoice
           question_name: "What Size Instances Are Required?"
           variable: demo
