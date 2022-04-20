@@ -1,40 +1,43 @@
 ---
 
-- name: define conditional var
-  ansible.builtin.set_fact:
-    cmdb_record_state: present
-  when:
-    - cmdb_record_state is not defined
+- debug:
+    msg: "hello world"
 
-- name: get auth token for netbox
-  ansible.builtin.uri:
-    url: "{{ netbox_url }}/api/users/tokens/provision/"
-    validate_certs: "{{ netbox_validate_certs | default(omit) }}"
-    method: POST
-    status_code: 201
-    body_format: json
-    body:
-      username: "{{ netbox_username }}"
-      password: "{{ netbox_password }}"
-  register: netbox_auth_token_raw
-  throttle: 5
-  delegate_to: "{{ delegate_host }}" 
+# - name: define conditional var
+#   ansible.builtin.set_fact:
+#     cmdb_record_state: present
+#   when:
+#     - cmdb_record_state is not defined
 
-- name: set netbox token fact
-  ansible.builtin.set_fact:
-    netbox_token: "{{ netbox_auth_token_raw.json.key }}"
+# - name: get auth token for netbox
+#   ansible.builtin.uri:
+#     url: "{{ netbox_url }}/api/users/tokens/provision/"
+#     validate_certs: "{{ netbox_validate_certs | default(omit) }}"
+#     method: POST
+#     status_code: 201
+#     body_format: json
+#     body:
+#       username: "{{ netbox_username }}"
+#       password: "{{ netbox_password }}"
+#   register: netbox_auth_token_raw
+#   throttle: 5
+#   delegate_to: "{{ delegate_host }}" 
 
-- import_tasks: manage-vm-records.yml
+# - name: set netbox token fact
+#   ansible.builtin.set_fact:
+#     netbox_token: "{{ netbox_auth_token_raw.json.key }}"
 
-- name: include tasks to get IP address
-  ansible.builtin.include_tasks:
-    file: manage-ip-addresses.yml
-  when:
-    - vm_record_created.changed
-    - cmdb_record_state == 'present'
+# - import_tasks: manage-vm-records.yml
 
-- name: update host record with ip address
-  ansible.builtin.include_tasks:
-    file: manage-vm-records.yml
-  when:
-    - allocated_ip_address.ip_address is defined
+# - name: include tasks to get IP address
+#   ansible.builtin.include_tasks:
+#     file: manage-ip-addresses.yml
+#   when:
+#     - vm_record_created.changed
+#     - cmdb_record_state == 'present'
+
+# - name: update host record with ip address
+#   ansible.builtin.include_tasks:
+#     file: manage-vm-records.yml
+#   when:
+#     - allocated_ip_address.ip_address is defined
