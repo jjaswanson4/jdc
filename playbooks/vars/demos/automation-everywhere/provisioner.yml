@@ -103,13 +103,33 @@ controller_groups_tier2:
         - fqcn: network_automation.ip_address_management
           version: 1.0.0
           display_name: IP Address Management
+          description: A collection of automation for IP address management
+          tags:
+            - network
+            - ip_address
+            - ipv4
           git:
             name: Network Automation
             email: network-automation@company.com
           files: files/demos/automation-everywhere/collections/network_automation/ip_address_management
           templates:
             - src: templates/demos/automation-everywhere/galaxy.yml.j2
-              dest: "{  { demo_ansible_collections_working_directory }}/network_automation/ip_address_management/galaxy.yml"    
+              dest: "{  { demo_ansible_collections_working_directory }}/network_automation/ip_address_management/galaxy.yml"
+        - fqcn: cmdb_automation.manage_records
+          version: 1.0.0
+          display_name: CMDB Instance Record Management
+          description: A collection for managing CDMB records via automation
+          tags:
+            - netbox
+            - cmdb
+            - instance_records
+          git:
+            name: CMDB Automation
+            email: cmdb-automation@company.com
+          files: files/demos/automation-everywhere/collections/cmdb_automation/manage_records
+          templates:
+            - src: templates/demos/automation-everywhere/galaxy.yml.j2
+              dest: "{  { demo_ansible_collections_working_directory }}/cmdb_automation/manage_records/galaxy.yml"  
 
 controller_groups_tier3:
   - name: demo_hosts
