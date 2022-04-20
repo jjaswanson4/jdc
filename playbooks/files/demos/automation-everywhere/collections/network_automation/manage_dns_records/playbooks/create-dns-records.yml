@@ -1,0 +1,7 @@
+---
+
+- name: create DNS records
+  hosts:
+    - all
+  roles:
+    - network_automation.manage_dns_records.update_dns
