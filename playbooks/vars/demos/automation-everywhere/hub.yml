@@ -111,3 +111,8 @@ ah_collections:
     url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/cmdb_automation/manage_records/-/archive/1.0.0/manage_records-1.0.0.tar.gz"
     version: 1.0.0
     auto_approve: yes
+  - name: update_dns
+    namespace: network_automation
+    url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/network_automation/update_dns/-/archive/1.0.0/manage_records-1.0.0.tar.gz"
+    version: 1.0.0
+    auto_approve: yes
