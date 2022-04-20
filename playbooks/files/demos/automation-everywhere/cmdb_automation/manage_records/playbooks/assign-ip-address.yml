@@ -1,0 +1,7 @@
+---
+
+- name: manage CMDB records
+  hosts:
+    - all
+  roles:
+    - cmdb_automation.manage_records.manage_instance_records
