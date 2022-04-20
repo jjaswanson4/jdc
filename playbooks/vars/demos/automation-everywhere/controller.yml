@@ -288,8 +288,21 @@ controller_projects:
     scm_branch: main
     scm_type: git
     scm_url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/network_automation/ip_address_management.git"
+  - name: CMDB Automation Codebase
+    organization: "{  { audience }}"
+    scm_branch: main
+    scm_type: git
+    scm_url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/cmdb_automation/manage_records.git"
 
 controller_templates:
+  - name: Get Available IP Address
+    organization: "{  { audience }}"
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: Network Automation Codebase
+    playbook: playbooks/assign-ip-address.yml
+    execution_environment: "{  { controller_execution_environments[0].name }}"
   - name: Get Available IP Address
     organization: "{  { audience }}"
     inventory: Demo Inventory
