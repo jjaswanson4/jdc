@@ -113,6 +113,6 @@ ah_collections:
     auto_approve: yes
   - name: manage_dns_records
     namespace: network_automation
-    url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/network_automation/manage_dns_records/-/archive/1.0.0/manage_records-1.0.0.tar.gz"
+    url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/network_automation/manage_dns_records/-/archive/1.0.0/manage_dns_records-1.0.0.tar.gz"
     version: 1.0.0
     auto_approve: yes
