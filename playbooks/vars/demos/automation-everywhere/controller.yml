@@ -268,21 +268,26 @@ controller_inventories:
       ignore_virtual_disk_errors: yes
       remove_cdrom: no
 
-controller_group_tiers: 2
+controller_hosts:
+  - name: localhost
+    inventory: "{  { audience }} Infrastructure"
+    variables:
+      ansible_connection: local
+
+controller_group_tiers: 1
 controller_groups_tier1:
   - name: production
     inventory: "{  { audience }} Infrastructure"
     variables:
       lifecycle_environment: production
 
-controller_groups_tier2:
-  - name: dummy_group
-    inventory: "{  { audience }} Infrastructure"
-    variables:
-      lifecycle_environment: production  
-
 
 controller_projects:
+  - name: Automation Utilities
+    organization: "{  { audience }}"
+    scm_branch: main
+    scm_type: git
+    scm_url: https://github.com/jjaswanson4/jdc.git
   - name: Network Automation | IP Address Management
     organization: "{  { audience }}"
     scm_branch: main
@@ -324,244 +329,83 @@ controller_templates:
     project: Network Automation | DNS Record Management
     playbook: playbooks/create-dns-records.yml
     execution_environment: "{  { controller_execution_environments[0].name }}"
+  - name: Send Provisioner Email
+    organization: "{{ controller_organization }}"
+    inventory: Demo Inventory
+    limit: localhost
+    project: Automation Utilities
+    allow_simultaneous: yes
+    playbook: playbooks/send-email.yml
+    execution_environment: "{  { controller_execution_environments[0].name }}"
+    ask_variables_on_launch: yes
 
-# controller_workflows:
-#   - name: Provision S/4HANA SID
-#     organization: "{  { audience }}"
-#     state: "{{ controller_state | default('present') }}"
-#     inventory: "{  { audience }} SAP Infrastructure"
-#     extra_vars:
-#       company: "{  { audience }}"
-#       demo_uuid: "{  { demo_uuid }}"
-#       base_dns_suffix: "{  { base_dns_suffix }}"
-#       provisioner: "{  { provisioner }}"
-#       provisioner_email: "{  { provisioner_email }}"
-#     survey_enabled: yes
-#     survey:
-#       name: ''
-#       description: ''
-#       spec:
-#         - type: text
-#           question_name: "What is the desired SAP System Identification (SID)?"
-#           variable: sid
-#           required: yes
-#           default: DS4
-#         - type: text
-#           question_name: "What is the SAR file name?"
-#           variable: sap_hana_deployment_bundle_sar_file_name
-#           required: yes
-#           default: IMDB_SERVER20_046_0-80002031.SAR
-#         - type: text
-#           question_name: "What is the name of the SAPCAR file?"
-#           variable: sap_hana_deployment_sapcar_file_name
-#           required: yes
-#           default: SAPCAR_1010-70006178.EXE
-#         - type: text
-#           question_name: "What is the HANA env type?"
-#           variable: sap_hana_deployment_hana_env_type
-#           required: yes
-#           default: development
-#         - type: text
-#           question_name: "What is the HANA instance number?"
-#           variable: sap_hana_deployment_hana_instance_number
-#           required: yes
-#           default: "00"
-#         - type: text
-#           question_name: "What is the desired S4HANA product?"
-#           variable: sap_s4hana_deployment_product_id
-#           required: yes
-#           default: "NW_ABAP_OneHost:S4HANA1909.CORE.HDB.ABAP"
-#         - type: text
-#           question_name: "What is the S4HANA SAPCAR file name?"
-#           variable: sap_s4hana_deployment_sapcar_file_name
-#           required: yes
-#           default: SAPCAR_1010-70006178.EXE
-#         - type: text
-#           question_name: "What is the S4HANA swpm file name?"
-#           variable: sap_s4hana_deployment_swpm_sar_file_name
-#           required: yes
-#           default: SWPM20SP04_6-80003424.SAR
-#         - type: text
-#           question_name: "How many deployment parallel jobs should run?"
-#           variable: sap_s4hana_deployment_parallel_jobs_nr
-#           required: yes
-#           default: "30"
-#         - type: text
-#           question_name: "What is the S4HANA deployment igs file name?"
-#           variable: sap_s4hana_deployment_igs_file_name
-#           required: yes
-#           default: igsexe_9-80003187.sar
-#         - type: text
-#           question_name: "What is the S4HANA deployment igs helper file name?"
-#           variable: sap_s4hana_deployment_igs_helper_file_name
-#           required: yes
-#           default: igshelper_17-10010245.sar
-#         - type: text
-#           question_name: "What is the S4HANA deployment kernel dependent file name?"
-#           variable: sap_s4hana_deployment_kernel_dependent_file_name
-#           required: yes
-#           default: SAPEXEDB_201-80003385.SAR
-#         - type: text
-#           question_name: "What is the S4HANA deployment kernel independent file name?"
-#           variable: sap_s4hana_deployment_kernel_independent_file_name
-#           required: yes
-#           default: SAPEXE_201-80003386.SAR
-#     simplified_workflow_nodes:
-#       - identifier: Add Hosts to Controller Inventory
-#         unified_job_template: Add Hosts to Controller Inventory
-#         success_nodes:
-#           - Create CMDB Records
-#         failure_nodes:
-#           - Send Failure Email About 'Add Hosts to Controller Inventory'
-#       - identifier: Send Failure Email About 'Add Hosts to Controller Inventory'
-#         unified_job_template: Send Provisioner Email
-#         extra_data:
-#           failed_at_step: Add Hosts to Controller Inventory
-#       - identifier: Create CMDB Records
-#         unified_job_template: Manage CMDB Records
-#         limit: s4hana
-#         credentials:
-#           - Netbox Credentials
-#           - vCenter Credentials
-#         success_nodes:
-#           - Create DNS Records
-#         failure_nodes:
-#           - Send Failure Email About 'Create CMDB Records'
-#       - identifier: Send Failure Email About 'Create CMDB Records'
-#         unified_job_template: Send Provisioner Email
-#         extra_data:
-#           failed_at_step: Create CMDB Records
-#       - identifier: Create DNS Records
-#         unified_job_template: Manage DNS Records
-#         limit: s4hana
-#         credentials:
-#           - Netbox Credentials
-#           - IDM Credentials
-#         success_nodes:
-#           - Provision SAP Systems
-#         failure_nodes:
-#           - Send Failure Email About 'Create DNS Records'
-#       - identifier: Send Failure Email About 'Create DNS Records'
-#         unified_job_template: Send Provisioner Email
-#         extra_data:
-#           failed_at_step: Create DNS Records
-#       - identifier: Provision SAP Systems
-#         unified_job_template: Provision Systems
-#         limit: s4hana
-#         credentials:
-#           - Netbox Credentials
-#           - Satellite Credentials
-#           - vCenter Credentials
-#           - Root Credentials
-#         success_nodes:
-#           - Preconfigure for SAP
-#         failure_nodes:
-#           - Send Failure Email About 'Provision SAP Systems'
-#       - identifier: Send Failure Email About 'Provision SAP Systems'
-#         unified_job_template: Send Provisioner Email
-#         extra_data:
-#           failed_at_step: Provision SAP Systems   
-#       - identifier: Preconfigure for SAP
-#         unified_job_template: Preconfigure for SAP
-#         limit: s4hana
-#         credentials:
-#           - Root Credentials
-#         success_nodes:
-#           - Preconfigure for HANA
-#           - Preconfigure for Netweaver
-#         failure_nodes:
-#           - Send Failure Email About 'Preconfigure for SAP'
-#       - identifier: Send Failure Email About 'Preconfigure for SAP'
-#         unified_job_template: Send Provisioner Email
-#         extra_data:
-#           failed_at_step: Preconfigure for SAP
-#       - identifier: Preconfigure for HANA
-#         unified_job_template: Preconfigure for HANA
-#         limit: hana
-#         credentials:
-#           - Root Credentials
-#         success_nodes:
-#           - Install SAP HANA
-#         failure_nodes:
-#           - Send Failure Email About 'Preconfigure for HANA'
-#       - identifier: Send Failure Email About 'Preconfigure for HANA'
-#         unified_job_template: Send Provisioner Email
-#         extra_data:
-#           failed_at_step: Preconfigure for HANA   
-#       - identifier: Preconfigure for Netweaver
-#         unified_job_template: Preconfigure for Netweaver
-#         limit: netweaver
-#         credentials:
-#           - Root Credentials
-#         success_nodes:
-#           - Install Netweaver
-#         failure_nodes:
-#           - Send Failure Email About 'Preconfigure for Netweaver'
-#       - identifier: Send Failure Email About 'Preconfigure for Netweaver'
-#         unified_job_template: Send Provisioner Email
-#         extra_data:
-#           failed_at_step: Preconfigure for Netweaver
-#       - identifier: Install SAP HANA
-#         unified_job_template: Install SAP HANA
-#         limit: hana
-#         credentials:
-#           - Root Credentials
-#         success_nodes:
-#           - Configure HSR and Pacemaker
-#         failure_nodes:
-#           - Send Failure Email About 'Install SAP HANA'
-#       - identifier: Send Failure Email About 'Install SAP HANA'
-#         unified_job_template: Send Provisioner Email
-#         extra_data:
-#           failed_at_step: Install SAP HANA
-#       - identifier: Configure HSR and Pacemaker
-#         unified_job_template: Configure HSR and Pacemaker
-#         limit: hana
-#         credentials:
-#           - Root Credentials
-#           - Netbox Credentials
-#         success_nodes:
-#           - Install Netweaver
-#         failure_nodes:
-#           - Send Failure Email About 'Configure HSR and Pacemaker'
-#       - identifier: Send Failure Email About 'Configure HSR and Pacemaker'
-#         unified_job_template: Send Provisioner Email
-#         extra_data:
-#           failed_at_step: Configure HSR and Pacemaker
-#       - identifier: Install Netweaver
-#         unified_job_template: Install Netweaver
-#         limit: netweaver
-#         credentials:
-#           - Root Credentials
-#         success_nodes:
-#           - Reinstate HSR
-#         failure_nodes:
-#           - Send Failure Email About 'Install Netweaver'
-#         all_parents_must_converge: yes
-#       - identifier: Send Failure Email About 'Install Netweaver'
-#         unified_job_template: Send Provisioner Email
-#         extra_data:
-#           failed_at_step: Install Netweaver
-#         all_parents_must_converge: yes
-#       - identifier: Reinstate HSR
-#         unified_job_template: Reinstate HSR
-#         limit: 'hana:&primary'
-#         credentials:
-#           - Root Credentials
-#         success_nodes:
-#           - Send Success Email
-#         failure_nodes:
-#           - Send Failure Email About 'Reinstate HSR'
-#         all_parents_must_converge: yes
-#       - identifier: Send Failure Email About 'Reinstate HSR'
-#         unified_job_template: Send Provisioner Email
-#         extra_data:
-#           failed_at_step: Reinstate HSR
-#       - identifier: Send Success Email
-#         unified_job_template: Send Provisioner Email
-#         all_parents_must_converge: yes
-#         extra_data:
-#           provisioner_status: success
+controller_workflows:
+  - name: Provision Infrastructure
+    organization: "{  { audience }}"
+    state: "{{ controller_state | default('present') }}"
+    inventory: "{  { audience }} Infrastructure"
+    extra_vars:
+      company: "{  { audience }}"
+      demo_uuid: "{  { demo_uuid }}"
+      base_dns_suffix: "{  { base_dns_suffix }}"
+      provisioner: "{  { provisioner }}"
+      provisioner_email: "{  { provisioner_email }}"
+    survey_enabled: yes
+    survey:
+      name: ''
+      description: ''
+      spec:
+        - type: text
+          question_name: "How Many Instnaces Should Be Provisioned?"
+          variable: num_instances
+          required: yes
+          default: 1
+        - type: multiplechoice
+          question_name: "What Size Instances Are Required?"
+          variable: demo
+          choices:
+            - small
+            - medium
+            - large
+          required: yes
+    simplified_workflow_nodes:
+      - identifier: Get Available IP Address
+        unified_job_template: Get Available IP Address
+        limit: localhost
+        success_nodes:
+          - Update CMDB Records
+        failure_nodes:
+          - Send Failure Email About 'Get Available IP Address'
+      - identifier: Send Failure Email About 'Get Available IP Address'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Get Available IP Address
+      - identifier: Update CMDB Records
+        unified_job_template: Update CMDB Records
+        limit: localhost
+        success_nodes:
+          - Create DNS Records
+        failure_nodes:
+          - Send Failure Email About 'Update CMDB Records'
+      - identifier: Send Failure Email About 'Update CMDB Records'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Update CMDB Records
+      - identifier: Create DNS Records
+        unified_job_template: Create DNS Records
+        limit: localhost
+        success_nodes:
+          - Send Success Email
+        failure_nodes:
+          - Send Failure Email About 'Create DNS Records'
+      - identifier: Send Failure Email About 'Create DNS Records'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Create DNS Records
+      - identifier: Send Success Email
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          provisioner_status: success
 
 # controller_roles:
 #   # admin account
