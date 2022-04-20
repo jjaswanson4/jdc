@@ -330,7 +330,7 @@ controller_templates:
     playbook: playbooks/create-dns-records.yml
     execution_environment: "{  { controller_execution_environments[0].name }}"
   - name: Send Provisioner Email
-    organization: "{{ controller_organization }}"
+    organization: "{  { audience }}"
     inventory: Demo Inventory
     limit: localhost
     project: Automation Utilities
