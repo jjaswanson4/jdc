@@ -124,7 +124,7 @@ controller_groups_tier2:
               dest: "{  { demo_ansible_collections_working_directory }}/network_automation/ip_address_management/galaxy.yml"
         - fqcn: cmdb_automation.manage_records
           version: 1.0.0
-          display_name: CMDB Instance Record Management
+          display_name: Manage Records
           description: A collection for managing CDMB records via automation
           tags:
             - netbox
