@@ -74,6 +74,7 @@
           - compliance
           - idm-ad
           - aap-aa
+          - automation-everywhere
         required: yes
       - type: text
         question_name: "Demo Audience?"
