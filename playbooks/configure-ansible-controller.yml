@@ -40,7 +40,7 @@
                 organization: Default
                 credential_type: Ansible Galaxy/Automation Hub API Token
                 inputs:
-                  url: "{{ automation_hub.url }}"
+                  url: "{{ automation_hub.url }}/api/galaxy/content/published/"
                   token: "{{ automation_hub_token.json.token }}"
       when:
         - setup_hub_credentials is defined
