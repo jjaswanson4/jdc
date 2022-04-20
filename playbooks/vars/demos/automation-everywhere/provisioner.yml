@@ -74,6 +74,10 @@ controller_hosts:
           path: manage_records
           group: cmdb_automation
           visibility: public
+        - name: Manage DNS Records
+          path: manage_dns_records
+          group: network_automation
+          visibility: public
   - name: "automation-utils.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "Demo {{ demo_uuid }} Inventory"
 
@@ -136,7 +140,22 @@ controller_groups_tier2:
           files: files/demos/automation-everywhere/collections/cmdb_automation/manage_records
           templates:
             - src: templates/demos/automation-everywhere/galaxy.yml.j2
-              dest: "{  { demo_ansible_collections_working_directory }}/cmdb_automation/manage_records/galaxy.yml"  
+              dest: "{  { demo_ansible_collections_working_directory }}/cmdb_automation/manage_records/galaxy.yml"
+        - fqcn: network_automation.manage_dns_records
+          version: 1.0.0
+          display_name: Manage DNS Records
+          description: A collection for managing DNS records via automation
+          tags:
+            - dns
+            - idm
+            - freeipa
+          git:
+            name: Network Automation
+            email: network-automation@company.com
+          files: files/demos/automation-everywhere/collections/network_automation/manage_dns_records
+          templates:
+            - src: templates/demos/automation-everywhere/galaxy.yml.j2
+              dest: "{  { demo_ansible_collections_working_directory }}/network_automation/manage_dns_records/galaxy.yml"
 
 controller_groups_tier3:
   - name: demo_hosts
