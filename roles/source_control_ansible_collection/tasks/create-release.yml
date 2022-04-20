@@ -4,7 +4,7 @@
   block:
     - name: find project
       ansible.builtin.uri:
-        url: "{{ gitlab_api_url }}api/v4/projects/?search={{ collection.display_name | regex_replace(' ', '%20') }}"
+        url: "{{ gitlab_api_url }}api/v4/projects/?search={{ collection.fqcn.split('.')[0] }}"
         headers:
           PRIVATE-TOKEN: "{{ admin_password }}"
         validate_certs: "{{ gitlab_api_validate_certs }}"
