@@ -62,10 +62,17 @@ controller_hosts:
         - name: Network Automation
           path: network_automation
           visibility: public
+        - name: CMDB Automation
+          path: cmdb_automation
+          visibility: public
       gitlab_projects:
         - name: IP Address Management
           path: ip_address_management
           group: network_automation
+          visibility: public
+        - name: Manage Records
+          path: manage_records
+          group: cmdb_automation
           visibility: public
   - name: "automation-utils.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "Demo {{ demo_uuid }} Inventory"
