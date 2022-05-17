@@ -1,0 +1,658 @@
+---
+
+# By default, the org 'Demo Provisioner' is created and resources are configured there,
+# Use this variable to override this behavior.
+# For example, overriding to 'Default' will put the resources into the default controller organization.
+controller_organization: Demo Provisioner
+
+# This is the default project name. It is a var so demos can import specific job templates and override the project locally.
+# Change this to change the name of the project for the provisioner job templates.
+project: Josh's Demos Collection
+
+# This is the default prefix for assets created for this demo.
+# Change this variable to use a different prefix.
+demo_prefix: Patching Demo
+
+# This is the realitive path to the vars files for this demo.
+# Typically this contains a vars file for the provisioner, Satellite, and Controller.
+vars_files_path: "vars/demos/{{ demo }}"
+
+# This is the execution environment used for this demo provisioner.
+# This execution environment will automatically be configured in Controller.
+execution_environment:
+  name: Josh's Demos Collection EE
+  registry: "{{ ee_registry.host }}"
+  image: joshs-demos-collection-ee
+  credential: Demo Provisioner EE Image Registry Credentials
+
+# This is the information used for the instance of Controller for the demo.
+# This can be the same instance as where the provisioner is deployed, but it's not recommended.
+controller_configuration_file: "{{ vars_files_path }}/controller.yml"
+
+# This is the information used for the instance of Satellite for the demo.
+# This can be the same instance as where the provisioner is deployed, but it's not recommended.
+satellite_configuration_file: "{{ vars_files_path }}/satellite.yml"
+
+base_dns_suffix: demos.lcl
+
+# This toggles secure logging, for example: when configuring credentials on Ansible Controller.
+# Since I'm using my own instance, secure logging isn't a requirement.
+controller_configuration_credentials_secure_logging: no
+
+# These are where demo specific components are defined, in hash form. These will automatically be added to the common resources.
+# If there is no need for a specific, resource, simply define an empty var, such as `controller_organizations: []`
+controller_organizations: []
+controller_credential_types: []
+controller_credentials: []
+controller_execution_environments: []
+controller_inventories: []
+controller_projects: []
+
+controller_hosts:
+  - name: "pos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "pos2-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "bos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "bos2-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "pos1-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "pos2-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "bos1-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "bos2-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "pc1-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "pc2-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "po1-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "po2-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "pc1-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "pc2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "po1-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "po2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+
+controller_group_tiers: 3
+controller_groups_tier1:
+  - name: point_of_sale
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    variables:
+      sys_purpose: point-of-sale
+    hosts:
+      - "pos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "pos2-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "pos1-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "pos2-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: back_of_store
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    variables:
+      sys_purpose: back-of-store
+    hosts:
+      - "bos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "bos2-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "bos1-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "bos2-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: process_control
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    variables:
+      sys_purpose: process-control
+    hosts:
+      - "pc1-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "pc2-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "pc1-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "pc2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: plant_operations
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    variables:
+      sys_purpose: process-control
+    hosts:
+      - "po1-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "po2-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "po1-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "po2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: store1000
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    variables:
+      country: US
+      state: MN
+      City: Saint Paul
+    hosts:
+      - "pos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "pos2-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "bos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "bos2-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: store1001
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    variables:
+      country: US
+      state: WI
+      City: Milwaukee
+    hosts:
+      - "pos1-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "pos2-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "bos1-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "bos2-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: plant100
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    variables:
+      country: US
+      state: IN
+      City: Lafayette
+    hosts:
+      - "pc1-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "pc2-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "po1-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "po2-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: plant101
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    variables:
+      country: US
+      state: IN
+      City: West Lafayette
+    hosts:
+      - "pc1-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "pc2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "po1-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "po2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
+
+controller_groups_tier2:
+  - name: retail_stores
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    children:
+      - store1000
+      - store1001
+  - name: manufacturing_plants
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    children:
+      - plant100
+      - plant101
+
+controller_groups_tier3:
+  - name: demo_hosts
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    children:
+      - retail_stores
+      - manufacturing_plants
+    variables:
+      rhel: edge
+
+controller_templates:
+  # - name: Prepare New Content
+  #   inventory: Demo Inventory
+  #   ask_inventory_on_launch: yes
+  #   limit: satellite
+  #   project: "{{ project }}"
+  #   playbook: playbooks/prepare-new-content.yml
+  #   execution_environment: "{{ execution_environment.name }}"
+  #   ask_credential_on_launch: yes
+  # - name: Roll Back Content
+  #   inventory: Demo Inventory
+  #   ask_inventory_on_launch: yes
+  #   limit: satellite
+  #   project: "{{ project }}"
+  #   playbook: playbooks/rollback-content.yml
+  #   execution_environment: "{{ execution_environment.name }}"
+  #   ask_credential_on_launch: yes
+
+controller_workflows:
+  - name: Provision RHEL for Edge Demo
+    organization: "{{ controller_organization }}"
+    state: "{{ controller_state | default('present') }}"
+    ask_inventory_on_launch: yes
+    ask_variables_on_launch: yes
+    extra_vars:
+      demo: r4e
+    simplified_workflow_nodes:
+      - identifier: Create CMDB Records
+        unified_job_template: Manage CMDB Records
+        limit: 'demo_hosts:management_plane'
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner vCenter Credentials
+        success_nodes:
+          - Create DNS Records
+        failure_nodes:
+          - Send Failure Email About 'Create CMDB Records'
+      - identifier: Send Failure Email About 'Create CMDB Records'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Create CMDB Records
+      - identifier: Create DNS Records
+        unified_job_template: Manage DNS Records
+        limit: 'demo_hosts:management_plane'
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner IDM Credentials
+        # success_nodes:
+        #   - Provision Satellite
+        #   - Provision Controller
+        failure_nodes:
+          - Send Failure Email About 'Create DNS Records'
+      - identifier: Send Failure Email About 'Create DNS Records'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Create DNS Records
+      # - identifier: Provision Satellite
+      #   unified_job_template: Provision Systems
+      #   limit: satellite
+      #   credentials:
+      #     - Demo Provisioner Netbox Credentials
+      #     - Demo Provisioner Satellite Credentials
+      #     - Demo Provisioner vCenter Credentials
+      #     - Demo Provisioner Root Account
+      #   success_nodes:
+      #     - Apply Standard Config to Satellite
+      #   failure_nodes:
+      #     - Send Failure Email About 'Provision Satellite'
+      # - identifier: Send Failure Email About 'Provision Satellite'
+      #   unified_job_template: Send Provisioner Email
+      #   extra_data:
+      #     failed_at_step: Provision Satellite
+      # - identifier: Apply Standard Config to Satellite
+      #   unified_job_template: Apply Standard Configuration
+      #   limit: satellite
+      #   credentials:
+      #     - Demo Provisioner Root Account
+      #   success_nodes:
+      #     - Install Red Hat Satellite
+      #   failure_nodes:
+      #     - Send Failure Email About 'Apply Standard Config to Satellite'
+      # - identifier: Send Failure Email About 'Apply Standard Config to Satellite'
+      #   unified_job_template: Send Provisioner Email
+      #   extra_data:
+      #     failed_at_step: Apply Standard Config to Satellite
+      # - identifier: Install Red Hat Satellite
+      #   unified_job_template: Install Red Hat Satellite
+      #   limit: satellite
+      #   credentials:
+      #     - Demo Provisioner vCenter Credentials
+      #     - Demo Provisioner Root Account
+      #     - Demo Provisioner Admin Credentials
+      #   success_nodes:
+      #     - Configure Red Hat Satellite
+      #   failure_nodes:
+      #     - Send Failure Email About 'Install Red Hat Satellite'
+      # - identifier: Send Failure Email About 'Install Red Hat Satellite'
+      #   unified_job_template: Send Provisioner Email
+      #   extra_data:
+      #     failed_at_step: Install Red Hat Satellite
+      # - identifier: Configure Red Hat Satellite
+      #   unified_job_template: Configure Red Hat Satellite
+      #   limit: satellite
+      #   credentials:
+      #     - Demo Provisioner vCenter Credentials
+      #     - Demo Provisioner Root Account
+      #     - Demo Provisioner Admin Credentials
+      #     - Demo Provisioner EE Python Libraries Env Vars
+      #   success_nodes:
+      #     - Provision Demo Systems
+      #   failure_nodes:
+      #     - Send Failure Email About 'Configure Red Hat Satellite'
+      # - identifier: Send Failure Email About 'Configure Red Hat Satellite'
+      #   unified_job_template: Send Provisioner Email
+      #   extra_data:
+      #     failed_at_step: Configure Red Hat Satellite
+      # - identifier: Provision Demo Systems
+      #   unified_job_template: Provision Systems
+      #   limit: demo_hosts
+      #   credentials:
+      #     - Demo Provisioner vCenter Credentials
+      #     - Demo Provisioner Admin Credentials
+      #     - Demo Provisioner Netbox Credentials
+      #     - Demo Provisioner Root Account
+      #     - Demo Provisioner EE Python Libraries Env Vars
+      #   success_nodes:
+      #     - Apply Standard Config to Demo Hosts
+      #     - Configure Ansible Controller
+      #   failure_nodes:
+      #     - Send Failure Email About 'Provision Demo Systems'
+      # - identifier: Send Failure Email About 'Provision Demo Systems'
+      #   unified_job_template: Send Provisioner Email
+      #   extra_data:
+      #     failed_at_step: Provision Demo Systems
+      # - identifier: Apply Standard Config to Demo Hosts
+      #   unified_job_template: Apply Standard Configuration
+      #   limit: demo_hosts
+      #   credentials:
+      #     - Demo Provisioner Root Account
+      #   success_nodes:
+      #     - Preconfigure for SAP
+      #   failure_nodes:
+      #     - Send Failure Email About 'Apply Standard Config to Demo Hosts'
+      # - identifier: Send Failure Email About 'Apply Standard Config to Demo Hosts'
+      #   unified_job_template: Send Provisioner Email
+      #   extra_data:
+      #     failed_at_step: Apply Standard Config to Demo Hosts
+      # - identifier: Provision Controller
+      #   unified_job_template: Provision Systems
+      #   limit: controller
+      #   credentials:
+      #     - Demo Provisioner Netbox Credentials
+      #     - Demo Provisioner Satellite Credentials
+      #     - Demo Provisioner vCenter Credentials
+      #     - Demo Provisioner Root Account
+      #   success_nodes:
+      #     - Apply Standard Config to Controller
+      #   failure_nodes:
+      #     - Send Failure Email About 'Provision Controller'
+      # - identifier: Send Failure Email About 'Provision Controller'
+      #   unified_job_template: Send Provisioner Email
+      #   extra_data:
+      #     failed_at_step: Provision Controller
+      # - identifier: Apply Standard Config to Controller
+      #   unified_job_template: Apply Standard Configuration
+      #   limit: controller
+      #   credentials:
+      #     - Demo Provisioner Root Account
+      #   success_nodes:
+      #     - Install Ansible Controller
+      #   failure_nodes:
+      #     - Send Failure Email About 'Apply Standard Config to Controller'
+      # - identifier: Send Failure Email About 'Apply Standard Config to Controller'
+      #   unified_job_template: Send Provisioner Email
+      #   extra_data:
+      #     failed_at_step: Apply Standard Config to Controller     
+      # - identifier: Install Ansible Controller
+      #   unified_job_template: Install Ansible Controller
+      #   limit: controller
+      #   credentials:
+      #     - Demo Provisioner Red Hat Registry Credentials
+      #     - Demo Provisioner Root Account
+      #     - Demo Provisioner Admin Credentials
+      #   success_nodes:
+      #     - Configure Ansible Controller
+      #   failure_nodes:
+      #     - Send Failure Email About 'Install Ansible Controller'
+      # - identifier: Send Failure Email About 'Install Ansible Controller'
+      #   unified_job_template: Send Provisioner Email
+      #   extra_data:
+      #     failed_at_step: Install Ansible Controller
+      # - identifier: Configure Ansible Controller
+      #   unified_job_template: Configure Ansible Controller
+      #   limit: controller
+      #   credentials:
+      #     - Demo Provisioner Admin Credentials
+      #   success_nodes:
+      #     - Send Success Email
+      #   failure_nodes:
+      #     - Send Failure Email About 'Configure Ansible Controller'
+      #   all_parents_must_converge: yes
+      # - identifier: Send Failure Email About 'Configure Ansible Controller'
+      #   unified_job_template: Send Provisioner Email
+      #   extra_data:
+      #     failed_at_step: Configure Ansible Controller
+      # - identifier: Preconfigure for SAP
+      #   unified_job_template: Preconfigure for SAP
+      #   limit: sap
+      #   credentials:
+      #     - Demo Provisioner Root Account
+      #     - Demo Provisioner vCenter Credentials
+      #   success_nodes:
+      #     - Preconfigure for Netweaver
+      #     - Preconfigure for HANA
+      #   failure_nodes:
+      #     - Send Failure Email About 'Preconfigure for SAP'
+      # - identifier: Send Failure Email About 'Preconfigure for SAP'
+      #   unified_job_template: Send Provisioner Email
+      #   extra_data:
+      #     failed_at_step: Preconfigure for SAP
+      # - identifier: Preconfigure for Netweaver
+      #   unified_job_template: Preconfigure for Netweaver
+      #   limit: netweaver
+      #   credentials:
+      #     - Demo Provisioner Root Account
+      #     - Demo Provisioner Admin Credentials
+      #   success_nodes:
+      #     - Install Production Netweaver
+      #     - Install Non-Production Netweaver
+      #     - Prepare New Content
+      #   failure_nodes:
+      #     - Send Failure Email About 'Preconfigure for Netweaver'
+      # - identifier: Send Failure Email About 'Preconfigure for Netweaver'
+      #   unified_job_template: Send Provisioner Email
+      #   extra_data:
+      #     failed_at_step: Preconfigure for Netweaver
+      # - identifier: Preconfigure for HANA
+      #   unified_job_template: Preconfigure for HANA
+      #   limit: hana
+      #   credentials:
+      #     - Demo Provisioner Root Account
+      #     - Demo Provisioner Admin Credentials
+      #   success_nodes:
+      #     - Deploy SAP HANA
+      #   failure_nodes:
+      #     - Send Failure Email About 'Preconfigure for HANA'
+      # - identifier: Send Failure Email About 'Preconfigure for HANA'
+      #   unified_job_template: Send Provisioner Email
+      #   extra_data:
+      #     failed_at_step: Preconfigure for HANA
+      # - identifier: Deploy SAP HANA
+      #   unified_job_template: Deploy SAP HANA
+      #   limit: hana
+      #   credentials:
+      #     - Demo Provisioner Root Account
+      #     - Demo Provisioner Admin Credentials
+      #   success_nodes:
+      #     - Configure Production SAP HANA HSR and Pacemaker
+      #     - Configure Non-Production SAP HANA HSR and Pacemaker
+      #   failure_nodes:
+      #     - Send Failure Email About 'Deploy SAP HANA'
+      # - identifier: Send Failure Email About 'Deploy SAP HANA'
+      #   unified_job_template: Send Provisioner Email
+      #   extra_data:
+      #     failed_at_step: Deploy SAP HANA
+      # - identifier: Configure Production SAP HANA HSR and Pacemaker
+      #   unified_job_template: Configure HSR and Pacemaker
+      #   limit: 'hana:&production'
+      #   credentials:
+      #     - Demo Provisioner Root Account
+      #     - Demo Provisioner Admin Credentials
+      #     - Demo Provisioner Netbox Credentials
+      #   success_nodes:
+      #     - Install Production Netweaver
+      #     - Prepare New Content
+      #   failure_nodes:
+      #     - Send Failure Email About 'Configure Production SAP HANA HSR and Pacemaker'
+      # - identifier: Send Failure Email About 'Configure Production SAP HANA HSR and Pacemaker'
+      #   unified_job_template: Send Provisioner Email
+      #   extra_data:
+      #     failed_at_step: Configure Production SAP HANA HSR and Pacemaker
+      # - identifier: Configure Non-Production SAP HANA HSR and Pacemaker
+      #   unified_job_template: Configure HSR and Pacemaker
+      #   limit: 'hana:&non_production'
+      #   credentials:
+      #     - Demo Provisioner Root Account
+      #     - Demo Provisioner Admin Credentials
+      #     - Demo Provisioner Netbox Credentials
+      #   success_nodes:
+      #     - Install Non-Production Netweaver
+      #     - Prepare New Content
+      #   failure_nodes:
+      #     - Send Failure Email About 'Configure Non-Production SAP HANA HSR and Pacemaker'
+      # - identifier: Send Failure Email About 'Configure Non-Production SAP HANA HSR and Pacemaker'
+      #   unified_job_template: Send Provisioner Email
+      #   extra_data:
+      #     failed_at_step: Configure Non-Production SAP HANA HSR and Pacemaker
+      # - identifier: Install Production Netweaver
+      #   unified_job_template: Install Netweaver
+      #   limit: 'netweaver:&production'
+      #   credentials:
+      #     - Demo Provisioner Root Account
+      #     - Demo Provisioner Admin Credentials
+      #   success_nodes:
+      #     - Reinstate HSR
+      #   failure_nodes:
+      #     - Send Failure Email About 'Install Production Netweaver'
+      #   all_parents_must_converge: yes
+      # - identifier: Send Failure Email About 'Install Production Netweaver'
+      #   unified_job_template: Send Provisioner Email
+      #   extra_data:
+      #     failed_at_step: Install Production Netweaver
+      # - identifier: Install Non-Production Netweaver
+      #   unified_job_template: Install Netweaver
+      #   limit: 'netweaver:&non_production'
+      #   credentials:
+      #     - Demo Provisioner Root Account
+      #     - Demo Provisioner Admin Credentials
+      #   success_nodes:
+      #     - Reinstate HSR
+      #   failure_nodes:
+      #     - Send Failure Email About 'Install Non-Production Netweaver'
+      #   all_parents_must_converge: yes
+      # - identifier: Send Failure Email About 'Install Non-Production Netweaver'
+      #   unified_job_template: Send Provisioner Email
+      #   extra_data:
+      #     failed_at_step: Install Non-Production Netweaver
+      # - identifier: Reinstate HSR
+      #   unified_job_template: Reinstate HSR
+      #   limit: 'hana:&primary'
+      #   credentials:
+      #     - Demo Provisioner Root Account
+      #     - Demo Provisioner Admin Credentials
+      #   success_nodes:
+      #     - Send Success Email
+      #   failure_nodes:
+      #     - Send Failure Email About 'Reinstate HSR'
+      #   all_parents_must_converge: yes
+      # - identifier: Send Failure Email About 'Reinstate HSR'
+      #   unified_job_template: Send Provisioner Email
+      #   extra_data:
+      #     failed_at_step: Reinstate HSR
+      # - identifier: Prepare New Content
+      #   unified_job_template: Prepare New Content
+      #   credentials:
+      #     - Demo Provisioner vCenter Credentials
+      #     - Demo Provisioner Admin Credentials
+      #     - Demo Provisioner Netbox Credentials
+      #     - Demo Provisioner Root Account
+      #     - Demo Provisioner EE Python Libraries Env Vars
+      #   all_parents_must_converge: yes
+      #   success_nodes:
+      #     - Send Success Email
+      #   failure_nodes:
+      #     - Send Failure Email About 'Prepare New Content'
+      # - identifier: Send Failure Email About 'Prepare New Content'
+      #   unified_job_template: Send Provisioner Email
+      #   extra_data:
+      #     failed_at_step: Prepare New Content
+      # - identifier: Send Success Email
+      #   unified_job_template: Send Provisioner Email
+      #   all_parents_must_converge: yes
+      #   extra_data:
+      #     provisioner_status: success
+
+  # - name: Teardown Patching Demo
+  #   organization: Demo Provisioner
+  #   ask_inventory_on_launch: yes
+  #   ask_variables_on_launch: yes
+  #   state: "{{ controller_state | default('present') }}"
+  #   extra_vars:
+  #     demo: patching
+  #   simplified_workflow_nodes:
+  #     - identifier: Unregister from Insights
+  #       unified_job_template: Unregister from Insights
+  #       limit: 'demo_hosts:satellite:controller'
+  #       credentials:
+  #         - Demo Provisioner Root Account
+  #         - Demo Provisioner Admin Credentials
+  #       always_nodes:
+  #         - Teardown Demo Hosts
+  #     - identifier: Teardown Demo Hosts
+  #       unified_job_template: Teardown Systems
+  #       limit: demo_hosts
+  #       credentials:
+  #         - Demo Provisioner Root Account
+  #         - Demo Provisioner Admin Credentials
+  #         - Demo Provisioner EE Python Libraries Env Vars
+  #       always_nodes:
+  #         - Teardown Management Plane
+  #     - identifier: Teardown Management Plane
+  #       unified_job_template: Teardown Systems
+  #       limit: management_plane
+  #       credentials:
+  #         - Demo Provisioner Satellite Credentials
+  #         - Demo Provisioner Admin Credentials
+  #       always_nodes:
+  #         - Cleanup DNS Records
+  #     - identifier: Cleanup DNS Records
+  #       unified_job_template: Manage DNS Records
+  #       limit: 'demo_hosts:management_plane'
+  #       credentials:
+  #         - Demo Provisioner Admin Credentials
+  #         - Demo Provisioner Netbox Credentials
+  #         - Demo Provisioner IDM Credentials
+  #       extra_data:
+  #         dns_records_state: absent
+  #       always_nodes:
+  #         - Remove CMDB Records
+  #     - identifier: Remove CMDB Records
+  #       unified_job_template: Manage CMDB Records
+  #       limit: 'demo_hosts:management_plane'
+  #       credentials:
+  #         - Demo Provisioner Admin Credentials
+  #         - Demo Provisioner Netbox Credentials
+  #         - Demo Provisioner vCenter Credentials
+  #       extra_data:
+  #         cmdb_record_state: absent
+  #       always_nodes:
+  #         - Remove Demo Context
+  #     - identifier: Remove Demo Context
+  #       unified_job_template: Configure Demo Context
+  #       credentials:
+  #         - Demo Provisioner Netbox Credentials
+  #         - Demo Provisioner vCenter Credentials
+  #         - Demo Provisioner IDM Credentials
+  #         - Demo Provisioner Satellite Credentials
+  #       extra_data:
+  #         demo_context_state: absent
+
+  # - name: Reset Patching Demo
+  #   organization: Demo Provisioner
+  #   ask_inventory_on_launch: yes
+  #   state: "{{ controller_state | default('present') }}"
+  #   extra_vars:
+  #     demo: patching
+  #   survey_enabled: yes
+  #   survey:
+  #     name: ''
+  #     description: ''
+  #     spec:
+  #       - type: text
+  #         question_name: "Demo Audience?"
+  #         question_description: "Who is the audience for this demo"
+  #         variable: audience
+  #         required: yes
+  #   simplified_workflow_nodes:
+  #     - unified_job_template: Unregister from Insights
+  #       identifier: node101
+  #       limit: 'demo_hosts:controller'
+  #       credentials:
+  #         - Demo Provisioner Root Account
+  #       always_nodes:
+  #         - node102
+  #         - node103
+  #         - node104
+  #     - unified_job_template: Teardown Systems
+  #       identifier: node102
+  #       limit: 'demo_hosts:controller'
+  #       credentials:
+  #         - Demo Provisioner Peripheral Credentials
+  #     - unified_job_template: Roll Back Content
+  #       identifier: node103
+  #       credentials:
+  #         - Demo Provisioner Peripheral Credentials
+  #     - unified_job_template: Cleanup DNS Records
+  #       identifier: node104
+  #       limit: 'demo_hosts:controller'
+  #       credentials:
+  #         - Demo Provisioner Peripheral Credentials
