@@ -312,8 +312,8 @@ controller_workflows:
         credentials:
           - Demo Provisioner Admin Credentials
           - Demo Provisioner Red Hat Registry Credentials
-        # success_nodes:
-        #   - Send Success Email
+        success_nodes:
+          - Send Success Email
         failure_nodes:
           - Send Failure Email About 'Configure Ansible Controller'
         all_parents_must_converge: yes
@@ -342,11 +342,16 @@ controller_workflows:
         limit: utility_server
         credentials:
           - Demo Provisioner Root Account
-        # success_nodes:
-        #   - Install Ansible Utility Server
+        success_nodes:
+          - Send Success Email
         failure_nodes:
           - Send Failure Email About 'Apply Standard Config to Utility Server'
       - identifier: Send Failure Email About 'Apply Standard Config to Utility Server'
         unified_job_template: Send Provisioner Email
         extra_data:
           failed_at_step: Apply Standard Config to Utility Server
+      - identifier: Send Success Email
+        unified_job_template: Send Provisioner Email
+        all_parents_must_converge: yes
+        extra_data:
+          provisioner_status: success
