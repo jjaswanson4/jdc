@@ -1,0 +1,528 @@
+---
+
+cpus: 4
+memory_mb: 16384
+os: rhel8
+application: general
+
+aap_download_url: http://satellite.lab.msp.redhat.com/pub/ansible-automation-platform-setup-2.1.2-1.tar.gz
+aap_bundle: ansible-automation-platform-setup-2.1.2-1.tar.gz
+
+controller_install:
+  admin_password: "{  { admin_password }}"
+  pg:
+    password: "{  { admin_password }}"
+
+bootstrap_controller: yes
+
+controller_hostname: "{  { inventory_hostname }}"
+controller_username: "{  { admin_username }}"
+controller_password: "{  { admin_password }}"
+controller_validate_certs: no
+
+controller_license:
+  manifest: /tmp/controller-manifest.zip
+
+controller_organizations:
+  - name: "{  { audience }}"
+
+controller_credentials:
+  - name: Patching Credentials
+    credential_type: Machine
+    organization: "{  { audience }}"
+    inputs:
+      username: root
+      password: "{  { admin_password }}"
+  - name: Red Hat Satellite Credentials
+    organization: "{  { audience }}"
+    credential_type: Red Hat Satellite 6
+    inputs:
+      host: "https://{  { groups['satellite'][0] }}"
+      username: "{  { admin_username }}"
+      password: "{  { admin_password }}"
+  - name: Automation Hub Image Registry Credentials
+    organization: "{  { audience }}"
+    credential_type: Container Registry
+    inputs:
+      host: hub.lab.msp.redhat.com
+      username: "{  { admin_username }}"
+      password: "{  { admin_password }}"
+      verify_ssl: no
+
+controller_execution_environments:
+  - name: Josh's Demos Collection EE
+    image: 'hub.lab.msp.redhat.com/joshs-demos-collection-ee:latest'
+    organization: "{  { audience }}"
+    credential: Automation Hub Image Registry Credentials
+    pull: always
+
+controller_teams:
+  - name: "{  { audience }} Application Team"
+    description: application team
+    organization: "{  { audience }}"
+  - name: "{  { audience }} Infrastructure Team"
+    description: infrastructure team
+    organization: "{  { audience }}"
+  - name: "{  { audience }} Security Team"
+    description: security team
+    organization: "{  { audience }}"
+  - name: "{  { audience }} Ops Team"
+    description: ops team
+    organization: "{  { audience }}"
+
+controller_user_accounts:
+  - username: "{  { audience }}_application_team"
+    password: "{  { admin_password }}"
+    email: dont@email.me
+    update_secrets: no
+  - username: "{  { audience }}_infrastructure_team"
+    password: "{  { admin_password }}"
+    email: dont@email.me
+    update_secrets: no
+  - username: "{  { audience }}_security_team"
+    password: "{  { admin_password }}"
+    email: dont@email.me
+    update_secrets: no
+  - username: "{  { audience }}_ops_team"
+    password: "{  { admin_password }}"
+    email: dont@email.me
+    update_secrets: no  
+  - username: "{  { audience }}_admin"
+    password: "{  { admin_password }}"
+    email: dont@email.me
+    update_secrets: no
+
+controller_inventories:
+  - name: "{  { audience }} Infrastructure"
+    organization: "{  { audience }}"
+
+controller_inventory_sources:
+  - name: Satellite Inventory Source
+    source: satellite6
+    inventory: "{  { audience }} Infrastructure"
+    credential: Red Hat Satellite Credentials
+    organization: "{  { audience }}"
+    wait: yes
+
+controller_group_tiers: 3
+controller_groups_tier1:
+  - name: primary
+    inventory: "{  { audience }} Infrastructure"
+    hosts:
+      - "sapdnhdb1.{  { demo_uuid }}.{  { base_dns_suffix }}"
+      - "sapdphdb1.{  { demo_uuid }}.{  { base_dns_suffix }}"
+    variables:
+      sap_hana_hsr_role: primary
+  - name: secondary
+    inventory: "{  { audience }} Infrastructure"
+    hosts:
+      - "sapdnhdb2.{  { demo_uuid }}.{  { base_dns_suffix }}"
+      - "sapdphdb2.{  { demo_uuid }}.{  { base_dns_suffix }}"
+    variables:
+      sap_hana_hsr_role: secondary
+  - name: netweaver
+    inventory: "{  { audience }} Infrastructure"
+    hosts:
+      - "sapdnapp1.{  { demo_uuid }}.{  { base_dns_suffix }}"
+      - "sapdpapp1.{  { demo_uuid }}.{  { base_dns_suffix }}"
+  - name: non_production
+    inventory: "{  { audience }} Infrastructure"
+    hosts:
+      - "sapdnapp1.{  { demo_uuid }}.{  { base_dns_suffix }}"
+      - "sapdnhdb1.{  { demo_uuid }}.{  { base_dns_suffix }}"
+      - "sapdnhdb2.{  { demo_uuid }}.{  { base_dns_suffix }}"
+    variables:
+      lifecycle_environment: non_production
+  - name: production
+    inventory: "{  { audience }} Infrastructure"
+    hosts:
+      - "sapdpapp1.{  { demo_uuid }}.{  { base_dns_suffix }}"
+      - "sapdphdb1.{  { demo_uuid }}.{  { base_dns_suffix }}"
+      - "sapdphdb2.{  { demo_uuid }}.{  { base_dns_suffix }}"
+    variables:
+      lifecycle_environment: production
+  - name: satellite
+    inventory: "{  { audience }} Infrastructure"
+    hosts:
+      - "{  { groups['satellite'][0] }}"
+    variables:
+      satellite:
+        username: "{  { admin_username }}"
+        password: "{  { admin_password }}"
+        url: "https://{  { groups['satellite'][0] }}"
+        organization: "{  { audience }}"
+        composite_content_view: composite-rhel8
+        content_view_filter_name: '07-01-2021'
+
+controller_groups_tier2:
+  - name: hana
+    inventory: "{  { audience }} Infrastructure"
+    children:
+      - primary
+      - secondary
+  - name: kpatch_patch
+    inventory: "{  { audience }} Infrastructure"
+    children:
+      - primary
+    variables:
+      patching_strategy: kpatch
+  - name: normal_patch
+    inventory: "{  { audience }} Infrastructure"
+    children:
+      - netweaver
+      - secondary
+    variables:
+      patching_strategy: normal
+
+controller_groups_tier3:
+  - name: sap
+    inventory: "{  { audience }} Infrastructure"
+    children:
+      - hana
+      - netweaver
+    variables:
+      os: rhel8.4
+      application: sap
+
+controller_projects:
+  - name: "{  { audience }} Patching Code"
+    organization: "{  { audience }}"
+    scm_branch: main
+    scm_type: git
+    scm_url: https://github.com/jjaswanson4/jdc.git
+    wait: yes
+
+controller_templates:
+  - name: Run Insights Report | Non_Production | Security
+    inventory: "{  { audience }} Infrastructure"
+    limit: non_production
+    project: "{  { audience }} Patching Code"
+    organization: "{  { audience }}"
+    playbook: playbooks/run-insights-report.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - Patching Credentials
+  - name: Check for Updates | Non_Production | Security
+    inventory: "{  { audience }} Infrastructure"
+    limit: non_production
+    project: "{  { audience }} Patching Code"
+    organization: "{  { audience }}"
+    playbook: playbooks/check-for-updates.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - Patching Credentials
+  - name: Install Tracer | Non_Production | Infrastructure
+    inventory: "{  { audience }} Infrastructure"
+    limit: 'non_production:&normal_patch'
+    project: "{  { audience }} Patching Code"
+    organization: "{  { audience }}"
+    playbook: playbooks/install-tracer.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - Patching Credentials
+  - name: Standby Secondary Database | Non_Production | BASIS (Application Team)
+    inventory: "{  { audience }} Infrastructure"
+    limit: 'non_production:&secondary'
+    project: "{  { audience }} Patching Code"
+    organization: "{  { audience }}"
+    playbook: playbooks/pacemaker-node-control.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - Patching Credentials
+    extra_vars:
+      pcs_node_status: standby
+  - name: Update All Packages | Non_Production | Infrastructure
+    inventory: "{  { audience }} Infrastructure"
+    limit: 'non_production:&normal_patch'
+    project: "{  { audience }} Patching Code"
+    organization: "{  { audience }}"
+    playbook: playbooks/update-all-packages.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - Patching Credentials
+  - name: Run Tracer Report | Non_Production | Infrastructure
+    inventory: "{  { audience }} Infrastructure"
+    limit: 'non_production:&normal_patch'
+    project: "{  { audience }} Patching Code"
+    organization: "{  { audience }}"
+    playbook: playbooks/run-tracer-report.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - Patching Credentials
+  - name: Reboot Server | Non_Production | Infrastructure
+    inventory: "{  { audience }} Infrastructure"
+    limit: 'non_production:&normal_patch'
+    project: "{  { audience }} Patching Code"
+    organization: "{  { audience }}"
+    playbook: playbooks/reboot-server.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - Patching Credentials  
+  - name: Kpatch Server | Non_Production | Infrastructure
+    inventory: "{  { audience }} Infrastructure"
+    limit: 'non_production:&kpatch_patch'
+    project: "{  { audience }} Patching Code"
+    organization: "{  { audience }}"
+    playbook: playbooks/kpatch-server.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - Patching Credentials
+  - name: Unstandby Secondary Database | Non_Production | BASIS (Application Team)
+    inventory: "{  { audience }} Infrastructure"
+    limit: 'non_production:&secondary'
+    project: "{  { audience }} Patching Code"
+    organization: "{  { audience }}"
+    playbook: playbooks/pacemaker-node-control.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - Patching Credentials
+    extra_vars:
+      pcs_node_status: unstandby
+  - name: Promote Content to Production | Infrastructure
+    inventory: "{  { audience }} Infrastructure"
+    limit: satellite
+    project: "{  { audience }} Patching Code"
+    organization: "{  { audience }}"
+    playbook: playbooks/promote-content.yml
+    execution_environment: Josh's Demos Collection EE
+    extra_vars:
+      current_lifecycle_environment: Non_Production
+      new_lifecycle_environment:
+        - Production
+    credentials:
+      - Patching Credentials
+  - name: Kill Stuck Insights Process
+    inventory: "{  { audience }} Infrastructure"
+    limit: 'non_production:&normal_patch'
+    project: "{  { audience }} Patching Code"
+    organization: "{  { audience }}"
+    playbook: playbooks/kill-hung-insights.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - Patching Credentials
+
+controller_workflows:
+  - name: Pre-Patching | Non_Production | Security
+    organization: "{  { audience }}"
+    state: "{{ controller_state | default('present') }}"
+    simplified_workflow_nodes:
+      - approval_node:
+          name: Approve 'Run Insights Report | Non_Production | Security'
+        identifier: Approve 'Run Insights Report | Non_Production | Security'
+        success_nodes:
+          - Run Insights Report | Non_Production | Security
+      - unified_job_template: Run Insights Report | Non_Production | Security
+        identifier: Run Insights Report | Non_Production | Security
+      - approval_node:
+          name: Approve 'Check for Updates | Non_Production | Security'
+        identifier: Approve 'Check for Updates | Non_Production | Security'
+        success_nodes:
+          - Check for Updates | Non_Production | Security
+      - unified_job_template: Check for Updates | Non_Production | Security
+        identifier: Check for Updates | Non_Production | Security
+  - name: Pre-Patching | Non_Production | Infrastructure
+    organization: "{  { audience }}"
+    state: "{{ controller_state | default('present') }}"
+    simplified_workflow_nodes:
+      - approval_node:
+          name: Approve 'Install Tracer | Non_Production | Infrastructure'
+        identifier: Approve 'Install Tracer | Non_Production | Infrastructure'
+        success_nodes:
+          - Install Tracer | Non_Production | Infrastructure
+      - unified_job_template: Install Tracer | Non_Production | Infrastructure
+        identifier: Install Tracer | Non_Production | Infrastructure
+  - name: Pre-Patching | Non_Production | BASIS (Application Team)
+    organization: "{  { audience }}"
+    state: "{{ controller_state | default('present') }}"
+    simplified_workflow_nodes:
+      - approval_node:
+          name: Approve 'Standby Secondary Database | Non_Production | BASIS (Application Team)'
+        identifier: Approve 'Standby Secondary Database | Non_Production | BASIS (Application Team)'
+        success_nodes:
+          - Standby Secondary Database | Non_Production | BASIS (Application Team)
+      - unified_job_template: Standby Secondary Database | Non_Production | BASIS (Application Team)
+        identifier: Standby Secondary Database | Non_Production | BASIS (Application Team)
+  - name: Patching | Non_Production | Infrastructure
+    organization: "{  { audience }}"
+    state: "{{ controller_state | default('present') }}"
+    simplified_workflow_nodes:
+      - approval_node:
+          name: Approve 'Update All Packages | Non_Production | Infrastructure'
+        identifier: Approve 'Update All Packages | Non_Production | Infrastructure'
+        success_nodes:
+          - Update All Packages | Non_Production | Infrastructure
+      - unified_job_template: Update All Packages | Non_Production | Infrastructure
+        identifier: Update All Packages | Non_Production | Infrastructure
+        success_nodes:
+          - Approve 'Run Tracer Report | Non_Production | Infrastructure'
+      - approval_node:
+          name: Approve 'Run Tracer Report | Non_Production | Infrastructure'
+        identifier: Approve 'Run Tracer Report | Non_Production | Infrastructure'
+        success_nodes:
+          - Run Tracer Report | Non_Production | Infrastructure
+      - unified_job_template: Run Tracer Report | Non_Production | Infrastructure
+        identifier: Run Tracer Report | Non_Production | Infrastructure
+        success_nodes:
+          - Approve 'Reboot Server | Non_Production | Infrastructure'
+      - approval_node:
+          name: Approve 'Reboot Server | Non_Production | Infrastructure'
+        identifier: Approve 'Reboot Server | Non_Production | Infrastructure'
+        success_nodes:
+          - Reboot Server | Non_Production | Infrastructure
+      - unified_job_template: Reboot Server | Non_Production | Infrastructure
+        identifier: Reboot Server | Non_Production | Infrastructure
+      - approval_node:
+          name: Approve 'Kpatch Server | Non_Production | Infrastructure'
+        identifier: Approve 'Kpatch Server | Non_Production | Infrastructure'
+        success_nodes:
+          - Kpatch Server | Non_Production | Infrastructure
+      - unified_job_template: Kpatch Server | Non_Production | Infrastructure
+        identifier: Kpatch Server | Non_Production | Infrastructure
+  - name: Post-Patching | Non_Production | Security
+    organization: "{  { audience }}"
+    state: "{{ controller_state | default('present') }}"
+    simplified_workflow_nodes:
+      - approval_node:
+          name: Approve 'Run Insights Report | Non_Production | Security'
+        identifier: Approve 'Run Insights Report | Non_Production | Security'
+        success_nodes:
+          - Run Insights Report | Non_Production | Security
+      - unified_job_template: Run Insights Report | Non_Production | Security
+        identifier: Run Insights Report | Non_Production | Security
+      - approval_node:
+          name: Approve 'Check for Updates | Non_Production | Security'
+        identifier: Approve 'Check for Updates | Non_Production | Security'
+        success_nodes:
+          - Check for Updates | Non_Production | Security
+      - unified_job_template: Check for Updates | Non_Production | Security
+        identifier: Check for Updates | Non_Production | Security
+  - name: Post-Patching | Non_Production | BASIS (Application Team)
+    organization: "{  { audience }}"
+    state: "{{ controller_state | default('present') }}"
+    simplified_workflow_nodes:
+      - approval_node:
+          name: Approve 'Unstandby Secondary Database | Non_Production | BASIS (Application Team)'
+        identifier: Approve 'Unstandby Secondary Database | Non_Production | BASIS (Application Team)'
+        success_nodes:
+          - Unstandby Secondary Database | Non_Production | BASIS (Application Team)
+      - unified_job_template: Unstandby Secondary Database | Non_Production | BASIS (Application Team)
+        identifier: Unstandby Secondary Database | Non_Production | BASIS (Application Team)
+  - name: Patch Non_Production
+    organization: "{  { audience }}"
+    state: "{{ controller_state | default('present') }}"
+    simplified_workflow_nodes:
+      - unified_job_template: Pre-Patching | Non_Production | Security
+        identifier: Pre-Patching | Non_Production | Security
+        success_nodes:
+          - Pre-Patching | Non_Production | Infrastructure
+      - unified_job_template: Pre-Patching | Non_Production | Infrastructure
+        identifier: Pre-Patching | Non_Production | Infrastructure
+        success_nodes:
+          - Pre-Patching | Non_Production | BASIS (Application Team)
+      - unified_job_template: Pre-Patching | Non_Production | BASIS (Application Team)
+        identifier: Pre-Patching | Non_Production | BASIS (Application Team)
+        success_nodes:
+          - Patching | Non_Production | Infrastructure
+      - unified_job_template: Patching | Non_Production | Infrastructure
+        identifier: Patching | Non_Production | Infrastructure
+        success_nodes:
+          - Post-Patching | Non_Production | Security
+      - unified_job_template: Post-Patching | Non_Production | Security
+        identifier: Post-Patching | Non_Production | Security
+        success_nodes:
+          - Post-Patching | Non_Production | BASIS (Application Team)
+      - unified_job_template: Post-Patching | Non_Production | BASIS (Application Team)
+        identifier: Post-Patching | Non_Production | BASIS (Application Team)
+        success_nodes:
+          - Approve 'Promote Content to Production | Infrastructure'
+      - approval_node:
+          name: Approve 'Promote Content to Production | Infrastructure'
+        identifier: Approve 'Promote Content to Production | Infrastructure'
+        success_nodes:
+          - Promote Content to Production | Infrastructure
+      - unified_job_template: Promote Content to Production | Infrastructure
+        identifier: Promote Content to Production | Infrastructure
+
+controller_roles:
+  # admin account
+  - user: "{  { audience }}_admin"
+    organization: "{  { audience }}"
+    role: admin
+  # Team Membership
+  - user: "{  { audience }}_infrastructure_team"
+    target_team: "{  { audience }} Infrastructure Team"
+    organization: "{  { audience }}"
+    role: member
+  - user: "{  { audience }}_application_team"
+    target_team: "{  { audience }} Application Team"
+    organization: "{  { audience }}"
+    role: member
+  - user: "{  { audience }}_security_team"
+    target_team: "{  { audience }} Security Team"
+    organization: "{  { audience }}"
+    role: member
+  - user: "{  { audience }}_ops_team"
+    target_team: "{  { audience }} Ops Team"
+    organization: "{  { audience }}"
+    role: member
+  # Infrastructure Permissions
+  - team: "{  { audience }} Infrastructure Team"
+    role: admin
+    credential: Patching Credentials
+  - team: "{  { audience }} Infrastructure Team"
+    role: admin
+    inventory: "{  { audience }} Infrastructure"
+  - team: "{  { audience }} Infrastructure Team"
+    role: admin
+    project: "{  { audience }} Patching Code"
+  - team: "{  { audience }} Infrastructure Team"
+    role: admin
+    job_template: Install Tracer | Non_Production | Infrastructure
+  - team: "{  { audience }} Infrastructure Team"
+    role: admin
+    job_template: Update All Packages | Non_Production | Infrastructure
+  - team: "{  { audience }} Infrastructure Team"
+    role: admin
+    job_template: Run Tracer Report | Non_Production | Infrastructure
+  - team: "{  { audience }} Infrastructure Team"
+    role: admin
+    job_template: Reboot Server | Non_Production | Infrastructure
+  - team: "{  { audience }} Infrastructure Team"
+    role: admin
+    job_template: Kpatch Server | Non_Production | Infrastructure
+  # BASIS (Application Team) Permissions
+  - team: "{  { audience }} Application Team"
+    role: read
+    credential: Patching Credentials
+  - team: "{  { audience }} Application Team"
+    role: update
+    inventory: "{  { audience }} Infrastructure"
+  - team: "{  { audience }} Application Team"
+    role: read
+    project: "{  { audience }} Patching Code"
+  - team: "{  { audience }} Application Team"
+    role: admin
+    job_template: Standby Secondary Database | Non_Production | BASIS (Application Team)
+  - team: "{  { audience }} Application Team"
+    role: admin
+    job_template: Unstandby Secondary Database | Non_Production | BASIS (Application Team)
+  # Security Permissions
+  - team: "{  { audience }} Security Team"
+    role: read
+    credential: Patching Credentials
+  - team: "{  { audience }} Security Team"
+    role: read
+    inventory: "{  { audience }} Infrastructure"
+  - team: "{  { audience }} Security Team"
+    role: read
+    project: "{  { audience }} Patching Code"
+  - team: "{  { audience }} Security Team"
+    role: admin
+    job_template: Run Insights Report | Non_Production | Security
+  - team: "{  { audience }} Security Team"
+    role: admin
+    job_template: Check for Updates | Non_Production | Security
+  # Ops Permissions
+  - team: "{  { audience }} Ops Team"
+    role: execute
+    workflow: Patch Non_Production
