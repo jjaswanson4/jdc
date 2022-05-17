@@ -26,13 +26,15 @@ controller_license:
 controller_organizations:
   - name: "{  { audience }}"
 
+controller_credential_types:
+  - name: Red Hat Registry Credentials
+    kind: cloud
+    injectors:
+      extra_vars:
+        redhat_registry_username: "{  { redhat_registry.username }}"
+        redhat_registry_password: "{  { redhat_registry.password }}"
+
 controller_credentials:
-  - name: Patching Credentials
-    credential_type: Machine
-    organization: "{  { audience }}"
-    inputs:
-      username: root
-      password: "{  { admin_password }}"
   - name: Automation Hub Image Registry Credentials
     organization: "{  { audience }}"
     credential_type: Container Registry
@@ -41,6 +43,9 @@ controller_credentials:
       username: "{  { admin_username }}"
       password: "{  { admin_password }}"
       verify_ssl: no
+  - name: Red Hat Registry Credentials
+    organization: "{  { audience }}"
+    credential_type: Red Hat Registry Credentials
 
 controller_execution_environments:
   - name: Josh's Demos Collection EE
@@ -48,42 +53,6 @@ controller_execution_environments:
     organization: "{  { audience }}"
     credential: Automation Hub Image Registry Credentials
     pull: always
-
-# controller_teams:
-#   - name: "{  { audience }} Application Team"
-#     description: application team
-#     organization: "{  { audience }}"
-#   - name: "{  { audience }} Infrastructure Team"
-#     description: infrastructure team
-#     organization: "{  { audience }}"
-#   - name: "{  { audience }} Security Team"
-#     description: security team
-#     organization: "{  { audience }}"
-#   - name: "{  { audience }} Ops Team"
-#     description: ops team
-#     organization: "{  { audience }}"
-
-# controller_user_accounts:
-#   - username: "{  { audience }}_application_team"
-#     password: "{  { admin_password }}"
-#     email: dont@email.me
-#     update_secrets: no
-#   - username: "{  { audience }}_infrastructure_team"
-#     password: "{  { admin_password }}"
-#     email: dont@email.me
-#     update_secrets: no
-#   - username: "{  { audience }}_security_team"
-#     password: "{  { admin_password }}"
-#     email: dont@email.me
-#     update_secrets: no
-#   - username: "{  { audience }}_ops_team"
-#     password: "{  { admin_password }}"
-#     email: dont@email.me
-#     update_secrets: no  
-#   - username: "{  { audience }}_admin"
-#     password: "{  { admin_password }}"
-#     email: dont@email.me
-#     update_secrets: no
 
 controller_inventories:
   - name: "{  { audience }} Edge Systems"
@@ -238,228 +207,144 @@ controller_templates:
     credentials:
       - Patching Credentials    
 
-controller_workflows:
-  - name: Pre-Patching | Non_Production | Security
-    organization: "{  { audience }}"
-    state: "{{ controller_state | default('present') }}"
-    simplified_workflow_nodes:
-      - approval_node:
-          name: Approve 'Run Insights Report | Non_Production | Security'
-        identifier: Approve 'Run Insights Report | Non_Production | Security'
-        success_nodes:
-          - Run Insights Report | Non_Production | Security
-      - unified_job_template: Run Insights Report | Non_Production | Security
-        identifier: Run Insights Report | Non_Production | Security
-      - approval_node:
-          name: Approve 'Check for Updates | Non_Production | Security'
-        identifier: Approve 'Check for Updates | Non_Production | Security'
-        success_nodes:
-          - Check for Updates | Non_Production | Security
-      - unified_job_template: Check for Updates | Non_Production | Security
-        identifier: Check for Updates | Non_Production | Security
-  - name: Pre-Patching | Non_Production | Infrastructure
-    organization: "{  { audience }}"
-    state: "{{ controller_state | default('present') }}"
-    simplified_workflow_nodes:
-      - approval_node:
-          name: Approve 'Install Tracer | Non_Production | Infrastructure'
-        identifier: Approve 'Install Tracer | Non_Production | Infrastructure'
-        success_nodes:
-          - Install Tracer | Non_Production | Infrastructure
-      - unified_job_template: Install Tracer | Non_Production | Infrastructure
-        identifier: Install Tracer | Non_Production | Infrastructure
-  - name: Pre-Patching | Non_Production | BASIS (Application Team)
-    organization: "{  { audience }}"
-    state: "{{ controller_state | default('present') }}"
-    simplified_workflow_nodes:
-      - approval_node:
-          name: Approve 'Standby Secondary Database | Non_Production | BASIS (Application Team)'
-        identifier: Approve 'Standby Secondary Database | Non_Production | BASIS (Application Team)'
-        success_nodes:
-          - Standby Secondary Database | Non_Production | BASIS (Application Team)
-      - unified_job_template: Standby Secondary Database | Non_Production | BASIS (Application Team)
-        identifier: Standby Secondary Database | Non_Production | BASIS (Application Team)
-  - name: Patching | Non_Production | Infrastructure
-    organization: "{  { audience }}"
-    state: "{{ controller_state | default('present') }}"
-    simplified_workflow_nodes:
-      - approval_node:
-          name: Approve 'Update All Packages | Non_Production | Infrastructure'
-        identifier: Approve 'Update All Packages | Non_Production | Infrastructure'
-        success_nodes:
-          - Update All Packages | Non_Production | Infrastructure
-      - unified_job_template: Update All Packages | Non_Production | Infrastructure
-        identifier: Update All Packages | Non_Production | Infrastructure
-        success_nodes:
-          - Approve 'Run Tracer Report | Non_Production | Infrastructure'
-      - approval_node:
-          name: Approve 'Run Tracer Report | Non_Production | Infrastructure'
-        identifier: Approve 'Run Tracer Report | Non_Production | Infrastructure'
-        success_nodes:
-          - Run Tracer Report | Non_Production | Infrastructure
-      - unified_job_template: Run Tracer Report | Non_Production | Infrastructure
-        identifier: Run Tracer Report | Non_Production | Infrastructure
-        success_nodes:
-          - Approve 'Reboot Server | Non_Production | Infrastructure'
-      - approval_node:
-          name: Approve 'Reboot Server | Non_Production | Infrastructure'
-        identifier: Approve 'Reboot Server | Non_Production | Infrastructure'
-        success_nodes:
-          - Reboot Server | Non_Production | Infrastructure
-      - unified_job_template: Reboot Server | Non_Production | Infrastructure
-        identifier: Reboot Server | Non_Production | Infrastructure
-      - approval_node:
-          name: Approve 'Kpatch Server | Non_Production | Infrastructure'
-        identifier: Approve 'Kpatch Server | Non_Production | Infrastructure'
-        success_nodes:
-          - Kpatch Server | Non_Production | Infrastructure
-      - unified_job_template: Kpatch Server | Non_Production | Infrastructure
-        identifier: Kpatch Server | Non_Production | Infrastructure
-  - name: Post-Patching | Non_Production | Security
-    organization: "{  { audience }}"
-    state: "{{ controller_state | default('present') }}"
-    simplified_workflow_nodes:
-      - approval_node:
-          name: Approve 'Run Insights Report | Non_Production | Security'
-        identifier: Approve 'Run Insights Report | Non_Production | Security'
-        success_nodes:
-          - Run Insights Report | Non_Production | Security
-      - unified_job_template: Run Insights Report | Non_Production | Security
-        identifier: Run Insights Report | Non_Production | Security
-      - approval_node:
-          name: Approve 'Check for Updates | Non_Production | Security'
-        identifier: Approve 'Check for Updates | Non_Production | Security'
-        success_nodes:
-          - Check for Updates | Non_Production | Security
-      - unified_job_template: Check for Updates | Non_Production | Security
-        identifier: Check for Updates | Non_Production | Security
-  - name: Post-Patching | Non_Production | BASIS (Application Team)
-    organization: "{  { audience }}"
-    state: "{{ controller_state | default('present') }}"
-    simplified_workflow_nodes:
-      - approval_node:
-          name: Approve 'Unstandby Secondary Database | Non_Production | BASIS (Application Team)'
-        identifier: Approve 'Unstandby Secondary Database | Non_Production | BASIS (Application Team)'
-        success_nodes:
-          - Unstandby Secondary Database | Non_Production | BASIS (Application Team)
-      - unified_job_template: Unstandby Secondary Database | Non_Production | BASIS (Application Team)
-        identifier: Unstandby Secondary Database | Non_Production | BASIS (Application Team)
-  - name: Patch Non_Production
-    organization: "{  { audience }}"
-    state: "{{ controller_state | default('present') }}"
-    simplified_workflow_nodes:
-      - unified_job_template: Pre-Patching | Non_Production | Security
-        identifier: Pre-Patching | Non_Production | Security
-        success_nodes:
-          - Pre-Patching | Non_Production | Infrastructure
-      - unified_job_template: Pre-Patching | Non_Production | Infrastructure
-        identifier: Pre-Patching | Non_Production | Infrastructure
-        success_nodes:
-          - Pre-Patching | Non_Production | BASIS (Application Team)
-      - unified_job_template: Pre-Patching | Non_Production | BASIS (Application Team)
-        identifier: Pre-Patching | Non_Production | BASIS (Application Team)
-        success_nodes:
-          - Patching | Non_Production | Infrastructure
-      - unified_job_template: Patching | Non_Production | Infrastructure
-        identifier: Patching | Non_Production | Infrastructure
-        success_nodes:
-          - Post-Patching | Non_Production | Security
-      - unified_job_template: Post-Patching | Non_Production | Security
-        identifier: Post-Patching | Non_Production | Security
-        success_nodes:
-          - Post-Patching | Non_Production | BASIS (Application Team)
-      - unified_job_template: Post-Patching | Non_Production | BASIS (Application Team)
-        identifier: Post-Patching | Non_Production | BASIS (Application Team)
-        success_nodes:
-          - Approve 'Promote Content to Production | Infrastructure'
-      - approval_node:
-          name: Approve 'Promote Content to Production | Infrastructure'
-        identifier: Approve 'Promote Content to Production | Infrastructure'
-        success_nodes:
-          - Promote Content to Production | Infrastructure
-      - unified_job_template: Promote Content to Production | Infrastructure
-        identifier: Promote Content to Production | Infrastructure
-
-controller_roles:
-  # admin account
-  - user: "{  { audience }}_admin"
-    organization: "{  { audience }}"
-    role: admin
-  # Team Membership
-  - user: "{  { audience }}_infrastructure_team"
-    target_team: "{  { audience }} Infrastructure Team"
-    organization: "{  { audience }}"
-    role: member
-  - user: "{  { audience }}_application_team"
-    target_team: "{  { audience }} Application Team"
-    organization: "{  { audience }}"
-    role: member
-  - user: "{  { audience }}_security_team"
-    target_team: "{  { audience }} Security Team"
-    organization: "{  { audience }}"
-    role: member
-  - user: "{  { audience }}_ops_team"
-    target_team: "{  { audience }} Ops Team"
-    organization: "{  { audience }}"
-    role: member
-  # Infrastructure Permissions
-  - team: "{  { audience }} Infrastructure Team"
-    role: admin
-    credential: Patching Credentials
-  - team: "{  { audience }} Infrastructure Team"
-    role: admin
-    inventory: "{  { audience }} Infrastructure"
-  - team: "{  { audience }} Infrastructure Team"
-    role: admin
-    project: "{  { audience }} Patching Code"
-  - team: "{  { audience }} Infrastructure Team"
-    role: admin
-    job_template: Install Tracer | Non_Production | Infrastructure
-  - team: "{  { audience }} Infrastructure Team"
-    role: admin
-    job_template: Update All Packages | Non_Production | Infrastructure
-  - team: "{  { audience }} Infrastructure Team"
-    role: admin
-    job_template: Run Tracer Report | Non_Production | Infrastructure
-  - team: "{  { audience }} Infrastructure Team"
-    role: admin
-    job_template: Reboot Server | Non_Production | Infrastructure
-  - team: "{  { audience }} Infrastructure Team"
-    role: admin
-    job_template: Kpatch Server | Non_Production | Infrastructure
-  # BASIS (Application Team) Permissions
-  - team: "{  { audience }} Application Team"
-    role: read
-    credential: Patching Credentials
-  - team: "{  { audience }} Application Team"
-    role: update
-    inventory: "{  { audience }} Infrastructure"
-  - team: "{  { audience }} Application Team"
-    role: read
-    project: "{  { audience }} Patching Code"
-  - team: "{  { audience }} Application Team"
-    role: admin
-    job_template: Standby Secondary Database | Non_Production | BASIS (Application Team)
-  - team: "{  { audience }} Application Team"
-    role: admin
-    job_template: Unstandby Secondary Database | Non_Production | BASIS (Application Team)
-  # Security Permissions
-  - team: "{  { audience }} Security Team"
-    role: read
-    credential: Patching Credentials
-  - team: "{  { audience }} Security Team"
-    role: read
-    inventory: "{  { audience }} Infrastructure"
-  - team: "{  { audience }} Security Team"
-    role: read
-    project: "{  { audience }} Patching Code"
-  - team: "{  { audience }} Security Team"
-    role: admin
-    job_template: Run Insights Report | Non_Production | Security
-  - team: "{  { audience }} Security Team"
-    role: admin
-    job_template: Check for Updates | Non_Production | Security
-  # Ops Permissions
-  - team: "{  { audience }} Ops Team"
-    role: execute
-    workflow: Patch Non_Production
+# controller_workflows:
+#   - name: Pre-Patching | Non_Production | Security
+#     organization: "{  { audience }}"
+#     state: "{{ controller_state | default('present') }}"
+#     simplified_workflow_nodes:
+#       - approval_node:
+#           name: Approve 'Run Insights Report | Non_Production | Security'
+#         identifier: Approve 'Run Insights Report | Non_Production | Security'
+#         success_nodes:
+#           - Run Insights Report | Non_Production | Security
+#       - unified_job_template: Run Insights Report | Non_Production | Security
+#         identifier: Run Insights Report | Non_Production | Security
+#       - approval_node:
+#           name: Approve 'Check for Updates | Non_Production | Security'
+#         identifier: Approve 'Check for Updates | Non_Production | Security'
+#         success_nodes:
+#           - Check for Updates | Non_Production | Security
+#       - unified_job_template: Check for Updates | Non_Production | Security
+#         identifier: Check for Updates | Non_Production | Security
+#   - name: Pre-Patching | Non_Production | Infrastructure
+#     organization: "{  { audience }}"
+#     state: "{{ controller_state | default('present') }}"
+#     simplified_workflow_nodes:
+#       - approval_node:
+#           name: Approve 'Install Tracer | Non_Production | Infrastructure'
+#         identifier: Approve 'Install Tracer | Non_Production | Infrastructure'
+#         success_nodes:
+#           - Install Tracer | Non_Production | Infrastructure
+#       - unified_job_template: Install Tracer | Non_Production | Infrastructure
+#         identifier: Install Tracer | Non_Production | Infrastructure
+#   - name: Pre-Patching | Non_Production | BASIS (Application Team)
+#     organization: "{  { audience }}"
+#     state: "{{ controller_state | default('present') }}"
+#     simplified_workflow_nodes:
+#       - approval_node:
+#           name: Approve 'Standby Secondary Database | Non_Production | BASIS (Application Team)'
+#         identifier: Approve 'Standby Secondary Database | Non_Production | BASIS (Application Team)'
+#         success_nodes:
+#           - Standby Secondary Database | Non_Production | BASIS (Application Team)
+#       - unified_job_template: Standby Secondary Database | Non_Production | BASIS (Application Team)
+#         identifier: Standby Secondary Database | Non_Production | BASIS (Application Team)
+#   - name: Patching | Non_Production | Infrastructure
+#     organization: "{  { audience }}"
+#     state: "{{ controller_state | default('present') }}"
+#     simplified_workflow_nodes:
+#       - approval_node:
+#           name: Approve 'Update All Packages | Non_Production | Infrastructure'
+#         identifier: Approve 'Update All Packages | Non_Production | Infrastructure'
+#         success_nodes:
+#           - Update All Packages | Non_Production | Infrastructure
+#       - unified_job_template: Update All Packages | Non_Production | Infrastructure
+#         identifier: Update All Packages | Non_Production | Infrastructure
+#         success_nodes:
+#           - Approve 'Run Tracer Report | Non_Production | Infrastructure'
+#       - approval_node:
+#           name: Approve 'Run Tracer Report | Non_Production | Infrastructure'
+#         identifier: Approve 'Run Tracer Report | Non_Production | Infrastructure'
+#         success_nodes:
+#           - Run Tracer Report | Non_Production | Infrastructure
+#       - unified_job_template: Run Tracer Report | Non_Production | Infrastructure
+#         identifier: Run Tracer Report | Non_Production | Infrastructure
+#         success_nodes:
+#           - Approve 'Reboot Server | Non_Production | Infrastructure'
+#       - approval_node:
+#           name: Approve 'Reboot Server | Non_Production | Infrastructure'
+#         identifier: Approve 'Reboot Server | Non_Production | Infrastructure'
+#         success_nodes:
+#           - Reboot Server | Non_Production | Infrastructure
+#       - unified_job_template: Reboot Server | Non_Production | Infrastructure
+#         identifier: Reboot Server | Non_Production | Infrastructure
+#       - approval_node:
+#           name: Approve 'Kpatch Server | Non_Production | Infrastructure'
+#         identifier: Approve 'Kpatch Server | Non_Production | Infrastructure'
+#         success_nodes:
+#           - Kpatch Server | Non_Production | Infrastructure
+#       - unified_job_template: Kpatch Server | Non_Production | Infrastructure
+#         identifier: Kpatch Server | Non_Production | Infrastructure
+#   - name: Post-Patching | Non_Production | Security
+#     organization: "{  { audience }}"
+#     state: "{{ controller_state | default('present') }}"
+#     simplified_workflow_nodes:
+#       - approval_node:
+#           name: Approve 'Run Insights Report | Non_Production | Security'
+#         identifier: Approve 'Run Insights Report | Non_Production | Security'
+#         success_nodes:
+#           - Run Insights Report | Non_Production | Security
+#       - unified_job_template: Run Insights Report | Non_Production | Security
+#         identifier: Run Insights Report | Non_Production | Security
+#       - approval_node:
+#           name: Approve 'Check for Updates | Non_Production | Security'
+#         identifier: Approve 'Check for Updates | Non_Production | Security'
+#         success_nodes:
+#           - Check for Updates | Non_Production | Security
+#       - unified_job_template: Check for Updates | Non_Production | Security
+#         identifier: Check for Updates | Non_Production | Security
+#   - name: Post-Patching | Non_Production | BASIS (Application Team)
+#     organization: "{  { audience }}"
+#     state: "{{ controller_state | default('present') }}"
+#     simplified_workflow_nodes:
+#       - approval_node:
+#           name: Approve 'Unstandby Secondary Database | Non_Production | BASIS (Application Team)'
+#         identifier: Approve 'Unstandby Secondary Database | Non_Production | BASIS (Application Team)'
+#         success_nodes:
+#           - Unstandby Secondary Database | Non_Production | BASIS (Application Team)
+#       - unified_job_template: Unstandby Secondary Database | Non_Production | BASIS (Application Team)
+#         identifier: Unstandby Secondary Database | Non_Production | BASIS (Application Team)
+#   - name: Patch Non_Production
+#     organization: "{  { audience }}"
+#     state: "{{ controller_state | default('present') }}"
+#     simplified_workflow_nodes:
+#       - unified_job_template: Pre-Patching | Non_Production | Security
+#         identifier: Pre-Patching | Non_Production | Security
+#         success_nodes:
+#           - Pre-Patching | Non_Production | Infrastructure
+#       - unified_job_template: Pre-Patching | Non_Production | Infrastructure
+#         identifier: Pre-Patching | Non_Production | Infrastructure
+#         success_nodes:
+#           - Pre-Patching | Non_Production | BASIS (Application Team)
+#       - unified_job_template: Pre-Patching | Non_Production | BASIS (Application Team)
+#         identifier: Pre-Patching | Non_Production | BASIS (Application Team)
+#         success_nodes:
+#           - Patching | Non_Production | Infrastructure
+#       - unified_job_template: Patching | Non_Production | Infrastructure
+#         identifier: Patching | Non_Production | Infrastructure
+#         success_nodes:
+#           - Post-Patching | Non_Production | Security
+#       - unified_job_template: Post-Patching | Non_Production | Security
+#         identifier: Post-Patching | Non_Production | Security
+#         success_nodes:
+#           - Post-Patching | Non_Production | BASIS (Application Team)
+#       - unified_job_template: Post-Patching | Non_Production | BASIS (Application Team)
+#         identifier: Post-Patching | Non_Production | BASIS (Application Team)
+#         success_nodes:
+#           - Approve 'Promote Content to Production | Infrastructure'
+#       - approval_node:
+#           name: Approve 'Promote Content to Production | Infrastructure'
+#         identifier: Approve 'Promote Content to Production | Infrastructure'
+#         success_nodes:
+#           - Promote Content to Production | Infrastructure
+#       - unified_job_template: Promote Content to Production | Infrastructure
+#         identifier: Promote Content to Production | Infrastructure
