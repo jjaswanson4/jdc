@@ -81,6 +81,8 @@ controller_hosts:
     inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "po2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "edge-utilities.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
 
 controller_group_tiers: 3
 controller_groups_tier1:
@@ -164,6 +166,10 @@ controller_groups_tier1:
       - "pc2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "po1-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "po2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: utility_server
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    hosts:
+      - "edge-utilities.{{ demo_uuid }}.{{ base_dns_suffix }}"
 
 controller_groups_tier2:
   - name: retail_stores
@@ -183,6 +189,7 @@ controller_groups_tier3:
     children:
       - retail_stores
       - manufacturing_plants
+      - utility_server
     variables:
       rhel: edge
 
@@ -215,7 +222,7 @@ controller_workflows:
     simplified_workflow_nodes:
       - identifier: Create CMDB Records
         unified_job_template: Manage CMDB Records
-        limit: 'demo_hosts:management_plane'
+        limit: 'utility_server:controller'
         credentials:
           - Demo Provisioner Netbox Credentials
           - Demo Provisioner vCenter Credentials
@@ -229,12 +236,13 @@ controller_workflows:
           failed_at_step: Create CMDB Records
       - identifier: Create DNS Records
         unified_job_template: Manage DNS Records
-        limit: 'demo_hosts:management_plane'
+        limit: 'utility_server:controller'
         credentials:
           - Demo Provisioner Netbox Credentials
           - Demo Provisioner IDM Credentials
         success_nodes:
           - Provision Controller
+          - Provision Utility Server
         failure_nodes:
           - Send Failure Email About 'Create DNS Records'
       - identifier: Send Failure Email About 'Create DNS Records'
@@ -299,6 +307,31 @@ controller_workflows:
       #   unified_job_template: Send Provisioner Email
       #   extra_data:
       #     failed_at_step: Configure Ansible Controller
+      - identifier: Provision Utility Server
+        unified_job_template: Provision Systems
+        limit: utility_server
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner Satellite Credentials
+          - Demo Provisioner vCenter Credentials
+          - Demo Provisioner Root Account
+        success_nodes:
+          - Apply Standard Config to Utility Server
+        failure_nodes:
+          - Send Failure Email About 'Provision Utility Server'
+      - identifier: Send Failure Email About 'Provision Utility Server'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Provision Utility Server
+      - identifier: Apply Standard Config to Utility Server
+        unified_job_template: Apply Standard Configuration
+        limit: Utility Server
+        credentials:
+          - Demo Provisioner Root Account
+        success_nodes:
+          - Install Ansible Utility Server
+        failure_nodes:
+          - Send Failure Email About 'Apply Standard Config to Utility Server'
       # - identifier: Preconfigure for SAP
       #   unified_job_template: Preconfigure for SAP
       #   limit: sap
