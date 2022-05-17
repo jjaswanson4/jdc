@@ -1,0 +1,24 @@
+---
+
+- name: create RHEL edge installer ISO
+  hosts:
+    - all
+  pre_tasks:
+    - name: ensure podman is present
+      ansible.builtin.dnf:
+        name: podman
+    - name: create working directory
+      ansible.builtin.file:
+        path: /tmp/fleet_iso
+        state: directory
+        mode: '0777'
+  tasks:
+    - name: grab base iso
+      ansible.builtin.get_url:
+        url: https://satellite.lab.msp.redhat.com/pub/rhel-edge-installer.iso
+        dest: /tmp/fleet_iso/fleet_source.iso
+    - name: grab fleet utils image
+      containers.podman.podman_image:
+        name: quay.io/fleet-management/fleet-iso-util:latest
+        username: "{{ redhat_registry_username }}"
+        password: "{{ redhat_registry_password }}"
