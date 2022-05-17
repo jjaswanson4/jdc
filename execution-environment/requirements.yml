@@ -61,3 +61,6 @@ collections:
 
   # IDM collections
   - name: redhat.rhel_idm
+
+  # Podman collections
+  - name: containers.podman
