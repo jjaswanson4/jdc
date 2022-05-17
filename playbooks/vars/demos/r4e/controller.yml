@@ -46,6 +46,11 @@ controller_credentials:
   - name: Red Hat Registry Credentials
     organization: "{  { audience }}"
     credential_type: Red Hat Registry Credentials
+  - name: Root Credentials
+    organization: "{  { audience }}"
+    credential_type: machine
+    username: root
+    password: "{  { admin_password }}"
 
 controller_execution_environments:
   - name: Josh's Demos Collection EE
@@ -204,7 +209,7 @@ controller_templates:
     playbook: playbooks/create-edge-installer-iso.yml
     execution_environment: Josh's Demos Collection EE
     credentials:
-      - Patching Credentials    
+      - Root Credentials  
 
 # controller_workflows:
 #   - name: Pre-Patching | Non_Production | Security
