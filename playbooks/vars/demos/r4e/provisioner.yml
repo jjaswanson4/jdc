@@ -83,6 +83,12 @@ controller_hosts:
     inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "edge-utilities.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "Demo {{ demo_uuid }} Inventory"
+    variables:
+      os: rhel8
+      cpus: 4
+      memory_mb: 8192
+      application: general
+      lifecycle_environment: production
 
 controller_group_tiers: 3
 controller_groups_tier1:
@@ -193,8 +199,6 @@ controller_groups_tier3:
     variables:
       provisioning:
         host_group: "{  { os }}"
-        organization: "{  { audience }}"
-        location: "{  { audience }}"
         method: bootdisk
         dns_domain: "{  { demo_uuid }}.{  { base_dns_suffix }}"
         cpus: "{  { cpus }}"
