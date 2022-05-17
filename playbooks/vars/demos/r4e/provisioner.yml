@@ -191,7 +191,16 @@ controller_groups_tier3:
       - manufacturing_plants
       - utility_server
     variables:
-      rhel: edge
+      provisioning:
+        host_group: "{  { os }}"
+        organization: "{  { audience }}"
+        location: "{  { audience }}"
+        method: bootdisk
+        dns_domain: "{  { demo_uuid }}.{  { base_dns_suffix }}"
+        cpus: "{  { cpus }}"
+        memory_mb: "{  { memory_mb }}"
+        activation_keys: "ak-{  { application }}-{  { os }}-{  { lifecycle_environment }}"
+
 
 controller_templates: []
   # - name: Prepare New Content
@@ -328,10 +337,14 @@ controller_workflows:
         limit: Utility Server
         credentials:
           - Demo Provisioner Root Account
-        success_nodes:
-          - Install Ansible Utility Server
+        # success_nodes:
+        #   - Install Ansible Utility Server
         failure_nodes:
           - Send Failure Email About 'Apply Standard Config to Utility Server'
+      - identifier: Send Failure Email About 'Apply Standard Config to Utility Server'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Apply Standard Config to Utility Server
       # - identifier: Preconfigure for SAP
       #   unified_job_template: Preconfigure for SAP
       #   limit: sap
