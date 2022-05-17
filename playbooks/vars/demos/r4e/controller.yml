@@ -48,7 +48,7 @@ controller_credentials:
     credential_type: Red Hat Registry Credentials
   - name: Root Credentials
     organization: "{  { audience }}"
-    credential_type: machine
+    credential_type: Machine
     username: root
     password: "{  { admin_password }}"
 
