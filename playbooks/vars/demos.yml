@@ -15,3 +15,5 @@ available_demos:
     display_name: Satellite Advanced Architecture
   - name: automation-everywhere
     display_name: Automation Everywhere
+  - name: r4e
+    display_name: RHEL for Edge
