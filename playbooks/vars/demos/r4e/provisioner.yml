@@ -311,8 +311,8 @@ controller_workflows:
         limit: controller
         credentials:
           - Demo Provisioner Admin Credentials
-        success_nodes:
-          - Send Success Email
+        # success_nodes:
+        #   - Send Success Email
         failure_nodes:
           - Send Failure Email About 'Configure Ansible Controller'
         all_parents_must_converge: yes
@@ -338,7 +338,7 @@ controller_workflows:
           failed_at_step: Provision Utility Server
       - identifier: Apply Standard Config to Utility Server
         unified_job_template: Apply Standard Configuration
-        limit: Utility Server
+        limit: utility_server
         credentials:
           - Demo Provisioner Root Account
         # success_nodes:
