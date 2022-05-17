@@ -60,43 +60,43 @@ controller_inventories:
 
 controller_hosts:
   - name: "pos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Systems"
   - name: "pos2-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Systems"
   - name: "bos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Systems"
   - name: "bos2-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Systems"
   - name: "pos1-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Systems"
   - name: "pos2-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Systems"
   - name: "bos1-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Systems"
   - name: "bos2-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Systems"
   - name: "pc1-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Systems"
   - name: "pc2-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Systems"
   - name: "po1-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Systems"
   - name: "po2-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Systems"
   - name: "pc1-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Systems"
   - name: "pc2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Systems"
   - name: "po1-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Systems"
   - name: "po2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Systems"
 
 controller_group_tiers: 2
 
 controller_groups_tier1:
   - name: point_of_sale
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Systems"
     variables:
       sys_purpose: point-of-sale
     hosts:
@@ -105,7 +105,7 @@ controller_groups_tier1:
       - "pos1-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "pos2-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: back_of_store
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Systems"
     variables:
       sys_purpose: back-of-store
     hosts:
@@ -114,7 +114,7 @@ controller_groups_tier1:
       - "bos1-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "bos2-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: process_control
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Systems"
     variables:
       sys_purpose: process-control
     hosts:
@@ -123,7 +123,7 @@ controller_groups_tier1:
       - "pc1-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "pc2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: plant_operations
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Systems"
     variables:
       sys_purpose: process-control
     hosts:
@@ -132,7 +132,7 @@ controller_groups_tier1:
       - "po1-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "po2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: store1000
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Systems"
     variables:
       country: US
       state: MN
@@ -143,7 +143,7 @@ controller_groups_tier1:
       - "bos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "bos2-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: store1001
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Systems"
     variables:
       country: US
       state: WI
@@ -154,7 +154,7 @@ controller_groups_tier1:
       - "bos1-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "bos2-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: plant100
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Systems"
     variables:
       country: US
       state: IN
@@ -165,7 +165,7 @@ controller_groups_tier1:
       - "po1-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "po2-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: plant101
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Systems"
     variables:
       country: US
       state: IN
@@ -178,12 +178,12 @@ controller_groups_tier1:
 
 controller_groups_tier2:
   - name: retail_stores
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Systems"
     children:
       - store1000
       - store1001
   - name: manufacturing_plants
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Systems"
     children:
       - plant100
       - plant101
