@@ -351,6 +351,7 @@
           - aap-aa
           - satellite-aa
           - automation-everywhere
+          - r4e
         required: yes
       - type: text
         question_name: "Demo Audience?"
