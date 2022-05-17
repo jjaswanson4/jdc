@@ -31,8 +31,8 @@ controller_credential_types:
     kind: cloud
     injectors:
       extra_vars:
-        redhat_registry_username: "{  { redhat_registry.username }}"
-        redhat_registry_password: "{  { redhat_registry.password }}"
+        redhat_registry_username: "{  { redhat_registry_username }}"
+        redhat_registry_password: "{  { redhat_registry_password }}"
 
 controller_credentials:
   - name: Automation Hub Image Registry Credentials
