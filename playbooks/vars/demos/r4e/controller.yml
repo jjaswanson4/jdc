@@ -194,7 +194,6 @@ controller_projects:
     scm_branch: main
     scm_type: git
     scm_url: https://github.com/jjaswanson4/jdc.git
-    wait: yes
 
 controller_templates:
   - name: Create Edge Installer ISO
