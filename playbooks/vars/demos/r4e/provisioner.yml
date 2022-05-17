@@ -198,7 +198,7 @@ controller_groups_tier3:
       - utility_server
     variables:
       provisioning:
-        host_group: "{  { os }}"
+        host_group: "{  { os }}/vlan146"
         method: bootdisk
         dns_domain: "{  { demo_uuid }}.{  { base_dns_suffix }}"
         cpus: "{  { cpus }}"
