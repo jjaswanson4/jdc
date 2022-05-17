@@ -33,13 +33,6 @@ controller_credentials:
     inputs:
       username: root
       password: "{  { admin_password }}"
-  - name: Red Hat Satellite Credentials
-    organization: "{  { audience }}"
-    credential_type: Red Hat Satellite 6
-    inputs:
-      host: "https://{  { groups['satellite'][0] }}"
-      username: "{  { admin_username }}"
-      password: "{  { admin_password }}"
   - name: Automation Hub Image Registry Credentials
     organization: "{  { audience }}"
     credential_type: Container Registry
@@ -56,136 +49,178 @@ controller_execution_environments:
     credential: Automation Hub Image Registry Credentials
     pull: always
 
-controller_teams:
-  - name: "{  { audience }} Application Team"
-    description: application team
-    organization: "{  { audience }}"
-  - name: "{  { audience }} Infrastructure Team"
-    description: infrastructure team
-    organization: "{  { audience }}"
-  - name: "{  { audience }} Security Team"
-    description: security team
-    organization: "{  { audience }}"
-  - name: "{  { audience }} Ops Team"
-    description: ops team
-    organization: "{  { audience }}"
+# controller_teams:
+#   - name: "{  { audience }} Application Team"
+#     description: application team
+#     organization: "{  { audience }}"
+#   - name: "{  { audience }} Infrastructure Team"
+#     description: infrastructure team
+#     organization: "{  { audience }}"
+#   - name: "{  { audience }} Security Team"
+#     description: security team
+#     organization: "{  { audience }}"
+#   - name: "{  { audience }} Ops Team"
+#     description: ops team
+#     organization: "{  { audience }}"
 
-controller_user_accounts:
-  - username: "{  { audience }}_application_team"
-    password: "{  { admin_password }}"
-    email: dont@email.me
-    update_secrets: no
-  - username: "{  { audience }}_infrastructure_team"
-    password: "{  { admin_password }}"
-    email: dont@email.me
-    update_secrets: no
-  - username: "{  { audience }}_security_team"
-    password: "{  { admin_password }}"
-    email: dont@email.me
-    update_secrets: no
-  - username: "{  { audience }}_ops_team"
-    password: "{  { admin_password }}"
-    email: dont@email.me
-    update_secrets: no  
-  - username: "{  { audience }}_admin"
-    password: "{  { admin_password }}"
-    email: dont@email.me
-    update_secrets: no
+# controller_user_accounts:
+#   - username: "{  { audience }}_application_team"
+#     password: "{  { admin_password }}"
+#     email: dont@email.me
+#     update_secrets: no
+#   - username: "{  { audience }}_infrastructure_team"
+#     password: "{  { admin_password }}"
+#     email: dont@email.me
+#     update_secrets: no
+#   - username: "{  { audience }}_security_team"
+#     password: "{  { admin_password }}"
+#     email: dont@email.me
+#     update_secrets: no
+#   - username: "{  { audience }}_ops_team"
+#     password: "{  { admin_password }}"
+#     email: dont@email.me
+#     update_secrets: no  
+#   - username: "{  { audience }}_admin"
+#     password: "{  { admin_password }}"
+#     email: dont@email.me
+#     update_secrets: no
 
 controller_inventories:
-  - name: "{  { audience }} Infrastructure"
+  - name: "{  { audience }} Edge Systems"
     organization: "{  { audience }}"
 
-controller_inventory_sources:
-  - name: Satellite Inventory Source
-    source: satellite6
-    inventory: "{  { audience }} Infrastructure"
-    credential: Red Hat Satellite Credentials
-    organization: "{  { audience }}"
-    wait: yes
+controller_hosts:
+  - name: "pos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "pos2-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "bos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "bos2-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "pos1-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "pos2-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "bos1-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "bos2-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "pc1-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "pc2-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "po1-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "po2-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "pc1-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "pc2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "po1-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "po2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
 
-controller_group_tiers: 3
+controller_group_tiers: 2
+
 controller_groups_tier1:
-  - name: primary
-    inventory: "{  { audience }} Infrastructure"
-    hosts:
-      - "sapdnhdb1.{  { demo_uuid }}.{  { base_dns_suffix }}"
-      - "sapdphdb1.{  { demo_uuid }}.{  { base_dns_suffix }}"
+  - name: point_of_sale
+    inventory: "Demo {{ demo_uuid }} Inventory"
     variables:
-      sap_hana_hsr_role: primary
-  - name: secondary
-    inventory: "{  { audience }} Infrastructure"
+      sys_purpose: point-of-sale
     hosts:
-      - "sapdnhdb2.{  { demo_uuid }}.{  { base_dns_suffix }}"
-      - "sapdphdb2.{  { demo_uuid }}.{  { base_dns_suffix }}"
+      - "pos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "pos2-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "pos1-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "pos2-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: back_of_store
+    inventory: "Demo {{ demo_uuid }} Inventory"
     variables:
-      sap_hana_hsr_role: secondary
-  - name: netweaver
-    inventory: "{  { audience }} Infrastructure"
+      sys_purpose: back-of-store
     hosts:
-      - "sapdnapp1.{  { demo_uuid }}.{  { base_dns_suffix }}"
-      - "sapdpapp1.{  { demo_uuid }}.{  { base_dns_suffix }}"
-  - name: non_production
-    inventory: "{  { audience }} Infrastructure"
-    hosts:
-      - "sapdnapp1.{  { demo_uuid }}.{  { base_dns_suffix }}"
-      - "sapdnhdb1.{  { demo_uuid }}.{  { base_dns_suffix }}"
-      - "sapdnhdb2.{  { demo_uuid }}.{  { base_dns_suffix }}"
+      - "bos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "bos2-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "bos1-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "bos2-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: process_control
+    inventory: "Demo {{ demo_uuid }} Inventory"
     variables:
-      lifecycle_environment: non_production
-  - name: production
-    inventory: "{  { audience }} Infrastructure"
+      sys_purpose: process-control
     hosts:
-      - "sapdpapp1.{  { demo_uuid }}.{  { base_dns_suffix }}"
-      - "sapdphdb1.{  { demo_uuid }}.{  { base_dns_suffix }}"
-      - "sapdphdb2.{  { demo_uuid }}.{  { base_dns_suffix }}"
+      - "pc1-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "pc2-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "pc1-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "pc2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: plant_operations
+    inventory: "Demo {{ demo_uuid }} Inventory"
     variables:
-      lifecycle_environment: production
-  - name: satellite
-    inventory: "{  { audience }} Infrastructure"
+      sys_purpose: process-control
     hosts:
-      - "{  { groups['satellite'][0] }}"
+      - "po1-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "po2-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "po1-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "po2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: store1000
+    inventory: "Demo {{ demo_uuid }} Inventory"
     variables:
-      satellite:
-        username: "{  { admin_username }}"
-        password: "{  { admin_password }}"
-        url: "https://{  { groups['satellite'][0] }}"
-        organization: "{  { audience }}"
-        composite_content_view: composite-rhel8
-        content_view_filter_name: '07-01-2021'
+      country: US
+      state: MN
+      City: Saint Paul
+    hosts:
+      - "pos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "pos2-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "bos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "bos2-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: store1001
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    variables:
+      country: US
+      state: WI
+      City: Milwaukee
+    hosts:
+      - "pos1-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "pos2-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "bos1-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "bos2-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: plant100
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    variables:
+      country: US
+      state: IN
+      City: Lafayette
+    hosts:
+      - "pc1-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "pc2-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "po1-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "po2-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: plant101
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    variables:
+      country: US
+      state: IN
+      City: West Lafayette
+    hosts:
+      - "pc1-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "pc2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "po1-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "po2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
 
 controller_groups_tier2:
-  - name: hana
-    inventory: "{  { audience }} Infrastructure"
+  - name: retail_stores
+    inventory: "Demo {{ demo_uuid }} Inventory"
     children:
-      - primary
-      - secondary
-  - name: kpatch_patch
-    inventory: "{  { audience }} Infrastructure"
+      - store1000
+      - store1001
+  - name: manufacturing_plants
+    inventory: "Demo {{ demo_uuid }} Inventory"
     children:
-      - primary
-    variables:
-      patching_strategy: kpatch
-  - name: normal_patch
-    inventory: "{  { audience }} Infrastructure"
-    children:
-      - netweaver
-      - secondary
-    variables:
-      patching_strategy: normal
-
-controller_groups_tier3:
-  - name: sap
-    inventory: "{  { audience }} Infrastructure"
-    children:
-      - hana
-      - netweaver
-    variables:
-      os: rhel8.4
-      application: sap
+      - plant100
+      - plant101
 
 controller_projects:
-  - name: "{  { audience }} Patching Code"
+  - name: "{  { audience }} Edge Management Codebase"
     organization: "{  { audience }}"
     scm_branch: main
     scm_type: git
@@ -193,113 +228,15 @@ controller_projects:
     wait: yes
 
 controller_templates:
-  - name: Run Insights Report | Non_Production | Security
+  - name: Create Edge Installer ISO
     inventory: "{  { audience }} Infrastructure"
     limit: non_production
-    project: "{  { audience }} Patching Code"
+    project: "{  { audience }} Edge Management Codebase"
     organization: "{  { audience }}"
-    playbook: playbooks/run-insights-report.yml
+    playbook: playbooks/create-edge-installer-iso.yml
     execution_environment: Josh's Demos Collection EE
     credentials:
-      - Patching Credentials
-  - name: Check for Updates | Non_Production | Security
-    inventory: "{  { audience }} Infrastructure"
-    limit: non_production
-    project: "{  { audience }} Patching Code"
-    organization: "{  { audience }}"
-    playbook: playbooks/check-for-updates.yml
-    execution_environment: Josh's Demos Collection EE
-    credentials:
-      - Patching Credentials
-  - name: Install Tracer | Non_Production | Infrastructure
-    inventory: "{  { audience }} Infrastructure"
-    limit: 'non_production:&normal_patch'
-    project: "{  { audience }} Patching Code"
-    organization: "{  { audience }}"
-    playbook: playbooks/install-tracer.yml
-    execution_environment: Josh's Demos Collection EE
-    credentials:
-      - Patching Credentials
-  - name: Standby Secondary Database | Non_Production | BASIS (Application Team)
-    inventory: "{  { audience }} Infrastructure"
-    limit: 'non_production:&secondary'
-    project: "{  { audience }} Patching Code"
-    organization: "{  { audience }}"
-    playbook: playbooks/pacemaker-node-control.yml
-    execution_environment: Josh's Demos Collection EE
-    credentials:
-      - Patching Credentials
-    extra_vars:
-      pcs_node_status: standby
-  - name: Update All Packages | Non_Production | Infrastructure
-    inventory: "{  { audience }} Infrastructure"
-    limit: 'non_production:&normal_patch'
-    project: "{  { audience }} Patching Code"
-    organization: "{  { audience }}"
-    playbook: playbooks/update-all-packages.yml
-    execution_environment: Josh's Demos Collection EE
-    credentials:
-      - Patching Credentials
-  - name: Run Tracer Report | Non_Production | Infrastructure
-    inventory: "{  { audience }} Infrastructure"
-    limit: 'non_production:&normal_patch'
-    project: "{  { audience }} Patching Code"
-    organization: "{  { audience }}"
-    playbook: playbooks/run-tracer-report.yml
-    execution_environment: Josh's Demos Collection EE
-    credentials:
-      - Patching Credentials
-  - name: Reboot Server | Non_Production | Infrastructure
-    inventory: "{  { audience }} Infrastructure"
-    limit: 'non_production:&normal_patch'
-    project: "{  { audience }} Patching Code"
-    organization: "{  { audience }}"
-    playbook: playbooks/reboot-server.yml
-    execution_environment: Josh's Demos Collection EE
-    credentials:
-      - Patching Credentials  
-  - name: Kpatch Server | Non_Production | Infrastructure
-    inventory: "{  { audience }} Infrastructure"
-    limit: 'non_production:&kpatch_patch'
-    project: "{  { audience }} Patching Code"
-    organization: "{  { audience }}"
-    playbook: playbooks/kpatch-server.yml
-    execution_environment: Josh's Demos Collection EE
-    credentials:
-      - Patching Credentials
-  - name: Unstandby Secondary Database | Non_Production | BASIS (Application Team)
-    inventory: "{  { audience }} Infrastructure"
-    limit: 'non_production:&secondary'
-    project: "{  { audience }} Patching Code"
-    organization: "{  { audience }}"
-    playbook: playbooks/pacemaker-node-control.yml
-    execution_environment: Josh's Demos Collection EE
-    credentials:
-      - Patching Credentials
-    extra_vars:
-      pcs_node_status: unstandby
-  - name: Promote Content to Production | Infrastructure
-    inventory: "{  { audience }} Infrastructure"
-    limit: satellite
-    project: "{  { audience }} Patching Code"
-    organization: "{  { audience }}"
-    playbook: playbooks/promote-content.yml
-    execution_environment: Josh's Demos Collection EE
-    extra_vars:
-      current_lifecycle_environment: Non_Production
-      new_lifecycle_environment:
-        - Production
-    credentials:
-      - Patching Credentials
-  - name: Kill Stuck Insights Process
-    inventory: "{  { audience }} Infrastructure"
-    limit: 'non_production:&normal_patch'
-    project: "{  { audience }} Patching Code"
-    organization: "{  { audience }}"
-    playbook: playbooks/kill-hung-insights.yml
-    execution_environment: Josh's Demos Collection EE
-    credentials:
-      - Patching Credentials
+      - Patching Credentials    
 
 controller_workflows:
   - name: Pre-Patching | Non_Production | Security
