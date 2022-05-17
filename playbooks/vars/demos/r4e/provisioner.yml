@@ -298,28 +298,28 @@ controller_workflows:
           - Demo Provisioner Red Hat Registry Credentials
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
-      #   success_nodes:
-      #     - Configure Ansible Controller
+        success_nodes:
+          - Configure Ansible Controller
         failure_nodes:
           - Send Failure Email About 'Install Ansible Controller'
       - identifier: Send Failure Email About 'Install Ansible Controller'
         unified_job_template: Send Provisioner Email
         extra_data:
           failed_at_step: Install Ansible Controller
-      # - identifier: Configure Ansible Controller
-      #   unified_job_template: Configure Ansible Controller
-      #   limit: controller
-      #   credentials:
-      #     - Demo Provisioner Admin Credentials
-      #   success_nodes:
-      #     - Send Success Email
-      #   failure_nodes:
-      #     - Send Failure Email About 'Configure Ansible Controller'
-      #   all_parents_must_converge: yes
-      # - identifier: Send Failure Email About 'Configure Ansible Controller'
-      #   unified_job_template: Send Provisioner Email
-      #   extra_data:
-      #     failed_at_step: Configure Ansible Controller
+      - identifier: Configure Ansible Controller
+        unified_job_template: Configure Ansible Controller
+        limit: controller
+        credentials:
+          - Demo Provisioner Admin Credentials
+        success_nodes:
+          - Send Success Email
+        failure_nodes:
+          - Send Failure Email About 'Configure Ansible Controller'
+        all_parents_must_converge: yes
+      - identifier: Send Failure Email About 'Configure Ansible Controller'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Configure Ansible Controller
       - identifier: Provision Utility Server
         unified_job_template: Provision Systems
         limit: utility_server
