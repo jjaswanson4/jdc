@@ -4,6 +4,10 @@
   ansible.builtin.fetch:
     src: /tmp/fleet_iso/fleet_out.iso
     dest: "/tmp/{{ demo_uuid }}-edge-installer.iso"
+    flat: yes
+
+- cmd: ls -lsar
+  delegate_to: localhost
 
 - name: upload edge installer ISO to datastore
   community.vmware.vsphere_copy:
@@ -14,5 +18,5 @@
     src: "/tmp/{{ demo_uuid }}-edge-installer.iso"
     datacenter: "{{ vcenter_datacenter }}"
     datastore: "{{ vcenter_datastore }}"
-    path: "/tmp/{{ demo_uuid }}-edge-installer.iso"
+    path: "/iso/{{ demo_uuid }}-edge-installer.iso"
   delegate_to: localhost
