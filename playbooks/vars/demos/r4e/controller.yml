@@ -97,10 +97,12 @@ controller_inventories:
     organization: "{  { audience }}"
     variables:
       audience: "{  { audience }}"
+      demo_uuid: "{  { demo_uuid }}"
   - name: "{  { audience }} Edge Utilities"
     organization: "{  { audience }}"
     variables:
       audience: "{  { audience }}"
+      demo_uuid: "{  { demo_uuid }}"
 
 controller_hosts:
   - name: "pos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
