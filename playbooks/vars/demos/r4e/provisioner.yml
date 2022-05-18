@@ -57,11 +57,10 @@ controller_credential_types:
         - id: rhc_activation_key
           type: string
           label: Activation Key
-          secret: yes
     injectors:
       extra_vars:
-        rhc_org_id: "{{ rhc_org_id }}"
-        rhc_activation_key: "{{ rhc_activation_key }}" 
+        rhc_org_id: "{  { rhc_org_id }}"
+        rhc_activation_key: "{  { rhc_activation_key }}" 
 
 controller_credentials:
   - name: Demo Provisioner RHC Edge Credentials
@@ -335,6 +334,7 @@ controller_workflows:
         credentials:
           - Demo Provisioner Admin Credentials
           - Demo Provisioner Red Hat Registry Credentials
+          - Demo Provisioner RHC Edge Credentials
         success_nodes:
           - Send Success Email
         failure_nodes:
