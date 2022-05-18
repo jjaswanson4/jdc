@@ -111,38 +111,6 @@ controller_inventories:
       base_dns_suffix: "{  { base_dns_suffix }}"
 
 controller_hosts:
-  # - name: "pos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  #   inventory: "{  { audience }} Edge Systems"
-  # - name: "pos2-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  #   inventory: "{  { audience }} Edge Systems"
-  # - name: "bos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  #   inventory: "{  { audience }} Edge Systems"
-  # - name: "bos2-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  #   inventory: "{  { audience }} Edge Systems"
-  # - name: "pos1-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  #   inventory: "{  { audience }} Edge Systems"
-  # - name: "pos2-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  #   inventory: "{  { audience }} Edge Systems"
-  # - name: "bos1-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  #   inventory: "{  { audience }} Edge Systems"
-  # - name: "bos2-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  #   inventory: "{  { audience }} Edge Systems"
-  # - name: "pc1-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  #   inventory: "{  { audience }} Edge Systems"
-  # - name: "pc2-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  #   inventory: "{  { audience }} Edge Systems"
-  # - name: "po1-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  #   inventory: "{  { audience }} Edge Systems"
-  # - name: "po2-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  #   inventory: "{  { audience }} Edge Systems"
-  # - name: "pc1-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  #   inventory: "{  { audience }} Edge Systems"
-  # - name: "pc2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  #   inventory: "{  { audience }} Edge Systems"
-  # - name: "po1-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  #   inventory: "{  { audience }} Edge Systems"
-  # - name: "po2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  #   inventory: "{  { audience }} Edge Systems"
   - name: "edge-utilities.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "{  { audience }} Edge Utilities"
   - name: localhost
@@ -158,82 +126,42 @@ controller_groups_tier1:
     inventory: "{  { audience }} Edge Systems"
     variables:
       sys_purpose: point-of-sale
-    # hosts:
-    #   - "pos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    #   - "pos2-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    #   - "pos1-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    #   - "pos2-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: back_of_store
     inventory: "{  { audience }} Edge Systems"
     variables:
       sys_purpose: back-of-store
-    # hosts:
-    #   - "bos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    #   - "bos2-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    #   - "bos1-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    #   - "bos2-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: process_control
     inventory: "{  { audience }} Edge Systems"
     variables:
       sys_purpose: process-control
-    # hosts:
-    #   - "pc1-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    #   - "pc2-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    #   - "pc1-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    #   - "pc2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: plant_operations
     inventory: "{  { audience }} Edge Systems"
     variables:
       sys_purpose: process-control
-    # hosts:
-    #   - "po1-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    #   - "po2-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    #   - "po1-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    #   - "po2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: store1000
     inventory: "{  { audience }} Edge Systems"
     variables:
       country: US
       state: MN
       City: Saint Paul
-    # hosts:
-    #   - "pos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    #   - "pos2-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    #   - "bos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    #   - "bos2-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: store1001
     inventory: "{  { audience }} Edge Systems"
     variables:
       country: US
       state: WI
       City: Milwaukee
-    # hosts:
-    #   - "pos1-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    #   - "pos2-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    #   - "bos1-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    #   - "bos2-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: plant100
     inventory: "{  { audience }} Edge Systems"
     variables:
       country: US
       state: IN
       City: Lafayette
-    # hosts:
-    #   - "pc1-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    #   - "pc2-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    #   - "po1-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    #   - "po2-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: plant101
     inventory: "{  { audience }} Edge Systems"
     variables:
       country: US
       state: IN
       City: West Lafayette
-    # hosts:
-    #   - "pc1-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    #   - "pc2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    #   - "po1-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    #   - "po2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
 
 controller_groups_tier2:
   - name: retail_stores
