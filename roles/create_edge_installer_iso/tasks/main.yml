@@ -11,3 +11,6 @@
 
 - name: import update image tasks
   ansible.builtin.import_tasks: update-installer-image.yml
+
+- name: import push installer iso to datastore
+  ansible.builtin.import_tasks: upload-installer-image.yml
