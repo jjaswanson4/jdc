@@ -69,7 +69,7 @@ controller_credentials:
     organization: "{{ controller_organization }}"
     inputs:
       rhc_org_id: "{{ rhc.org_id }}"
-      admin_password: "{{ rhc.activation_key }}"    
+      rhc_activation_key: "{{ rhc.activation_key }}"    
 
 controller_hosts:
   - name: "pos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
