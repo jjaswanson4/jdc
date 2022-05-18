@@ -45,6 +45,7 @@ controller_organizations: []
 controller_execution_environments: []
 controller_inventories: []
 controller_projects: []
+controller_templates: []
 
 controller_credential_types:
   - name: Demo Provisioner RHC Edge Credentials
@@ -98,38 +99,6 @@ controller_credentials:
       edge_user_ssh_key_data: "{{ edge_user_key_data }}"
 
 controller_hosts:
-  - name: "pos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
-  - name: "pos2-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
-  - name: "bos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
-  - name: "bos2-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
-  - name: "pos1-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
-  - name: "pos2-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
-  - name: "bos1-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
-  - name: "bos2-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
-  - name: "pc1-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
-  - name: "pc2-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
-  - name: "po1-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
-  - name: "po2-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
-  - name: "pc1-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
-  - name: "pc2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
-  - name: "po1-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
-  - name: "po2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "edge-utilities.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "Demo {{ demo_uuid }} Inventory"
     variables:
@@ -138,112 +107,37 @@ controller_hosts:
       memory_mb: 8192
       application: general
       lifecycle_environment: production
+  - name: "r4e-system-0.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "r4e-system-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "r4e-system-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "r4e-system-3.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: "r4e-system-4.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
 
-controller_group_tiers: 3
+controller_group_tiers: 2
 controller_groups_tier1:
-  - name: point_of_sale
-    inventory: "Demo {{ demo_uuid }} Inventory"
-    variables:
-      sys_purpose: point-of-sale
-    hosts:
-      - "pos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "pos2-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "pos1-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "pos2-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  - name: back_of_store
-    inventory: "Demo {{ demo_uuid }} Inventory"
-    variables:
-      sys_purpose: back-of-store
-    hosts:
-      - "bos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "bos2-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "bos1-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "bos2-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  - name: process_control
-    inventory: "Demo {{ demo_uuid }} Inventory"
-    variables:
-      sys_purpose: process-control
-    hosts:
-      - "pc1-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "pc2-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "pc1-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "pc2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  - name: plant_operations
-    inventory: "Demo {{ demo_uuid }} Inventory"
-    variables:
-      sys_purpose: process-control
-    hosts:
-      - "po1-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "po2-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "po1-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "po2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  - name: store1000
-    inventory: "Demo {{ demo_uuid }} Inventory"
-    variables:
-      country: US
-      state: MN
-      City: Saint Paul
-    hosts:
-      - "pos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "pos2-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "bos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "bos2-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  - name: store1001
-    inventory: "Demo {{ demo_uuid }} Inventory"
-    variables:
-      country: US
-      state: WI
-      City: Milwaukee
-    hosts:
-      - "pos1-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "pos2-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "bos1-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "bos2-store1001.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  - name: plant100
-    inventory: "Demo {{ demo_uuid }} Inventory"
-    variables:
-      country: US
-      state: IN
-      City: Lafayette
-    hosts:
-      - "pc1-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "pc2-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "po1-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "po2-mfgplant100.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  - name: plant101
-    inventory: "Demo {{ demo_uuid }} Inventory"
-    variables:
-      country: US
-      state: IN
-      City: West Lafayette
-    hosts:
-      - "pc1-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "pc2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "po1-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "po2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: utility_server
     inventory: "Demo {{ demo_uuid }} Inventory"
     hosts:
       - "edge-utilities.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: edge_systems
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    hosts:
+      - "r4e-system-0.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "r4e-system-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "r4e-system-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "r4e-system-3.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "r4e-system-4.{{ demo_uuid }}.{{ base_dns_suffix }}"
 
 controller_groups_tier2:
-  - name: retail_stores
-    inventory: "Demo {{ demo_uuid }} Inventory"
-    children:
-      - store1000
-      - store1001
-  - name: manufacturing_plants
-    inventory: "Demo {{ demo_uuid }} Inventory"
-    children:
-      - plant100
-      - plant101
-
-controller_groups_tier3:
   - name: demo_hosts
     inventory: "Demo {{ demo_uuid }} Inventory"
     children:
-      - retail_stores
-      - manufacturing_plants
+      - edge_systems
       - utility_server
     variables:
       provisioning:
@@ -253,25 +147,6 @@ controller_groups_tier3:
         cpus: "{  { cpus }}"
         memory_mb: "{  { memory_mb }}"
         activation_keys: "ak-{  { application }}-{  { os }}-{  { lifecycle_environment }}"
-
-
-controller_templates: []
-  # - name: Prepare New Content
-  #   inventory: Demo Inventory
-  #   ask_inventory_on_launch: yes
-  #   limit: satellite
-  #   project: "{{ project }}"
-  #   playbook: playbooks/prepare-new-content.yml
-  #   execution_environment: "{{ execution_environment.name }}"
-  #   ask_credential_on_launch: yes
-  # - name: Roll Back Content
-  #   inventory: Demo Inventory
-  #   ask_inventory_on_launch: yes
-  #   limit: satellite
-  #   project: "{{ project }}"
-  #   playbook: playbooks/rollback-content.yml
-  #   execution_environment: "{{ execution_environment.name }}"
-  #   ask_credential_on_launch: yes
 
 controller_workflows:
   - name: Provision RHEL for Edge Demo
