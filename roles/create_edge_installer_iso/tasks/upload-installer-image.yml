@@ -14,4 +14,4 @@
     src: /tmp/fleet_iso/fleet_out.iso
     datacenter: "{{ vcenter_datacenter }}"
     datastore: "{{ vcenter_datastore }}"
-    path: iso/
+    path: "iso/{{ demo_uuid }}-edge-installer.iso"
