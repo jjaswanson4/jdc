@@ -8,3 +8,6 @@
 
 - name: import push-configs tasks
   ansible.builtin.import_tasks: push-configs.yml
+
+- name: import update image tasks
+  ansible.builtin.import_tasks: push-configs.yml
