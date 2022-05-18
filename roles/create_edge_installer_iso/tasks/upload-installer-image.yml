@@ -29,6 +29,7 @@
   ansible.builtin.copy:
     src: /tmp/fleet_iso/fleet_out.iso
     dest: "/mnt/vmware-datastore/iso/{{ demo_uuid }}-edge-installer.iso"
+    remote_src: yes
 
 - name: unmount datastore path
   ansible.posix.mount:
