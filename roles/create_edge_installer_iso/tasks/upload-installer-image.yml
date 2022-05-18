@@ -6,7 +6,8 @@
     dest: "/tmp/{{ demo_uuid }}-edge-installer.iso"
     flat: yes
 
-- cmd: ls -lsar
+- ansible.builtin.shell:
+    cmd: ls -lsar
   delegate_to: localhost
 
 - name: upload edge installer ISO to datastore
