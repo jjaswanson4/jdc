@@ -21,5 +21,5 @@
 # dirty workaround since vmware_copy module doesn't work
 - name: install nfs-utils
   ansible.builtin.dnf:
-    name: nfs-uitls
+    name: nfs-utils
   
