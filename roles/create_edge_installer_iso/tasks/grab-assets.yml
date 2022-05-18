@@ -8,5 +8,3 @@
 - name: grab fleet utils image
   containers.podman.podman_image:
     name: quay.io/fleet-management/fleet-iso-util:latest
-    username: "{{ redhat_registry_username }}"
-    password: "{{ redhat_registry_password }}"
