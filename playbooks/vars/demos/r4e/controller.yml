@@ -149,6 +149,7 @@ controller_hosts:
     inventory: Local Actions
     variables:
       ansible_connection: local
+      ansible_python_interpreter: "{  { ansible_playbook_python }}"
 
 controller_group_tiers: 2
 
@@ -267,7 +268,7 @@ controller_templates:
       - Red Hat Registry Credentials
       - vCenter Credentials
   - name: Provision Edge Systems
-    inventory: "{  { audience }} Edge Utilities"
+    inventory: Local Actions
     project: "{  { audience }} Edge Management Codebase"
     organization: "{  { audience }}"
     playbook: playbooks/provision-rhel-edge-system.yml
