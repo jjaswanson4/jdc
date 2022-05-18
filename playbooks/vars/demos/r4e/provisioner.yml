@@ -42,11 +42,34 @@ controller_configuration_credentials_secure_logging: no
 # These are where demo specific components are defined, in hash form. These will automatically be added to the common resources.
 # If there is no need for a specific, resource, simply define an empty var, such as `controller_organizations: []`
 controller_organizations: []
-controller_credential_types: []
-controller_credentials: []
 controller_execution_environments: []
 controller_inventories: []
 controller_projects: []
+
+controller_credential_types:
+  - name: Demo Provisioner RHC Edge Credentials
+    kind: cloud
+    inputs:
+      fields:
+        - id: rhc_org_id
+          type: string
+          label: Organization ID
+        - id: rhc_activation_key
+          type: string
+          label: Activation Key
+          secret: yes
+    injectors:
+      extra_vars:
+        rhc_org_id: "{{ rhc_org_id }}"
+        rhc_activation_key: "{{ rhc_activation_key }}" 
+
+controller_credentials:
+  - name: Demo Provisioner RHC Edge Credentials
+    credential_type: Demo Provisioner RHC Edge Credentials
+    organization: "{{ controller_organization }}"
+    inputs:
+      rhc_org_id: "{{ rhc.org_id }}"
+      admin_password: "{{ rhc.activation_key }}"    
 
 controller_hosts:
   - name: "pos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
