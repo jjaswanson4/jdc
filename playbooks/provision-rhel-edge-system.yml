@@ -38,6 +38,7 @@
       register: deploy_vm
       loop_control:
         loop_var: system_number
+        pause: 10
       loop: "{{ range(0, 5, 1) | list }}"
       async: 10
       poll: 0
