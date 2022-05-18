@@ -335,6 +335,7 @@ controller_workflows:
           - Demo Provisioner Admin Credentials
           - Demo Provisioner Red Hat Registry Credentials
           - Demo Provisioner RHC Edge Credentials
+          - Demo Provisioner vCenter Credentials
         success_nodes:
           - Send Success Email
         failure_nodes:
