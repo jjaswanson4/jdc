@@ -12,7 +12,7 @@
 
 - name: upload edge installer ISO to datastore
   community.vmware.vsphere_copy:
-    hostname: "{{ vcenter_hostname }}"
+    hostname: vcenter03.lab.msp.redhat.com
     username: '{{ vcenter_username }}'
     password: '{{ vcenter_password }}'
     validate_certs: "{{ vcenter_validate_certs }}"
