@@ -73,8 +73,9 @@ controller_credentials:
   - name: Root Credentials
     organization: "{  { audience }}"
     credential_type: Machine
-    username: root
-    password: "{  { admin_password }}"
+      inputs:
+      username: root
+      password: "{  { admin_password }}"
   - name: RHC Edge Credentials
     credential_type: RHC Edge Credentials
     organization: "{  { audience }}"
@@ -87,8 +88,9 @@ controller_credentials:
   - name: Edge User Credentials
     organization: "{  { audience }}"
     credential_type: Machine
-    username: "{  { edge_user_username }}"
-    ssh_key_data: "{  { edge_user_ssh_key_data }}"
+    inputs:
+      username: "{  { edge_user_username }}"
+      ssh_key_data: "{  { edge_user_ssh_key_data }}"
 
 controller_execution_environments:
   - name: Josh's Demos Collection EE
