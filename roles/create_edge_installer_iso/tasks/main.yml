@@ -10,4 +10,4 @@
   ansible.builtin.import_tasks: push-configs.yml
 
 - name: import update image tasks
-  ansible.builtin.import_tasks: push-configs.yml
+  ansible.builtin.import_tasks: update-installer-image.yml
