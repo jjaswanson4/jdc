@@ -56,7 +56,7 @@ controller_credential_types:
         vcenter_validate_certs: "no"
         vcenter_datacenter: "{  { vcenter_datacenter }}"
         vcenter_cluster: "{  { vcenter_cluster }}"
-        vcenter_datastore: storage04-nfs-lun00
+        vcenter_datastore: storage04-nfs-lun0
 
 controller_credentials:
   - name: Automation Hub Image Registry Credentials
