@@ -33,13 +33,11 @@
             iso_path: '[{{ vcenter_datastore }}] iso/{{ demo_uuid }}-edge-installer.iso'
             type: iso
             unit_number: 0
-        wait_for_ip_address: true
-        wait_for_ip_address_timeout: 600
+        # wait_for_ip_address: true
+        # wait_for_ip_address_timeout: 600
       register: deploy_vm
       loop_control:
         loop_var: system_number
         pause: 10
       loop: "{{ range(0, 5, 1) | list }}"
-      async: 10
-      poll: 0
 
