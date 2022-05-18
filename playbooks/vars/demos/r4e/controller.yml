@@ -234,6 +234,7 @@ controller_templates:
       - Root Credentials
       - RHC Edge Credentials
       - Controller API Credentials
+      - Red Hat Registry Credentials
 
 # controller_workflows:
 #   - name: Pre-Patching | Non_Production | Security
