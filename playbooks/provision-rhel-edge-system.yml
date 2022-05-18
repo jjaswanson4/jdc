@@ -14,7 +14,7 @@
         datacenter: "{{ vcenter_datacenter }}"
         datastore: "{{ vcenter_datastore }}"
         folder: "/Demos/{{ demo_uuid }}/"
-        name: "r4e-system-test.{{ demo_uuid }}.{{ base_dns_suffix }}"
+        name: "r4e-system-{{ system_number }}.{{ demo_uuid }}.{{ base_dns_suffix }}"
         state: poweredon
         guest_id: rhel8_64Guest
         disk:
@@ -34,5 +34,9 @@
             type: iso
             unit_number: 0
         wait_for_ip_address: true
-      delegate_to: localhost
+        wait_for_ip_address_timeout: 600
       register: deploy_vm
+      loop_control:
+        loop_var: system_number
+      loop: "{{ range(0, 5, 1) | list }}"
+
