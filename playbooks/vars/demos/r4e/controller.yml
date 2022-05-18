@@ -33,6 +33,40 @@ controller_credential_types:
       extra_vars:
         redhat_registry_username: "{  { redhat_registry_username }}"
         redhat_registry_password: "{  { redhat_registry_password }}"
+  - name: RHC Edge Credentials
+    kind: cloud
+    inputs:
+      fields:
+        - id: rhc_org_id
+          type: string
+          label: Organization ID
+        - id: rhc_activation_key
+          type: string
+          label: Activation Key
+          secret: yes
+    injectors:
+      extra_vars:
+        rhc_org_id: "{  { rhc_org_id }}"
+        rhc_activation_key: "{  { rhc_activation_key }}" 
+  - name: Controller API Credentials
+    kind: cloud
+    inputs:
+      fields:
+        - id: controller_hostname
+          type: string
+          label: Controller Hostname
+        - id: controller_username
+          type: string
+          label: Controller Username
+        - id: controller_password
+          type: string
+          label: Controller Password
+          secret: yes
+    injectors:
+      extra_vars:
+        controller_hostname: "{  { controller_hostname }}"
+        controller_username: "{  { controller_username }}"
+        controller_password: "{  { controller_password }}"
 
 controller_credentials:
   - name: Automation Hub Image Registry Credentials
@@ -51,6 +85,19 @@ controller_credentials:
     credential_type: Machine
     username: root
     password: "{  { admin_password }}"
+  - name: RHC Edge Credentials
+    credential_type: RHC Edge Credentials
+    organization: "{  { audience }}"
+    inputs:
+      rhc_org_id: "{  { rhc_org_id }}"
+      admin_password: "{  { rhc_activation_key }}"
+  - name: Controller API Credentials
+    organization: "{  { audience }}"
+    credential_type: Controller API Credentials
+    inputs: 
+        controller_hostname: "https://{  { audience | lower }}-{  { demo }}-controller.{  { demo_uuid }}.{  { base_dns_suffix }}"
+        controller_username: "{  { controller_username }}"
+        controller_password: "{  { controller_password }}"
 
 controller_execution_environments:
   - name: Josh's Demos Collection EE
@@ -61,6 +108,8 @@ controller_execution_environments:
 
 controller_inventories:
   - name: "{  { audience }} Edge Systems"
+    organization: "{  { audience }}"
+  - name: "{  { audience }} Edge Utilities"
     organization: "{  { audience }}"
 
 controller_hosts:
@@ -96,6 +145,8 @@ controller_hosts:
     inventory: "{  { audience }} Edge Systems"
   - name: "po2-mfgplant101.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "{  { audience }} Edge Systems"
+  - name: "edge-utilities.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "{  { audience }} Edge Utilities"
 
 controller_group_tiers: 2
 
@@ -202,14 +253,14 @@ controller_projects:
 
 controller_templates:
   - name: Create Edge Installer ISO
-    inventory: "{  { audience }} Infrastructure"
-    limit: non_production
+    inventory: "{  { audience }} Edge Utilities"
     project: "{  { audience }} Edge Management Codebase"
     organization: "{  { audience }}"
     playbook: playbooks/create-edge-installer-iso.yml
     execution_environment: Josh's Demos Collection EE
     credentials:
-      - Root Credentials  
+      - Root Credentials
+      - RHC Edge Credentials
 
 # controller_workflows:
 #   - name: Pre-Patching | Non_Production | Security
