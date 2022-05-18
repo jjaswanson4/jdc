@@ -12,7 +12,6 @@
         password: "{{ vcenter_password }}"
         validate_certs: "{{ vcenter_validate_certs }}"
         datacenter: "{{ vcenter_datacenter }}"
-        datastore: "{{ vcenter_datastore }}"
         folder: "/Demos/{{ demo_uuid }}/"
         name: "r4e-system-test.{{ demo_uuid }}.{{ base_dns_suffix }}"
         state: poweredon
@@ -20,7 +19,7 @@
         disk:
           - size_gb: 10
             type: thin
-            datastore: datastore1
+            datastore: "{{ vcenter_datastore }}"
         hardware:
           memory_mb: 2048
           num_cpus: 2
