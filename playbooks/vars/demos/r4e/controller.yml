@@ -35,36 +35,15 @@ controller_credential_types:
         redhat_registry_password: "{  { redhat_registry_password }}"
   - name: RHC Edge Credentials
     kind: cloud
-    inputs:
-      fields:
-        - id: rhc_org_id
-          type: string
-          label: Organization ID
-        - id: rhc_activation_key
-          type: string
-          label: Activation Key
-          secret: yes
     injectors:
       extra_vars:
         rhc_org_id: "{  { rhc_org_id }}"
         rhc_activation_key: "{  { rhc_activation_key }}" 
   - name: Controller API Credentials
     kind: cloud
-    inputs:
-      fields:
-        - id: controller_hostname
-          type: string
-          label: Controller Hostname
-        - id: controller_username
-          type: string
-          label: Controller Username
-        - id: controller_password
-          type: string
-          label: Controller Password
-          secret: yes
     injectors:
       extra_vars:
-        controller_hostname: "{  { controller_hostname }}"
+        controller_hostname: "https://{  { audience | lower }}-{  { demo }}-controller.{  { demo_uuid }}.{  { base_dns_suffix }}"
         controller_username: "{  { controller_username }}"
         controller_password: "{  { controller_password }}"
 
@@ -88,16 +67,9 @@ controller_credentials:
   - name: RHC Edge Credentials
     credential_type: RHC Edge Credentials
     organization: "{  { audience }}"
-    inputs:
-      rhc_org_id: "{  { rhc_org_id }}"
-      admin_password: "{  { rhc_activation_key }}"
   - name: Controller API Credentials
     organization: "{  { audience }}"
     credential_type: Controller API Credentials
-    inputs: 
-        controller_hostname: "https://{  { audience | lower }}-{  { demo }}-controller.{  { demo_uuid }}.{  { base_dns_suffix }}"
-        controller_username: "{  { controller_username }}"
-        controller_password: "{  { controller_password }}"
 
 controller_execution_environments:
   - name: Josh's Demos Collection EE
