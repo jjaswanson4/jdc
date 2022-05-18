@@ -73,7 +73,7 @@ controller_credentials:
   - name: Root Credentials
     organization: "{  { audience }}"
     credential_type: Machine
-      inputs:
+    inputs:
       username: root
       password: "{  { admin_password }}"
   - name: RHC Edge Credentials
