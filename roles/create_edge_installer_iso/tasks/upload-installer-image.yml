@@ -1,23 +1,37 @@
 ---
 
-- name: grab iso from utility server
-  ansible.builtin.fetch:
+# - name: grab iso from utility server
+#   ansible.builtin.fetch:
+#     src: /tmp/fleet_iso/fleet_out.iso
+#     dest: "/tmp/{{ demo_uuid }}-edge-installer.iso"
+#     flat: yes
+
+# - name: upload edge installer ISO to datastore
+#   community.vmware.vsphere_copy:
+#     hostname: vcenter03.lab.msp.redhat.com
+#     username: '{{ vcenter_username }}'
+#     password: '{{ vcenter_password }}'
+#     validate_certs: "{{ vcenter_validate_certs }}"
+#     src: "/tmp/{{ demo_uuid }}-edge-installer.iso"
+#     datacenter: "{{ vcenter_datacenter }}"
+#     datastore: "{{ vcenter_datastore }}"
+#     path: "/iso/{{ demo_uuid }}-edge-installer.iso"
+#   delegate_to: localhost
+
+- name: mount datastore path
+  ansible.posix.mount:
+    src: 10.15.120.250:/mnt/data01/vmware-datastore
+    path: /mnt/vmware-datastore
+    fstype: nfs
+    state: mounted
+
+- name: push to datastore (dirty)
+  ansible.builtin.copy:
     src: /tmp/fleet_iso/fleet_out.iso
-    dest: "/tmp/{{ demo_uuid }}-edge-installer.iso"
-    flat: yes
+    dest: "/mnt/vmware-datastore/iso/{{ demo_uuid }}-edge-installer.iso"
 
-- ansible.builtin.shell:
-    cmd: ls -lsar /tmp/
-  delegate_to: localhost
-
-- name: upload edge installer ISO to datastore
-  community.vmware.vsphere_copy:
-    hostname: vcenter03.lab.msp.redhat.com
-    username: '{{ vcenter_username }}'
-    password: '{{ vcenter_password }}'
-    validate_certs: "{{ vcenter_validate_certs }}"
-    src: "/tmp/{{ demo_uuid }}-edge-installer.iso"
-    datacenter: "{{ vcenter_datacenter }}"
-    datastore: "{{ vcenter_datastore }}"
-    path: "/iso/{{ demo_uuid }}-edge-installer.iso"
-  delegate_to: localhost
+- name: unmount datastore path
+  ansible.posix.mount:
+    path: /mnt/vmware-datastore
+    fstype: nfs
+    state: unmounted
