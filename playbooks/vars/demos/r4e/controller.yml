@@ -46,6 +46,17 @@ controller_credential_types:
         controller_hostname: "https://{  { audience | lower }}-{  { demo }}-controller.{  { demo_uuid }}.{  { base_dns_suffix }}"
         controller_username: "{  { controller_username }}"
         controller_password: "{  { controller_password }}"
+  - name: vCenter Credentials
+    kind: cloud
+    injectors:
+      extra_vars:
+        vcenter_hostname: "{  { vcenter_hostname }}"
+        vcenter_username: "{  { vcenter_username }}"
+        vcenter_password: "{  { vcenter_password }}"
+        vcenter_validate_certs: "no"
+        vcenter_datacenter: "{  { vcenter_datacenter }}"
+        vcenter_cluster: "{  { vcenter_cluster }}"
+        vcenter_datastore: storage04-nfs-lun00
 
 controller_credentials:
   - name: Automation Hub Image Registry Credentials
@@ -70,6 +81,9 @@ controller_credentials:
   - name: Controller API Credentials
     organization: "{  { audience }}"
     credential_type: Controller API Credentials
+  - name: vCenter Credentials
+    organization: "{  { audience }}"
+    credential_type: vCenter Credentials
 
 controller_execution_environments:
   - name: Josh's Demos Collection EE
@@ -239,6 +253,7 @@ controller_templates:
       - RHC Edge Credentials
       - Controller API Credentials
       - Red Hat Registry Credentials
+      - vCenter Credentials
 
 # controller_workflows:
 #   - name: Pre-Patching | Non_Production | Security
