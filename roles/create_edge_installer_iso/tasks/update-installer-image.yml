@@ -9,3 +9,9 @@
     rm: yes
     volumes:
       - /tmp/fleet_iso:/isodir:Z
+
+- name: wait for new iso to exist
+  ansible.builtin.wait_for:
+    path: /tmp/fleet_iso/fleet_out.iso
+    state: present
+    
