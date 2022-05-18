@@ -233,6 +233,7 @@ controller_templates:
     credentials:
       - Root Credentials
       - RHC Edge Credentials
+      - Controller API Credentials
 
 # controller_workflows:
 #   - name: Pre-Patching | Non_Production | Security
