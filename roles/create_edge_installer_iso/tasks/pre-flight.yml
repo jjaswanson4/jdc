@@ -3,8 +3,18 @@
 - name: ensure podman is present
   ansible.builtin.dnf:
     name: podman
+
 - name: create working directory
   ansible.builtin.file:
     path: /tmp/fleet_iso
     state: directory
     mode: '0777'
+
+- name: ensure /tmp is big enough
+  community.general.lvol:
+    vg: os
+    lv: tmp
+    size: 16g
+    resizefs: yes
+  register: lv_grown
+  
