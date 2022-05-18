@@ -65,17 +65,17 @@ controller_credential_types:
     kind: cloud
     inputs:
       fields:
-        - id: username
+        - id: edge_user_username
           type: string
           label: Username
-        - id: ssh_key_data
+        - id: edge_user_ssh_key_data
           type: string
           label: Private SSH Key Data
           secret: yes
     injectors:
       extra_vars:
-        rhc_org_id: "{  { username }}"
-        rhc_activation_key: "{  { ssh_key_data }}"    
+        edge_user_username: "{  { edge_user_username }}"
+        edge_user_ssh_key_data: "{  { edge_user_ssh_key_data }}"    
 
 controller_credentials:
   - name: Demo Provisioner RHC Edge Credentials
@@ -92,9 +92,10 @@ controller_credentials:
       rhc_activation_key: "{{ rhc.activation_key }}"
   - name: Demo Provisioner Edge User Credentials
     credential_type: Demo Provisioner Edge User SSH Key Data
+    organization: "{{ controller_organization }}"
     inputs:
-      username: edge-user
-      ssh_key_data: "{{ edge_user_key_data }}"
+      edge_user_username: edge-user
+      edge_user_ssh_key_data: "{{ edge_user_key_data }}"
 
 controller_hosts:
   - name: "pos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
@@ -362,6 +363,7 @@ controller_workflows:
           - Demo Provisioner Red Hat Registry Credentials
           - Demo Provisioner RHC Edge Credentials
           - Demo Provisioner vCenter Credentials
+          - Demo Provisioner Edge User Credentials
         success_nodes:
           - Send Success Email
         failure_nodes:

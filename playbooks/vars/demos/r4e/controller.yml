@@ -84,6 +84,11 @@ controller_credentials:
   - name: vCenter Credentials
     organization: "{  { audience }}"
     credential_type: vCenter Credentials
+  - name: Edge User Credentials
+    organization: "{  { audience }}"
+    credential_type: Machine
+    username: "{  { edge_user_username }}"
+    ssh_key_data: "{  { edge_user_ssh_key_data }}"
 
 controller_execution_environments:
   - name: Josh's Demos Collection EE
@@ -203,4 +208,11 @@ controller_templates:
     execution_environment: Josh's Demos Collection EE
     credentials:
       - vCenter Credentials
-
+  - name: Post-Install Edge Systems
+    inventory: "{  { audience }} Edge Systems"
+    project: "{  { audience }} Edge Management Codebase"
+    organization: "{  { audience }}"
+    playbook: playbooks/post-install-rhel-edge-systems.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - Edge User Credentials  
