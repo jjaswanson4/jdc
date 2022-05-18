@@ -39,4 +39,6 @@
       loop_control:
         loop_var: system_number
       loop: "{{ range(0, 5, 1) | list }}"
+      async: 10
+      poll: 0
 
