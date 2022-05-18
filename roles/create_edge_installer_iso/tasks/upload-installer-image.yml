@@ -1,0 +1,17 @@
+---
+
+# - name: rename iso to be demo specific
+#   ansible.builtin.copy:
+#     src: /tmp/fleet_iso/fleet_out.iso
+#     dest: "/tmp/fleet_iso/{{ demo_uuid }}-edge-installer.iso"
+
+- name: upload edge installer ISO to datastore
+  community.vmware.vsphere_copy:
+    hostname: "{{ vcenter_hostname }}"
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    validate_certs: "{{ vcenter_validate_certs }}"
+    src: /tmp/fleet_iso/fleet_out.iso
+    datacenter: "{{ vcenter_datacenter }}"
+    datastore: "{{ vcenter_datastore }}"
+    path: iso/
