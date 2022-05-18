@@ -7,7 +7,7 @@
     flat: yes
 
 - ansible.builtin.shell:
-    cmd: ls -lsar
+    cmd: ls -lsar /tmp/
   delegate_to: localhost
 
 - name: upload edge installer ISO to datastore
