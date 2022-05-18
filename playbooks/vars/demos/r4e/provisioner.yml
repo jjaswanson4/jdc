@@ -60,7 +60,22 @@ controller_credential_types:
     injectors:
       extra_vars:
         rhc_org_id: "{  { rhc_org_id }}"
-        rhc_activation_key: "{  { rhc_activation_key }}" 
+        rhc_activation_key: "{  { rhc_activation_key }}"
+  - name: Demo Provisioner Edge User SSH Key Data
+    kind: cloud
+    inputs:
+      fields:
+        - id: username
+          type: string
+          label: Username
+        - id: ssh_key_data
+          type: string
+          label: Private SSH Key Data
+          secret: yes
+    injectors:
+      extra_vars:
+        rhc_org_id: "{  { username }}"
+        rhc_activation_key: "{  { ssh_key_data }}"    
 
 controller_credentials:
   - name: Demo Provisioner RHC Edge Credentials
@@ -68,7 +83,18 @@ controller_credentials:
     organization: "{{ controller_organization }}"
     inputs:
       rhc_org_id: "{{ rhc.org_id }}"
-      rhc_activation_key: "{{ rhc.activation_key }}"    
+      rhc_activation_key: "{{ rhc.activation_key }}"
+  - name: Demo Provisioner RHC Edge Credentials
+    credential_type: Demo Provisioner RHC Edge Credentials
+    organization: "{{ controller_organization }}"
+    inputs:
+      rhc_org_id: "{{ rhc.org_id }}"
+      rhc_activation_key: "{{ rhc.activation_key }}"
+  - name: Demo Provisioner Edge User Credentials
+    credential_type: Demo Provisioner Edge User SSH Key Data
+    inputs:
+      username: edge-user
+      ssh_key_data: "{{ edge_user_key_data }}"
 
 controller_hosts:
   - name: "pos1-store1000.{{ demo_uuid }}.{{ base_dns_suffix }}"
