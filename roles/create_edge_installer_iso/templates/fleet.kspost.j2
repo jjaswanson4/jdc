@@ -41,6 +41,20 @@ cat > /tmp/aap-auto-registration.yml <<EOF
       failed_when:
         - create_host.status | int != 201
         - "'already exists' not in create_host.content"
+    - name: find the id of {{ provisioning_template }}
+      ansible.builtin.uri:
+        url: "{{ controller_url }}/job_templates?name={{ provisioning_template | regex_replace(' ', '%20') }}"
+      register: job_template_lookup
+    - name: set the id of {{ provisioning_template }}
+      ansible.builtin.set_fact:
+        job_template_id: "{{ job_template_lookup.json.results[0].id }}"
+    - name: trigger {{ provisioning_template }}
+      ansible.builtin.uri:
+        url: "{{ controller_url }}/job_templates/{{ job_template_id }}/launch/"
+        method: POST
+        body_format: json
+        body:
+          limit: "edge-{{ ansible_default_ipv4.macaddress | replace(':','') }}"
 {% endraw %}
 EOF
 # create systemd runonce file to trigger playbook
