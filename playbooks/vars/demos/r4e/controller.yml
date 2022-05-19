@@ -225,6 +225,7 @@ controller_templates:
 controller_workflows:
   - name: Create ISO and Provision Systems
     organization: "{  { audience }}"
+    state: present
     simplified_workflow_nodes:
       - identifier: Create Edge Installer ISO
         unified_job_template: Create Edge Installer ISO
