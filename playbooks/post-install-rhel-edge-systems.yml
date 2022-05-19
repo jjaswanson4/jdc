@@ -20,12 +20,16 @@
       ansible.builtin.group:
         name: kiosk-users
         gid: 2048
+      notify:
+        - reboot_system
     - name: create kiosk user
       ansible.builtin.user:
         name: kiosk-user
         uid: 2048
         group: kiosk-users
         password: '$6$R3dh4t123$cYAI8okOB5I/cozPAatzNBBPwKOhnEAxaseIaTKuQWcYg.Js2ce3ZCtRK/nj9wmIBc17Y3e/Jm2Do/r6CBvwG/'
+      notify:
+        - reboot_system
     - name: enable auto-login for kiosk user
       ansible.builtin.blockinfile:
         path: /etc/gdm/custom.conf
@@ -33,6 +37,8 @@
         block: |
           AutomaticLoginEnable=True
           AutomaticLogin=kiosk-user
+      notify:
+        - reboot_system
     - name: configure kiosk-user to use the kiosk session
       ansible.builtin.blockinfile:
         path: /var/lib/AccountsService/users/kiosk-user
@@ -42,12 +48,16 @@
           [User]
           Session=com.redhat.Kiosk
           SystemAccount=false
+      notify:
+        - reboot_system
     - name: create path for kiosk user script
       ansible.builtin.file:
         path: /home/kiosk-user/.local/bin
         state: directory
         owner: kiosk-user
         group: kiosk-users
+      notify:
+        - reboot_system
     - name: push kiosk script
       ansible.builtin.blockinfile:
         path: /home/kiosk-user/.local/bin/redhat-kiosk
@@ -61,6 +71,8 @@
         owner: kiosk-user
         group: kiosk-users
         mode: '0550'
+      notify:
+        - reboot_system
   post_tasks:
     - name: check the status of the system
       ansible.builtin.shell:
