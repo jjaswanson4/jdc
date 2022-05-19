@@ -46,6 +46,9 @@ controller_execution_environments: []
 controller_inventories: []
 controller_projects: []
 
+controller_configuration_projects_async_retries: 60
+controller_configuration_projects_async_delay: 5
+
 controller_credential_types:
   - name: Demo Provisioner RHC Edge Credentials
     kind: cloud
@@ -317,7 +320,7 @@ controller_workflows:
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
         always_nodes:
-          - Teardown Management Plane
+          - Teardown Management and Utility Systems
       - identifier: Teardown Management and Utility Systems
         unified_job_template: Teardown Systems
         limit: 'utility_server:controller'
