@@ -10,7 +10,7 @@ cat > /tmp/aap-auto-registration.yml <<EOF
     ansible_connection: local
     controller_url: https://{{ controller_hostname }}/api/v2
     controller_inventory: {{ audience }} Edge Systems
-    provisioning_template: Provision Edge Systems
+    provisioning_template: Post-Install Edge Systems
   module_defaults:
     ansible.builtin.uri:
       user: {{ controller_username }}
@@ -52,6 +52,8 @@ cat > /tmp/aap-auto-registration.yml <<EOF
       ansible.builtin.uri:
         url: "{{ controller_url }}/job_templates/{{ job_template_id }}/launch/"
         method: POST
+        status_code:
+          - 201
         body_format: json
         body:
           limit: "edge-{{ ansible_default_ipv4.macaddress | replace(':','') }}"
