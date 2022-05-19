@@ -3,7 +3,7 @@
 - name: run various post-install steps on r4e systems
   hosts:
     - all
-  tasks:
+  pre_tasks:
     - name: set the system hostname
       ansible.builtin.hostname:
         name: "{{ inventory_hostname }}"
@@ -13,10 +13,54 @@
     - name: install an out-of-band package
       community.general.rpm_ostree_pkg:
         name: https://download-ib01.fedoraproject.org/pub/epel/8/Everything/x86_64/Packages/h/htop-3.0.5-1.el8.x86_64.rpm
-      register: packages_installed
-    - name: reboot system if packages changed
-      ansible.builtin.reboot:
-        reboot_command: systemctl reboot
+      notify:
+        - reboot_system
+  tasks:
+    - name: create kiosk users group
+      ansible.builtin.group:
+        name: kiosk-users
+        gid: 2048
+    - name: create kiosk user
+      ansible.builtin.user:
+        name: kiosk-user
+        uid: 2048
+        group: kiosk-users
+        password: '$6$R3dh4t123$cYAI8okOB5I/cozPAatzNBBPwKOhnEAxaseIaTKuQWcYg.Js2ce3ZCtRK/nj9wmIBc17Y3e/Jm2Do/r6CBvwG/'
+    - name: enable auto-login for kiosk user
+      ansible.builtin.blockinfile:
+        path: /etc/gdm/custom.conf
+        insertafter: '[daemon]'
+        block: |
+          AutomaticLoginEnable=True
+          AutomaticLogin=kiosk-user
+    - name: configure kiosk-user to use the kiosk session
+      ansible.builtin.blockinfile:
+        path: /var/lib/AccountsService/users/kiosk-user
+        insertafter: BOF
+        create: yes
+        block: |
+          [User]
+          Session=com.redhat.Kiosk
+          SystemAccount=false
+    - name: create path for kiosk user script
+      ansible.builtin.file:
+        path: /home/kiosk-user/.local/bin
+        state: directory
+        owner: kiosk-user
+        group: kiosk-users
+    - name: push kiosk script
+      ansible.builtin.blockinfile:
+        path: /home/kiosk-user/.local/bin/redhat-kiosk
+        insertafter: BOF
+        create: yes
+        block: |
+          #!/bin/sh
+          while true; do
+              firefox -kiosk https://time.gov
+          done
+        owner: kiosk-user
+        group: kiosk-users
+        mode: '0550'
   post_tasks:
     - name: check the status of the system
       ansible.builtin.shell:
@@ -25,4 +69,9 @@
     - name: print out rpm-ostree status
       ansible.builtin.debug:
         msg: "{{ rpm_ostree_status.stdout_lines }}"
-      
+  handlers:
+    - name: reboot system
+      ansible.builtin.reboot:
+        reboot_command: systemctl reboot
+      listen:
+        - reboot_system
