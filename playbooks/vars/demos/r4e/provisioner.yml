@@ -309,7 +309,7 @@ controller_workflows:
           - Demo Provisioner Admin Credentials
           - Demo Provisioner vCenter Credentials
         always_nodes:
-          - Teardown Management Plane      
+          - Remove Demo Context     
       - identifier: Unregister from Insights
         unified_job_template: Unregister from Insights
         limit: controller
@@ -355,5 +355,6 @@ controller_workflows:
           - Demo Provisioner vCenter Credentials
           - Demo Provisioner IDM Credentials
           - Demo Provisioner Satellite Credentials
+        all_parents_must_converge: yes
         extra_data:
           demo_context_state: absent
