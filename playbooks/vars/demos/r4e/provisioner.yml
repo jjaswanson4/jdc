@@ -148,7 +148,7 @@ controller_groups_tier2:
         activation_keys: "ak-{  { application }}-{  { os }}-{  { lifecycle_environment }}"
 
 controller_templates:
-- name: Manage DNS Records
+- name: Teardown Edge Systems
   organization: "{{ controller_organization }}"
   ask_inventory_on_launch: yes
   inventory: Demo Inventory
