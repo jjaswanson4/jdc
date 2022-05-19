@@ -33,7 +33,7 @@
     - name: enable auto-login for kiosk user
       ansible.builtin.blockinfile:
         path: /etc/gdm/custom.conf
-        insertafter: '[daemon]'
+        insertafter: '\[daemon\]'
         block: |
           AutomaticLoginEnable=True
           AutomaticLogin=kiosk-user
