@@ -219,7 +219,7 @@ controller_templates:
     organization: "{  { audience }}"
     playbook: playbooks/post-install-rhel-edge-systems.yml
     execution_environment: Josh's Demos Collection EE
-    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
     become_enabled: yes
     allow_simultaneous: yes
     credentials:
