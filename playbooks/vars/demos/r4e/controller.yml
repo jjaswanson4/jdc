@@ -218,6 +218,17 @@ controller_templates:
     execution_environment: Josh's Demos Collection EE
     ask_inventory_on_launch: yes
     become_enabled: yes
+    allow_simultaneous: yes
     credentials:
       - Edge User Credentials  
 
+controller_workflows:
+  - name: Create ISO and Provision Systems
+    organization: "{  { audience }}"
+    simplified_workflow_nodes:
+      - identifier: Create Edge Installer ISO
+        unified_job_template: Create Edge Installer ISO
+        success_nodes:
+          - Provision Edge Systems
+      - identifier: Provision Edge Systems
+        unified_job_template: Provision Edge Systems
