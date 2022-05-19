@@ -42,10 +42,9 @@
     - name: configure kiosk-user to use the kiosk session
       ansible.builtin.blockinfile:
         path: /var/lib/AccountsService/users/kiosk-user
-        insertafter: BOF
+        insertafter: '\[User\]'
         create: yes
         block: |
-          [User]
           Session=com.redhat.Kiosk
           SystemAccount=false
       notify:
@@ -70,7 +69,7 @@
           done
         owner: kiosk-user
         group: kiosk-users
-        mode: '0550'
+        mode: '0755'
       notify:
         - reboot_system
     - name: ensure home directory permissions
