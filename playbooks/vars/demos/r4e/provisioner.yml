@@ -318,9 +318,9 @@ controller_workflows:
           - Demo Provisioner Admin Credentials
         always_nodes:
           - Teardown Management Plane
-      - identifier: Teardown Management Plane
+      - identifier: Teardown Management and Utility Systems
         unified_job_template: Teardown Systems
-        limit: controller
+        limit: 'utility_server:controller'
         credentials:
           - Demo Provisioner Satellite Credentials
           - Demo Provisioner Admin Credentials
