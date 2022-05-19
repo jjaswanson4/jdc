@@ -73,6 +73,12 @@
         mode: '0550'
       notify:
         - reboot_system
+    - name: ensure home directory permissions
+      ansible.builtin.file:
+        path: /home/kiosk-user
+        owner: kiosk-user
+        group: kiosk-users
+        recurse: yes
   post_tasks:
     - name: check the status of the system
       ansible.builtin.shell:
