@@ -77,7 +77,7 @@
         enabled: yes
       notify:
         - reboot_system
-    - name: Configure available keyboard layouts in Gnome
+    - name: disable screen timeout
       community.general.dconf:
         key: "/org/gnome/desktop/screensaver/lock-enabled"
         value: 'false'
