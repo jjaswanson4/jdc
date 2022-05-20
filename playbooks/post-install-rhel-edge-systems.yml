@@ -50,7 +50,7 @@
       notify:
         - reboot_system
     - name: create kiosk service file
-      ansible.builtin.blockinfile:
+      ansible.builtin.copy:
         dest: /etc/systemd/system/kiosk.service
         content: |
           [Unit]
