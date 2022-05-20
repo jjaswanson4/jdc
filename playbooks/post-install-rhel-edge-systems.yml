@@ -55,13 +55,12 @@
         content: |
           [Unit]
           Description=kiosk firefox service
-          After=graphical.target
+          After=network.target
 
           [Service]
           Type=simple
           User=kiosk-user
           Environment="DISPLAY=:0"
-          ExecStartPre=/usr/bin/sleep 10
           ExecStart=/usr/bin/firefox -kiosk https://time.gov
           Restart=on-failure
           RestartSec=1
