@@ -76,6 +76,8 @@
       ansible.builtin.systemd:
         name: kiosk.service
         enabled: yes
+      notify:
+        - reboot_system
   post_tasks:
     - name: check the status of the system
       ansible.builtin.shell:
