@@ -51,7 +51,7 @@
         - reboot_system
     - name: create kiosk service file
       ansible.builtin.blockinfile:
-        path: /etc/systemd/system/kiosk.service
+        dest: /etc/systemd/system/kiosk.service
         content: |
           [Unit]
           Description=kiosk firefox service
