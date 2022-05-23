@@ -380,3 +380,8 @@
         question_description: If this demo exists, what vlan was it built on?
         variable: demo_vlan
         required: no
+      - type: text
+        question_name: Kiosk Website?
+        question_description: If building r4e systems, what website should they display?
+        variable: kiosk_website
+        required: no
