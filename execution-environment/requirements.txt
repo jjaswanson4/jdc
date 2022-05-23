@@ -3,3 +3,4 @@ pywinrm
 requests
 pynetbox
 python-gitlab
+psutil
