@@ -1,0 +1,13 @@
+---
+
+- name: disable the screensaver
+  ansible.builtin.shell:
+    cmd: gsettings set org.gnome.desktop.screensaver lock-enabled false
+  listen:
+    - disable_screensaver
+
+- name: reboot system
+  ansible.builtin.reboot:
+    reboot_command: systemctl reboot
+  listen:
+    - reboot_system

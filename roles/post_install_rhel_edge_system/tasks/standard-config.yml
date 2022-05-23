@@ -1,0 +1,15 @@
+---
+
+- name: set the system hostname
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: set the system timezone
+  community.general.timezone:
+    name: America/Chicago
+
+- name: install an out-of-band package
+  community.general.rpm_ostree_pkg:
+    name: https://download-ib01.fedoraproject.org/pub/epel/8/Everything/x86_64/Packages/h/htop-3.0.5-1.el8.x86_64.rpm
+  notify:
+    - reboot_system

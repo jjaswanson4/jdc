@@ -1,0 +1,13 @@
+---
+
+- name: import standard tasks
+  ansible.builtin.import_tasks: standard-config.yml
+
+- name: include kiosk tasks
+  ansible.builtin.include_tasks:
+    file: kiosk-config.yml
+  when:
+    - edge_system_mode == 'kiosk'
+
+- name: import post-flight tasks
+  ansible.builtin.import_tasks: post-flight.yml

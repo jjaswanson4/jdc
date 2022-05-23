@@ -1,0 +1,10 @@
+---
+
+- name: check the status of the system
+  ansible.builtin.shell:
+    cmd: rpm-ostree status
+  register: rpm_ostree_status
+  
+- name: print out rpm-ostree status
+  ansible.builtin.debug:
+    msg: "{{ rpm_ostree_status.stdout_lines }}"
