@@ -222,6 +222,8 @@ controller_templates:
     ask_limit_on_launch: yes
     become_enabled: yes
     allow_simultaneous: yes
+    extra_vars:
+      kiosk_website: "{  { kiosk_website | default('https://time.gov') }}"
     credentials:
       - Edge User Credentials  
 
