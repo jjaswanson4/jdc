@@ -1,7 +1,7 @@
 %post
 
 # create playbook for controller registration
-cat > /tmp/aap-auto-registration.yml <<EOF
+cat > /var/tmp/aap-auto-registration.yml <<EOF
 ---
 - name: register a r4e system to ansible controller
   hosts:
@@ -68,7 +68,7 @@ After=network.target
 
 [Service]
 ExecStartPre=/usr/bin/sleep 20
-ExecStart=/usr/bin/ansible-playbook /tmp/aap-auto-registration.yml
+ExecStart=/usr/bin/ansible-playbook /var/tmp/aap-auto-registration.yml
 User=root
 RemainAfterExit=true
 Type=oneshot
