@@ -65,10 +65,12 @@ cat > /etc/systemd/system/aap-auto-registration.service <<EOF
 Description=Ansible Automation Platform Auto-Registration
 After=local-fs.target
 After=network.target
+ConditionPathExists=!/var/tmp/post-installed
 
 [Service]
 ExecStartPre=/usr/bin/sleep 20
 ExecStart=/usr/bin/ansible-playbook /var/tmp/aap-auto-registration.yml
+ExecStartPost=/usr/bin/touch /var/tmp/post-installed
 User=root
 RemainAfterExit=true
 Type=oneshot
