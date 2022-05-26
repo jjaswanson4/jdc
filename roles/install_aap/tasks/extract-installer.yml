@@ -7,7 +7,7 @@
 # https://stackoverflow.com/questions/984204/shell-command-to-tar-directory-excluding-certain-files-folders
 - name: extract the tower installer
   ansible.builtin.unarchive:
-    src: "/tmp/{{ aap_bundle }}"
+    src: "/tmp/{{ aap_installer_bundle }}"
     dest: /tmp/aap-installer/
     remote_src: yes
   when:
