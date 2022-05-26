@@ -3,5 +3,5 @@
 - name: download the tower installer
   ansible.builtin.get_url:
     url: "{{ aap_download_url }}"
-    dest: /tmp/
+    dest: "/tmp/{{ aap_installer_bundle }}"
   register: installer
