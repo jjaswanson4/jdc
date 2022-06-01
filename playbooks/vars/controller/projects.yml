@@ -2,7 +2,7 @@
 
 controller_projects:
 
-  - name: Josh Demos Collection
+  - name: Josh's Demos Collection
     organization: Demo Provisioner
     scm_branch: main
     scm_type: git
