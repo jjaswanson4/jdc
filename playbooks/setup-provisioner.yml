@@ -11,6 +11,9 @@
     controller_username: "{{ controller.username }}"
     controller_password: "{{ controller.password }}"
     controller_validate_certs: "{{ controller.validate_certs | default(false) }}"
+    controller_configuration_credentials_secure_logging: no
+    controller_configuration_projects_async_retries: 60
+    controller_configuration_projects_async_delay: 5
   vars_files:
     - vars/demos.yml
   pre_tasks:
@@ -20,45 +23,49 @@
           - demo in available_demos | json_query('[*].name')
         success_msg: "{{ demo }} demo selected"
         fail_msg: "selected demo {{ demo }} is not available, please select one of: {{ available_demos | join(', ') }}"
+
+    - name: load in standard controller configs
+      ansible.builtin.include_vars:
+        dir: "{{ controller_resources }}"
+        extensions:
+          - yml
+        ignore_files:
+          - inventories.yml
+          - workflow-survey.yml
+          - groups/*
+
+    - name: configure controller with standard configs
+      ansible.builtin.include_role:
+        name: "{{ controller_config_role }}"
+      loop:
+        - redhat_cop.controller_configuration.organizations
+        - redhat_cop.controller_configuration.credential_types
+        - redhat_cop.controller_configuration.credentials
+        - redhat_cop.controller_configuration.execution_environments
+        - redhat_cop.controller_configuration.projects
+        - redhat_cop.controller_configuration.job_templates
+        - redhat_cop.controller_configuration.workflow_job_templates
+      loop_control:
+        loop_var: controller_config_role
+
+  tasks:
     - name: load in {{ demo }} provisioner vars
       ansible.builtin.include_vars:
         file: "vars/demos/{{ demo }}/provisioner.yml"
-    - name: load in common assets
-      ansible.builtin.set_fact:
-        preconfigured:
-          controller_organizations: "{{ lookup('file', controller_resources + 'organizations.yml') | from_yaml }}"
-          controller_credential_types: "{{ lookup('file', controller_resources + 'credential-types.yml') | from_yaml }}"
-          controller_credentials: "{{ lookup('file', controller_resources + 'credentials.yml') | from_yaml }}"
-          controller_execution_environments: "{{ lookup('file', controller_resources + 'execution-environments.yml') | from_yaml }}"
-          controller_projects: "{{ lookup('file', controller_resources + 'projects.yml') | from_yaml }}"
-          controller_templates: "{{ lookup('file', controller_resources + 'templates.yml') | from_yaml }}"
-          controller_workflows: "{{ lookup('file', controller_resources + 'workflows.yml') | from_yaml }}"
 
-    - name: add demo specific assets
-      ansible.builtin.set_fact:
-        controller_organizations: "{{ preconfigured.controller_organizations + controller_organizations }}"
-        controller_credential_types: "{{ preconfigured.controller_credential_types + controller_credential_types }}"
-        controller_credentials: "{{ preconfigured.controller_credentials + controller_credentials }}"
-        controller_execution_environments: "{{ preconfigured.controller_execution_environments + controller_execution_environments }}"
-        controller_projects: "{{ preconfigured.controller_projects + controller_projects }}"
-        controller_templates: "{{ preconfigured.controller_templates + controller_templates }}"
-        controller_workflows: "{{ preconfigured.controller_workflows + controller_workflows }}"
+    - debug:
+        var: controller_credential_types
 
-    - name: set facts so ansible instanciates vars
-      ansible.builtin.set_fact:
-        controller_organizations: "{{ lookup('vars', 'controller_organizations') | default(omit) }}"
-        controller_credential_types: "{{ lookup('vars', 'controller_credential_types') | default(omit) }}"
-        controller_credentials: "{{ lookup('vars', 'controller_credentials') | default(omit) }}"
-        controller_execution_environments: "{{ lookup('vars', 'controller_execution_environments') | default(omit) }}"
-        controller_projects: "{{ lookup('vars', 'controller_projects') | default(omit) }}"
-        controller_templates: "{{ lookup('vars', 'controller_templates') | default(omit) }}"
-        controller_workflows: "{{ lookup('vars', 'controller_workflows') | default(omit) }}"
-
-  roles:
-    - redhat_cop.controller_configuration.organizations
-    - redhat_cop.controller_configuration.credential_types
-    - redhat_cop.controller_configuration.credentials
-    - redhat_cop.controller_configuration.execution_environments
-    - redhat_cop.controller_configuration.projects
-    - redhat_cop.controller_configuration.job_templates
-    - redhat_cop.controller_configuration.workflow_job_templates
+    - name: configure controller with demo specific configs
+      ansible.builtin.include_role:
+        name: "{{ controller_config_role }}"
+      loop:
+        - redhat_cop.controller_configuration.organizations
+        - redhat_cop.controller_configuration.credential_types
+        - redhat_cop.controller_configuration.credentials
+        - redhat_cop.controller_configuration.execution_environments
+        - redhat_cop.controller_configuration.projects
+        - redhat_cop.controller_configuration.job_templates
+        - redhat_cop.controller_configuration.workflow_job_templates
+      loop_control:
+        loop_var: controller_config_role
