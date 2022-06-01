@@ -162,8 +162,8 @@ controller_groups:
     variables:
       cpus: 4
       memory_mb: 16384
-      aap_download_url: http://satellite.lab.msp.redhat.com/pub/ansible-automation-platform-setup-2.1.0-1.tar.gz
-      aap_bundle: ansible-automation-platform-setup-2.1.0-1.tar.gz
+      aap_download_url: http://satellite.lab.msp.redhat.com/pub/ansible-automation-platform-setup-latest.tar.gz
+      aap_installer_bundle: ansible-automation-platform-setup-latest.tar.gz
       controller_install:
         admin_password: "{  { admin_password }}"
         pg:
