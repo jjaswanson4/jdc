@@ -49,42 +49,74 @@ controller_projects: []
 controller_credentials: []
 controller_templates: []
 
+controller_configuration_projects_async_retries: 60
+controller_configuration_projects_async_delay: 5
+
 controller_hosts:
   - name: "database-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "control-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "control-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "control-node-3.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "execution-node-azure-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "execution-node-azure-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "execution-node-aws-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "execution-node-aws-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "execution-node-dc1-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "execution-node-dc1-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "execution-node-dc2-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "execution-node-dc2-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "hop-node-mfgplant1-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "hop-node-mfgplant1-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "execution-node-mfgplant-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "execution-node-mfgplant-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "endpoint-node-azure-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "endpoint-node-azure-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "endpoint-node-aws-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "endpoint-node-aws-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "endpoint-node-dc1-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "endpoint-node-dc1-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "endpoint-node-dc2-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "endpoint-node-dc2-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "endpoint-node-mfgplant1-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "endpoint-node-mfgplant1-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
 
 controller_groups:
   - name: database_nodes
+    inventory: "Demo {{ demo_uuid }} Inventory"
     hosts:
       - "database-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: aap_installer_node
+    inventory: "Demo {{ demo_uuid }} Inventory"
     hosts:
       - "control-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}"   
   - name: control_nodes
+    inventory: "Demo {{ demo_uuid }} Inventory"
     hosts:
       - "control-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "control-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
@@ -92,6 +124,7 @@ controller_groups:
     variables:
       node_type: control
   - name: execution_nodes
+    inventory: "Demo {{ demo_uuid }} Inventory"
     hosts:
       - "execution-node-azure-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "execution-node-azure-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
@@ -106,10 +139,12 @@ controller_groups:
     variables:
       node_type: execution
   - name: hop_nodes
+    inventory: "Demo {{ demo_uuid }} Inventory"
     hosts:
       - "hop-node-mfgplant1-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "hop-node-mfgplant1-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: managed_endpoints
+    inventory: "Demo {{ demo_uuid }} Inventory"
     hosts:
       - "endpoint-node-azure-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "endpoint-node-azure-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
@@ -122,30 +157,35 @@ controller_groups:
       - "endpoint-node-mfgplant1-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "endpoint-node-mfgplant1-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: azure
+    inventory: "Demo {{ demo_uuid }} Inventory"
     hosts:
       - "execution-node-azure-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "execution-node-azure-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "endpoint-node-azure-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "endpoint-node-azure-2.{{ demo_uuid }}.{{ base_dns_suffix }}"  
   - name: aws
+    inventory: "Demo {{ demo_uuid }} Inventory"
     hosts:
       - "execution-node-aws-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "execution-node-aws-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "endpoint-node-aws-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "endpoint-node-aws-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: dc1
+    inventory: "Demo {{ demo_uuid }} Inventory"
     hosts:
       - "execution-node-dc1-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "execution-node-dc1-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "endpoint-node-dc1-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "endpoint-node-dc1-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: dc2
+    inventory: "Demo {{ demo_uuid }} Inventory"
     hosts:
       - "execution-node-dc2-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "execution-node-dc2-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "endpoint-node-dc2-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "endpoint-node-dc2-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: mfgplant1
+    inventory: "Demo {{ demo_uuid }} Inventory"
     hosts:
       - "hop-node-mfgplant1-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "hop-node-mfgplant1-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
@@ -154,6 +194,7 @@ controller_groups:
       - "endpoint-node-mfgplant1-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "endpoint-node-mfgplant1-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: aap_infrastructure
+    inventory: "Demo {{ demo_uuid }} Inventory"
     children:
       - control_nodes
       - execution_nodes
@@ -174,6 +215,7 @@ controller_groups:
       controller_password: "{  { admin_password }}"
       controller_validate_certs: no
   - name: demo_hosts
+    inventory: "Demo {{ demo_uuid }} Inventory"
     children:
       - aap_infrastructure
       - managed_endpoints
