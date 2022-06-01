@@ -17,14 +17,6 @@ demo_prefix: AAP Advanced Automation
 # Typically this contains a vars file for the provisioner, Satellite, and Controller.
 vars_files_path: "vars/demos/{{ demo }}"
 
-# This is the execution environment used for this demo provisioner.
-# This execution environment will automatically be configured in Controller.
-execution_environment:
-  name: Josh's Demos Collection EE
-  registry: "{{ ee.registry }}"
-  image: joshs-demos-collection-ee
-  credential: "{{ ee.credential }}"
-
 # This is the information used for the instance of Controller for the demo.
 # This can be the same instance as where the provisioner is deployed, but it's not recommended.
 controller_configuration_file: "{{ vars_files_path }}/controller.yml"
@@ -106,7 +98,9 @@ controller_hosts:
   - name: "endpoint-node-mfgplant1-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "Demo {{ demo_uuid }} Inventory"
 
-controller_groups:
+controller_group_tiers: 3
+
+controller_groups_tier1:
   - name: database_nodes
     inventory: "Demo {{ demo_uuid }} Inventory"
     hosts:
@@ -193,6 +187,8 @@ controller_groups:
       - "execution-node-mfgplant-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "endpoint-node-mfgplant1-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "endpoint-node-mfgplant1-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+
+controller_groups_tier2:
   - name: aap_infrastructure
     inventory: "Demo {{ demo_uuid }} Inventory"
     children:
@@ -214,6 +210,8 @@ controller_groups:
       controller_username: "{  { admin_username }}"
       controller_password: "{  { admin_password }}"
       controller_validate_certs: no
+
+controller_groups_tier3:
   - name: demo_hosts
     inventory: "Demo {{ demo_uuid }} Inventory"
     children:
@@ -259,7 +257,7 @@ controller_groups:
 
 controller_workflows:
   - name: Provision AAP Advanced Architecture Demo
-    organization: "{{ controller_organization }}"
+    organization: Demo Provisioner
     state: "{{ controller_state | default('present') }}"
     ask_inventory_on_launch: yes
     ask_variables_on_launch: yes
