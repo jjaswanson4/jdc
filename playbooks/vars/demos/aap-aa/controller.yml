@@ -5,3 +5,21 @@ memory_mb: 1024
 
 controller_license:
   manifest: /tmp/controller-manifest.zip
+
+os: rhel8
+application: general
+
+aap_download_url: http://satellite.lab.msp.redhat.com/pub/ansible-automation-platform-setup-latest.tar.gz
+aap_installer_bundle: ansible-automation-platform-setup-latest.tar.gz
+
+controller_install:
+  admin_password: "{  { admin_password }}"
+  pg:
+    password: "{  { admin_password }}"
+
+bootstrap_controller: yes
+
+controller_hostname: "{  { inventory_hostname }}"
+controller_username: "{  { admin_username }}"
+controller_password: "{  { admin_password }}"
+controller_validate_certs: no

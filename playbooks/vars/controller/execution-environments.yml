@@ -1,6 +1,8 @@
 ---
 
-- name: "{{ execution_environment.name }}"
-  image: "{{ execution_environment.registry }}/{{ execution_environment.image }}"
-  credential: "{{ execution_environment.credential }}"
-  pull: always
+controller_execution_environments:
+
+  - name: Josh's Demos Collection EE
+    image: "{{ ee_registry.host }}/joshs-demos-collection-ee:latest"
+    credential: Demo Provisioner EE Image Registry Credentials
+    pull: always

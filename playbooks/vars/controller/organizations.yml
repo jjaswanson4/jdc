@@ -1,3 +1,4 @@
 ---
 
-- name: "{{ controller_organization }}"
+controller_organizations:
+  - name: Demo Provisioner

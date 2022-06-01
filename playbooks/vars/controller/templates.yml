@@ -1,387 +1,389 @@
 ---
 
-- name: Install Ansible Controller
-  organization: "{{ controller_organization }}"
-  inventory: Demo Inventory
-  ask_inventory_on_launch: yes
-  ask_limit_on_launch: yes
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/install-aap.yml
-  execution_environment: "{{ execution_environment.name }}"
-  ask_credential_on_launch: yes
-  ask_variables_on_launch: yes
-- name: Install Ansible Automation Platform
-  organization: "{{ controller_organization }}"
-  inventory: Demo Inventory
-  ask_inventory_on_launch: yes
-  ask_limit_on_launch: yes
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/install-aap.yml
-  execution_environment: "{{ execution_environment.name }}"
-  ask_credential_on_launch: yes
-  ask_variables_on_launch: yes
-- name: Configure Ansible Controller
-  organization: "{{ controller_organization }}"
-  inventory: Demo Inventory
-  ask_inventory_on_launch: yes
-  ask_limit_on_launch: yes
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/configure-ansible-controller.yml
-  execution_environment: "{{ execution_environment.name }}"
-  ask_credential_on_launch: yes
-  extra_vars:
-    controller_state: present
-    ansible_connection: local
-- name: Configure Automation Hub
-  organization: "{{ controller_organization }}"
-  inventory: Demo Inventory
-  ask_inventory_on_launch: yes
-  ask_limit_on_launch: yes
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/configure-automation-hub.yml
-  execution_environment: "{{ execution_environment.name }}"
-  ask_credential_on_launch: yes
-  extra_vars:
-    ansible_connection: local
-- name: Install Red Hat Satellite
-  organization: "{{ controller_organization }}"
-  inventory: Demo Inventory
-  ask_inventory_on_launch: yes
-  ask_limit_on_launch: yes
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/install-satellite.yml
-  execution_environment: "{{ execution_environment.name }}"
-  ask_credential_on_launch: yes
-- name: Configure Red Hat Satellite
-  organization: "{{ controller_organization }}"
-  inventory: Demo Inventory
-  ask_inventory_on_launch: yes
-  ask_limit_on_launch: yes
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/configure-satellite.yml
-  execution_environment: "{{ execution_environment.name }}"
-  ask_credential_on_launch: yes
-- name: Provision Systems
-  organization: "{{ controller_organization }}"
-  inventory: Demo Inventory
-  ask_inventory_on_launch: yes
-  ask_limit_on_launch: yes
-  forks: 10
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/provision-systems.yml
-  execution_environment: "{{ execution_environment.name }}"
-  ask_credential_on_launch: yes
-  extra_vars:
-    ansible_become: no
-- name: Preconfigure for SAP
-  organization: "{{ controller_organization }}"
-  inventory: Demo Inventory
-  ask_inventory_on_launch: yes
-  ask_limit_on_launch: yes
-  forks: 10
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/sap-preconfigure.yml
-  execution_environment: "{{ execution_environment.name }}"
-  ask_credential_on_launch: yes
-- name: Preconfigure for HANA
-  organization: "{{ controller_organization }}"
-  inventory: Demo Inventory
-  ask_inventory_on_launch: yes
-  ask_limit_on_launch: yes
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/hana-preconfigure.yml
-  execution_environment: "{{ execution_environment.name }}"
-  ask_credential_on_launch: yes
-- name: Preconfigure for Netweaver
-  organization: "{{ controller_organization }}"
-  inventory: Demo Inventory
-  ask_inventory_on_launch: yes
-  ask_limit_on_launch: yes
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/netweaver-preconfigure.yml
-  execution_environment: "{{ execution_environment.name }}"
-  ask_credential_on_launch: yes
-- name: Deploy SAP HANA
-  organization: "{{ controller_organization }}"
-  inventory: Demo Inventory
-  ask_inventory_on_launch: yes
-  ask_limit_on_launch: yes
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/deploy-hana.yml
-  execution_environment: "{{ execution_environment.name }}"
-  ask_credential_on_launch: yes
-- name: Configure HSR and Pacemaker
-  organization: "{{ controller_organization }}"
-  inventory: Demo Inventory
-  ask_inventory_on_launch: yes
-  ask_limit_on_launch: yes
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/setup-hsr-pacemaker.yml
-  execution_environment: "{{ execution_environment.name }}"
-  ask_credential_on_launch: yes
-- name: Install Netweaver
-  organization: "{{ controller_organization }}"
-  inventory: Demo Inventory
-  ask_inventory_on_launch: yes
-  ask_limit_on_launch: yes
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/install-s4.yml
-  execution_environment: "{{ execution_environment.name }}"
-  ask_credential_on_launch: yes
-- name: Reinstate HSR
-  organization: "{{ controller_organization }}"
-  inventory: Demo Inventory
-  ask_inventory_on_launch: yes
-  ask_limit_on_launch: yes
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/reinstate-hsr.yml
-  execution_environment: "{{ execution_environment.name }}"
-  ask_credential_on_launch: yes
-- name: Remove Controller Configuration
-  organization: "{{ controller_organization }}"
-  ask_inventory_on_launch: yes
-  ask_limit_on_launch: yes
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/remove-controller-configuration.yml
-  execution_environment: "{{ execution_environment.name }}"
-  ask_credential_on_launch: yes
-  extra_vars:
-    controller_state: absent
-- name: Unregister from Insights
-  organization: "{{ controller_organization }}"
-  inventory: Demo Inventory
-  ask_inventory_on_launch: yes
-  ask_limit_on_launch: yes
-  forks: 50
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/attempt-insights-unregister.yml
-  execution_environment: "{{ execution_environment.name }}"
-  ask_credential_on_launch: yes
-  ask_variables_on_launch: yes
-  extra_vars:
-    ansible_become: no
-- name: Teardown Systems
-  organization: "{{ controller_organization }}"
-  inventory: Demo Inventory
-  ask_inventory_on_launch: yes
-  ask_limit_on_launch: yes
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/teardown-systems.yml
-  execution_environment: "{{ execution_environment.name }}"
-  ask_credential_on_launch: yes
-- name: Cleanup DNS Records
-  organization: "{{ controller_organization }}"
-  inventory: Demo Inventory
-  ask_inventory_on_launch: yes
-  ask_limit_on_launch: yes
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/delete-dns-records.yml
-  execution_environment: "{{ execution_environment.name }}"
-  ask_credential_on_launch: yes
-  ask_variables_on_launch: yes
-- name: Send Provisioner Email
-  organization: "{{ controller_organization }}"
-  inventory: Demo Inventory
-  limit: localhost
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/send-email.yml
-  execution_environment: "{{ execution_environment.name }}"
-  ask_variables_on_launch: yes
-- name: Run Remote Execution Jobs
-  organization: "{{ controller_organization }}"
-  ask_inventory_on_launch: yes
-  ask_limit_on_launch: yes
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/run-rex-job-via-satellite.yml
-  execution_environment: "{{ execution_environment.name }}"
-  ask_credential_on_launch: yes
-- name: Configure Demo Context
-  organization: "{{ controller_organization }}"
-  inventory: Demo Inventory
-  ask_inventory_on_launch: yes
-  limit: localhost
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/configure-demo-context.yml
-  execution_environment: "{{ execution_environment.name }}"
-  ask_credential_on_launch: yes
-  ask_variables_on_launch: yes
-# - name: Configure Demo Inventory
-#   organization: "{{ controller_organization }}"
-#   inventory: Demo Inventory
-#   limit: localhost
-#   project: "{{ project }}"
-#   allow_simultaneous: yes
-#   playbook: playbooks/configure-demo-inventory.yml
-#   execution_environment: "{{ execution_environment.name }}"
-#   ask_credential_on_launch: yes
-#   ask_variables_on_launch: yes
-- name: Remove Demo Inventory
-  organization: "{{ controller_organization }}"
-  inventory: Demo Inventory
-  limit: localhost
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/remove-demo-inventory.yml
-  execution_environment: "{{ execution_environment.name }}"
-  ask_credential_on_launch: yes
-  ask_variables_on_launch: yes
-- name: Run Demo Provisioner Workflow
-  organization: "{{ controller_organization }}"
-  inventory: Demo Inventory
-  limit: localhost
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/run-demo-provisioner-workflow.yml
-  execution_environment: "{{ execution_environment.name }}"
-  ask_credential_on_launch: yes
-  ask_variables_on_launch: yes
-- name: Manage CMDB Records
-  organization: "{{ controller_organization }}"
-  ask_inventory_on_launch: yes
-  inventory: Demo Inventory
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/manage-cmdb-records.yml
-  execution_environment: "{{ execution_environment.name }}"
-  ask_credential_on_launch: yes
-  ask_variables_on_launch: yes
-  ask_limit_on_launch: yes
-# - name: Run Controller Job
-#   organization: "{{ controller_organization }}"
-#   inventory: Demo Inventory
-#   project: "{{ project }}"
-#   allow_simultaneous: yes
-#   playbook: playbooks/run-controller-job.yml
-#   execution_environment: "{{ execution_environment.name }}"
-#   ask_credential_on_launch: yes
-#   ask_variables_on_launch: yes
-- name: Manage DNS Records
-  organization: "{{ controller_organization }}"
-  ask_inventory_on_launch: yes
-  inventory: Demo Inventory
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/manage-dns-records.yml
-  execution_environment: "{{ execution_environment.name }}"
-  ask_credential_on_launch: yes
-  ask_variables_on_launch: yes
-  ask_limit_on_launch: yes
-- name: Apply Standard Configuration
-  organization: "{{ controller_organization }}"
-  inventory: Demo Inventory
-  ask_inventory_on_launch: yes
-  ask_limit_on_launch: yes
-  forks: 10
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/apply-standard-configuration.yml
-  execution_environment: "{{ execution_environment.name }}"
-  ask_credential_on_launch: yes
-  extra_vars:
-    ansible_become: no
-- name: Provision Windows Systems
-  inventory: Demo Inventory
-  ask_inventory_on_launch: yes
-  ask_limit_on_launch: yes
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/provision-windows.yml
-  execution_environment: "{{ execution_environment.name }}"
-  ask_credential_on_launch: yes
-- name: Teardown Windows Systems
-  inventory: Demo Inventory
-  ask_inventory_on_launch: yes
-  ask_limit_on_launch: yes
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/teardown-windows.yml
-  execution_environment: "{{ execution_environment.name }}"
-  ask_credential_on_launch: yes
-- name: Provision Demo
-  organization: "{{ controller_organization }}"
-  inventory: Demo Inventory
-  project: "{{ project }}"
-  allow_simultaneous: yes
-  playbook: playbooks/configure-demo-context-and-run.yml
-  execution_environment: "{{ execution_environment.name }}"
-  extra_vars:
-    demo_context_state: present
-  credentials:
-    - Demo Provisioner Netbox Credentials
-    - Demo Provisioner vCenter Credentials
-    - Demo Provisioner IDM Credentials
-    - Demo Provisioner Satellite Credentials
-    - Demo Provisioner Controller Credentials
-    - Demo Provisioner Admin Credentials
-  survey_enabled: yes
-  survey:
-    name: ''
-    description: ''
-    spec:
-      - type: multiplechoice
-        question_name: Which Demo?
-        question_description: What demo should be provisioned?
-        variable: demo
-        choices:
-          - patching
-          - s4hana-deployment
-          - compliance
-          - idm-ad
-          - aap-aa
-          - satellite-aa
-          - automation-everywhere
-          - r4e
-        required: yes
-      - type: text
-        question_name: "Demo Audience?"
-        question_description: "Who is the audience for this demo?"
-        variable: audience
-        required: yes
-      - type: text
-        question_name: "Provisioner?"
-        question_description: "Who is provisioning this demo?"
-        variable: provisioner
-        required: yes
-        default: 'Josh Swanson'
-      - type: text
-        question_name: "Provisioner's Email?"
-        question_description: "What is the provisioner's email address?"
-        variable: provisioner_email
-        required: yes
-        default: 'joshswanson@redhat.com'
-      - type: text
-        question_name: "Demo UUID?"
-        question_description: "If this demo exists, what is the unique ID?"
-        variable: demo_uuid
-        required: no
-      - type: text
-        question_name: Demo VLAN?
-        question_description: If this demo exists, what vlan was it built on?
-        variable: demo_vlan
-        required: no
-      - type: text
-        question_name: Kiosk Website?
-        question_description: If building r4e systems, what website should they display?
-        variable: kiosk_website
-        required: no
+controller_templates:
+
+  - name: Install Ansible Controller
+    organization: Demo Provisioner
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/install-aap.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_credential_on_launch: yes
+    ask_variables_on_launch: yes
+  - name: Install Ansible Automation Platform
+    organization: Demo Provisioner
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/install-aap.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_credential_on_launch: yes
+    ask_variables_on_launch: yes
+  - name: Configure Ansible Controller
+    organization: Demo Provisioner
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/configure-ansible-controller.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_credential_on_launch: yes
+    extra_vars:
+      controller_state: present
+      ansible_connection: local
+  - name: Configure Automation Hub
+    organization: Demo Provisioner
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/configure-automation-hub.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_credential_on_launch: yes
+    extra_vars:
+      ansible_connection: local
+  - name: Install Red Hat Satellite
+    organization: Demo Provisioner
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/install-satellite.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_credential_on_launch: yes
+  - name: Configure Red Hat Satellite
+    organization: Demo Provisioner
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/configure-satellite.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_credential_on_launch: yes
+  - name: Provision Systems
+    organization: Demo Provisioner
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    forks: 10
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/provision-systems.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_credential_on_launch: yes
+    extra_vars:
+      ansible_become: no
+  - name: Preconfigure for SAP
+    organization: Demo Provisioner
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    forks: 10
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/sap-preconfigure.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_credential_on_launch: yes
+  - name: Preconfigure for HANA
+    organization: Demo Provisioner
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/hana-preconfigure.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_credential_on_launch: yes
+  - name: Preconfigure for Netweaver
+    organization: Demo Provisioner
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/netweaver-preconfigure.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_credential_on_launch: yes
+  - name: Deploy SAP HANA
+    organization: Demo Provisioner
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/deploy-hana.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_credential_on_launch: yes
+  - name: Configure HSR and Pacemaker
+    organization: Demo Provisioner
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/setup-hsr-pacemaker.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_credential_on_launch: yes
+  - name: Install Netweaver
+    organization: Demo Provisioner
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/install-s4.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_credential_on_launch: yes
+  - name: Reinstate HSR
+    organization: Demo Provisioner
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/reinstate-hsr.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_credential_on_launch: yes
+  - name: Remove Controller Configuration
+    organization: Demo Provisioner
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/remove-controller-configuration.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_credential_on_launch: yes
+    extra_vars:
+      controller_state: absent
+  - name: Unregister from Insights
+    organization: Demo Provisioner
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    forks: 50
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/attempt-insights-unregister.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_credential_on_launch: yes
+    ask_variables_on_launch: yes
+    extra_vars:
+      ansible_become: no
+  - name: Teardown Systems
+    organization: Demo Provisioner
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/teardown-systems.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_credential_on_launch: yes
+  - name: Cleanup DNS Records
+    organization: Demo Provisioner
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/delete-dns-records.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_credential_on_launch: yes
+    ask_variables_on_launch: yes
+  - name: Send Provisioner Email
+    organization: Demo Provisioner
+    inventory: Demo Inventory
+    limit: localhost
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/send-email.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_variables_on_launch: yes
+  - name: Run Remote Execution Jobs
+    organization: Demo Provisioner
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/run-rex-job-via-satellite.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_credential_on_launch: yes
+  - name: Configure Demo Context
+    organization: Demo Provisioner
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    limit: localhost
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/configure-demo-context.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_credential_on_launch: yes
+    ask_variables_on_launch: yes
+  # - name: Configure Demo Inventory
+  #   organization: Demo Provisioner
+  #   inventory: Demo Inventory
+  #   limit: localhost
+  #   project: Josh's Demos Collection
+  #   allow_simultaneous: yes
+  #   playbook: playbooks/configure-demo-inventory.yml
+  #   execution_environment: Josh's Demos Collection EE
+  #   ask_credential_on_launch: yes
+  #   ask_variables_on_launch: yes
+  - name: Remove Demo Inventory
+    organization: Demo Provisioner
+    inventory: Demo Inventory
+    limit: localhost
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/remove-demo-inventory.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_credential_on_launch: yes
+    ask_variables_on_launch: yes
+  - name: Run Demo Provisioner Workflow
+    organization: Demo Provisioner
+    inventory: Demo Inventory
+    limit: localhost
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/run-demo-provisioner-workflow.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_credential_on_launch: yes
+    ask_variables_on_launch: yes
+  - name: Manage CMDB Records
+    organization: Demo Provisioner
+    ask_inventory_on_launch: yes
+    inventory: Demo Inventory
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/manage-cmdb-records.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_credential_on_launch: yes
+    ask_variables_on_launch: yes
+    ask_limit_on_launch: yes
+  # - name: Run Controller Job
+  #   organization: Demo Provisioner
+  #   inventory: Demo Inventory
+  #   project: Josh's Demos Collection
+  #   allow_simultaneous: yes
+  #   playbook: playbooks/run-controller-job.yml
+  #   execution_environment: Josh's Demos Collection EE
+  #   ask_credential_on_launch: yes
+  #   ask_variables_on_launch: yes
+  - name: Manage DNS Records
+    organization: Demo Provisioner
+    ask_inventory_on_launch: yes
+    inventory: Demo Inventory
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/manage-dns-records.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_credential_on_launch: yes
+    ask_variables_on_launch: yes
+    ask_limit_on_launch: yes
+  - name: Apply Standard Configuration
+    organization: Demo Provisioner
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    forks: 10
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/apply-standard-configuration.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_credential_on_launch: yes
+    extra_vars:
+      ansible_become: no
+  - name: Provision Windows Systems
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/provision-windows.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_credential_on_launch: yes
+  - name: Teardown Windows Systems
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/teardown-windows.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_credential_on_launch: yes
+  - name: Provision Demo
+    organization: Demo Provisioner
+    inventory: Demo Inventory
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/configure-demo-context-and-run.yml
+    execution_environment: Josh's Demos Collection EE
+    extra_vars:
+      demo_context_state: present
+    credentials:
+      - Demo Provisioner Netbox Credentials
+      - Demo Provisioner vCenter Credentials
+      - Demo Provisioner IDM Credentials
+      - Demo Provisioner Satellite Credentials
+      - Demo Provisioner Controller Credentials
+      - Demo Provisioner Admin Credentials
+    survey_enabled: yes
+    survey:
+      name: ''
+      description: ''
+      spec:
+        - type: multiplechoice
+          question_name: Which Demo?
+          question_description: What demo should be provisioned?
+          variable: demo
+          choices:
+            - patching
+            - s4hana-deployment
+            - compliance
+            - idm-ad
+            - aap-aa
+            - satellite-aa
+            - automation-everywhere
+            - r4e
+          required: yes
+        - type: text
+          question_name: "Demo Audience?"
+          question_description: "Who is the audience for this demo?"
+          variable: audience
+          required: yes
+        - type: text
+          question_name: "Provisioner?"
+          question_description: "Who is provisioning this demo?"
+          variable: provisioner
+          required: yes
+          default: 'Josh Swanson'
+        - type: text
+          question_name: "Provisioner's Email?"
+          question_description: "What is the provisioner's email address?"
+          variable: provisioner_email
+          required: yes
+          default: 'joshswanson@redhat.com'
+        - type: text
+          question_name: "Demo UUID?"
+          question_description: "If this demo exists, what is the unique ID?"
+          variable: demo_uuid
+          required: no
+        - type: text
+          question_name: Demo VLAN?
+          question_description: If this demo exists, what vlan was it built on?
+          variable: demo_vlan
+          required: no
+        - type: text
+          question_name: Kiosk Website?
+          question_description: If building r4e systems, what website should they display?
+          variable: kiosk_website
+          required: no
