@@ -9,7 +9,7 @@
 # hybrid.example  node_type=hybrid
 # hybrid2.example <- this will default to hybrid
 [automationcontroller]
-control-node-1.{{ demo_uuid }}.{{ base_dns_suffix }} ansible_connection=local
+{{ audience | lower }}-{{ demo }}-controller.{{ demo_uuid }}.{{ base_dns_suffix }} ansible_connection=local
 control-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}
 control-node-3.{{ demo_uuid }}.{{ base_dns_suffix }}
 
