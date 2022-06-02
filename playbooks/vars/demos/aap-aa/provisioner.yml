@@ -95,7 +95,8 @@ controller_hosts:
     inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "mfgplant1-managed-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "Demo {{ demo_uuid }} Inventory"
-
+  - name: "aap-metrics.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
 
 controller_group_tiers: 3
 
@@ -184,6 +185,17 @@ controller_groups_tier1:
       - "mfgplant1-hop-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "mfgplant1-execution-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "mfgplant1-managed-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: metrics_collection
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    hosts:
+      - "aap-metrics.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    variables:
+      cpus: 4
+      memory_mb: 8192
+      metrics_graph_service: yes
+      metrics_query_service: yes
+      metrics_rention_days: 14
+      metrics_monitored_hosts:  "{  { groups['aap_infrastructure'] }}"
 
 controller_groups_tier2:
   - name: aap_infrastructure
@@ -215,7 +227,6 @@ controller_groups_tier3:
       - aap_infrastructure
       - managed_endpoints
     variables:
-      run_additional_roles: no
       htop_url: https://dl.fedoraproject.org/pub/epel/8/Everything/x86_64/Packages/h/htop-3.0.5-1.el8.x86_64.rpm
       firewall:
         name: firewalld
@@ -226,6 +237,7 @@ controller_groups_tier3:
       os: rhel8
       application: general
       lifecycle_environment: production
+      run_additional_roles: yes
       provisioning:
         host_group: "{  { os }}/vlan146"
         method: bootdisk
