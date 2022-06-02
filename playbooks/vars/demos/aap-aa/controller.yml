@@ -1,11 +1,5 @@
 ---
 
-cpus: 1
-memory_mb: 1024
-
-controller_license:
-  manifest: /tmp/controller-manifest.zip
-
 os: rhel8
 application: general
 
@@ -23,3 +17,208 @@ controller_hostname: "{  { inventory_hostname }}"
 controller_username: "{  { admin_username }}"
 controller_password: "{  { admin_password }}"
 controller_validate_certs: no
+
+controller_configuration_projects_async_retries: 60
+controller_configuration_projects_async_delay: 5
+
+controller_license:
+  manifest: /tmp/controller-manifest.zip
+
+controller_organizations:
+  - name: "{  { audience }}"
+
+controller_credentials:
+  - name: Root Credentials
+    credential_type: Machine
+    organization: "{  { audience }}"
+    inputs:
+      username: root
+      password: "{  { admin_password }}"
+  - name: Automation Hub Image Registry Credentials
+    organization: "{  { audience }}"
+    credential_type: Container Registry
+    inputs:
+      host: hub.lab.msp.redhat.com
+      username: "{  { admin_username }}"
+      password: "{  { admin_password }}"
+      verify_ssl: no
+  
+controller_execution_environments:
+  - name: Josh's Demos Collection EE
+    image: 'hub.lab.msp.redhat.com/joshs-demos-collection-ee:latest'
+    organization: "{  { audience }}"
+    credential: Automation Hub Image Registry Credentials
+    pull: always
+
+controller_inventories:
+  - name: "{  { audience }} DC1 Inventory"
+    organization: "{  { audience }}"
+    instance_groups:
+      - dc1
+  - name: "{  { audience }} DC2 Inventory"
+    organization: "{  { audience }}"
+    instance_groups:
+      - dc2
+  - name: "{  { audience }} AWS Inventory"
+    organization: "{  { audience }}"
+    instance_groups:
+      - aws
+  - name: "{  { audience }} Azure Inventory"
+    organization: "{  { audience }}"
+    instance_groups:
+      - azure
+  - name: "{  { audience }} Mfgplant1 Inventory"
+    organization: "{  { audience }}"
+    instance_groups:
+      - mfgplant1
+
+controller_hosts:
+  - name: "dc1-managed-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "{  { audience }} DC1 Inventory"
+  - name: "dc2-managed-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "{  { audience }} DC2 Inventory"
+  - name: "azure-managed-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "{  { audience }} Azure Inventory"
+  - name: "aws-managed-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "{  { audience }} AWS Inventory"
+  - name: "mfgplant1-managed-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "{  { audience }} Mfgplant1 Inventory"
+
+controller_projects:
+  - name: "{  { audience }} Codebase"
+    organization: "{  { audience }}"
+    scm_branch: main
+    scm_type: git
+    scm_url: https://github.com/jjaswanson4/jdc.git
+    wait: yes
+
+controller_templates:
+  - name: Apply Standard Configuration
+    ask_inventory_on_launch: yes
+    project: "{  { audience }} Codebase"
+    organization: "{  { audience }}"
+    playbook: playbooks/apply-standard-configuration.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - Root Credentials
+  - name: Update All Packages
+    ask_inventory_on_launch: yes
+    project: "{  { audience }} Codebase"
+    organization: "{  { audience }}"
+    playbook: playbooks/update-all-packages.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - Root Credentials
+  - name: Install Tracer
+    ask_inventory_on_launch: yes
+    project: "{  { audience }} Codebase"
+    organization: "{  { audience }}"
+    playbook: playbooks/install-tracer.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - Root Credentials
+  - name: Install GitLab
+    ask_inventory_on_launch: yes
+    project: "{  { audience }} Codebase"
+    organization: "{  { audience }}"
+    playbook: playbooks/install-gitlab.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - Root Credentials
+
+controller_workflows:
+  - name: Setup Regional GitLab Servers
+    organization: "{  { audience }}"
+    state: present
+    simplified_workflow_nodes:
+      - identifier: Apply Standard Configuration to DC1 Servers
+        unified_job_template: Apply Standard Configuration
+        inventory: "{  { audience }} DC1 Inventory"
+        success_nodes:
+          - Update All Packages on DC1 Servers
+      - identifier: Update All Packages on DC1 Servers
+        unified_job_template: Update All Packages
+        inventory: "{  { audience }} DC1 Inventory"
+        success_nodes:
+          - Install Tracer on DC1 Servers
+      - identifier: Install Tracer on DC1 Servers
+        unified_job_template: Install Tracer
+        inventory: "{  { audience }} DC1 Inventory"
+        success_nodes:
+          - Install Gitlab in DC1
+      - identifier: Install Gitlab in DC1
+        unified_job_template: Install GitLab
+        inventory: "{  { audience }} DC1 Inventory"
+      - identifier: Apply Standard Configuration to DC2 Servers
+        unified_job_template: Apply Standard Configuration
+        inventory: "{  { audience }} DC2 Inventory"
+        success_nodes:
+          - Update All Packages on DC2 Servers
+      - identifier: Update All Packages on DC2 Servers
+        unified_job_template: Update All Packages
+        inventory: "{  { audience }} DC2 Inventory"
+        success_nodes:
+          - Install Tracer on DC2 Servers
+      - identifier: Install Tracer on DC2 Servers
+        unified_job_template: Install Tracer
+        inventory: "{  { audience }} DC2 Inventory"
+        success_nodes:
+          - Install Gitlab in DC2
+      - identifier: Install Gitlab in DC2
+        unified_job_template: Install GitLab
+        inventory: "{  { audience }} DC2 Inventory"
+      - identifier: Apply Standard Configuration to AWS Servers
+        unified_job_template: Apply Standard Configuration
+        inventory: "{  { audience }} AWS Inventory"
+        success_nodes:
+          - Update All Packages on AWS Servers
+      - identifier: Update All Packages on AWS Servers
+        unified_job_template: Update All Packages
+        inventory: "{  { audience }} AWS Inventory"
+        success_nodes:
+          - Install Tracer on AWS Servers
+      - identifier: Install Tracer on AWS Servers
+        unified_job_template: Install Tracer
+        inventory: "{  { audience }} AWS Inventory"
+        success_nodes:
+          - Install Gitlab in AWS
+      - identifier: Install Gitlab in AWS
+        unified_job_template: Install GitLab
+        inventory: "{  { audience }} AWS Inventory"
+      - identifier: Apply Standard Configuration to Azure Servers
+        unified_job_template: Apply Standard Configuration
+        inventory: "{  { audience }} Azure Inventory"
+        success_nodes:
+          - Update All Packages on Azure Servers
+      - identifier: Update All Packages on Azure Servers
+        unified_job_template: Update All Packages
+        inventory: "{  { audience }} Azure Inventory"
+        success_nodes:
+          - Install Tracer on Azure Servers
+      - identifier: Install Tracer on Azure Servers
+        unified_job_template: Install Tracer
+        inventory: "{  { audience }} Azure Inventory"
+        success_nodes:
+          - Install Gitlab in Azure
+      - identifier: Install Gitlab in Azure
+        unified_job_template: Install GitLab
+        inventory: "{  { audience }} Azure Inventory"
+      - identifier: Apply Standard Configuration to Mfgplant1 Servers
+        unified_job_template: Apply Standard Configuration
+        inventory: "{  { audience }} Mfgplant1 Inventory"
+        success_nodes:
+          - Update All Packages on Mfgplant1 Servers
+      - identifier: Update All Packages on Mfgplant1 Servers
+        unified_job_template: Update All Packages
+        inventory: "{  { audience }} Mfgplant1 Inventory"
+        success_nodes:
+          - Install Tracer on Mfgplant1 Servers
+      - identifier: Install Tracer on Mfgplant1 Servers
+        unified_job_template: Install Tracer
+        inventory: "{  { audience }} Mfgplant1 Inventory"
+        success_nodes:
+          - Install Gitlab in Mfgplant1
+      - identifier: Install Gitlab in Mfgplant1
+        unified_job_template: Install GitLab
+        inventory: "{  { audience }} Mfgplant1 Inventory"
+
