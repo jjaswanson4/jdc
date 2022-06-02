@@ -226,6 +226,7 @@ controller_groups_tier3:
     children:
       - aap_infrastructure
       - managed_endpoints
+      - metrics_collection
     variables:
       htop_url: https://dl.fedoraproject.org/pub/epel/8/Everything/x86_64/Packages/h/htop-3.0.5-1.el8.x86_64.rpm
       firewall:
