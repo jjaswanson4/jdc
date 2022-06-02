@@ -69,16 +69,28 @@ dc1-execution-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}
 dc2-execution-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}
 dc2-execution-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}
 
+[instance_group_dc2:vars]
+peers=dc2_hop
+
 [instance_group_azure]
 azure-execution-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}
 azure-execution-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}
+
+[instance_group_azure:vars]
+peers=azure_hop
 
 [instance_group_aws]
 aws-execution-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}
 aws-execution-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}
 
+[instance_group_aws:vars]
+peers=aws_hop
+
 [instance_group_mfgplant1]
 mfgplant1-execution-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}
+
+[instance_group_mfgplant1:vars]
+peers=mfgplant1_hop
 
 [hop_nodes]
 dc2-hop-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}
@@ -91,6 +103,21 @@ mfgplant1-hop-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}
 
 [hop_nodes:vars]
 peers=automationcontroller
+
+[dc2_hop]
+dc2-hop-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}
+dc2-hop-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}
+
+[azure_hop]
+azure-hop-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}
+azure-hop-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}
+
+[aws_hop]
+aws-hop-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}
+aws-hop-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}
+
+[mfgplant1_hop]
+mfgplant1-hop-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}
 
 [automationhub]
 
