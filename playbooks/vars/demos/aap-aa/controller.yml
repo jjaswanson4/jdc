@@ -157,6 +157,11 @@ controller_inventories:
         name: firewalld
         state: stopped
         enabled: no
+      base_packages:
+        - wget
+        - redhat-support-tool
+
+controller_group_tiers: 0
 
 controller_hosts:
   - name: "dc1-managed-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
@@ -187,6 +192,7 @@ controller_templates:
     execution_environment: Josh's Demos Collection EE
     credentials:
       - Root Credentials
+    allow_simultaneous: yes
   - name: Update All Packages
     ask_inventory_on_launch: yes
     project: "{  { audience }} Codebase"
@@ -195,6 +201,7 @@ controller_templates:
     execution_environment: Josh's Demos Collection EE
     credentials:
       - Root Credentials
+    allow_simultaneous: yes
   - name: Install Tracer
     ask_inventory_on_launch: yes
     project: "{  { audience }} Codebase"
@@ -203,6 +210,7 @@ controller_templates:
     execution_environment: Josh's Demos Collection EE
     credentials:
       - Root Credentials
+    allow_simultaneous: yes
   - name: Install GitLab
     ask_inventory_on_launch: yes
     project: "{  { audience }} Codebase"
@@ -211,6 +219,7 @@ controller_templates:
     execution_environment: Josh's Demos Collection EE
     credentials:
       - Root Credentials
+    allow_simultaneous: yes
 
 controller_workflows:
   - name: Setup Regional GitLab Servers
