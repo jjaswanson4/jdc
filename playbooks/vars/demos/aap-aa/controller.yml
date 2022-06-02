@@ -22,7 +22,7 @@ controller_configuration_projects_async_retries: 60
 controller_configuration_projects_async_delay: 5
 
 controller_license:
-  manifest: /tmp/controller-manifest.zip
+  manifest_url: http://satellite.lab.msp.redhat.com/pub/controller-manifest.zip
 
 controller_organizations:
   - name: "{  { audience }}"
