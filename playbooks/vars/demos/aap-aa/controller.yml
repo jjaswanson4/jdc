@@ -55,22 +55,107 @@ controller_inventories:
     organization: "{  { audience }}"
     instance_groups:
       - dc1
+    variables:
+      config_files:
+        - hosts
+        - resolv.conf
+      timesync_ntp_servers:
+        - hostname: 0.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 1.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 2.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 3.rhel.pool.ntp.org
+          iburst: yes
+      firewall:
+        name: firewalld
+        state: stopped
+        enabled: no
   - name: "{  { audience }} DC2 Inventory"
     organization: "{  { audience }}"
     instance_groups:
       - dc2
+    variables:
+      config_files:
+        - hosts
+        - resolv.conf
+      timesync_ntp_servers:
+        - hostname: 0.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 1.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 2.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 3.rhel.pool.ntp.org
+          iburst: yes
+      firewall:
+        name: firewalld
+        state: stopped
+        enabled: no
   - name: "{  { audience }} AWS Inventory"
     organization: "{  { audience }}"
     instance_groups:
       - aws
+    variables:
+      config_files:
+        - hosts
+        - resolv.conf
+      timesync_ntp_servers:
+        - hostname: 1.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 2.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 3.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 0.rhel.pool.ntp.org
+          iburst: yes
+      firewall:
+        name: firewalld
+        state: stopped
+        enabled: no
   - name: "{  { audience }} Azure Inventory"
     organization: "{  { audience }}"
     instance_groups:
       - azure
+    variables:
+      config_files:
+        - hosts
+        - resolv.conf
+      timesync_ntp_servers:
+        - hostname: 2.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 3.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 0.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 1.rhel.pool.ntp.org
+          iburst: yes
+      firewall:
+        name: firewalld
+        state: stopped
+        enabled: no
   - name: "{  { audience }} Mfgplant1 Inventory"
     organization: "{  { audience }}"
     instance_groups:
       - mfgplant1
+    variables:
+      config_files:
+        - hosts
+        - resolv.conf
+      timesync_ntp_servers:
+        - hostname: 3.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 0.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 1.rhel.pool.ntp.org
+          iburst: yes
+        - hostname: 2.rhel.pool.ntp.org
+          iburst: yes
+      firewall:
+        name: firewalld
+        state: stopped
+        enabled: no
 
 controller_hosts:
   - name: "dc1-managed-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
