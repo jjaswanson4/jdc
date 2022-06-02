@@ -81,6 +81,17 @@ controller_inventories:
           - sos
           - redhat-support-tool
           - open-vm-tools
+      selinux_policy: targeted
+      selinux_state: permissive
+      dns_resolv:
+        search_domains:
+          - "{  { demo_uuid }}.{{ base_dns_suffix }}"
+          - lab.msp.redhat.com
+        nameservers:
+          - 10.15.108.102
+          - 10.15.108.101
+        options:
+          - 'timeout:1'
   - name: "{  { audience }} DC2 Inventory"
     organization: "{  { audience }}"
     instance_groups:
@@ -110,6 +121,17 @@ controller_inventories:
           - sos
           - redhat-support-tool
           - open-vm-tools
+      selinux_policy: targeted
+      selinux_state: permissive
+      dns_resolv:
+        search_domains:
+          - "{  { demo_uuid }}.{{ base_dns_suffix }}"
+          - lab.msp.redhat.com
+        nameservers:
+          - 10.15.108.102
+          - 10.15.108.101
+        options:
+          - 'timeout:1'
   - name: "{  { audience }} AWS Inventory"
     organization: "{  { audience }}"
     instance_groups:
@@ -139,6 +161,17 @@ controller_inventories:
           - sos
           - redhat-support-tool
           - open-vm-tools
+      selinux_policy: targeted
+      selinux_state: permissive
+      dns_resolv:
+        search_domains:
+          - "{  { demo_uuid }}.{{ base_dns_suffix }}"
+          - lab.msp.redhat.com
+        nameservers:
+          - 10.15.108.102
+          - 10.15.108.101
+        options:
+          - 'timeout:1'
   - name: "{  { audience }} Azure Inventory"
     organization: "{  { audience }}"
     instance_groups:
@@ -168,6 +201,17 @@ controller_inventories:
           - sos
           - redhat-support-tool
           - open-vm-tools
+      selinux_policy: targeted
+      selinux_state: permissive
+      dns_resolv:
+        search_domains:
+          - "{  { demo_uuid }}.{{ base_dns_suffix }}"
+          - lab.msp.redhat.com
+        nameservers:
+          - 10.15.108.102
+          - 10.15.108.101
+        options:
+          - 'timeout:1'
   - name: "{  { audience }} Mfgplant1 Inventory"
     organization: "{  { audience }}"
     instance_groups:
@@ -197,6 +241,17 @@ controller_inventories:
           - sos
           - redhat-support-tool
           - open-vm-tools
+      selinux_policy: targeted
+      selinux_state: permissive
+      dns_resolv:
+        search_domains:
+          - "{  { demo_uuid }}.{{ base_dns_suffix }}"
+          - lab.msp.redhat.com
+        nameservers:
+          - 10.15.108.102
+          - 10.15.108.101
+        options:
+          - 'timeout:1'
 
 controller_group_tiers: 0
 
