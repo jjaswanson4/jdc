@@ -41,6 +41,15 @@
   when:
     - use_advanced_inventory is not defined
 
+- name: generate mesh topology | advanced
+  ansible.builtin.shell:
+    cmd: ./setup.sh -- --tags generate_dot_file
+  args:
+    chdir: "{{ installer_directory | json_query('files[0].path') }}"
+  when:
+    - use_advanced_inventory is defined
+    - use_advanced_inventory
+
 - name: run the setup playbook | advanced
   ansible.builtin.shell:
     cmd: ./setup.sh -- --forks 50
