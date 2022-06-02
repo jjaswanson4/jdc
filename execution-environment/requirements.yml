@@ -2,18 +2,12 @@
 
 roles:
   - name: linux-system-roles.cockpit
-    source: https://galaxy.ansible.com
   - name: linux-system-roles.metrics
-    source: https://galaxy.ansible.com
   # https://github.com/linux-system-roles/timesync/pull/134
   - name: linux-system-roles.timesync
-    source: https://galaxy.ansible.com
   - name: redhat_sap.sap_hostagent
-    source: https://galaxy.ansible.com
   - name: redhat_sap.sap_hana_deployment
-    source: https://galaxy.ansible.com
   - name: redhat_sap.sap_s4hana_deployment
-    source: https://galaxy.ansible.com
   - name: sap-hana-hsr
     src: https://github.com/jjaswanson4/sap-hana-hsr/archive/refs/tags/v1.3.0.tar.gz
   - name: sap-hana-ha-pacemaker
