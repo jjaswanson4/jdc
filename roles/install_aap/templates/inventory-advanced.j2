@@ -36,7 +36,7 @@ dc2-hop-node-1.{{ demo_uuid }}.{{ base_dns_suffix }} node_type=hop peers=dc2-hop
 dc2-hop-node-2.{{ demo_uuid }}.{{ base_dns_suffix }} node_type=hop
 
 # DC2 execution nodes
-dc2-execution-node-1.{{ demo_uuid }}.{{ base_dns_suffix }} peers=dc1-execution-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}
+dc2-execution-node-1.{{ demo_uuid }}.{{ base_dns_suffix }} peers=dc2-execution-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}
 dc2-execution-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}
 
 # Hop to Azure
