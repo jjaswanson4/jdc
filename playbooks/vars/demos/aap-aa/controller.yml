@@ -74,8 +74,13 @@ controller_inventories:
         state: stopped
         enabled: no
       base_packages:
-        - wget
-        - redhat-support-tool
+        disable_gpg_check: yes
+        packages:
+          - lsof
+          - vim
+          - sos
+          - redhat-support-tool
+          - open-vm-tools
   - name: "{  { audience }} DC2 Inventory"
     organization: "{  { audience }}"
     instance_groups:
@@ -98,8 +103,13 @@ controller_inventories:
         state: stopped
         enabled: no
       base_packages:
-        - wget
-        - redhat-support-tool
+        disable_gpg_check: yes
+        packages:
+          - lsof
+          - vim
+          - sos
+          - redhat-support-tool
+          - open-vm-tools
   - name: "{  { audience }} AWS Inventory"
     organization: "{  { audience }}"
     instance_groups:
@@ -122,8 +132,13 @@ controller_inventories:
         state: stopped
         enabled: no
       base_packages:
-        - wget
-        - redhat-support-tool
+        disable_gpg_check: yes
+        packages:
+          - lsof
+          - vim
+          - sos
+          - redhat-support-tool
+          - open-vm-tools
   - name: "{  { audience }} Azure Inventory"
     organization: "{  { audience }}"
     instance_groups:
@@ -146,8 +161,13 @@ controller_inventories:
         state: stopped
         enabled: no
       base_packages:
-        - wget
-        - redhat-support-tool
+        disable_gpg_check: yes
+        packages:
+          - lsof
+          - vim
+          - sos
+          - redhat-support-tool
+          - open-vm-tools
   - name: "{  { audience }} Mfgplant1 Inventory"
     organization: "{  { audience }}"
     instance_groups:
@@ -170,8 +190,13 @@ controller_inventories:
         state: stopped
         enabled: no
       base_packages:
-        - wget
-        - redhat-support-tool
+        disable_gpg_check: yes
+        packages:
+          - lsof
+          - vim
+          - sos
+          - redhat-support-tool
+          - open-vm-tools
 
 controller_group_tiers: 0
 
