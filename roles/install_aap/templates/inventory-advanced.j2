@@ -15,7 +15,7 @@ control-node-3.{{ demo_uuid }}.{{ base_dns_suffix }}
 
 [automationcontroller:vars]
 node_type=control
-peers=instance_group_azure,instance_group_aws,instance_group_dc1,instance_group_dc2,instance_group_mfgplant1
+peers=instance_group_dc1
 
 # Execution Nodes
 # There are two valid node_types that can be assigned for this group.
@@ -27,42 +27,67 @@ peers=instance_group_azure,instance_group_aws,instance_group_dc1,instance_group_
 # execution.example  node_type=execution
 # execution2.example <- this will default to execution
 [execution_nodes]
-execution-node-azure-1.{{ demo_uuid }}.{{ base_dns_suffix }} peers=execution-node-azure-2.{{ demo_uuid }}.{{ base_dns_suffix }}
-execution-node-azure-2.{{ demo_uuid }}.{{ base_dns_suffix }}
-execution-node-aws-1.{{ demo_uuid }}.{{ base_dns_suffix }} peers=execution-node-aws-2.{{ demo_uuid }}.{{ base_dns_suffix }}
-execution-node-aws-2.{{ demo_uuid }}.{{ base_dns_suffix }}
-execution-node-dc1-1.{{ demo_uuid }}.{{ base_dns_suffix }} peers=execution-node-dc1-2.{{ demo_uuid }}.{{ base_dns_suffix }}
-execution-node-dc1-2.{{ demo_uuid }}.{{ base_dns_suffix }}
-execution-node-dc2-1.{{ demo_uuid }}.{{ base_dns_suffix }} peers=execution-node-dc2-2.{{ demo_uuid }}.{{ base_dns_suffix }}
-execution-node-dc2-2.{{ demo_uuid }}.{{ base_dns_suffix }}
-execution-node-mfgplant-1.{{ demo_uuid }}.{{ base_dns_suffix }} peers=execution-node-mfgplant-2.{{ demo_uuid }}.{{ base_dns_suffix }}
-execution-node-mfgplant-2.{{ demo_uuid }}.{{ base_dns_suffix }}
-hop-node-mfgplant1-1.{{ demo_uuid }}.{{ base_dns_suffix }} node_type=hop peers=hop-node-mfgplant1-2.{{ demo_uuid }}.{{ base_dns_suffix }}
-hop-node-mfgplant1-2.{{ demo_uuid }}.{{ base_dns_suffix }} node_type=hop
+# Direct connected to control plane (Control nodes are "in" DC1)
+dc1-execution-node-1.{{ demo_uuid }}.{{ base_dns_suffix }} peers=dc1-execution-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}
+dc1-execution-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}
 
-[instance_group_azure]
-execution-node-azure-1.{{ demo_uuid }}.{{ base_dns_suffix }}
-execution-node-azure-2.{{ demo_uuid }}.{{ base_dns_suffix }}
+# Hop to DC2
+dc2-hop-node-1.{{ demo_uuid }}.{{ base_dns_suffix }} node_type=hop peers=dc2-hop-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}
+dc2-hop-node-2.{{ demo_uuid }}.{{ base_dns_suffix }} node_type=hop
 
-[instance_group_aws]
-execution-node-aws-1.{{ demo_uuid }}.{{ base_dns_suffix }}
-execution-node-aws-2.{{ demo_uuid }}.{{ base_dns_suffix }}
+# DC2 execution nodes
+dc2-execution-node-1.{{ demo_uuid }}.{{ base_dns_suffix }} peers=dc1-execution-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}
+dc2-execution-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}
+
+# Hop to Azure
+azure-hop-node-1.{{ demo_uuid }}.{{ base_dns_suffix }} node_type=hop peers=azure-hop-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}
+azure-hop-node-2.{{ demo_uuid }}.{{ base_dns_suffix }} node_type=hop
+
+# Azure execution nodes
+azure-execution-node-1.{{ demo_uuid }}.{{ base_dns_suffix }} peers=azure-execution-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}
+azure-execution-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}
+
+# Hop to AWS
+aws-hop-node-1.{{ demo_uuid }}.{{ base_dns_suffix }} node_type=hop peers=aws-hop-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}
+aws-hop-node-2.{{ demo_uuid }}.{{ base_dns_suffix }} node_type=hop
+
+# AWS execution nodes
+aws-execution-node-1.{{ demo_uuid }}.{{ base_dns_suffix }} peers=aws-execution-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}
+aws-execution-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}
+
+# Hop to mfgplant1
+mfgplant1-hop-node-1.{{ demo_uuid }}.{{ base_dns_suffix }} node_type=hop
+
+# mfgplant1 execution nodes
+mfgplant1-execution-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}
 
 [instance_group_dc1]
-execution-node-dc1-1.{{ demo_uuid }}.{{ base_dns_suffix }}
-execution-node-dc1-2.{{ demo_uuid }}.{{ base_dns_suffix }}
+dc1-execution-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}
+dc1-execution-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}
 
 [instance_group_dc2]
-execution-node-dc2-1.{{ demo_uuid }}.{{ base_dns_suffix }}
-execution-node-dc2-2.{{ demo_uuid }}.{{ base_dns_suffix }}
+dc2-execution-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}
+dc2-execution-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}
+
+[instance_group_azure]
+azure-execution-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}
+azure-execution-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}
+
+[instance_group_aws]
+aws-execution-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}
+aws-execution-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}
 
 [instance_group_mfgplant1]
-execution-node-mfgplant-1.{{ demo_uuid }}.{{ base_dns_suffix }}
-execution-node-mfgplant-2.{{ demo_uuid }}.{{ base_dns_suffix }}
+mfgplant1-execution-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}
 
 [hop_nodes]
-hop-node-mfgplant1-1.{{ demo_uuid }}.{{ base_dns_suffix }}
-hop-node-mfgplant1-2.{{ demo_uuid }}.{{ base_dns_suffix }}
+dc2-hop-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}
+dc2-hop-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}
+azure-hop-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}
+azure-hop-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}
+aws-hop-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}
+aws-hop-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}
+mfgplant1-hop-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}
 
 [hop_nodes:vars]
 peers=automationcontroller
