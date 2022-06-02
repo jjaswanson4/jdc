@@ -28,6 +28,14 @@ controller_license:
 controller_organizations:
   - name: "{  { audience }}"
 
+controller_credential_types:
+  - name: Admin Credentials
+    kind: cloud
+    injectors:
+      extra_vars:
+        admin_username: "{  { admin_username }}"
+        admin_password: "{  { admin_password }}"
+
 controller_credentials:
   - name: Root Credentials
     credential_type: Machine
@@ -43,6 +51,9 @@ controller_credentials:
       username: "{  { admin_username }}"
       password: "{  { admin_password }}"
       verify_ssl: no
+  - name: Admin Credentials
+    organization: "{  { audience }}"
+    credential_type: Admin Credentials
   
 controller_execution_environments:
   - name: Josh's Demos Collection EE
@@ -311,6 +322,7 @@ controller_templates:
     execution_environment: Josh's Demos Collection EE
     credentials:
       - Root Credentials
+      - Admin Credentials
     allow_simultaneous: yes
 
 controller_workflows:
