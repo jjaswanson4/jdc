@@ -73,6 +73,9 @@ controller_inventories:
         name: firewalld
         state: stopped
         enabled: no
+      base_packages:
+        - wget
+        - redhat-support-tool
   - name: "{  { audience }} DC2 Inventory"
     organization: "{  { audience }}"
     instance_groups:
@@ -94,6 +97,9 @@ controller_inventories:
         name: firewalld
         state: stopped
         enabled: no
+      base_packages:
+        - wget
+        - redhat-support-tool
   - name: "{  { audience }} AWS Inventory"
     organization: "{  { audience }}"
     instance_groups:
@@ -115,6 +121,9 @@ controller_inventories:
         name: firewalld
         state: stopped
         enabled: no
+      base_packages:
+        - wget
+        - redhat-support-tool
   - name: "{  { audience }} Azure Inventory"
     organization: "{  { audience }}"
     instance_groups:
@@ -136,6 +145,9 @@ controller_inventories:
         name: firewalld
         state: stopped
         enabled: no
+      base_packages:
+        - wget
+        - redhat-support-tool
   - name: "{  { audience }} Mfgplant1 Inventory"
     organization: "{  { audience }}"
     instance_groups:
