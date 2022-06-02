@@ -136,7 +136,7 @@ database-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}
 [all:vars]
 admin_password='{{ controller_install.admin_password | default('') }}'
 ansible_user={{ ansible_user }}
-ansible_password='{{ ansible_password }}'
+ansible_password='{{ admin_password }}'
 
 pg_host='database-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}'
 pg_port='{{ controller_install.pg.port | default('5432') }}'
