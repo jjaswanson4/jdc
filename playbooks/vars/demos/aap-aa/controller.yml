@@ -2,6 +2,7 @@
 
 os: rhel8
 application: general
+run_additional_roles: yes
 
 aap_download_url: http://satellite.lab.msp.redhat.com/pub/ansible-automation-platform-setup-latest.tar.gz
 aap_installer_bundle: ansible-automation-platform-setup-latest.tar.gz
