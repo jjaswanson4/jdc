@@ -294,7 +294,7 @@ controller_templates:
     inventory: Demo Inventory
     ask_inventory_on_launch: yes
     ask_limit_on_launch: yes
-    forks: 10
+    forks: 50
     project: Josh's Demos Collection
     allow_simultaneous: yes
     playbook: playbooks/apply-standard-configuration.yml
