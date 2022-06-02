@@ -47,8 +47,6 @@ controller_configuration_projects_async_delay: 5
 controller_hosts:
   - name: "database-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "Demo {{ demo_uuid }} Inventory"
-  - name: "control-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "control-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "control-node-3.{{ demo_uuid }}.{{ base_dns_suffix }}"
@@ -108,11 +106,11 @@ controller_groups_tier1:
   - name: aap_installer_node
     inventory: "Demo {{ demo_uuid }} Inventory"
     hosts:
-      - "control-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}"   
+      - "{{ audience | lower }}-{{ demo }}-controller.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: control_nodes
     inventory: "Demo {{ demo_uuid }} Inventory"
     hosts:
-      - "control-node-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "{{ audience | lower }}-{{ demo }}-controller.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "control-node-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "control-node-3.{{ demo_uuid }}.{{ base_dns_suffix }}"
     variables:
