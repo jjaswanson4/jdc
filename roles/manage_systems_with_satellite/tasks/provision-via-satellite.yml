@@ -50,7 +50,7 @@
         
     - name: wait for VM to come up
       ansible.builtin.wait_for_connection:
-        timeout: 1800
+        timeout: 2400
         sleep: 30
   when:
     - not host_status.host
