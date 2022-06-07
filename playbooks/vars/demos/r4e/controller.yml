@@ -49,6 +49,7 @@ controller_credential_types:
         controller_hostname: "{  { audience | lower }}-{  { demo }}-controller.{  { demo_uuid }}.{  { base_dns_suffix }}"
         controller_username: "{  { controller_username }}"
         controller_password: "{  { controller_password }}"
+        controller_validate_certs: 'no'
   - name: vCenter Credentials
     kind: cloud
     injectors:
@@ -108,6 +109,7 @@ controller_inventories:
     variables:
       audience: "{  { audience }}"
       demo_uuid: "{  { demo_uuid }}"
+      kiosk_website: "https://{  { audience | lower }}.com"
   - name: "{  { audience }} Edge Utilities"
     organization: "{  { audience }}"
     variables:
