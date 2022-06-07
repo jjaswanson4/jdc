@@ -222,8 +222,6 @@ controller_templates:
     ask_limit_on_launch: yes
     become_enabled: yes
     allow_simultaneous: yes
-    extra_vars:
-      kiosk_website: "{  { kiosk_website | default('https://time.gov') }}"
     credentials:
       - Edge User Credentials  
 
@@ -241,6 +239,7 @@ controller_workflows:
           question_description: If building r4e systems, what website should they display?
           variable: kiosk_website
           required: no
+          default: "https://{  { audience | lower }}.com"
     simplified_workflow_nodes:
       - identifier: Create Edge Installer ISO
         unified_job_template: Create Edge Installer ISO
