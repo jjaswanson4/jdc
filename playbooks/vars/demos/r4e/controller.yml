@@ -231,6 +231,16 @@ controller_workflows:
   - name: Create ISO and Provision Systems
     organization: "{  { audience }}"
     state: present
+    survey_enabled: yes
+    survey:
+      name: ''
+      description: ''
+      spec:
+        - type: text
+          question_name: Kiosk Website?
+          question_description: If building r4e systems, what website should they display?
+          variable: kiosk_website
+          required: no
     simplified_workflow_nodes:
       - identifier: Create Edge Installer ISO
         unified_job_template: Create Edge Installer ISO
