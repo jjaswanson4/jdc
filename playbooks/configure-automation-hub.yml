@@ -11,4 +11,4 @@
     - redhat_cop.ah_configuration.group
     - redhat_cop.ah_configuration.user
     - redhat_cop.ah_configuration.namespace
-    - redhat_cop.ah_configuration.publish
+    - jjaswanson4.ah_configuration.publish
