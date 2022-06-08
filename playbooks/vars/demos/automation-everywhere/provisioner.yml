@@ -401,6 +401,7 @@ controller_workflows:
         credentials:
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
+          - Demo Provisioner Red Hat Registry Credentials
         success_nodes:
           - Configure Automation Hub
         failure_nodes:
