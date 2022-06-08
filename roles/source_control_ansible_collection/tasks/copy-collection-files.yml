@@ -7,5 +7,5 @@
 
 - name: push collection files (recurse)
   ansible.builtin.copy:
-    src: "files/{{ collection.fqcn.split('.')[0] }}/{{ collection.fqcn.split('.')[0] }}"
+    src: "files/{{ collection.fqcn.split('.')[0] }}/{{ collection.fqcn.split('.')[1] }}"
     dest: "{{ demo_ansible_collections_working_directory }}/{{ collection.fqcn.split('.')[0] }}/"
