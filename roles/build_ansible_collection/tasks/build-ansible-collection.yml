@@ -4,8 +4,9 @@
   ansible.builtin.shell:
     cmd: ansible-galaxy collection build
     chdir: "{{ demo_ansible_collections_working_directory }}/{{ collection.fqcn.split('.')[1] }}"
+  register: collection_created
   changed_when:
-    - "'Created collection' in extracted_collection.stdout"
+    - "'Created collection' in collection_created.stdout"
   failed_when:
-    - "'Created collection' not in extracted_collection.stdout"
-    - "'already exists' not in extracted_collection.stderr"
+    - "'Created collection' not in collection_created.stdout"
+    - "'already exists' not in collection_created.stderr"
