@@ -40,14 +40,38 @@ base_dns_suffix: demos.lcl
 controller_configuration_credentials_secure_logging: no
 
 controller_organizations: []
-controller_credential_types: []
-controller_credentials: []
 controller_execution_environments: []
 controller_inventories: []
 controller_projects: []
 
 controller_configuration_projects_async_retries: 60
 controller_configuration_projects_async_delay: 5
+
+controller_credential_types:
+  - name: Demo Provisioner Automation Hub Credentials
+    kind: cloud
+    inputs:
+      fields:
+        - id: ah_username
+          type: string
+          label: Automation Hub Username
+        - id: ah_password
+          type: string
+          label: Automation Hub Password
+          secret: yes
+    injectors:
+      extra_vars:
+        ah_username: "{  { ah_username }}"
+        ah_password: "{  { ah_password }}"
+        ah_validate_certs: 'no'
+
+controller_credentials:
+  - name: Demo Provisioner Automation Hub Credentials
+    credential_type: Demo Provisioner Automation Hub Credentials
+    organization: Demo Provisioner
+    inputs:
+      ah_username: "{  { admin_username }}"
+      ah_password: "{  { admin_password }}"
 
 controller_hosts:
   - name: "{{ audience | lower }}-gitlab.{{ demo_uuid }}.{{ base_dns_suffix }}"
@@ -400,6 +424,7 @@ controller_workflows:
         credentials:
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
+          - Demo Provisioner Automation Hub Credentials
         success_nodes:
           - Configure Ansible Controller
         failure_nodes:
