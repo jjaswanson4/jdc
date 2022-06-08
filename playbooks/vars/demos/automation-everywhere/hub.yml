@@ -103,11 +103,9 @@ ah_namespaces:
         url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/cmdb_automation"
 
 ah_collections:
-  - name: ip_address_management
-    namespace: network_automation
+  - collection_name: ip_address_management
     git_url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/network_automation/ip_address_management"
-    version: 1.0.0
-    auto_approve: yes
+
   # - name: manage_records
   #   namespace: cmdb_automation
   #   url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/cmdb_automation/manage_records/-/archive/1.0.0/manage_records-1.0.0.tar.gz"
