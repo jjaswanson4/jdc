@@ -1,5 +1,9 @@
 ---
 
+- name: ensure ansible-core is installed
+  ansible.builtin.yum:
+    name: ansible-core
+
 - name: ensure working directory exists
   ansible.builtin.file:
     path: "{{ demo_ansible_collections_working_directory }}"
