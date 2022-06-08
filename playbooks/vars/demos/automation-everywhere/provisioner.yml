@@ -21,14 +21,6 @@ vars_files_path: "vars/demos/{{ demo }}"
 # Typically this contains something copied out or uploaded.
 files_files_path: "files/demos/{{ demo }}"
 
-# This is the execution environment used for this demo provisioner.
-# This execution environment will automatically be configured in Controller.
-execution_environment:
-  name: Josh's Demos Collection EE
-  registry: "{{ ee_registry.host }}"
-  image: joshs-demos-collection-ee
-  credential: Demo Provisioner EE Image Registry Credentials
-
 # This is the information used for the instance of Controller for the demo.
 # This can be the same instance as where the provisioner is deployed, but it's not recommended.
 controller_configuration_file: "{{ vars_files_path }}/controller.yml"
@@ -53,6 +45,9 @@ controller_credentials: []
 controller_execution_environments: []
 controller_inventories: []
 controller_projects: []
+
+controller_configuration_projects_async_retries: 60
+controller_configuration_projects_async_delay: 5
 
 controller_hosts:
   - name: "{{ audience | lower }}-gitlab.{{ demo_uuid }}.{{ base_dns_suffix }}"
