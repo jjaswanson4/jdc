@@ -7,7 +7,7 @@
 
 - name: clone collection code
   ansible.builtin.shell:
-    cmd: "git -c http.sslVerify=false https://{{ audience | lower }}-gitlab.{{ demo_uuid }}.{{ base_dns_suffix }}/{{ collection.fqcn.split('.')[0] }}/{{ collection.fqcn.split('.')[1] }}.git"
+    cmd: "git -c http.sslVerify=false clone https://{{ audience | lower }}-gitlab.{{ demo_uuid }}.{{ base_dns_suffix }}/{{ collection.fqcn.split('.')[0] }}/{{ collection.fqcn.split('.')[1] }}.git"
     chdir: "{{ demo_ansible_collections_working_directory }}/"
   when:
     - not collection_local_copy.stat.exists
