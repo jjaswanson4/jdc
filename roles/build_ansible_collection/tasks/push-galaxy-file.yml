@@ -1,0 +1,6 @@
+---
+
+- name: push galaxy file
+  ansible.builtin.template:
+    src: templates/galaxy.yml.j2
+    dest: "{{ demo_ansible_collections_working_directory }}/{{ collection.fqcn.split('.')[1] }}/galaxy.yml"
