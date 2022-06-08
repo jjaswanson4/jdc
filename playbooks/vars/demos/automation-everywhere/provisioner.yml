@@ -100,7 +100,6 @@ controller_groups_tier2:
     children:
       - gitlab
     variables:
-      demo_ansible_collections_working_directory: /tmp
       gitlab_api_url: "https://{{ audience | lower }}-gitlab.{{ demo_uuid }}.{{ base_dns_suffix }}/"
       gitlab_api_username: root
       gitlab_api_password: "{  { admin_password }}"
@@ -117,7 +116,6 @@ controller_groups_tier2:
           git:
             name: Network Automation
             email: network-automation@company.com
-          files: files/demos/automation-everywhere/collections/network_automation/ip_address_management
           templates:
             - src: templates/demos/automation-everywhere/galaxy.yml.j2
               dest: "{  { demo_ansible_collections_working_directory }}/network_automation/ip_address_management/galaxy.yml"
@@ -132,7 +130,6 @@ controller_groups_tier2:
           git:
             name: CMDB Automation
             email: cmdb-automation@company.com
-          files: files/demos/automation-everywhere/collections/cmdb_automation/manage_records
           templates:
             - src: templates/demos/automation-everywhere/galaxy.yml.j2
               dest: "{  { demo_ansible_collections_working_directory }}/cmdb_automation/manage_records/galaxy.yml"
@@ -147,7 +144,6 @@ controller_groups_tier2:
           git:
             name: Network Automation
             email: network-automation@company.com
-          files: files/demos/automation-everywhere/collections/network_automation/manage_dns_records
           templates:
             - src: templates/demos/automation-everywhere/galaxy.yml.j2
               dest: "{  { demo_ansible_collections_working_directory }}/network_automation/manage_dns_records/galaxy.yml"
@@ -300,7 +296,7 @@ controller_workflows:
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
         success_nodes:
-          - Build Ansible Collections
+          - Source Control Ansible Collections
         failure_nodes:
           - Send Failure Email About 'Configure GitLab'
       - identifier: Send Failure Email About 'Configure GitLab'
@@ -330,28 +326,14 @@ controller_workflows:
         credentials:
           - Demo Provisioner Root Account
         success_nodes:
-          - Build Ansible Collections
+          - Source Control Ansible Collections
         failure_nodes:
           - Send Failure Email About 'Apply Standard Config to Automation Utils System'
       - identifier: Send Failure Email About 'Apply Standard Config to Automation Utils System'
         unified_job_template: Send Provisioner Email
         extra_data:
-          failed_at_step: Apply Standard Config to Automation Utils System
-      - identifier: Build Ansible Collections
-        unified_job_template: Build Ansible Collections
-        limit: 'source_control:!gitlab'
-        credentials:
-          - Demo Provisioner Root Account
-          - Demo Provisioner Admin Credentials
-        success_nodes:
-          - Source Control Ansible Collections
-        failure_nodes:
-          - Send Failure Email About 'Build Ansible Collections'
-        all_parents_must_converge: yes
-      - identifier: Send Failure Email About 'Build Ansible Collections'
-        unified_job_template: Send Provisioner Email
-        extra_data:
-          failed_at_step: Build Ansible Collections
+          failed_at_step: Apply Standard Config to Automation Utils Systems
+      # Collections work
       - identifier: Source Control Ansible Collections
         unified_job_template: Source Control Ansible Collections
         limit: 'source_control:!gitlab'
@@ -359,13 +341,28 @@ controller_workflows:
           - Demo Provisioner Root Account
           - Demo Provisioner Admin Credentials
         success_nodes:
-          - Configure Automation Hub
+          - Build Ansible Collections
         failure_nodes:
           - Send Failure Email About 'Source Control Ansible Collections'
+        all_parents_must_converge: yes
       - identifier: Send Failure Email About 'Source Control Ansible Collections'
         unified_job_template: Send Provisioner Email
         extra_data:
           failed_at_step: Source Control Ansible Collections
+      - identifier: Build Ansible Collections
+        unified_job_template: Build Ansible Collections
+        limit: 'source_control:!gitlab'
+        credentials:
+          - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
+        success_nodes:
+          - Configure Automation Hub
+        failure_nodes:
+          - Send Failure Email About 'Build Ansible Collections'
+      - identifier: Send Failure Email About 'Build Ansible Collections'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Build Ansible Collections
       - identifier: Provision Automation Hub
         unified_job_template: Provision Systems
         limit: hub
