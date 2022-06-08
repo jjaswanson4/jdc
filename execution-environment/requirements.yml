@@ -44,6 +44,7 @@ collections:
 
   # hub ansible collections
   - name: redhat_cop.ah_configuration
+    version: '>=0.8.0'
   - name: jjaswanson4.ah_configuration
 
   # sap ansible collections
