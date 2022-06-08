@@ -1,0 +1,11 @@
+---
+
+- name: create {{ collection.fqcn.split('.')[0] }} namespace directory
+  ansible.builtin.file:
+    path: "{{ demo_ansible_collections_working_directory }}/{{ collection.fqcn.split('.')[0] }}"
+    state: directory
+
+- name: push collection files (recurse)
+  ansible.builtin.copy:
+    src: "files/{{ collection.fqcn.split('.')[0] }}/{{ collection.fqcn.split('.')[0] }}"
+    dest: "{{ demo_ansible_collections_working_directory }}/{{ collection.fqcn.split('.')[0] }}/"
