@@ -7,6 +7,7 @@
   vars:
     ansible_python_interpreter: "{{ ansible_playbook_python }}"
     ansible_connection: local
+    ah_host: "{{ inventory_hostname }}"
   roles:
     - redhat_cop.ah_configuration.group
     - redhat_cop.ah_configuration.user
