@@ -182,7 +182,7 @@ controller_templates:
     ask_limit_on_launch: yes
     project: "{{ project }}"
     playbook: playbooks/install-gitlab.yml
-    execution_environment: "{{ execution_environment.name }}"
+    execution_environment: Josh's Demos Collection EE
     ask_credential_on_launch: yes
   - name: Configure GitLab
     inventory: Demo Inventory
@@ -190,7 +190,7 @@ controller_templates:
     ask_limit_on_launch: yes
     project: "{{ project }}"
     playbook: playbooks/configure-gitlab.yml
-    execution_environment: "{{ execution_environment.name }}"
+    execution_environment: Josh's Demos Collection EE
     ask_credential_on_launch: yes
   - name: Build Ansible Collections
     inventory: Demo Inventory
@@ -198,7 +198,7 @@ controller_templates:
     ask_limit_on_launch: yes
     project: "{{ project }}"
     playbook: playbooks/build-ansible-collection.yml
-    execution_environment: "{{ execution_environment.name }}"
+    execution_environment: Josh's Demos Collection EE
     ask_credential_on_launch: yes
   - name: Source Control Ansible Collections
     inventory: Demo Inventory
@@ -206,7 +206,7 @@ controller_templates:
     ask_limit_on_launch: yes
     project: "{{ project }}"
     playbook: playbooks/source-control-ansible-collection.yml
-    execution_environment: "{{ execution_environment.name }}"
+    execution_environment: Josh's Demos Collection EE
     ask_credential_on_launch: yes
 
 controller_workflows:
