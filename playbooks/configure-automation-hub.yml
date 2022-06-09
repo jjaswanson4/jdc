@@ -13,3 +13,14 @@
     - redhat_cop.ah_configuration.user
     - redhat_cop.ah_configuration.namespace
     - jjaswanson4.ah_configuration.publish
+  tasks:
+    - name: approve pending collections
+      redhat_cop.ah_configuration.ah_approval:
+        ah_host: "{{ ah_host }}"
+        ah_username: "{{ ah_username }}"
+        ah_password: "{{ ah_password }}"
+        ah_validate_certs: no
+        namespace: network_automation
+        collection: ip_address_management
+        version: 1.0.0
+        
