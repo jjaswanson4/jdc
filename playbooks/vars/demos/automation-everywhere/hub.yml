@@ -10,6 +10,8 @@ ah_username: "{  { admin_username }}"
 ah_password: "{  { admin_password }}"
 ah_validate_certs: no
 
+ah_configuration_publish_async_delay: 60
+
 ah_groups:
   - name: WebApp Automation Team
   - name: Network Automation Team
@@ -103,13 +105,13 @@ ah_namespaces:
 ah_collections:
   - collection_name: ip_address_management
     git_url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/network_automation/ip_address_management"
-    # namespace: network_automation
-    # version: 1.0.0
+    namespace: network_automation
+    version: 1.0.0
   - collection_name: manage_records
     git_url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/cmdb_automation/manage_records"
-    # namespace: cmdb_automation
-    # version: 1.0.0
+    namespace: cmdb_automation
+    version: 1.0.0
   - collection_name: manage_dns_records
     git_url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/network_automation/manage_dns_records"
-    # namespace: network_automation
-    # version: 1.0.0
+    namespace: network_automation
+    version: 1.0.0
