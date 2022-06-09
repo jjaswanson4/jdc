@@ -18,7 +18,7 @@ ah_groups:
   - name: Virtualization Automation Team
   - name: Security Automation Team
   - name: Storage Automation Team
-  - name: RHEL Automation Team
+  - name: OS Automation Team
   - name: Automation Architecture Team
 
 ah_users:
@@ -57,10 +57,10 @@ ah_users:
     last_name: Automation
     email: dont@email.me
     password: "{  { admin_password }}"
-  - username: rhel_automation_admin
+  - username: os_automation_admin
     groups:
-      - RHEL Automation Team
-    first_name: WebApp
+      - OS Automation Team
+    first_name: OS
     last_name: Automation
     email: dont@email.me
     password: "{  { admin_password }}"
@@ -117,6 +117,38 @@ ah_namespaces:
         object_permissions:
           - "change_namespace"
           - "upload_to_namespace"
+  - name: security_automation
+    company: Security Automation
+    email: "security-automation@{  { audience | lower }}.com"
+    avatar_url: http://satellite.lab.msp.redhat.com/pub/security.png
+    description: "{  { audience }} Security Automation"
+    resources: |
+      # Redhat
+      test namespace
+    links:
+      - name: Code Repositories
+        url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/security_automation"
+    groups:
+      - name: Security Automation Team
+        object_permissions:
+          - "change_namespace"
+          - "upload_to_namespace"
+  - name: os_automation
+    company: Operating System Automation
+    email: "os-automation@{  { audience | lower }}.com"
+    avatar_url: http://satellite.lab.msp.redhat.com/pub/rhel.png
+    description: "{  { audience }} Operating System Automation"
+    resources: |
+      # Redhat
+      test namespace
+    links:
+      - name: Code Repositories
+        url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/os_automation"
+    groups:
+      - name: OS Automation Team
+        object_permissions:
+          - "change_namespace"
+          - "upload_to_namespace"
 
 ah_collections:
   - collection_name: ip_address_management
@@ -132,6 +164,14 @@ ah_collections:
     namespace: network_automation
     version: 1.0.0
   - collection_name: manage_systems
-    git_url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/virtualization_automation/provision_system"
+    git_url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/virtualization_automation/manage_systems"
     namespace: virtualization_automation
+    version: 1.0.0
+  - collection_name: os
+    git_url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/security_automation/os"
+    namespace: security_automation
+    version: 1.0.0
+  - collection_name: rhel
+    git_url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/os_automation/rhel"
+    namespace: os_automation
     version: 1.0.0
