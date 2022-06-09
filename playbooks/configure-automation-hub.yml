@@ -21,6 +21,5 @@
         ah_password: "{{ ah_password }}"
         ah_validate_certs: no
         namespace: network_automation
-        collection: ip_address_management
+        name: ip_address_management
         version: 1.0.0
-        
