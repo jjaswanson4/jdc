@@ -84,6 +84,9 @@ controller_hosts:
         - name: CMDB Automation
           path: cmdb_automation
           visibility: public
+        - name: Virtualization Automation
+          path: virtualization_automation
+          visibility: public
       gitlab_projects:
         - name: IP Address Management
           path: ip_address_management
@@ -96,6 +99,10 @@ controller_hosts:
         - name: Manage DNS Records
           path: manage_dns_records
           group: network_automation
+          visibility: public
+        - name: Manage Systems
+          path: manage_systems
+          group: virtualization_automation
           visibility: public
   - name: "automation-utils.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "Demo {{ demo_uuid }} Inventory"
@@ -154,9 +161,6 @@ controller_groups_tier2:
           git:
             name: CMDB Automation
             email: cmdb-automation@company.com
-          templates:
-            - src: templates/demos/automation-everywhere/galaxy.yml.j2
-              dest: "{  { demo_ansible_collections_working_directory }}/cmdb_automation/manage_records/galaxy.yml"
         - fqcn: network_automation.manage_dns_records
           version: 1.0.0
           display_name: Manage DNS Records
@@ -168,9 +172,18 @@ controller_groups_tier2:
           git:
             name: Network Automation
             email: network-automation@company.com
-          templates:
-            - src: templates/demos/automation-everywhere/galaxy.yml.j2
-              dest: "{  { demo_ansible_collections_working_directory }}/network_automation/manage_dns_records/galaxy.yml"
+        - fqcn: virtualization_automation.manage_systems
+          version: 1.0.0
+          display_name: Manage Systems
+          description: A collection for managing DNS records via automation
+          tags:
+            - virtualization
+            - vmware
+            - cloud
+            - systems_management
+          git:
+            name: Virtualization Automation
+            email: network-automation@company.com
 
 controller_groups_tier3:
   - name: demo_hosts
