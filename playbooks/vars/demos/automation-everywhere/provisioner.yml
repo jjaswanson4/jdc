@@ -87,6 +87,12 @@ controller_hosts:
         - name: Virtualization Automation
           path: virtualization_automation
           visibility: public
+        - name: Operating System Automation
+          path: os_automation
+          visibility: public
+        - name: Security Automation
+          path: security_automation
+          visibility: public
       gitlab_projects:
         - name: IP Address Management
           path: ip_address_management
@@ -103,6 +109,14 @@ controller_hosts:
         - name: Manage Systems
           path: manage_systems
           group: virtualization_automation
+          visibility: public
+        - name: OS
+          path: os
+          group: security_automation
+          visibility: public
+        - name: RHEL
+          path: rhel
+          group: os_automation
           visibility: public
   - name: "automation-utils.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "Demo {{ demo_uuid }} Inventory"
@@ -147,9 +161,6 @@ controller_groups_tier2:
           git:
             name: Network Automation
             email: network-automation@company.com
-          templates:
-            - src: templates/demos/automation-everywhere/galaxy.yml.j2
-              dest: "{  { demo_ansible_collections_working_directory }}/network_automation/ip_address_management/galaxy.yml"
         - fqcn: cmdb_automation.manage_records
           version: 1.0.0
           display_name: Manage Records
@@ -175,7 +186,7 @@ controller_groups_tier2:
         - fqcn: virtualization_automation.manage_systems
           version: 1.0.0
           display_name: Manage Systems
-          description: A collection for managing DNS records via automation
+          description: A collection for managing systems on supported virtualization platforms
           tags:
             - virtualization
             - vmware
@@ -184,6 +195,27 @@ controller_groups_tier2:
           git:
             name: Virtualization Automation
             email: network-automation@company.com
+        - fqcn: os_automation.rhel
+          version: 1.0.0
+          display_name: OS Automation for RHEL
+          description: A collection of automation for managed RHEL systems
+          tags:
+            - os
+            - RHEL
+          git:
+            name: Operating System Automation
+            email: os-automation@company.com
+        - fqcn: security_automation.os
+          version: 1.0.0
+          display_name: Security Automation for Operating Systems
+          description: A collection of security automation for operating systems
+          tags:
+            - os
+            - rhel
+            - windows
+          git:
+            name: Security Automation
+            email: security-automation@company.com
 
 controller_groups_tier3:
   - name: demo_hosts
