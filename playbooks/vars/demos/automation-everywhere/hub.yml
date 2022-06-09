@@ -103,13 +103,13 @@ ah_namespaces:
 ah_collections:
   - collection_name: ip_address_management
     git_url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/network_automation/ip_address_management"
-    namespace: network_automation
-    version: 1.0.0
+    # namespace: network_automation
+    # version: 1.0.0
   - collection_name: manage_records
     git_url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/cmdb_automation/manage_records"
-    namespace: cmdb_automation
-    version: 1.0.0
+    # namespace: cmdb_automation
+    # version: 1.0.0
   - collection_name: manage_dns_records
     git_url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/network_automation/manage_dns_records"
-    namespace: network_automation
-    version: 1.0.0
+    # namespace: network_automation
+    # version: 1.0.0
