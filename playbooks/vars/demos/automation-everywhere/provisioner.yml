@@ -70,8 +70,8 @@ controller_credentials:
     credential_type: Demo Provisioner Automation Hub Credentials
     organization: Demo Provisioner
     inputs:
-      ah_username: "{  { admin_username }}"
-      ah_password: "{  { admin_password }}"
+      ah_username: "{{ admin_username }}"
+      ah_password: "{{ admin_password }}"
 
 controller_hosts:
   - name: "{{ audience | lower }}-gitlab.{{ demo_uuid }}.{{ base_dns_suffix }}"
