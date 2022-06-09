@@ -19,7 +19,11 @@
         ah_host: "{{ ah_host }}"
         ah_username: "{{ ah_username }}"
         ah_password: "{{ ah_password }}"
-        validate_certs: no
-        namespace: network_automation
-        name: ip_address_management
-        version: 1.0.0
+        validate_certs: "{{ ah_validate_certs }}"
+        namespace: "{{ collection.namespace }}"
+        name: "{{ collection.collection_name }}"
+        version: "{{ collection.version }}"
+      loop_control:
+        loop_var: collection
+      loop: "{{ ah_collections }}"
+
