@@ -101,6 +101,22 @@ ah_namespaces:
     links:
       - name: Code Repositories
         url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/cmdb_automation"
+  - name: virtualization_automation
+    company: Virtualization Automation
+    email: "virtualization-automation@{  { audience | lower }}.com"
+    avatar_url: http://satellite.lab.msp.redhat.com/pub/virtualization.png
+    description: "{  { audience }} Virtualization Automation"
+    resources: |
+      # Redhat
+      test namespace
+    links:
+      - name: Code Repositories
+        url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/virtualization_automation"
+    groups:
+      - name: Virtualization Automation Team
+        object_permissions:
+          - "change_namespace"
+          - "upload_to_namespace"
 
 ah_collections:
   - collection_name: ip_address_management
@@ -114,4 +130,8 @@ ah_collections:
   - collection_name: manage_dns_records
     git_url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/network_automation/manage_dns_records"
     namespace: network_automation
+    version: 1.0.0
+  - collection_name: manage_systems
+    git_url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/virtualization_automation/provision_system"
+    namespace: virtualization_automation
     version: 1.0.0
