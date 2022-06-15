@@ -18,7 +18,8 @@
         Authorization: Bearer {{ console_dot_api_access_token }}
       return_content: yes
   tasks:
-    - uri:
+    - name: create group in edge management via api
+      ansible.builtin.uri:
         url: https://console.redhat.com/api/edge/v1/device-groups
         body_format: json
         body:
