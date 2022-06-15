@@ -100,11 +100,6 @@ controller_credentials:
     inputs:
       edge_user_username: edge-user
       edge_user_ssh_key_data: "{{ edge_user_key_data }}"
-  - name: Demo Provisioner Cloud Dot Offline Token
-    credential_type: Demo Provisioner Cloud Dot Offline Token
-    organization: "{{ controller_organization }}"
-    inputs:
-      rhsm_offline_token: "{{ rhsm_offline_token }}"
 
 controller_hosts:
   - name: "edge-utilities.{{ demo_uuid }}.{{ base_dns_suffix }}"
