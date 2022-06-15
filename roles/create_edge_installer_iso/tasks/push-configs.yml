@@ -9,3 +9,4 @@
   loop:
     - fleet_rhc_vars
     - fleet.kspost
+    - fleet_tags
