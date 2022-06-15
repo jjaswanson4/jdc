@@ -78,7 +78,8 @@ controller_credential_types:
     injectors:
       extra_vars:
         edge_user_username: "{  { edge_user_username }}"
-        edge_user_ssh_key_data: "{  { edge_user_ssh_key_data }}"    
+        edge_user_ssh_key_data: "{  { edge_user_ssh_key_data }}"
+
 
 controller_credentials:
   - name: Demo Provisioner RHC Edge Credentials
@@ -99,6 +100,11 @@ controller_credentials:
     inputs:
       edge_user_username: edge-user
       edge_user_ssh_key_data: "{{ edge_user_key_data }}"
+  - name: Demo Provisioner Cloud Dot Offline Token
+    credential_type: Demo Provisioner Cloud Dot Offline Token
+    organization: "{{ controller_organization }}"
+    inputs:
+      rhsm_offline_token: "{{ rhsm_offline_token }}"
 
 controller_hosts:
   - name: "edge-utilities.{{ demo_uuid }}.{{ base_dns_suffix }}"
@@ -119,6 +125,11 @@ controller_hosts:
     inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "r4e-system-4.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "Demo {{ demo_uuid }} Inventory"
+  - name: localhost
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    variables:
+      ansible_connection: local
+      ansible_python_interpreter: '{  { ansible_playbook_python }}'
 
 controller_group_tiers: 2
 controller_groups_tier1:
@@ -162,6 +173,17 @@ controller_templates:
   ask_credential_on_launch: yes
   ask_variables_on_launch: yes
   ask_limit_on_launch: yes
+- name: Create Demo Group In Edge Management
+  organization: "{{ controller_organization }}"
+  ask_inventory_on_launch: yes
+  inventory: Demo Inventory
+  project: "{{ project }}"
+  allow_simultaneous: yes
+  playbook: playbooks/create-group-in-edge-management
+  execution_environment: "{{ execution_environment.name }}"
+  ask_credential_on_launch: yes
+  ask_variables_on_launch: yes
+  ask_limit_on_launch: yes
 
 controller_workflows:
   - name: Provision RHEL for Edge Demo
@@ -172,6 +194,19 @@ controller_workflows:
     extra_vars:
       demo: r4e
     simplified_workflow_nodes:
+      - identifier: Create Demo Group In Edge Management
+        unified_job_template:
+        limit: localhost
+        credentials:
+          - Demo Provisioner Console Dot Offline Token
+        success_nodes:
+          - Send Success Email
+        failure_nodes:
+          - Send Failure Email About 'Create Demo Group In Edge Management'
+      - identifier: Send Failure Email About 'Create Demo Group In Edge Management'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Create Demo Group In Edge Management      
       - identifier: Create CMDB Records
         unified_job_template: Manage CMDB Records
         limit: 'utility_server:controller'
