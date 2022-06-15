@@ -31,5 +31,3 @@
       register: group_create_output
       changed_when:
         - "'CreatedAt' in group_create_output.content"
-    - debug:
-        msg: "{{ api_output }}"
