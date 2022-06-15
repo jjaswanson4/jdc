@@ -276,9 +276,26 @@ controller_hosts:
     inventory: "{  { audience }} Infrastructure"
     variables:
       ansible_connection: local
+  - name: "app-server-1.{  { demo_uuid }}.{  { base_dns_suffix }}"
+    inventory: "{  { audience }} Infrastructure"
+    variables:
+      firewall:
+        name: firewalld
+        state: stopped
+        enabled: no
+      provisioning:
+        host_group: rhel8/vlan146
+        organization: MSP Lab
+        location: MSP LAb
+        method: bootdisk
+        dns_domain: "{  { demo_uuid }}.{  { base_dns_suffix }}"
+        cpus: 4
+        memory_mb: 8192
+        activation_keys: "ak-{  { application }}-{  { os }}-{  { lifecycle_environment }}"
 
 controller_group_tiers: 1
 controller_groups_tier1:
+  - name: new_app_server
   - name: production
     inventory: "{  { audience }} Infrastructure"
     variables:
@@ -306,6 +323,16 @@ controller_projects:
     scm_branch: main
     scm_type: git
     scm_url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/network_automation/manage_dns_records.git"
+  - name: Operating System Automation | RHEL
+    organization: "{  { audience }}"
+    scm_branch: main
+    scm_type: git
+    scm_url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/os_automation/rhel.git"
+  - name: Security Automation | Operating System
+    organization: "{  { audience }}"
+    scm_branch: main
+    scm_type: git
+    scm_url: "https://{  { audience | lower }}-gitlab.{  { demo_uuid }}.{  { base_dns_suffix }}/security_automation/os.git"
 
 controller_templates:
   - name: Get Available IP Address
