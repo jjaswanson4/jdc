@@ -190,7 +190,7 @@ controller_workflows:
       demo: r4e
     simplified_workflow_nodes:
       - identifier: Create Demo Group In Edge Management
-        unified_job_template:
+        unified_job_template: Create Demo Group In Edge Management
         limit: localhost
         credentials:
           - Demo Provisioner Console Dot Offline Token
