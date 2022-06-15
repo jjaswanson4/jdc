@@ -174,7 +174,7 @@ controller_templates:
   inventory: Demo Inventory
   project: "{{ project }}"
   allow_simultaneous: yes
-  playbook: playbooks/create-group-in-edge-management
+  playbook: playbooks/create-group-in-edge-management.yml
   execution_environment: "{{ execution_environment.name }}"
   ask_credential_on_launch: yes
   ask_variables_on_launch: yes
