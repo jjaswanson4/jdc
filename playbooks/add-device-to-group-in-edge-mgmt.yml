@@ -1,0 +1,45 @@
+---
+
+- name: auth with console dot
+  hosts:
+    - all
+  gather_facts: no
+  roles:
+    - ../roles/auth_with_console_dot
+
+- name: add device to group
+  hosts:
+    - all
+  gather_facts: no
+  module_defaults:
+    ansible.builtin.uri:
+      headers:
+        accept: application/json
+        Authorization: Bearer {{ console_dot_api_access_token }}
+      return_content: yes
+  tasks:
+    - name: run tasks from localhost
+      block:
+        - name: get group ID
+          ansible.builtin.uri:
+            url: https://console.redhat.com/api/edge/v1/device-groups?name={{ demo_uuid }}
+          register: edge_management_group
+        - name: get device ID
+          uri:
+            url: https://console.redhat.com/api/edge/v1/devices?hostname_or_id={{ inventory_hostname }}
+          register: device_info
+        - name: add device to group
+          uri:
+            url: https://console.redhat.com/api/edge/v1/device-groups/{{ edge_management_group.content | from_json | json_query('data[0].DeviceGroup.ID') }}/devices
+            method: POST
+            body_format: json
+            body: >
+              {
+                "ID": {{ edge_management_group.content | from_json | json_query('data[0].DeviceGroup.ID') | int }},
+                "Devices": [
+                  {
+                    "ID": {{ device_info.content | from_json | json_query('data[0].Device.ID') | int }}
+                  }
+                ]
+              }
+      delegate_to: localhost
