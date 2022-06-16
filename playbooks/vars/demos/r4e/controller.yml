@@ -223,7 +223,7 @@ controller_templates:
     execution_environment: Josh's Demos Collection EE
     credentials:
       - vCenter Credentials
-  - name: Post-Install Edge Systems
+  - name: Apply Configuration to Edge Device
     inventory: "{  { audience }} Edge Systems"
     project: "{  { audience }} Edge Management Codebase"
     organization: "{  { audience }}"
@@ -233,7 +233,18 @@ controller_templates:
     become_enabled: yes
     allow_simultaneous: yes
     credentials:
-      - Edge User Credentials  
+      - Edge User Credentials
+  - name: Add Device to Edge Management Group
+    inventory: "{  { audience }} Edge Systems"
+    project: "{  { audience }} Edge Management Codebase"
+    organization: "{  { audience }}"
+    playbook: playbooks/add-device-to-group-in-edge-mgmt.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_limit_on_launch: yes
+    become_enabled: yes
+    allow_simultaneous: yes
+    credentials:
+      - Console Dot Offline Token
 
 controller_workflows:
   - name: Create ISO and Provision Systems
@@ -266,3 +277,12 @@ controller_workflows:
           - Provision Edge Systems
       - identifier: Provision Edge Systems
         unified_job_template: Provision Edge Systems
+  - name: Post-Install Edge System
+    organization: "{  { audience }}"
+    state: present
+    ask_limit_on_launch: yes
+    simplified_workflow_nodes:
+      - identifier: Apply Configuration to Edge Device
+        unified_job_template: Apply Configuration to Edge Device
+      - identifier: Add Device to Edge Management Group
+        unified_job_template: Add Device to Edge Management Group
