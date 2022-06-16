@@ -281,6 +281,7 @@ controller_workflows:
     organization: "{  { audience }}"
     state: present
     ask_limit_on_launch: yes
+    allow_simultaneous: yes
     simplified_workflow_nodes:
       - identifier: Apply Configuration to Edge Device
         unified_job_template: Apply Configuration to Edge Device
