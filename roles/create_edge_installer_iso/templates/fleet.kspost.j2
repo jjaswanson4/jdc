@@ -10,7 +10,7 @@ cat > /var/tmp/aap-auto-registration.yml <<EOF
     ansible_connection: local
     controller_url: https://{{ controller_hostname }}/api/v2
     controller_inventory: {{ audience }} Edge Systems
-    provisioning_template: Post-Install Edge Systems
+    provisioning_template: Post-Install Edge System
   module_defaults:
     ansible.builtin.uri:
       user: {{ controller_username }}
