@@ -296,6 +296,9 @@ controller_hosts:
 controller_group_tiers: 1
 controller_groups_tier1:
   - name: new_app_server
+    inventory: "{  { audience }} Infrastructure"
+    hosts:
+      - "app-server-1.{  { demo_uuid }}.{  { base_dns_suffix }}"
   - name: production
     inventory: "{  { audience }} Infrastructure"
     variables:
