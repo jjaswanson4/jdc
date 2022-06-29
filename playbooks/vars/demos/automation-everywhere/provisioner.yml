@@ -201,7 +201,7 @@ controller_groups_tier2:
           description: A collection of automation for managed RHEL systems
           tags:
             - os
-            - RHEL
+            - rhel
           git:
             name: OS Automation
             email: os-automation@company.com
