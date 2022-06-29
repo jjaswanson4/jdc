@@ -203,7 +203,7 @@ controller_groups_tier2:
             - os
             - RHEL
           git:
-            name: Operating System Automation
+            name: OS Automation
             email: os-automation@company.com
         - fqcn: security_automation.os
           version: 1.0.0
