@@ -125,6 +125,14 @@ controller_hosts:
     variables:
       ansible_connection: local
       ansible_python_interpreter: '{  { ansible_playbook_python }}'
+  - name: console.redhat.com
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    variables:
+      ansible_connection: httpapi
+      ansible_network_os: maxamillion.fleetmanager.consoledot
+      ansible_user: "{{ console_dot_username }}"
+      ansible_httpapi_pass: "{  { console_dot_password }}"
+      ansible_httpapi_use_ssl: yes
 
 controller_group_tiers: 2
 controller_groups_tier1:
@@ -174,7 +182,7 @@ controller_templates:
   inventory: Demo Inventory
   project: "{{ project }}"
   allow_simultaneous: yes
-  playbook: playbooks/create-group-in-edge-management.yml
+  playbook: playbooks/manage-groups-in-edge-management.yml
   execution_environment: "{{ execution_environment.name }}"
   ask_credential_on_launch: yes
   ask_variables_on_launch: yes
