@@ -201,7 +201,7 @@ controller_workflows:
         unified_job_template: Create Demo Group In Edge Management
         limit: console.redhat.com
         credentials:
-          - Demo Provisioner Console Dot Offline Token
+          - Demo Provisioner Console Dot Credentials
         success_nodes:
           - Send Success Email
         failure_nodes:
