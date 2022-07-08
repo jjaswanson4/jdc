@@ -64,3 +64,6 @@ collections:
   # Edge Management collections
   - name: maxamillion.fleetmanager
     version: '>=0.1.1'
+
+  # Networking collections
+  - name: ansible.netcommon
