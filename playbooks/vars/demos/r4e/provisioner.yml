@@ -199,7 +199,7 @@ controller_workflows:
     simplified_workflow_nodes:
       - identifier: Create Demo Group In Edge Management
         unified_job_template: Create Demo Group In Edge Management
-        limit: localhost
+        limit: console.redhat.com
         credentials:
           - Demo Provisioner Console Dot Offline Token
         success_nodes:
