@@ -1,0 +1,11 @@
+---
+
+- name: create group in Edge Management
+  hosts:
+    - all
+  gather_facts: false
+  tasks:
+    - name: create group in Edge Management
+      maxamillion.fleetmanager.groups:
+        name: "{{ demo_uuid }}"
+        state: "{{ group_state | default('present') }}"
