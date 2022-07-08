@@ -130,7 +130,7 @@ controller_hosts:
     variables:
       ansible_connection: httpapi
       ansible_network_os: maxamillion.fleetmanager.consoledot
-      ansible_user: "{{ console_dot_username }}"
+      ansible_user: "{  { console_dot_username }}"
       ansible_httpapi_pass: "{  { console_dot_password }}"
       ansible_httpapi_use_ssl: yes
 
