@@ -128,7 +128,7 @@ controller_hosts:
   - name: console.redhat.com
     inventory: "Demo {{ demo_uuid }} Inventory"
     variables:
-      ansible_connection: httpapi
+      ansible_connection: maxamillion.fleetmanager.httpapi
       ansible_network_os: maxamillion.fleetmanager.consoledot
       ansible_user: "{  { console_dot_username }}"
       ansible_httpapi_pass: "{  { console_dot_password }}"
