@@ -4,6 +4,9 @@
   hosts:
     - all
   gather_facts: false
+  pre_tasks:
+    - debug:
+        msg: "{{ ansible_user }} {{ ansible_httpapi_pass }}"
   tasks:
     - name: create group in Edge Management
       maxamillion.fleetmanager.groups:
