@@ -60,3 +60,7 @@ collections:
 
   # Podman collections
   - name: containers.podman
+
+  # Edge Management collections
+  - name: maxamillion.fleetmanager
+    version: '>=0.1.1'
