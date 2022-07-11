@@ -1,0 +1,14 @@
+---
+
+- name: create an inventory for edge devices in ansible controller
+  hosts:
+    - all
+  gather_facts: false
+  vars:
+    controller_inventories:
+      - name: "{  { audience }} Edge Systems"
+        organization: "{  { audience }}"
+        variables:
+          audience: "{  { audience }}"
+          demo_uuid: "{  { demo_uuid }}"
+          kiosk_website: "{  { kiosk_website }}"
