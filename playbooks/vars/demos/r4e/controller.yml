@@ -277,10 +277,14 @@ controller_workflows:
         unified_job_template: Create Edge Installer ISO
         success_nodes:
           - Provision Edge Systems
-      - identifier: Provision Edge Systems
-        unified_job_template: Provision Edge Systems
       - identifier: Create Edge Devices Inventory
         unified_job_template: Create Edge Devices Inventory
+        success_nodes:
+          - Provision Edge Systems
+      - identifier: Provision Edge Systems
+        unified_job_template: Provision Edge Systems
+        all_parents_must_converge: yes
+
         
   - name: Post-Install Edge System
     organization: "{  { audience }}"
