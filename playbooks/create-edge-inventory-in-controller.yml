@@ -6,11 +6,11 @@
   gather_facts: false
   vars:
     controller_inventories:
-      - name: "{  { audience }} Edge Systems"
-        organization: "{  { audience }}"
+      - name: "{{ audience }} Edge Systems"
+        organization: "{{ audience }}"
         variables:
-          audience: "{  { audience }}"
-          demo_uuid: "{  { demo_uuid }}"
-          kiosk_website: "{  { kiosk_website }}"
+          audience: "{{ audience }}"
+          demo_uuid: "{{ demo_uuid }}"
+          kiosk_website: "{{ kiosk_website }}"
   roles:
     - redhat_cop.controller_configuration.inventories
