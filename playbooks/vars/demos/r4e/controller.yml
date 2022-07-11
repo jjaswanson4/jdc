@@ -244,6 +244,22 @@ controller_templates:
     allow_simultaneous: yes
     credentials:
       - Console Dot Offline Token
+  - name: Update Edge Devices Inventory
+    inventory: Local Actions
+    project: "{  { audience }} Edge Management Codebase"
+    organization: "{  { audience }}"
+    playbook: playbooks/configure-ansible-controller.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - Controller API Credentials
+    extra_vars:
+      controller_inventories:
+        - name: "{  { audience }} Edge Systems"
+          organization: "{  { audience }}"
+          variables:
+            audience: "{  { audience }}"
+            demo_uuid: "{  { demo_uuid }}"
+            kiosk_website: "{  { kiosk_website }}"
 
 controller_workflows:
   - name: Create ISO and Provision Systems
@@ -276,6 +292,8 @@ controller_workflows:
           - Provision Edge Systems
       - identifier: Provision Edge Systems
         unified_job_template: Provision Edge Systems
+      - identifier: Update Edge Devices Inventory
+        unified_job_template: Update Edge Devices Inventory
         
   - name: Post-Install Edge System
     organization: "{  { audience }}"
