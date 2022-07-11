@@ -1,5 +1,15 @@
 ---
 
+- name: grab rhc status
+  ansible.builtin.shell:
+    cmd: rhc status
+  register: rhc_status
+  changed_when: false
+
+- name: print out rhc status
+  ansible.builtin.debug:
+    msg: "{{ rhc_status.stdout }}"
+
 - name: trigger run of insights-client
   ansible.builtin.shell:
     cmd: insights-client
