@@ -1,5 +1,9 @@
 ---
 
+- name: trigger run of insights-client
+  ansible.builtin.shell:
+    cmd: insights-client
+
 - name: check the status of the system
   ansible.builtin.shell:
     cmd: rpm-ostree status

@@ -1,0 +1,9 @@
+---
+
+- name: grab status of kiosk service
+  ansible.builtin.systemd:
+    name: kiosk.service
+    state: running
+    enabled: yes
+  notify:
+    - reboot_system
