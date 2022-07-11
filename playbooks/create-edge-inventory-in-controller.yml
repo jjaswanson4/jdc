@@ -12,3 +12,5 @@
           audience: "{  { audience }}"
           demo_uuid: "{  { demo_uuid }}"
           kiosk_website: "{  { kiosk_website }}"
+  roles:
+    - redhat_cop.controller_configuration.inventories
