@@ -20,29 +20,33 @@
   tasks:
     - name: run tasks from localhost
       block:
-        - name: get group ID
-          ansible.builtin.uri:
-            url: https://console.redhat.com/api/edge/v1/device-groups?name={{ demo_uuid }}
-          register: edge_management_group
-        - name: get device ID
-          ansible.builtin.uri:
-            url: https://console.redhat.com/api/edge/v1/devices?hostname_or_id={{ inventory_hostname }}
+        # - name: get group ID
+        #   ansible.builtin.uri:
+        #     url: https://console.redhat.com/api/edge/v1/device-groups?name={{ demo_uuid }}
+        #   register: edge_management_group
+        # - name: get device ID
+        #   ansible.builtin.uri:
+        #     url: https://console.redhat.com/api/edge/v1/devices?hostname_or_id={{ inventory_hostname }}
+        #   register: device_info
+        #   until: "'Device' in device_info.content"
+        #   retries: 10
+        #   delay: 60
+        # - name: add device to group
+        #   ansible.builtin.uri:
+        #     url: https://console.redhat.com/api/edge/v1/device-groups/{{ edge_management_group.content | from_json | json_query('data[0].DeviceGroup.ID') }}/devices
+        #     method: POST
+        #     body_format: json
+        #     body: >
+        #       {
+        #         "ID": {{ edge_management_group.content | from_json | json_query('data[0].DeviceGroup.ID') | int }},
+        #         "Devices": [
+        #           {
+        #             "ID": {{ device_info.content | from_json | json_query('data[0].Device.ID') | int }}
+        #           }
+        #         ]
+        #       }
+        - name: Get information about the device from console dot
+          maxamillion.fleetmanager.devices_info:
+            name: "{{ inventory_hostname }}"
           register: device_info
-          until: "'Device' in device_info.content"
-          retries: 10
-          delay: 60
-        - name: add device to group
-          ansible.builtin.uri:
-            url: https://console.redhat.com/api/edge/v1/device-groups/{{ edge_management_group.content | from_json | json_query('data[0].DeviceGroup.ID') }}/devices
-            method: POST
-            body_format: json
-            body: >
-              {
-                "ID": {{ edge_management_group.content | from_json | json_query('data[0].DeviceGroup.ID') | int }},
-                "Devices": [
-                  {
-                    "ID": {{ device_info.content | from_json | json_query('data[0].Device.ID') | int }}
-                  }
-                ]
-              }
       delegate_to: localhost
