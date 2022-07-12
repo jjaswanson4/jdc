@@ -137,7 +137,7 @@ controller_hosts:
 
 controller_group_tiers: 0
 
-controller_groups_tier1:
+# controller_groups_tier1:
   # - name: point_of_sale
   #   inventory: "{  { audience }} Edge Systems"
   #   variables:
@@ -179,7 +179,7 @@ controller_groups_tier1:
   #     state: IN
   #     City: West Lafayette
 
-controller_groups_tier2:
+# controller_groups_tier2:
   # - name: retail_stores
   #   inventory: "{  { audience }} Edge Systems"
   #   children:
