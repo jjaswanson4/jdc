@@ -1,0 +1,7 @@
+---
+
+- name: deploy workload to edge devices
+  hosts:
+    - all
+  roles:
+    - ../roles/deploy_edge_workload

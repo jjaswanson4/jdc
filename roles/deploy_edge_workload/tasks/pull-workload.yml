@@ -1,0 +1,8 @@
+---
+
+- name: pull edge workload container image to device
+  containers.podman.podman_image:
+    name: "{{ edge_workload_iamge }}"
+    validate_certs: no
+    username: "{{ edge_workload_registry_username | default(omit) }}"
+    password: "{{ edge_workload_registry_password | default(omit) }}"

@@ -1,0 +1,10 @@
+---
+
+- name: import tasks to pull workload to device
+  ansible.builtin.import_tasks: pull-workload.yml
+
+- name: import tasks to setup to run
+  ansible.builtin.import_tasks: setup-workload.yml
+
+- name: import tasks to ensure workload is started/monitored
+  ansible.builtin.import_tasks: monitor-workload.yml

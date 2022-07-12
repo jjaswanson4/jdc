@@ -1,0 +1,22 @@
+---
+
+
+- name: copy generated systemd file to systemd dir
+  ansible.builtin.copy:
+    src: /tmp/container-edge-workload.service
+    dest: /etc/systemd/user/
+    remote_src: yes
+  register: container_systemd_file
+  become: true
+
+- name: reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: yes
+    scope: user
+
+- name: ensure systemd watches workload
+  ansible.builtin.systemd:
+    name: container-edge-workload
+    state: started
+    scope: user
+    enabled: yes
