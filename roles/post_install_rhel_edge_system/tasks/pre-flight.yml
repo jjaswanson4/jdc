@@ -1,0 +1,6 @@
+---
+
+- name: wait for first boot to finish
+  ansible.builtin.wait_for_connection:
+    sleep: 10
+  

@@ -1,7 +1,7 @@
 ---
 
-- name: import tasks to pull workload to device
-  ansible.builtin.import_tasks: pull-workload.yml
+- name: import tasks to setup pod
+  ansible.builtin.import_tasks: setup-pod.yml
 
 - name: import tasks to setup to run
   ansible.builtin.import_tasks: setup-workload.yml
