@@ -1,5 +1,8 @@
 ---
 
+- name: import pre-flight tasks
+  ansible.builtin.import_tasks: pre-flight.yml
+
 - name: import standard tasks
   ansible.builtin.import_tasks: standard-config.yml
 
