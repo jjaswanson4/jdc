@@ -14,9 +14,15 @@
   community.general.lvol:
     vg: os
     lv: tmp
-    size: 32g
+    size: 24g
     resizefs: yes
-  register: lv_grown
+
+- name: ensure /var is big enough
+  community.general.lvol:
+    vg: os
+    lv: var
+    size: 24g
+    resizefs: yes
 
 # dirty workaround since vmware_copy module doesn't work
 - name: install nfs-utils
