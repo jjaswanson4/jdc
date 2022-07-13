@@ -12,5 +12,12 @@
           audience: "{{ audience }}"
           demo_uuid: "{{ demo_uuid }}"
           kiosk_website: "{{ kiosk_website }}"
+    controller_groups:
+      - name: human_machine_interface
+        inventory: "{{ audience }} Edge Systems"
+      - name: process_control
+        organization: "{{ audience }}"
+        inventory: "{{ audience }} Edge Systems"
   roles:
     - redhat_cop.controller_configuration.inventories
+    - redhat_cop.controller_configuration.groups
