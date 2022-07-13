@@ -163,6 +163,7 @@ controller_templates:
     organization: "{  { audience }}"
     playbook: playbooks/create-edge-installer-iso.yml
     execution_environment: Josh's Demos Collection EE
+    ask_variables_on_launch: yes
     credentials:
       - Root Credentials
       - RHC Edge Credentials
@@ -220,7 +221,7 @@ controller_workflows:
         - type: multiplechoice
           question_name: Workload Type?
           question_description: What workload should be run?
-          variable: workload
+          variable: edge_workload
           choices:
             - Process Control
             - In-Store Display
@@ -233,17 +234,23 @@ controller_workflows:
           required: no
           default: "https://{  { audience | lower }}.com"
     simplified_workflow_nodes:
-      - identifier: Create Edge Installer ISO
+      - identifier: Create Human Machine Interface Installer ISO
         unified_job_template: Create Edge Installer ISO
         success_nodes:
           - Provision Edge Systems
-      - identifier: Create Edge Devices Inventory
-        unified_job_template: Create Edge Devices Inventory
-        success_nodes:
-          - Provision Edge Systems
-      - identifier: Provision Edge Systems
-        unified_job_template: Provision Edge Systems
-        all_parents_must_converge: yes
+        extra_data:
+          source_installer_image: rhel-edge-hmi-image.iso
+      - identifier: Create Process Control System Installer ISO
+        unified_job_template: Create Edge Installer ISO
+        extra_data:
+          source_installer_image: rhel-edge-pcs-image.iso
+      # - identifier: Create Edge Devices Inventory
+      #   unified_job_template: Create Edge Devices Inventory
+      #   success_nodes:
+      #     - Provision Edge Systems
+      # - identifier: Provision Edge Systems
+      #   unified_job_template: Provision Edge Systems
+      #   all_parents_must_converge: yes
 
         
   - name: Post-Install Edge System
