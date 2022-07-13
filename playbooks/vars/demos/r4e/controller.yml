@@ -164,6 +164,7 @@ controller_templates:
     playbook: playbooks/create-edge-installer-iso.yml
     execution_environment: Josh's Demos Collection EE
     ask_variables_on_launch: yes
+    allow_simultaneous: yes
     credentials:
       - Root Credentials
       - RHC Edge Credentials
