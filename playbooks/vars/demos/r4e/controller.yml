@@ -218,18 +218,18 @@ controller_workflows:
       description: ''
       spec:
         - type: multiplechoice
-          question_name: Kiosk or Headless Mode?
-          question_description: What mode should RHEL for Edge run in?
-          variable: r4e_mode
+          question_name: Workload Type?
+          question_description: What workload should be run?
+          variable: workload
           choices:
-            - kiosk
-            - headless
+            - Process Control
+            - In-Store Display
           required: yes
-          default: kiosk
+          default: Process Control
         - type: text
-          question_name: Kiosk Website?
-          question_description: If building r4e kiosk systems, what website should they display?
-          variable: kiosk_website
+          question_name: In-Store Display Website?
+          question_description: If building in-store displays, what website should they display?
+          variable: display_website
           required: no
           default: "https://{  { audience | lower }}.com"
     simplified_workflow_nodes:
