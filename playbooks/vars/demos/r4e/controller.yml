@@ -119,6 +119,11 @@ controller_execution_environments:
     pull: always
 
 controller_inventories:
+  - name: "{  { audience }} Edge Systems"
+    organization: "{  { audience }}"
+    variables:
+      audience: "{  { audience }}"
+      demo_uuid: "{  { demo_uuid }}"
   - name: "{  { audience }} Edge Utilities"
     organization: "{  { audience }}"
     variables:
