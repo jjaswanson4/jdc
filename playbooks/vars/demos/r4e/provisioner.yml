@@ -110,15 +110,9 @@ controller_hosts:
       memory_mb: 8192
       application: general
       lifecycle_environment: production
-  - name: "r4e-system-0.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "pcs.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "Demo {{ demo_uuid }} Inventory"
-  - name: "r4e-system-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
-  - name: "r4e-system-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
-  - name: "r4e-system-3.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
-  - name: "r4e-system-4.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "hmi.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "Demo {{ demo_uuid }} Inventory"
   - name: localhost
     inventory: "Demo {{ demo_uuid }} Inventory"
@@ -143,11 +137,8 @@ controller_groups_tier1:
   - name: edge_systems
     inventory: "Demo {{ demo_uuid }} Inventory"
     hosts:
-      - "r4e-system-0.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "r4e-system-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "r4e-system-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "r4e-system-3.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "r4e-system-4.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "pcs.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "hmi.{{ demo_uuid }}.{{ base_dns_suffix }}"
 
 controller_groups_tier2:
   - name: demo_hosts
