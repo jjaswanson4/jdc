@@ -117,7 +117,7 @@ controller_credentials:
   - name: Console Dot Offline Token
     organization: "{  { audience }}"
     credential_type: Console Dot Offline Token
-  - name: Automation Hub Image Registry Credentials
+  - name: Local Automation Hub Image Registry Credentials
     organization: "{  { audience }}"
     credential_type: Automation Hub Image Registry Credentials
 
@@ -246,7 +246,7 @@ controller_templates:
     credentials:
       - Root Credentials
       - Red Hat Registry Credentials
-      - Automation Hub Image Registry Credentials
+      - Local Automation Hub Image Registry Credentials
 
 controller_workflows:
   - name: Deploy Edge Systems
