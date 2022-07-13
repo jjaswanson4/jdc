@@ -14,7 +14,7 @@
   community.general.lvol:
     vg: os
     lv: tmp
-    size: 16g
+    size: 32g
     resizefs: yes
   register: lv_grown
 
