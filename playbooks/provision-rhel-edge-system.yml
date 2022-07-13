@@ -4,6 +4,35 @@
   hosts:
     - all
   gather_facts: no
+  pre_tasks:
+    - name: define list of systems to build | Process Control
+      ansible.builtin.set_fact:
+        systems_to_build:
+          - name: process-control-system-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+            installer_iso: "{{ demo_uuid }}-rhel-edge-pcs-image.iso"
+          - name: process-control-system-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+            installer_iso: "{{ demo_uuid }}-rhel-edge-pcs-image.iso"
+          - name: process-control-system-3.{{ demo_uuid }}.{{ base_dns_suffix }}"
+            installer_iso: "{{ demo_uuid }}-rhel-edge-pcs-image.iso"
+          - name: human-machine-interface-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+            installer_iso: "{{ demo_uuid }}-rhel-edge-hmi-image.iso"
+          - name: human-machine-interface-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+            installer_iso: "{{ demo_uuid }}-rhel-edge-hmi-image.iso"
+          - name: human-machine-interface-3.{{ demo_uuid }}.{{ base_dns_suffix }}"
+            installer_iso: "{{ demo_uuid }}-rhel-edge-hmi-image.iso"
+      when:
+        - edge_workload == 'Process Control'
+    - name: define list of systems to build | In-Store Display
+      ansible.builtin.set_fact:
+        systems_to_build:
+          - name: in-store-display-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+            installer_iso: "{{ demo_uuid }}-rhel-edge-hmi-image.iso"
+          - name: in-store-display-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+            installer_iso: "{{ demo_uuid }}-rhel-edge-hmi-image.iso"
+          - name: in-store-display-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+            installer_iso: "{{ demo_uuid }}-rhel-edge-hmi-image.iso"
+      when:
+        - edge_workload == 'In-Store Display'      
   tasks:
     - name: provision rhel for edge system
       community.vmware.vmware_guest:
@@ -14,7 +43,7 @@
         datacenter: "{{ vcenter_datacenter }}"
         datastore: "{{ vcenter_datastore }}"
         folder: "/Demos/{{ demo_uuid }}/"
-        name: "r4e-system-{{ system_number }}.{{ demo_uuid }}.{{ base_dns_suffix }}"
+        name: "{{ system.name }}"
         state: poweredon
         guest_id: rhel8_64Guest
         disk:
@@ -30,12 +59,12 @@
         cdrom:
           - controller_number: 0
             controller_type: sata
-            iso_path: '[{{ vcenter_datastore }}] iso/{{ demo_uuid }}-edge-installer.iso'
+            iso_path: '[{{ vcenter_datastore }}] iso/{{ system.installer_iso }}'
             type: iso
             unit_number: 0
       register: deploy_vm
       loop_control:
-        loop_var: system_number
+        loop_var: system
         pause: 10
-      loop: "{{ range(0, 5, 1) | list }}"
+      loop: "{{ systems_to_build }}"
 
