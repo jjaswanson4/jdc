@@ -153,19 +153,19 @@ controller_hosts:
     variables:
       edge_workload_info:
         image_registry: "{  { audience | lower }}-{  { demo }}-hub.{  { demo_uuid }}.{  { base_dns_suffix }}"
-      pod:
-        name: process-control-demo
-        ports:
-          - 1881
-      containers:
-        - name: mqtt
-          src: https://github.com/jjaswanson4/process-demo-mqtt.git
-        - name: control
-          src: https://github.com/jjaswanson4/process-demo-control.git
-        - name: simulate
-          src: https://github.com/jjaswanson4/process-demo-simulate.git
-        - name: ui
-          src: https://github.com/jjaswanson4/process-demo-ui.git
+        pod:
+          name: process-control-demo
+          ports:
+            - 1881
+        containers:
+          - name: mqtt
+            src: https://github.com/jjaswanson4/process-demo-mqtt.git
+          - name: control
+            src: https://github.com/jjaswanson4/process-demo-control.git
+          - name: simulate
+            src: https://github.com/jjaswanson4/process-demo-simulate.git
+          - name: ui
+            src: https://github.com/jjaswanson4/process-demo-ui.git
 
   - name: localhost
     inventory: Local Actions
