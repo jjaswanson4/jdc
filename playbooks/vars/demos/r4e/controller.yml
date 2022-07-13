@@ -72,6 +72,13 @@ controller_credential_types:
       extra_vars:
         edge_workload_registry_username: "{  { admin_username }}"
         edge_workload_registry_password: "{  { admin_password }}"
+  - name: Automation Hub Image Registry Credentials
+    kind: cloud
+    injectors:
+      extra_vars:
+        hub_image_registry_username: "{  { admin_username }}"
+        hub_image_registry_password: "{  { admin_password }}"
+        hub_image_registry_tls_verify: 'no'
           
 
 controller_credentials:
@@ -110,6 +117,10 @@ controller_credentials:
   - name: Console Dot Offline Token
     organization: "{  { audience }}"
     credential_type: Console Dot Offline Token
+  - name: Automation Hub Image Registry Credentials
+    organization: "{  { audience }}"
+    credential_type: Automation Hub Image Registry Credentials
+
 
 controller_execution_environments:
   - name: Josh's Demos Collection EE
@@ -139,6 +150,23 @@ controller_inventories:
 controller_hosts:
   - name: "edge-utilities.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "{  { audience }} Edge Utilities"
+    variables:
+      edge_workload_info:
+        image_registry: "{  { audience | lower }}-{  { demo }}-hub.{  { demo_uuid }}.{  { base_dns_suffix }}"
+      pod:
+        name: process-control-demo
+        ports:
+          - 1881
+      containers:
+        - name: mqtt
+          src: https://github.com/jjaswanson4/process-demo-mqtt.git
+        - name: control
+          src: https://github.com/jjaswanson4/process-demo-control.git
+        - name: simulate
+          src: https://github.com/jjaswanson4/process-demo-simulate.git
+        - name: ui
+          src: https://github.com/jjaswanson4/process-demo-ui.git
+
   - name: localhost
     inventory: Local Actions
     variables:
@@ -209,11 +237,26 @@ controller_templates:
     execution_environment: Josh's Demos Collection EE
     credentials:
       - Controller API Credentials
+  - name: Build Edge Workload
+    inventory: "{  { audience }} Edge Utilities"
+    project: "{  { audience }} Edge Management Codebase"
+    organization: "{  { audience }}"
+    playbook: playbooks/build-edge-workload.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - Root Credentials
+      - Red Hat Registry Credentials
+      - Automation Hub Image Registry Credentials
 
 controller_workflows:
-  - name: Create ISO and Provision Systems
+  - name: Deploy Edge Systems
     organization: "{  { audience }}"
     state: present
+    extra_vars:
+      audience: "{  { audience }}"
+      demo: "{  { demo }}"
+      demo_uuid: "{  { demo_uuid }}"
+      base_dns_suffix: "{{ base_dns_suffix }}"
     survey_enabled: yes
     survey:
       name: ''
@@ -239,20 +282,23 @@ controller_workflows:
         unified_job_template: Create Edge Installer ISO
         extra_data:
           source_installer_image: rhel-edge-hmi-image.iso
-        # success_nodes:
-        #   - Provision Edge Systems
+        success_nodes:
+          - Provision Edge Systems
       - identifier: Create Process Control System Installer ISO
         unified_job_template: Create Edge Installer ISO
         extra_data:
           source_installer_image: rhel-edge-pcs-image.iso
-      # - identifier: Create Edge Devices Inventory
-      #   unified_job_template: Create Edge Devices Inventory
-      #   success_nodes:
-      #     - Provision Edge Systems
-      # - identifier: Provision Edge Systems
-      #   unified_job_template: Provision Edge Systems
-      #   all_parents_must_converge: yes
-
+        success_nodes:
+          - Provision Edge Systems
+      - identifier: Create Edge Devices Inventory
+        unified_job_template: Create Edge Devices Inventory
+        success_nodes:
+          - Provision Edge Systems
+      - identifier: Provision Edge Systems
+        unified_job_template: Provision Edge Systems
+        all_parents_must_converge: yes
+      - identifier: Build Edge Workload
+        unified_job_template: Build Edge Workload
         
   - name: Post-Install Edge System
     organization: "{  { audience }}"
@@ -262,5 +308,5 @@ controller_workflows:
     simplified_workflow_nodes:
       - identifier: Apply Configuration to Edge Device
         unified_job_template: Apply Configuration to Edge Device
-      - identifier: Add Device to Edge Management Group
-        unified_job_template: Add Device to Edge Management Group
+      # - identifier: Add Device to Edge Management Group
+      #   unified_job_template: Add Device to Edge Management Group
