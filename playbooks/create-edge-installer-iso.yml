@@ -3,5 +3,10 @@
 - name: create RHEL edge installer ISO
   hosts:
     - all
-  roles:
-    - ../roles/create_edge_installer_iso
+  tasks:
+    - name: include role to build installer iso
+      ansible.builtin.include_role:
+        name:  ../roles/create_edge_installer_iso
+      when:
+        - edge_workload == "Process Control" or
+          (edge_workload == "In-Store Display" and source_installer_image != "rhel-edge-pcs-image.iso")
