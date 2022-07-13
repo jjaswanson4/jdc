@@ -28,7 +28,7 @@
 - name: push to datastore (dirty)
   ansible.builtin.copy:
     src: "/tmp/{{ source_installer_image }}/fleet_out.iso"
-    dest: "/mnt/{{ source_installer_image }}/vmware-datastore/iso/{{ demo_uuid }}-{{ source_installer_image }}.iso"
+    dest: "/mnt/{{ source_installer_image }}/vmware-datastore/iso/{{ demo_uuid }}-{{ source_installer_image }}"
     remote_src: yes
 
 - name: unmount datastore path
