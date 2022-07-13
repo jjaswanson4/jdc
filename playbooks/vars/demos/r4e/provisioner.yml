@@ -207,7 +207,7 @@ controller_workflows:
           failed_at_step: Create Demo Group In Edge Management      
       - identifier: Create CMDB Records
         unified_job_template: Manage CMDB Records
-        limit: 'utility_server:controller'
+        limit: 'utility_server:controller:hub'
         credentials:
           - Demo Provisioner Netbox Credentials
           - Demo Provisioner vCenter Credentials
@@ -221,13 +221,14 @@ controller_workflows:
           failed_at_step: Create CMDB Records
       - identifier: Create DNS Records
         unified_job_template: Manage DNS Records
-        limit: 'utility_server:controller'
+        limit: 'utility_server:controller:hub'
         credentials:
           - Demo Provisioner Netbox Credentials
           - Demo Provisioner IDM Credentials
         success_nodes:
           - Provision Controller
           - Provision Utility Server
+          - Provision Hub
         failure_nodes:
           - Send Failure Email About 'Create DNS Records'
       - identifier: Send Failure Email About 'Create DNS Records'
@@ -326,6 +327,50 @@ controller_workflows:
         unified_job_template: Send Provisioner Email
         extra_data:
           failed_at_step: Apply Standard Config to Utility Server
+      - identifier: Provision Hub
+        unified_job_template: Provision Systems
+        limit: hub
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner Satellite Credentials
+          - Demo Provisioner vCenter Credentials
+          - Demo Provisioner Root Account
+        success_nodes:
+          - Apply Standard Config to Hub
+        failure_nodes:
+          - Send Failure Email About 'Provision Hub'
+      - identifier: Send Failure Email About 'Provision Hub'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Provision Hub
+      - identifier: Apply Standard Config to Hub
+        unified_job_template: Apply Standard Configuration
+        limit: hub
+        credentials:
+          - Demo Provisioner Root Account
+        success_nodes:
+          - Install Hub
+        failure_nodes:
+          - Send Failure Email About 'Apply Standard Config to Hub'
+      - identifier: Send Failure Email About 'Apply Standard Config to Hub'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Apply Standard Config to Hub    
+      - identifier: Install Hub
+        unified_job_template: Install Ansible Automation Platform
+        limit: hub
+        credentials:
+          - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
+          - Demo Provisioner Red Hat Registry Credentials
+        success_nodes:
+          - Send Success Email
+        failure_nodes:
+          - Send Failure Email About 'Install Hub'
+      - identifier: Send Failure Email About 'Install Hub'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Install Hub
       - identifier: Send Success Email
         unified_job_template: Send Provisioner Email
         all_parents_must_converge: yes
@@ -357,7 +402,7 @@ controller_workflows:
           - Teardown Management and Utility Systems
       - identifier: Teardown Management and Utility Systems
         unified_job_template: Teardown Systems
-        limit: 'utility_server:controller'
+        limit: 'utility_server:controller:hub'
         credentials:
           - Demo Provisioner Satellite Credentials
           - Demo Provisioner Admin Credentials
@@ -365,7 +410,7 @@ controller_workflows:
           - Cleanup DNS Records
       - identifier: Cleanup DNS Records
         unified_job_template: Manage DNS Records
-        limit: 'utility_server:controller'
+        limit: 'utility_server:controller:hub'
         credentials:
           - Demo Provisioner Admin Credentials
           - Demo Provisioner Netbox Credentials
@@ -376,7 +421,7 @@ controller_workflows:
           - Remove CMDB Records
       - identifier: Remove CMDB Records
         unified_job_template: Manage CMDB Records
-        limit: 'utility_server:controller'
+        limit: 'utility_server:controller:hub'
         credentials:
           - Demo Provisioner Admin Credentials
           - Demo Provisioner Netbox Credentials
