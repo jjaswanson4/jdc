@@ -8,28 +8,28 @@
     - name: define list of systems to build | Process Control
       ansible.builtin.set_fact:
         systems_to_build:
-          - name: process-control-system-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+          - name: "process-control-system-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
             installer_iso: "{{ demo_uuid }}-rhel-edge-pcs-image.iso"
-          - name: process-control-system-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+          - name: "process-control-system-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
             installer_iso: "{{ demo_uuid }}-rhel-edge-pcs-image.iso"
-          - name: process-control-system-3.{{ demo_uuid }}.{{ base_dns_suffix }}"
+          - name: "process-control-system-3.{{ demo_uuid }}.{{ base_dns_suffix }}"
             installer_iso: "{{ demo_uuid }}-rhel-edge-pcs-image.iso"
-          - name: human-machine-interface-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+          - name: "human-machine-interface-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
             installer_iso: "{{ demo_uuid }}-rhel-edge-hmi-image.iso"
-          - name: human-machine-interface-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
+          - name: "human-machine-interface-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
             installer_iso: "{{ demo_uuid }}-rhel-edge-hmi-image.iso"
-          - name: human-machine-interface-3.{{ demo_uuid }}.{{ base_dns_suffix }}"
+          - name: "human-machine-interface-3.{{ demo_uuid }}.{{ base_dns_suffix }}"
             installer_iso: "{{ demo_uuid }}-rhel-edge-hmi-image.iso"
       when:
         - edge_workload == 'Process Control'
     - name: define list of systems to build | In-Store Display
       ansible.builtin.set_fact:
         systems_to_build:
-          - name: in-store-display-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+          - name: "in-store-display-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
             installer_iso: "{{ demo_uuid }}-rhel-edge-hmi-image.iso"
-          - name: in-store-display-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+          - name: "in-store-display-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
             installer_iso: "{{ demo_uuid }}-rhel-edge-hmi-image.iso"
-          - name: in-store-display-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+          - name: "in-store-display-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
             installer_iso: "{{ demo_uuid }}-rhel-edge-hmi-image.iso"
       when:
         - edge_workload == 'In-Store Display'      
