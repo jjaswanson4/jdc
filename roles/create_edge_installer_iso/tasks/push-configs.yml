@@ -3,7 +3,7 @@
 - name: push kickstart and registration creds
   ansible.builtin.template:
     src: "templates/{{ config_file }}.j2"
-    dest: "/tmp/fleet_iso/{{ config_file }}"
+    dest: "/tmp/{{ source_installer_image }}/{{ config_file }}"
   loop_control:
     loop_var: config_file
   loop:

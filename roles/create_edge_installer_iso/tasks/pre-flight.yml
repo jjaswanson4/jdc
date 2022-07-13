@@ -6,7 +6,7 @@
 
 - name: create working directory
   ansible.builtin.file:
-    path: /tmp/fleet_iso
+    path: "/tmp/{{ source_installer_image }}"
     state: directory
     mode: '0777'
 

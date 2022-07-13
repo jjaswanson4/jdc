@@ -21,14 +21,14 @@
 - name: mount datastore path
   ansible.posix.mount:
     src: 10.15.120.250:/mnt/data01/vmware-datastore
-    path: /mnt/vmware-datastore
+    path: "/mnt/{{ source_installer_image }}/vmware-datastore"
     fstype: nfs
     state: mounted
 
 - name: push to datastore (dirty)
   ansible.builtin.copy:
-    src: /tmp/fleet_iso/fleet_out.iso
-    dest: "/mnt/vmware-datastore/iso/{{ demo_uuid }}-edge-installer.iso"
+    src: "/tmp/{{ source_installer_image }}/fleet_out.iso"
+    dest: "/mnt/{{ source_installer_image }}/vmware-datastore/iso/{{ demo_uuid }}-{{ source_installer_image }}.iso"
     remote_src: yes
 
 - name: unmount datastore path

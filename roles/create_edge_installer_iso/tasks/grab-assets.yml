@@ -2,8 +2,8 @@
 
 - name: grab base iso
   ansible.builtin.get_url:
-    url: https://satellite.lab.msp.redhat.com/pub/rhel-edge-installer.iso
-    dest: /tmp/fleet_iso/fleet_source.iso
+    url: "https://satellite.lab.msp.redhat.com/pub/{{ source_installer_image }}"
+    dest: "/tmp/{{ source_installer_image }}/fleet_source.iso"
 
 - name: grab fleet utils image
   containers.podman.podman_image:

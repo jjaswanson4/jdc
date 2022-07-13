@@ -2,12 +2,12 @@
 
 - name: add configs to edge installer iso
   containers.podman.podman_container:
-    name: fleet-iso-util
+    name: "fleet-iso-util-{{ source_installer_image }}"
     image: quay.io/fleet-management/fleet-iso-util:latest
     state: started
     interactive: yes
     rm: yes
     volumes:
-      - /tmp/fleet_iso:/isodir:Z
+      - "/tmp/{{ source_installer_image }}:/isodir:Z"
     detach: no
 
