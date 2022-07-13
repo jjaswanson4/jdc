@@ -236,10 +236,10 @@ controller_workflows:
     simplified_workflow_nodes:
       - identifier: Create Human Machine Interface Installer ISO
         unified_job_template: Create Edge Installer ISO
-        success_nodes:
-          - Provision Edge Systems
         extra_data:
           source_installer_image: rhel-edge-hmi-image.iso
+        # success_nodes:
+        #   - Provision Edge Systems
       - identifier: Create Process Control System Installer ISO
         unified_job_template: Create Edge Installer ISO
         extra_data:
