@@ -15,7 +15,7 @@
     controller_groups:
       - name: human_machine_interface
         inventory: "{{ audience }} Edge Systems"
-      - name: process_control
+      - name: process_control_system
         organization: "{{ audience }}"
         inventory: "{{ audience }} Edge Systems"
   roles:
