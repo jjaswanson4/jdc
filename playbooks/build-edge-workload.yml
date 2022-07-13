@@ -1,0 +1,7 @@
+---
+
+- name: build components of an edge workload
+  hosts:
+    - all
+  roles:
+    - ../roles/build_edge_workload
