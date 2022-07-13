@@ -1,0 +1,14 @@
+---
+
+- name: build and push images
+  containers.podman.podman_image:
+    name: "{{ container.name }}"
+    path: "/tmp/edge-workload/{{ container.name }}"
+    push: yes
+    push_args:
+      dest: "{{ edge_workload_info.image_registry }}"
+    validate_certs: "{{ hub_image_registry_tls_verify }}"
+  loop_control:
+    loop_var: container
+  loop: "{{ edge_workload_info.containers }}"
+      

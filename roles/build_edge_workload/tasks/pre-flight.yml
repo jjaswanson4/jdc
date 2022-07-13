@@ -1,0 +1,25 @@
+---
+
+- name: ensure podman and buildah are installed
+  ansible.builtin.dnf:
+    name:
+      - podman
+      - buildah
+
+- name: ensure podman is logged in to registry.redhat.io
+  containers.podman.podman_login:
+    registry: registry.redhat.io
+    username: "{{ redhat_registry_username }}"
+    password: "{{ redhat_registry_password }}"
+
+- name: ensure podman is logged in to local registry
+  containers.podman.podman_login:
+    registry: "{{ edge_workload_info.image_registry }}"
+    username: "{{ hub_image_registry_username }}"
+    password: "{{ hub_image_registry_password }}"
+    tlsverify: "{{ hub_image_registry_tls_verify }}"
+
+- name: ensure parent working directory exists
+  ansible.builtin.file:
+    path: /tmp/edge-workload
+    state: directory

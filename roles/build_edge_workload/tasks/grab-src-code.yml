@@ -1,0 +1,17 @@
+---
+
+- name: create directories for src code
+  ansible.builtin.file:
+    path: "/tmp/edge-workload/{{ container.name }}"
+    state: directory
+  loop_control:
+    loop_var: container
+  loop: "{{ edge_workload_info.containers }}"
+
+- name: grab src code
+  ansible.builtin.git:
+    repo: "{{ container.src }}"
+    dest: "/tmp/edge-workload/{{ container.name }}"
+  loop_control:
+    loop_var: container
+  loop: "{{ edge_workload_info.containers }}"

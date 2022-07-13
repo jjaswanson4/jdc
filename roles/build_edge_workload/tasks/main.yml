@@ -1,0 +1,10 @@
+---
+
+- name: import pre-flight tasks
+  ansible.builtin.import_tasks: pre-flight.yml
+
+- name: import grab src code tasks
+  ansible.builtin.import_tasks: grab-src-code.yml
+
+- name: import build and push tasks
+  ansible.builtin.import_tasks: build-and-push-images.yml
