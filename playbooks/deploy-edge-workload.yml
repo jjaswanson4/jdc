@@ -36,8 +36,12 @@
     - name: set url for devices
       ansible.builtin.set_fact:
         kisok_website: http://{{ hostvars[groups['process_control_system'][0]]['ansible_host'] }}:1881/ui
-  roles:
-    - ../roles/deploy_kiosk_mode
+  tasks:
+    - name: include kiosk setup role
+      ansible.builtin.include_role:
+        name: ../roles/deploy_kiosk_mode
+        apply:
+          become: true
 
 
 - name: deploy workload to In-Store Displays
