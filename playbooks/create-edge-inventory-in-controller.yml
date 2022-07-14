@@ -12,41 +12,31 @@
           audience: "{{ audience }}"
           demo_uuid: "{{ demo_uuid }}"
           edge_workload: "{{ edge_workload }}"
-  pre_tasks:
-    - name: set vars for Process Control workload
-      ansible.builtin.set_fact:
-        controller_groups:
-          - name: human_machine_interface
-            inventory: "{{ audience }} Edge Systems"
-            variables:
-              system_type: hmi
-          - name: process_control_system
-            inventory: "{{ audience }} Edge Systems"
-            variables:
-              system_type: pcs
-              edge_workload_info:
-                image_registry: "{{ audience | lower }}-{  { demo }}-hub.{  { demo_uuid }}.{{ base_dns_suffix }}"
-              pod:
-                name: process-control-demo
-                ports:
-                  - 1881
-              containers:
-                - name: mqtt
-                - name: control
-                - name: simulate
-                - name: ui
-      when:
-        - edge_workload == 'Process Control'
-    - name: set vars for In-Store Display workload
-      ansible.builtin.set_fact:
-        controller_groups:
-          - name: in_store_display
-            inventory: "{{ audience }} Edge Systems"
-            variables:
-              system_type: isd
-              display_website: "{{ display_website }}"
-      when:
-        - edge_workload == 'In-Store Display'
+    controller_groups:
+      - name: human_machine_interface
+        inventory: "{{ audience }} Edge Systems"
+        variables:
+          system_type: hmi
+      - name: process_control_system
+        inventory: "{{ audience }} Edge Systems"
+        variables:
+          system_type: pcs
+          edge_workload_info:
+            image_registry: "{{ audience | lower }}-{  { demo }}-hub.{  { demo_uuid }}.{{ base_dns_suffix }}"
+          pod:
+            name: process-control-demo
+            ports:
+              - 1881
+          containers:
+            - name: mqtt
+            - name: control
+            - name: simulate
+            - name: ui
+      - name: in_store_display
+        inventory: "{{ audience }} Edge Systems"
+        variables:
+          system_type: isd
+          display_website: "{{ display_website }}"
   roles:
     - redhat_cop.controller_configuration.inventories
     - redhat_cop.controller_configuration.groups
