@@ -270,7 +270,6 @@ controller_templates:
     playbook: playbooks/deploy-edge-workload.yml
     execution_environment: Josh's Demos Collection EE
     ask_limit_on_launch: yes
-    become_enabled: yes
     allow_simultaneous: yes
     credentials:
       - Edge User Credentials
