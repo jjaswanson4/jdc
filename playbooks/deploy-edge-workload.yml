@@ -35,7 +35,7 @@
       
     - name: set url for devices
       ansible.builtin.set_fact:
-        kisok_website: http://{{ hostvars[groups['process_control_system'][0]]['ansible_host'] }}:1881/ui
+        kiosk_website: "http://{{ hostvars[groups['process_control_system'][0]]['ansible_host'] }}:1881/ui"
   tasks:
     - name: include kiosk setup role
       ansible.builtin.include_role:
