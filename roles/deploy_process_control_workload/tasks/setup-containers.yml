@@ -6,10 +6,6 @@
     image: "{{ container.image }}"
     pod: "{{ edge_workload_info.pod.name }}"
     state: present
-    generate_systemd:
-      path: /tmp
-      restart_policy: always
-      names: true
   loop_control:
     loop_var: container
   loop: "{{ edge_workload_info.containers }}"

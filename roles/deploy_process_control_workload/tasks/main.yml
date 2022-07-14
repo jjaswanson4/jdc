@@ -12,5 +12,5 @@
 - name: import tasks to setup containers
   ansible.builtin.import_tasks: setup-containers.yml
 
-# - name: import tasks to ensure workload is started/monitored
-#   ansible.builtin.import_tasks: monitor-workload.yml
+- name: import tasks to ensure workload is started/monitored
+  ansible.builtin.import_tasks: setup-systemd.yml
