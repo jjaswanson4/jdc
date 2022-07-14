@@ -328,7 +328,7 @@ controller_workflows:
           - Add Edge Device to Controller Group
       - identifier: Add Edge Device to Controller Group
         unified_job_template: Add Edge Device to Controller Group
-        success_nodes:
-          - Add Edge Device to Controller Group   
+        # success_nodes:
+        #   - Add Edge Device to Controller Group   
       # - identifier: Add Device to Edge Management Group
       #   unified_job_template: Add Device to Edge Management Group
