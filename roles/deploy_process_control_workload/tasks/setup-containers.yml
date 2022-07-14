@@ -4,7 +4,7 @@
   containers.podman.podman_container:
     name: "{{ container.name }}"
     image: "{{ container.image }}"
-    pod: "{{ edge_workload.pod.name }}"
+    pod: "{{ edge_workload_info.pod.name }}"
     state: present
     generate_systemd:
       path: /tmp
