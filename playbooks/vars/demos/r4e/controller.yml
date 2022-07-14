@@ -252,11 +252,13 @@ controller_templates:
       - Red Hat Registry Credentials
       - Local Automation Hub Image Registry Credentials
   - name: Add Edge Device to Controller Group
-    inventory: "{  { audience }} Edge Utilities"
+    inventory: "{  { audience }} Edge Systems"
     project: "{  { audience }} Edge Management Codebase"
     organization: "{  { audience }}"
     playbook: playbooks/add-edge-device-to-controller-group.yml
     execution_environment: Josh's Demos Collection EE
+    ask_limit_on_launch: yes
+    become_enabled: yes
     allow_simultaneous: yes
     credentials:
       - Edge User Credentials
