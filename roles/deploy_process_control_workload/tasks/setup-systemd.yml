@@ -9,7 +9,7 @@
 
 - name: gather up service files
   ansible.builtin.stat:
-    paths: /tmp
+    path: /tmp
     patterns: '*service'
   register: service_files
 
