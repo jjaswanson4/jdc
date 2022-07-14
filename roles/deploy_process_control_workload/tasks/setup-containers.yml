@@ -4,6 +4,7 @@
   containers.podman.podman_container:
     name: "{{ container.name }}"
     image: "{{ container.image }}"
+    pod: "{{ edge_workload.pod.name }}"
     state: present
     generate_systemd:
       path: /tmp
@@ -13,10 +14,3 @@
     loop_var: container
   loop: "{{ edge_workload_info.containers }}"
 
-- name: ensure port 8080 is allowed through the firewall
-  ansible.posix.firewalld:
-    port: 8080/tcp
-    permanent: yes
-    state: enabled
-    immediate: yes
-  become: true
