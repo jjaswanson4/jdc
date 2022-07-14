@@ -50,7 +50,7 @@
               system_type: isd
               display_website: "{{ display_website }}"
       when:
-        - edge_workload == 'Process Control'
+        - edge_workload == 'In-Store Display'
   roles:
     - redhat_cop.controller_configuration.inventories
     - redhat_cop.controller_configuration.groups
