@@ -1,0 +1,8 @@
+---
+
+- name: ensure podman is logged in to local registry
+  containers.podman.podman_login:
+    registry: "{{ edge_workload_info.image_registry }}"
+    username: "{{ hub_image_registry_username }}"
+    password: "{{ hub_image_registry_password }}"
+    tlsverify: "{{ hub_image_registry_tls_verify }}"
