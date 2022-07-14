@@ -1,0 +1,6 @@
+---
+
+- name: create pod for containers
+  containers.podman.podman_pod:
+    name: "{{ edge_workload_info.pod.name }}"
+    ports: "{{ edge_workload_info.pod.ports }}"

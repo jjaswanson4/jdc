@@ -2,15 +2,16 @@
 
 - name: deploy containerized workload to edge device
   containers.podman.podman_container:
-    name: edge-workload
-    image: "{{ edge_workload_iamge }}"
-    ports:
-      - 8080:8080
+    name: "{{ container.name }}"
+    image: "{{ container.image }}"
     state: present
     generate_systemd:
       path: /tmp
       restart_policy: always
       names: true
+  loop_control:
+    loop_var: container
+  loop: "{{ edge_workload_info.containers }}"
 
 - name: ensure port 8080 is allowed through the firewall
   ansible.posix.firewalld:
