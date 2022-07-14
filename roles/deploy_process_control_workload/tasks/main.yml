@@ -3,6 +3,9 @@
 - name: import pre-flight tasks
   ansible.builtin.import_tasks: pre-flight.yml
 
+- name: import tasks to pull container images
+  ansible.builtin.import_tasks: pull-images.yml
+
 - name: import tasks to setup pod
   ansible.builtin.import_tasks: setup-pod.yml
 

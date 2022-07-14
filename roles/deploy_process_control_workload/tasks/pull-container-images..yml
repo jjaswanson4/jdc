@@ -1,6 +1,6 @@
 ---
 
-- name: pull edge workload container image to device
+- name: pull edge workload container images to device
   containers.podman.podman_image:
     name: "{{ edge_workload_iamge }}"
     validate_certs: no
