@@ -7,22 +7,37 @@
     generate_systemd:
       path: /tmp
 
-# - name: copy generated systemd file to systemd dir
-#   ansible.builtin.copy:
-#     src: /tmp/container-edge-workload.service
-#     dest: /etc/systemd/user/
-#     remote_src: yes
-#   register: container_systemd_file
-#   become: true
+- name: gather up service files
+  ansible.builtin.stat:
+    paths: /tmp
+    patterns: '*service'
+  register: service_files
+
+- debug:
+    msg: "{{ service_files }}"
+
+- name: copy generated systemd file to systemd dir
+  ansible.builtin.copy:
+    src: "{{ file.path }}"
+    dest: /etc/systemd/user/
+    remote_src: yes
+  loop_control:
+    loop_var: file
+  loop: "{{ service_files.files }}"
+  become: true
 
 # - name: reload systemd
 #   ansible.builtin.systemd:
 #     daemon_reload: yes
 #     scope: user
 
-# - name: ensure systemd watches workload
+# - name: ensure systemd watches containers and pod
 #   ansible.builtin.systemd:
-#     name: container-edge-workload
+#     name: "{{ file."
 #     state: started
 #     scope: user
 #     enabled: yes
+#   loop_control:
+#     loop_var: file
+#   loop: "{{ service_files.files }}"
+#   become: true
