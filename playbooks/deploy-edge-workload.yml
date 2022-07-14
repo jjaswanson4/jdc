@@ -3,8 +3,8 @@
 - name: deploy workload to process control systems
   hosts:
     - process_control_system
-  # roles:
-  #   - ../roles/deploy_process_control_workload
+  roles:
+    - ../roles/deploy_process_control_workload
 
 
 - name: deploy workload to HMI devices
