@@ -41,7 +41,7 @@
   loop: "{{ service_files.files }}"
 
 - name: start the pod
-  ansible.buildin.systemd:
+  ansible.builtin.systemd:
     name: pod-{{ edge_workload_info.pod.name }}
     state: started
     scope: user
