@@ -30,7 +30,7 @@
           until:
             - group_membership.json.count | int == 1
           delay: 10
-          retries: 10
+          retries: 50
       delegate_to: localhost  
       
     - name: set url for devices
