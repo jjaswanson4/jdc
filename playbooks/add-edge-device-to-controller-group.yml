@@ -16,7 +16,7 @@
       register: installed_packages
       changed_when: false
 
-    - name: get groups in inventory
+    - name: get inventory
       ansible.builtin.uri:
         url: "https://{{ controller_hostname }}/api/v2/inventories?name__icontains=Edge%20Systems"
       register: inventory_search
