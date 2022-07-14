@@ -4,15 +4,17 @@
   hosts:
     - all
   gather_facts: false
+  vars:
+    controller_inventories:
+      - name: "{{ audience }} Edge Systems"
+        organization: "{{ audience }}"
+        variables:
+          audience: "{{ audience }}"
+          demo_uuid: "{{ demo_uuid }}"
+          edge_workload: "{{ edge_workload }}"
   pre_tasks:
     - name: set vars for Process Control workload
       ansible.builtin.set_fact:
-        controller_inventories:
-          - name: "{{ audience }} Edge Systems"
-            organization: "{{ audience }}"
-            variables:
-              audience: "{{ audience }}"
-              demo_uuid: "{{ demo_uuid }}"
         controller_groups:
           - name: human_machine_interface
             inventory: "{{ audience }} Edge Systems"
@@ -37,12 +39,6 @@
         - edge_workload == 'Process Control'
     - name: set vars for In-Store Display workload
       ansible.builtin.set_fact:
-        controller_inventories:
-          - name: "{{ audience }} Edge Systems"
-            organization: "{{ audience }}"
-            variables:
-              audience: "{{ audience }}"
-              demo_uuid: "{{ demo_uuid }}"
         controller_groups:
           - name: in_store_display
             inventory: "{{ audience }} Edge Systems"
