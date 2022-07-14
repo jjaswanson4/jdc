@@ -274,6 +274,7 @@ controller_templates:
     credentials:
       - Edge User Credentials
       - Controller API Credentials
+      - Local Automation Hub Image Registry Credentials
 
 controller_workflows:
   - name: Deploy Edge Systems
