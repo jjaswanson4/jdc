@@ -5,6 +5,7 @@
     - all
   gather_facts: false
   vars:
+    ansible_connection: local
     controller_inventories:
       - name: "{{ audience }} Edge Systems"
         organization: "{{ audience }}"
@@ -22,25 +23,7 @@
         inventory: "{{ audience }} Edge Systems"
         variables:
           system_type: pcs
-          edge_workload_info:
-            image_registry: "{{ audience | lower }}-{  { demo }}-hub.{  { demo_uuid }}.{{ base_dns_suffix }}"
-            pod:
-              name: process-control-demo
-              ports:
-                - 1881
-            containers:
-              - name: mqtt
-                src: https://github.com/jjaswanson4/process-demo-mqtt.git
-                image: "{  { audience | lower }}-{  { demo }}-hub.{  { demo_uuid }}.{  { base_dns_suffix }}/mqtt:latest"
-              - name: control
-                src: https://github.com/jjaswanson4/process-demo-control.git
-                image: "{  { audience | lower }}-{  { demo }}-hub.{  { demo_uuid }}.{  { base_dns_suffix }}/control:latest"
-              - name: simulate
-                src: https://github.com/jjaswanson4/process-demo-simulate.git
-                image: "{  { audience | lower }}-{  { demo }}-hub.{  { demo_uuid }}.{  { base_dns_suffix }}/simulate:latest"
-              - name: ui
-                src: https://github.com/jjaswanson4/process-demo-ui.git
-                image: "{  { audience | lower }}-{  { demo }}-hub.{  { demo_uuid }}.{  { base_dns_suffix }}/ui:latest"
+          edge_workload_info: "{{ edge_workload_info }}"
       - name: in_store_display
         inventory: "{{ audience }} Edge Systems"
         variables:
