@@ -43,4 +43,3 @@
   loop_control:
     loop_var: file
   loop: "{{ service_files.files }}"
-  become: true
