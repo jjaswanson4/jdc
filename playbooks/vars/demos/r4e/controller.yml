@@ -284,7 +284,7 @@ controller_workflows:
       audience: "{  { audience }}"
       demo: "{  { demo }}"
       demo_uuid: "{  { demo_uuid }}"
-      base_dns_suffix: "{{ base_dns_suffix }}"
+      base_dns_suffix: "{  { base_dns_suffix }}"
     survey_enabled: yes
     survey:
       name: ''

@@ -10,6 +10,7 @@
         organization: "{{ audience }}"
         variables:
           audience: "{{ audience }}"
+          demo: "{{ demo }}"
           demo_uuid: "{{ demo_uuid }}"
           edge_workload: "{{ edge_workload }}"
     controller_groups:
