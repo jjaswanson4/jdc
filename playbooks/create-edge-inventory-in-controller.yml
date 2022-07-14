@@ -24,15 +24,15 @@
           system_type: pcs
           edge_workload_info:
             image_registry: "{{ audience | lower }}-{  { demo }}-hub.{  { demo_uuid }}.{{ base_dns_suffix }}"
-          pod:
-            name: process-control-demo
-            ports:
-              - 1881
-          containers:
-            - name: mqtt
-            - name: control
-            - name: simulate
-            - name: ui
+            pod:
+              name: process-control-demo
+              ports:
+                - 1881
+            containers:
+              - name: mqtt
+              - name: control
+              - name: simulate
+              - name: ui
       - name: in_store_display
         inventory: "{{ audience }} Edge Systems"
         variables:
