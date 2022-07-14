@@ -1,0 +1,12 @@
+---
+
+- name: ensure ports for pod are allowed through the firewall
+  ansible.posix.firewalld:
+    port: "{{ port.split(':')[0] }}"
+    permanent: yes
+    state: enabled
+    immediate: yes
+  loop_control:
+    loop_var: port
+  loop: "{{ edge_workload_info.pod.ports }}"
+  become: true
