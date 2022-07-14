@@ -1,0 +1,79 @@
+---
+
+- name: determine edge device type and add to group
+  hosts:
+    - all
+  module_defaults:
+    ansible.builtin.uri:
+      force_basic_auth: yes
+      user: "{{ controller_username }}"
+      password: "{{ controller_password }}"
+      validate_certs: "{{ controller_validate_certs }}"
+  pre_tasks:
+    - name: get packages on system
+      ansible.builtin.shell:
+        cmd: rpm -qa
+      register: installed_packages
+      changed_when: false
+
+    - name: get groups in inventory
+      ansible.builtin.uri:
+        url: "https://{{ controller_hostname }}/api/v2/inventories?name__icontains=Edge%20Systems"
+      register: inventory_search
+      delegate_to: localhost
+
+    - name: set inventory facts variables
+      ansible.builtin.set_fact:
+        inventory_variables: "{{ inventory_search.json | json_query('results[0].variables') }}"
+
+    - name: set device type to pcs
+      ansible.builtin.set_fact:
+        device_type: pcs
+        add_to_group: process_control_system
+      when:
+        - "'gdm' not in installed_packages.stdout"
+
+    - name: set device type to hmi
+      ansible.builtin.set_fact:
+        device_type: hmi
+        add_to_group: human_machine_interface
+      when:
+        - "'gdm' in installed_packages.stdout"
+        - inventory_variables.edge_workload == 'Process Control'
+
+    - name: set device type to isd
+      ansible.builtin.set_fact:
+        device_type: isd
+        add_to_group: in_store_display
+      when:
+        - "'gdm' in installed_packages.stdout"
+        - inventory_variables.edge_workload == 'In-Store Display'
+
+    - name: get information via API calls from localhost
+      block:
+        - name: get group ID to add host to
+          ansible.builtin.uri:
+            url: "https://{{ controller_hostname }}/api/v2/groups?name={{ add_to_group }}"
+          register: group_search
+        - name: get host ID
+          ansible.builtin.uri:
+            url: "https://{{ controller_hostname }}/api/v2/hosts?name=edge-{{ ansible_default_ipv4.macaddress | replace(':','') }}"
+          register: host_search
+      delegate_to: localhost
+    
+    - name: set host ID fact
+      ansible.builtin.set_fact:
+        host_id: "{{ host_search.json.results[0].id | int }}"
+
+  tasks:
+    - name: add host to group
+      ansible.builtin.uri:
+        url: "https://{{ controller_hostname }}/api/v2/groups/{{ group_search.json.results[0].id }}/hosts/"
+        method: POST
+        body_format: json
+        body: '{ "id": {{ host_id }} }'
+        status_code:
+          - 204
+      delegate_to: localhost
+      
+
