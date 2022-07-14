@@ -156,16 +156,20 @@ controller_hosts:
         pod:
           name: process-control-demo
           ports:
-            - 1881
+            - 1881:1881
         containers:
           - name: mqtt
             src: https://github.com/jjaswanson4/process-demo-mqtt.git
+            image: "{  { audience | lower }}-{  { demo }}-hub.{  { demo_uuid }}.{  { base_dns_suffix }}/mqtt:latest"
           - name: control
             src: https://github.com/jjaswanson4/process-demo-control.git
+            image: "{  { audience | lower }}-{  { demo }}-hub.{  { demo_uuid }}.{  { base_dns_suffix }}/control:latest"
           - name: simulate
             src: https://github.com/jjaswanson4/process-demo-simulate.git
+            image: "{  { audience | lower }}-{  { demo }}-hub.{  { demo_uuid }}.{  { base_dns_suffix }}/simulate:latest"
           - name: ui
             src: https://github.com/jjaswanson4/process-demo-ui.git
+            image: "{  { audience | lower }}-{  { demo }}-hub.{  { demo_uuid }}.{  { base_dns_suffix }}/ui:latest"
 
   - name: localhost
     inventory: Local Actions
@@ -247,6 +251,15 @@ controller_templates:
       - Root Credentials
       - Red Hat Registry Credentials
       - Local Automation Hub Image Registry Credentials
+  - name: Add Edge Device to Controller Group
+    inventory: "{  { audience }} Edge Utilities"
+    project: "{  { audience }} Edge Management Codebase"
+    organization: "{  { audience }}"
+    playbook: playbooks/add-edge-device-to-controller-group.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - Edge User Credentials
+      - Controller API Credentials
 
 controller_workflows:
   - name: Deploy Edge Systems
@@ -294,11 +307,14 @@ controller_workflows:
         unified_job_template: Create Edge Devices Inventory
         success_nodes:
           - Provision Edge Systems
+      - identifier: Build Edge Workload
+        unified_job_template: Build Edge Workload
+        success_nodes:
+          - Provision Edge Systems
       - identifier: Provision Edge Systems
         unified_job_template: Provision Edge Systems
         all_parents_must_converge: yes
-      - identifier: Build Edge Workload
-        unified_job_template: Build Edge Workload
+
         
   - name: Post-Install Edge System
     organization: "{  { audience }}"
@@ -308,5 +324,11 @@ controller_workflows:
     simplified_workflow_nodes:
       - identifier: Apply Configuration to Edge Device
         unified_job_template: Apply Configuration to Edge Device
+        success_nodes:
+          - Add Edge Device to Controller Group
+      - identifier: Add Edge Device to Controller Group
+        unified_job_template: Add Edge Device to Controller Group
+        success_nodes:
+          - Add Edge Device to Controller Group   
       # - identifier: Add Device to Edge Management Group
       #   unified_job_template: Add Device to Edge Management Group
