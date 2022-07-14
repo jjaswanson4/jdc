@@ -2,7 +2,7 @@
 
 - name: ensure ports for pod are allowed through the firewall
   ansible.posix.firewalld:
-    port: "{{ port.split(':')[0] }}"
+    port: "{{ port.split(':')[0] }}/tcp"
     permanent: yes
     state: enabled
     immediate: yes
