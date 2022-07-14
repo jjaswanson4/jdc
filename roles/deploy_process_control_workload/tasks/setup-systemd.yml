@@ -8,8 +8,8 @@
       path: /tmp
 
 - name: gather up service files
-  ansible.builtin.stat:
-    path: /tmp
+  ansible.builtin.find:
+    paths: /tmp
     patterns: '*service'
   register: service_files
 
