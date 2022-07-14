@@ -1,7 +1,47 @@
 ---
 
-- name: deploy workload to edge devices
+- name: deploy workload to process control systems
   hosts:
-    - all
-  roles:
-    - ../roles/deploy_edge_workload
+    - process_control_system
+  # roles:
+  #   - ../roles/deploy_process_control_workload
+
+
+- name: deploy workload to HMI devices
+  hosts:
+    - human_machine_interface
+  module_defaults:
+    ansible.builtin.uri:
+      force_basic_auth: yes
+      user: "{{ controller_username }}"
+      password: "{{ controller_password }}"
+      validate_certs: "{{ controller_validate_certs }}"
+  pre_tasks:
+    - name: run API calls from localhost
+      block:
+        - name: get group info
+          ansible.builtin.uri:
+            url: "https://{{ controller_hostname }}/api/v2/groups?name=process_control_system"
+          register: group_search
+        - name: ensure group has a host
+          ansible.builtin.uri:
+            url: "https://{{ controller_hostname }}/api/v2/groups/{{ group_search.json.results[0].id }}/hosts"
+          register: group_membership
+          until:
+            - group_membership.json.count | int == 1
+          delay: 10
+          retries: 10
+      delegate_to: localhost  
+      
+    - name: set url for devices
+      ansible.builtin.set_fact:
+        kisok_website: http://{{ hostvars[groups['process_control_system'][0]]['ansible_host'] }}:1881/ui
+  # roles:
+  #   - ../roles/deploy_edge_workload
+
+
+- name: deploy workload to In-Store Displays
+  hosts:
+    - in_store_display
+  # roles:
+  #   - ../roles/deploy_edge_workload
