@@ -30,9 +30,17 @@
                 - 1881
             containers:
               - name: mqtt
+                src: https://github.com/jjaswanson4/process-demo-mqtt.git
+                image: "{  { audience | lower }}-{  { demo }}-hub.{  { demo_uuid }}.{  { base_dns_suffix }}/mqtt:latest"
               - name: control
+                src: https://github.com/jjaswanson4/process-demo-control.git
+                image: "{  { audience | lower }}-{  { demo }}-hub.{  { demo_uuid }}.{  { base_dns_suffix }}/control:latest"
               - name: simulate
+                src: https://github.com/jjaswanson4/process-demo-simulate.git
+                image: "{  { audience | lower }}-{  { demo }}-hub.{  { demo_uuid }}.{  { base_dns_suffix }}/simulate:latest"
               - name: ui
+                src: https://github.com/jjaswanson4/process-demo-ui.git
+                image: "{  { audience | lower }}-{  { demo }}-hub.{  { demo_uuid }}.{  { base_dns_suffix }}/ui:latest"
       - name: in_store_display
         inventory: "{{ audience }} Edge Systems"
         variables:
