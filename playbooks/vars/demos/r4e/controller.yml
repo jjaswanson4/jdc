@@ -152,7 +152,7 @@ controller_hosts:
     inventory: "{  { audience }} Edge Utilities"
     variables:
       edge_workload_info:
-        image_registry: "{  { audience | lower }}-{  { demo }}-hub.{  { demo_uuid }}.{  { base_dns_suffix }}"
+        image_registry: "{{ audience | lower }}-{{ demo }}-hub.{{ demo_uuid }}.{{ base_dns_suffix }}"
         pod:
           name: process-control-demo
           ports:
@@ -160,16 +160,16 @@ controller_hosts:
         containers:
           - name: mqtt
             src: https://github.com/jjaswanson4/process-demo-mqtt.git
-            image: "{  { audience | lower }}-{  { demo }}-hub.{  { demo_uuid }}.{  { base_dns_suffix }}/mqtt:latest"
+            image: "{{ audience | lower }}-{{ demo }}-hub.{{ demo_uuid }}.{{ base_dns_suffix }}/mqtt:latest"
           - name: control
             src: https://github.com/jjaswanson4/process-demo-control.git
-            image: "{  { audience | lower }}-{  { demo }}-hub.{  { demo_uuid }}.{  { base_dns_suffix }}/control:latest"
+            image: "{{ audience | lower }}-{{ demo }}-hub.{{ demo_uuid }}.{{ base_dns_suffix }}/control:latest"
           - name: simulate
             src: https://github.com/jjaswanson4/process-demo-simulate.git
-            image: "{  { audience | lower }}-{  { demo }}-hub.{  { demo_uuid }}.{  { base_dns_suffix }}/simulate:latest"
+            image: "{{ audience | lower }}-{{ demo }}-hub.{{ demo_uuid }}.{{ base_dns_suffix }}/simulate:latest"
           - name: ui
             src: https://github.com/jjaswanson4/process-demo-ui.git
-            image: "{  { audience | lower }}-{  { demo }}-hub.{  { demo_uuid }}.{  { base_dns_suffix }}/ui:latest"
+            image: "{{ audience | lower }}-{{ demo }}-hub.{{ demo_uuid }}.{{ base_dns_suffix }}/ui:latest"
 
   - name: localhost
     inventory: Local Actions
@@ -234,7 +234,7 @@ controller_templates:
     credentials:
       - Console Dot Offline Token
   - name: Create Edge Devices Inventory
-    inventory: Local Actions
+    inventory: "{  { audience }} Edge Utilities"
     project: "{  { audience }} Edge Management Codebase"
     organization: "{  { audience }}"
     playbook: playbooks/create-edge-inventory-in-controller.yml
