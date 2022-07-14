@@ -1,0 +1,9 @@
+---
+
+- name: pull images down
+  containers.podman.podman_image:
+    name: "{{ container.name }}"
+    validate_certs: "{{ hub_image_registry_tls_verify }}"
+  loop_control:
+    loop_var: container
+  loop: "{{ edge_workload_info.containers }}"
