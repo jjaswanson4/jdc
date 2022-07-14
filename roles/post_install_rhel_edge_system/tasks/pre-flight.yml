@@ -4,3 +4,5 @@
   ansible.builtin.wait_for_connection:
     sleep: 10
   
+- name: run the setup module
+  ansible.builtin.setup:

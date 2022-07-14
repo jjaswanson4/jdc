@@ -3,5 +3,6 @@
 - name: run various post-install steps on r4e systems
   hosts:
     - all
+  gather_facts: false
   roles:
     - ../roles/post_install_rhel_edge_system
