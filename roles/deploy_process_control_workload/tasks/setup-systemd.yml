@@ -25,19 +25,22 @@
     loop_var: file
   loop: "{{ service_files.files }}"
   become: true
+  register: systemd_files_updated
 
-# - name: reload systemd
-#   ansible.builtin.systemd:
-#     daemon_reload: yes
-#     scope: user
+- name: reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: yes
+    scope: user
+  when:
+    - systemd_files_updated.changed
 
-# - name: ensure systemd watches containers and pod
-#   ansible.builtin.systemd:
-#     name: "{{ file."
-#     state: started
-#     scope: user
-#     enabled: yes
-#   loop_control:
-#     loop_var: file
-#   loop: "{{ service_files.files }}"
-#   become: true
+- name: ensure systemd watches containers and pod
+  ansible.builtin.systemd:
+    name: "{{ file.path.split('/')[-1] }}"
+    state: started
+    scope: user
+    enabled: yes
+  loop_control:
+    loop_var: file
+  loop: "{{ service_files.files }}"
+  become: true
