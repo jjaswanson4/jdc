@@ -14,3 +14,6 @@
 
 - name: import tasks to ensure workload is started/monitored
   ansible.builtin.import_tasks: setup-systemd.yml
+
+- name: import tasks to configure the system firewall
+  ansible.builtin.import_tasks: configure-firewall.yml

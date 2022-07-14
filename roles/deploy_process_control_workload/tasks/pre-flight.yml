@@ -6,3 +6,7 @@
     username: "{{ hub_image_registry_username }}"
     password: "{{ hub_image_registry_password }}"
     tlsverify: "{{ hub_image_registry_tls_verify }}"
+
+- name: enable lingering for user
+  ansible.builtin.shell:
+    cmd: "loginctl enable-linger {{ ansible_user }}"
