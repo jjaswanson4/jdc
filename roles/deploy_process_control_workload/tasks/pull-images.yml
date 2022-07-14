@@ -2,7 +2,7 @@
 
 - name: pull images down
   containers.podman.podman_image:
-    name: "{{ container.name }}"
+    name: "{{ container.image }}"
     validate_certs: "{{ hub_image_registry_tls_verify }}"
   loop_control:
     loop_var: container
