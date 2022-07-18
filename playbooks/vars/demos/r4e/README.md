@@ -10,3 +10,4 @@ This demo covers RHEL for Edge, Ansible, and Edge Management as a solution for d
 - Add unregister of edge systems to teardown
 - Add update of edge systems as job template
 - ~~Update hosts in provisioner inventory~~
+- Teardown group in edge management
