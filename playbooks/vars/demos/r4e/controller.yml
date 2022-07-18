@@ -345,12 +345,13 @@ controller_workflows:
       - identifier: Apply Configuration to Edge Device
         unified_job_template: Apply Configuration to Edge Device
         success_nodes:
-          - Deploy Edge Workload
           - Add Edge Device to Controller Group
           - Add Device to Edge Management Group
-      - identifier: Deploy Edge Workload
-        unified_job_template: Deploy Edge Workload
       - identifier: Add Edge Device to Controller Group
         unified_job_template: Add Edge Device to Controller Group
+        success_nodes:
+          - Deploy Edge Workload
       - identifier: Add Device to Edge Management Group
         unified_job_template: Add Device to Edge Management Group
+      - identifier: Deploy Edge Workload
+        unified_job_template: Deploy Edge Workload
