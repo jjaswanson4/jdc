@@ -111,7 +111,7 @@ controller_hosts:
     variables:
       os: rhel8
       cpus: 4
-      memory_mb: 8192
+      memory_mb: 16384
       application: general
       lifecycle_environment: production
   - name: "process-control-system-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
