@@ -177,7 +177,7 @@ controller_templates:
   ask_credential_on_launch: yes
   ask_variables_on_launch: yes
   ask_limit_on_launch: yes
-- name: Create Demo Group In Edge Management
+- name: Manage Groups In Edge Management
   organization: "{{ controller_organization }}"
   ask_inventory_on_launch: yes
   inventory: Demo Inventory
@@ -199,7 +199,7 @@ controller_workflows:
       demo: r4e
     simplified_workflow_nodes:
       - identifier: Create Demo Group In Edge Management
-        unified_job_template: Create Demo Group In Edge Management
+        unified_job_template: Manage Groups In Edge Management
         limit: console.redhat.com
         credentials:
           - Demo Provisioner Console Dot Credentials
@@ -434,6 +434,15 @@ controller_workflows:
           - Demo Provisioner vCenter Credentials
         extra_data:
           cmdb_record_state: absent
+        always_nodes:
+          - Remove Demo Context
+      - identifier: Remove Demo Group In Edge Management
+        unified_job_template: Manage Groups In Edge Management
+        limit: console.redhat.com
+        credentials:
+          - Demo Provisioner Console Dot Credentials
+        extra_data:
+          group_state: absent
         always_nodes:
           - Remove Demo Context
       - identifier: Remove Demo Context
