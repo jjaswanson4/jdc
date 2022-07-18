@@ -1,10 +1,11 @@
 ---
 
-- name: ensure podman and buildah are installed
+- name: ensure podman, buildah, and git are installed
   ansible.builtin.dnf:
     name:
       - podman
       - buildah
+      - git
 
 - name: ensure podman is logged in to registry.redhat.io
   containers.podman.podman_login:
