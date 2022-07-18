@@ -79,6 +79,15 @@ controller_credential_types:
         hub_image_registry_username: "{  { admin_username }}"
         hub_image_registry_password: "{  { admin_password }}"
         hub_image_registry_tls_verify: 'no'
+  - name: Console Dot API Connection
+    kind: cloud
+    injectors:
+      extra_vars:
+        ansible_connection: ansible.netcommon.httpapi
+        ansible_network_os: consoledot.edgemanagement.consoledot
+        ansible_user: "{  { console_dot_username }}"
+        ansible_httpapi_pass: "{  { console_dot_password }}"
+        ansible_httpapi_use_ssl: yes
           
 
 controller_credentials:
@@ -120,6 +129,9 @@ controller_credentials:
   - name: Local Automation Hub Image Registry Credentials
     organization: "{  { audience }}"
     credential_type: Automation Hub Image Registry Credentials
+  - name: Console Dot API Connection
+    organization: "{  { audience }}"
+    credential_type: Console Dot API Connection
 
 
 controller_execution_environments:
@@ -170,6 +182,14 @@ controller_hosts:
           - name: ui
             src: https://github.com/jjaswanson4/process-demo-ui.git
             image: "{{ audience | lower }}-{{ demo }}-hub.{{ demo_uuid }}.{{ base_dns_suffix }}/ui:latest"
+  - name: console.redhat.com
+    inventory: "{  { audience }} Edge Utilities"
+    variables:
+      ansible_connection: ansible.netcommon.httpapi
+      ansible_network_os: consoledot.edgemanagement.consoledot
+      ansible_user: "{  { console_dot_username }}"
+      ansible_httpapi_pass: "{  { console_dot_password }}"
+      ansible_httpapi_use_ssl: yes
 
   - name: localhost
     inventory: Local Actions
@@ -191,6 +211,7 @@ controller_projects:
 controller_templates:
   - name: Create Edge Installer ISO
     inventory: "{  { audience }} Edge Utilities"
+    limit: "edge-utilities.{{ demo_uuid }}.{{ base_dns_suffix }}"
     project: "{  { audience }} Edge Management Codebase"
     organization: "{  { audience }}"
     playbook: playbooks/create-edge-installer-iso.yml
@@ -224,6 +245,7 @@ controller_templates:
       - Edge User Credentials
   - name: Add Device to Edge Management Group
     inventory: "{  { audience }} Edge Systems"
+    limit: console.redhat.com
     project: "{  { audience }} Edge Management Codebase"
     organization: "{  { audience }}"
     playbook: playbooks/add-device-to-group-in-edge-mgmt.yml
@@ -234,7 +256,7 @@ controller_templates:
     credentials:
       - Console Dot Offline Token
   - name: Create Edge Devices Inventory
-    inventory: "{  { audience }} Edge Utilities"
+    inventory: Local Actions
     project: "{  { audience }} Edge Management Codebase"
     organization: "{  { audience }}"
     playbook: playbooks/create-edge-inventory-in-controller.yml
@@ -244,6 +266,7 @@ controller_templates:
   - name: Build Edge Workload
     inventory: "{  { audience }} Edge Utilities"
     project: "{  { audience }} Edge Management Codebase"
+    limit: "edge-utilities.{{ demo_uuid }}.{{ base_dns_suffix }}"
     organization: "{  { audience }}"
     playbook: playbooks/build-edge-workload.yml
     execution_environment: Josh's Demos Collection EE
@@ -253,13 +276,12 @@ controller_templates:
       - Local Automation Hub Image Registry Credentials
   - name: Add Edge Device to Controller Group
     inventory: "{  { audience }} Edge Systems"
+    ask_limit_on_launch: yes
     project: "{  { audience }} Edge Management Codebase"
     organization: "{  { audience }}"
     playbook: playbooks/add-edge-device-to-controller-group.yml
     execution_environment: Josh's Demos Collection EE
-    ask_limit_on_launch: yes
-    become_enabled: yes
-    allow_simultaneous: yes
+    allow_simultaneous: yes  
     credentials:
       - Edge User Credentials
       - Controller API Credentials
@@ -329,8 +351,7 @@ controller_workflows:
       - identifier: Provision Edge Systems
         unified_job_template: Provision Edge Systems
         all_parents_must_converge: yes
-
-        
+   
   - name: Post-Install Edge System
     organization: "{  { audience }}"
     state: present
@@ -340,13 +361,10 @@ controller_workflows:
       - identifier: Apply Configuration to Edge Device
         unified_job_template: Apply Configuration to Edge Device
         success_nodes:
-          - Add Edge Device to Controller Group
-      - identifier: Add Edge Device to Controller Group
-        unified_job_template: Add Edge Device to Controller Group
-        success_nodes:
           - Deploy Edge Workload
       - identifier: Deploy Edge Workload
         unified_job_template: Deploy Edge Workload
-
-      # - identifier: Add Device to Edge Management Group
-      #   unified_job_template: Add Device to Edge Management Group
+      - identifier: Add Edge Device to Controller Group
+        unified_job_template: Add Edge Device to Controller Group
+      - identifier: Add Device to Edge Management Group
+        unified_job_template: Add Device to Edge Management Group
