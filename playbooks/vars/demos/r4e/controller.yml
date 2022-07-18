@@ -61,11 +61,6 @@ controller_credential_types:
         vcenter_datacenter: "{  { vcenter_datacenter }}"
         vcenter_cluster: "{  { vcenter_cluster }}"
         vcenter_datastore: storage04-nfs-lun0
-  - name: Console Dot Offline Token
-    kind: cloud
-    injectors:
-      extra_vars:
-        console_dot_offline_token: "{  { console_dot_offline_token }}"
   - name: Edge Workload Image Registry Credentials
     kind: cloud
     injectors:
@@ -79,6 +74,15 @@ controller_credential_types:
         hub_image_registry_username: "{  { admin_username }}"
         hub_image_registry_password: "{  { admin_password }}"
         hub_image_registry_tls_verify: 'no'
+  - name: Console Dot API Connection Settings
+    kind: cloud
+    injectors:
+      extra_vars:
+        ansible_connection: ansible.netcommon.httpapi
+        ansible_network_os: consoledot.edgemanagement.consoledot
+        ansible_user: "{  { console_dot_username }}"
+        ansible_httpapi_pass: "{  { console_dot_password }}"
+        ansible_httpapi_use_ssl: yes
 
 controller_credentials:
   - name: Automation Hub Image Registry Credentials
@@ -113,12 +117,12 @@ controller_credentials:
     inputs:
       username: "{  { edge_user_username }}"
       ssh_key_data: "{  { edge_user_ssh_key_data }}"
-  - name: Console Dot Offline Token
-    organization: "{  { audience }}"
-    credential_type: Console Dot Offline Token
   - name: Local Automation Hub Image Registry Credentials
     organization: "{  { audience }}"
     credential_type: Automation Hub Image Registry Credentials
+  - name: Console Dot API Connection Settings
+    organization: "{  { audience }}"
+    credential_type: Console Dot API Connection Settings
 
 controller_execution_environments:
   - name: Josh's Demos Collection EE
@@ -170,13 +174,6 @@ controller_hosts:
             image: "{{ audience | lower }}-{{ demo }}-hub.{{ demo_uuid }}.{{ base_dns_suffix }}/ui:latest"
   - name: console.redhat.com
     inventory: "{  { audience }} Edge Utilities"
-    variables:
-      ansible_connection: ansible.netcommon.httpapi
-      ansible_network_os: consoledot.edgemanagement.consoledot
-      ansible_user: "{  { console_dot_username }}"
-      ansible_httpapi_pass: "{  { console_dot_password }}"
-      ansible_httpapi_use_ssl: yes
-
   - name: localhost
     inventory: Local Actions
     variables:
@@ -240,7 +237,7 @@ controller_templates:
     become_enabled: yes
     allow_simultaneous: yes
     credentials:
-      - Console Dot Offline Token
+      - Console Dot API Connection Settings
   - name: Create Edge Devices Inventory
     inventory: Local Actions
     project: "{  { audience }} Edge Management Codebase"
