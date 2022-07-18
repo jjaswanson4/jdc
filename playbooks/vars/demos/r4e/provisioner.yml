@@ -315,6 +315,7 @@ controller_workflows:
           - Demo Provisioner Satellite Credentials
           - Demo Provisioner vCenter Credentials
           - Demo Provisioner Root Account
+          - Demo Provisioner Console Dot Credentials
         success_nodes:
           - Apply Standard Config to Utility Server
         failure_nodes:
