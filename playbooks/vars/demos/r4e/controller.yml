@@ -79,16 +79,6 @@ controller_credential_types:
         hub_image_registry_username: "{  { admin_username }}"
         hub_image_registry_password: "{  { admin_password }}"
         hub_image_registry_tls_verify: 'no'
-  - name: Console Dot API Connection
-    kind: cloud
-    injectors:
-      extra_vars:
-        ansible_connection: ansible.netcommon.httpapi
-        ansible_network_os: consoledot.edgemanagement.consoledot
-        ansible_user: "{  { console_dot_username }}"
-        ansible_httpapi_pass: "{  { console_dot_password }}"
-        ansible_httpapi_use_ssl: yes
-          
 
 controller_credentials:
   - name: Automation Hub Image Registry Credentials
@@ -129,10 +119,6 @@ controller_credentials:
   - name: Local Automation Hub Image Registry Credentials
     organization: "{  { audience }}"
     credential_type: Automation Hub Image Registry Credentials
-  - name: Console Dot API Connection
-    organization: "{  { audience }}"
-    credential_type: Console Dot API Connection
-
 
 controller_execution_environments:
   - name: Josh's Demos Collection EE
