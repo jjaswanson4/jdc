@@ -297,7 +297,7 @@ controller_workflows:
           - Demo Provisioner RHC Edge Credentials
           - Demo Provisioner vCenter Credentials
           - Demo Provisioner Edge User Credentials
-          - Demo Provisioner Console Dot Offline Token
+          - Demo Provisioner Console Dot Credentials
         success_nodes:
           - Send Success Email
         failure_nodes:
@@ -315,7 +315,6 @@ controller_workflows:
           - Demo Provisioner Satellite Credentials
           - Demo Provisioner vCenter Credentials
           - Demo Provisioner Root Account
-          - Demo Provisioner Console Dot Credentials
         success_nodes:
           - Apply Standard Config to Utility Server
         failure_nodes:
