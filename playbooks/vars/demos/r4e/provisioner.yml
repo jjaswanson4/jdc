@@ -143,16 +143,15 @@ controller_groups_tier1:
   - name: utility_server
     inventory: "Demo {{ demo_uuid }} Inventory"
     hosts:
+      - "edge-utilities.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: edge_systems
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    hosts:
       - "process-control-system-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "human-machine-interface-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "in-store-display-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "in-store-display-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
       - "in-store-display-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
-  - name: edge_systems
-    inventory: "Demo {{ demo_uuid }} Inventory"
-    hosts:
-      - "pcs.{{ demo_uuid }}.{{ base_dns_suffix }}"
-      - "hmi.{{ demo_uuid }}.{{ base_dns_suffix }}"
 
 controller_groups_tier2:
   - name: demo_hosts
