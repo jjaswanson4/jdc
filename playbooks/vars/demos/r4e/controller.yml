@@ -82,7 +82,7 @@ controller_credential_types:
         ansible_network_os: consoledot.edgemanagement.consoledot
         ansible_user: "{  { console_dot_username }}"
         ansible_httpapi_pass: "{  { console_dot_password }}"
-        ansible_httpapi_use_ssl: yes
+        ansible_httpapi_use_ssl: 'yes'
 
 controller_credentials:
   - name: Automation Hub Image Registry Credentials
