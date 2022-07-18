@@ -62,8 +62,8 @@ collections:
   - name: containers.podman
 
   # Edge Management collections
-  - name: maxamillion.fleetmanager
-    version: '>=0.1.2'
+  - name: consoledot.edgemanagement
+    version: '>=0.1.1'
 
   # Networking collections
   - name: ansible.netcommon
