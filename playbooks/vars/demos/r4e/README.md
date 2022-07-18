@@ -9,3 +9,4 @@ This demo covers RHEL for Edge, Ansible, and Edge Management as a solution for d
 - Finish In-Store Display deployment workflow
 - Add unregister of edge systems to teardown
 - Add update of edge systems as job template
+- ~~Update hosts in provisioner inventory~~
