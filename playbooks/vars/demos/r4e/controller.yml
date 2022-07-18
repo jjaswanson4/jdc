@@ -239,7 +239,8 @@ controller_templates:
     credentials:
       - Console Dot API Connection Settings
   - name: Create Edge Devices Inventory
-    inventory: Local Actions
+    inventory: "{  { audience }} Edge Utilities"
+    limit: "edge-utilities.{{ demo_uuid }}.{{ base_dns_suffix }}"
     project: "{  { audience }} Edge Management Codebase"
     organization: "{  { audience }}"
     playbook: playbooks/create-edge-inventory-in-controller.yml
