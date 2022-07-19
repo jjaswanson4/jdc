@@ -281,6 +281,16 @@ controller_templates:
       - Edge User Credentials
       - Controller API Credentials
       - Local Automation Hub Image Registry Credentials
+  - name: Disconnect from Consoledot
+    inventory: "{  { audience }} Edge Systems"
+    project: "{  { audience }} Edge Management Codebase"
+    organization: "{  { audience }}"
+    playbook: playbooks/disconnect-from-consoledot.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_limit_on_launch: yes
+    allow_simultaneous: yes
+    credentials:
+      - Edge User Credentials
 
 controller_workflows:
   - name: Deploy Edge Systems
