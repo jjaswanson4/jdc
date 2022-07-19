@@ -9,9 +9,9 @@
       ansible.builtin.set_fact:
         edge_management_groups:
           - "{{ demo_uuid }}"
-          - "Process%20Control%20Systems"
-          - Human%20Machine%20Interfaces
-          - In-Store%20Displays
+          - "Process Control Systems"
+          - Human Machine Interfaces
+          - In-Store Displays
       when:
         - group_state is not defined or
           (group_state is defined and group_state == 'present')
@@ -25,7 +25,7 @@
   tasks:
     - name: create group in Edge Management
       consoledot.edgemanagement.groups:
-        name: "{{ edge_management_group }}"
+        name: "{{ edge_management_group  | regex_replace(' ', '_') }}"
         state: "{{ group_state | default('present') }}"
       loop_control:
         loop_var: edge_management_group
