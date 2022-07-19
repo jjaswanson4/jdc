@@ -269,15 +269,17 @@ controller_templates:
     ask_credential_on_launch: yes
     ask_variables_on_launch: yes
     ask_limit_on_launch: yes
-  # - name: Run Controller Job
-  #   organization: Demo Provisioner
-  #   inventory: Demo Inventory
-  #   project: Josh's Demos Collection
-  #   allow_simultaneous: yes
-  #   playbook: playbooks/run-controller-job.yml
-  #   execution_environment: Josh's Demos Collection EE
-  #   ask_credential_on_launch: yes
-  #   ask_variables_on_launch: yes
+  - name: Run Controller Job
+    organization: Demo Provisioner
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/run-controller-job.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_credential_on_launch: yes
+    ask_variables_on_launch: yes
   - name: Manage DNS Records
     organization: Demo Provisioner
     ask_inventory_on_launch: yes
