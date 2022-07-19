@@ -393,6 +393,33 @@ controller_workflows:
     extra_vars:
       demo: r4e
     simplified_workflow_nodes:
+      - identifier: Run Controller Job to Disconnect Hosts from Consoledot
+        unified_job_template: Run Controller Job
+        limit: controller
+        extra_data:
+          controller_launch_jobs:
+            - name: Disconnect from Consoledot
+              wait: true
+              interval: 5
+        credentials:
+          - Demo Provisioner Admin Credentials
+          - Demo Provisioner Red Hat Registry Credentials
+          - Demo Provisioner RHC Edge Credentials
+          - Demo Provisioner vCenter Credentials
+          - Demo Provisioner Edge User Credentials
+          - Demo Provisioner Console Dot Credentials
+        always_nodes:
+          - Teardown Edge Systems
+          - Remove Edge Management Groups
+      - identifier: Remove Edge Management Groups
+        unified_job_template: Manage Groups In Edge Management
+        limit: console.redhat.com
+        credentials:
+          - Demo Provisioner Console Dot Credentials
+        extra_data:
+          group_state: absent
+        always_nodes:
+          - Remove Demo Context
       - identifier: Teardown Edge Systems
         unified_job_template: Teardown Edge Systems
         limit: edge_systems
