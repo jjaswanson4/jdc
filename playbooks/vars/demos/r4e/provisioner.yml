@@ -410,13 +410,24 @@ controller_workflows:
           - Demo Provisioner Console Dot Credentials
         always_nodes:
           - Teardown Edge Systems
-          - Remove Edge Management Groups
-      - identifier: Remove Edge Management Groups
+          - Remove Demo Group In Edge Management
+          - Teardown Management and Utility Systems
+      - identifier: Unregister from Insights
+        unified_job_template: Unregister from Insights
+        limit: controller
+        credentials:
+          - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
+        always_nodes:
+          - Teardown Management and Utility Systems
+      - identifier: Remove Demo Group In Edge Management
         unified_job_template: Manage Groups In Edge Management
         limit: console.redhat.com
         credentials:
           - Demo Provisioner Console Dot Credentials
         extra_data:
+          edge_management_groups:
+            - "{  { demo_uuid }}"
           group_state: absent
         always_nodes:
           - Remove Demo Context
@@ -428,14 +439,6 @@ controller_workflows:
           - Demo Provisioner vCenter Credentials
         always_nodes:
           - Remove Demo Context     
-      - identifier: Unregister from Insights
-        unified_job_template: Unregister from Insights
-        limit: controller
-        credentials:
-          - Demo Provisioner Root Account
-          - Demo Provisioner Admin Credentials
-        always_nodes:
-          - Teardown Management and Utility Systems
       - identifier: Teardown Management and Utility Systems
         unified_job_template: Teardown Systems
         limit: 'utility_server:controller:hub'
@@ -444,6 +447,7 @@ controller_workflows:
           - Demo Provisioner Admin Credentials
         always_nodes:
           - Cleanup DNS Records
+        all_parents_must_converge: yes
       - identifier: Cleanup DNS Records
         unified_job_template: Manage DNS Records
         limit: 'utility_server:controller:hub'
@@ -464,15 +468,6 @@ controller_workflows:
           - Demo Provisioner vCenter Credentials
         extra_data:
           cmdb_record_state: absent
-        always_nodes:
-          - Remove Demo Context
-      - identifier: Remove Demo Group In Edge Management
-        unified_job_template: Manage Groups In Edge Management
-        limit: console.redhat.com
-        credentials:
-          - Demo Provisioner Console Dot Credentials
-        extra_data:
-          group_state: absent
         always_nodes:
           - Remove Demo Context
       - identifier: Remove Demo Context
