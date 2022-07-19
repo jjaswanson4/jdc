@@ -426,8 +426,6 @@ controller_workflows:
         credentials:
           - Demo Provisioner Console Dot Credentials
         extra_data:
-          edge_management_groups:
-            - "{  { demo_uuid }}"
           group_state: absent
         always_nodes:
           - Remove Demo Context
