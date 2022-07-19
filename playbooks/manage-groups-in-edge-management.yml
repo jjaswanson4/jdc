@@ -9,9 +9,9 @@
       ansible.builtin.set_fact:
         edge_management_groups:
           - "{{ demo_uuid }}"
-          - Process Control Systems
-          - Human Machine Interfaces
-          - In-Store Displays
+          - "Process%20Control%20Systems"
+          - Human%20Machine%20Interfaces
+          - In-Store%20Displays
       when:
         - group_state is not defined or
           (group_state is defined and group_state == 'present')
