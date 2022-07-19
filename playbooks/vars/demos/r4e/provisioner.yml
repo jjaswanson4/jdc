@@ -120,9 +120,9 @@ controller_hosts:
     inventory: "Demo {{ demo_uuid }} Inventory"
   - name: "in-store-display-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "Demo {{ demo_uuid }} Inventory"
-  - name: "in-store-display-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "in-store-display-2.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "Demo {{ demo_uuid }} Inventory"
-  - name: "in-store-display-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "in-store-display-3.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "Demo {{ demo_uuid }} Inventory"
   - name: localhost
     inventory: "Demo {{ demo_uuid }} Inventory"
