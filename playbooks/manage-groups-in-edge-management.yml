@@ -4,8 +4,29 @@
   hosts:
     - all
   gather_facts: false
+  pre_tasks:
+    - name: set group list when provisioning
+      ansible.builtin.set_fact:
+        edge_management_groups:
+          - "{{ demo_uuid }}"
+          - Process Control Systems
+          - Human Machine Interfaces
+          - In-Store Displays
+      when:
+        - group_state is not defined or
+          (group_state is defined and group_state == 'present')
+    - name: set group list when tearing down
+      ansible.builtin.set_fact:
+        edge_management_groups:
+          - "{{ demo_uuid }}"
+      when:
+        - group_state is defined
+        - group_state == 'absent'
   tasks:
     - name: create group in Edge Management
       consoledot.edgemanagement.groups:
-        name: "{{ demo_uuid }}"
+        name: "{{ edge_management_group }}"
         state: "{{ group_state | default('present') }}"
+      loop_control:
+        loop_var: edge_management_group
+      loop: "{{ edge_management_groups }}"
