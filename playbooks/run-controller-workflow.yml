@@ -1,0 +1,8 @@
+---
+
+- name: run workflow on specified ansible controller
+  hosts:
+    - all
+  gather_facts: no
+  roles:
+    - redhat_cop.controller_configuration.workflow_launch
