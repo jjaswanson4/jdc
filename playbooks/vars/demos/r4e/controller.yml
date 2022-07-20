@@ -305,7 +305,7 @@ controller_templates:
     allow_simultaneous: yes
     credentials:
       - Edge User Credentials
-  - name: Teardown Edge Systems
+  - name: Delete Edge Systems
     inventory: "{  { audience }} Edge Systems"
     project: "{  { audience }} Edge Management Codebase"
     organization: "{  { audience }}"
@@ -418,8 +418,8 @@ controller_workflows:
           - Teardown Edge Systems
           - Delete Hosts from Controller Inventory
           - Delete Edge Installer ISO
-      - identifier: Teardown Edge Systems
-        unified_job_template: Teardown Edge Systems
+      - identifier: Delete Edge Systems
+        unified_job_template: Delete Edge Systems
       - identifier: Delete Hosts from Controller Inventory
         unified_job_template: Delete Hosts from Controller Inventory
       - identifier: Delete Edge Installer ISO
