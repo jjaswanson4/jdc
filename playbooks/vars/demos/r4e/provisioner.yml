@@ -298,6 +298,7 @@ controller_workflows:
           - Demo Provisioner vCenter Credentials
           - Demo Provisioner Edge User Credentials
           - Demo Provisioner Console Dot Credentials
+          - Demo Provisioner Console Dot Offline Token
         success_nodes:
           - Send Success Email
         failure_nodes:
@@ -408,6 +409,7 @@ controller_workflows:
           - Demo Provisioner vCenter Credentials
           - Demo Provisioner Edge User Credentials
           - Demo Provisioner Console Dot Credentials
+          - Demo Provisioner Console Dot Offline Token
         always_nodes:
           - Teardown Edge Systems
           - Remove Demo Group In Edge Management
