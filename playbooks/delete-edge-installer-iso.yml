@@ -1,0 +1,33 @@
+---
+
+- name: delete edge installer isos
+  hosts:
+    - all
+  pre_tasks:
+    - name: ensure nfs-utils are present
+      ansible.builtin.dnf:
+        name: nfs-utils
+  tasks:
+    - name: mount datastore path
+      ansible.posix.mount:
+        src: 10.15.120.250:/mnt/data01/vmware-datastore
+        path: /mnt/vmware-datastore
+        fstype: nfs
+        state: mounted
+
+    - name: delete installer isos
+      ansible.builtin.file:
+        path: "/mnt/vmware-datastore/iso/{{ iso }}"
+        state: absent
+      loop_control:
+        loop_var: iso
+      loop:
+        - "{{ demo_uuid }}-rhel-edge-hmi-image.iso"
+        - "{{ demo_uuid }}-rhel-edge-pcs-image.iso"
+        - "{{ demo_uuid }}-rhel-edge-isd-image.iso"
+
+    - name: unmount datastore path
+      ansible.posix.mount:
+        path: /mnt/vmware-datastore
+        fstype: nfs
+        state: unmounted
