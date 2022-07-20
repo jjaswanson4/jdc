@@ -329,7 +329,7 @@ controller_templates:
     project: "{  { audience }} Edge Management Codebase"
     limit: "edge-utilities.{{ demo_uuid }}.{{ base_dns_suffix }}"
     organization: "{  { audience }}"
-    playbook: playbooks/build-edge-workload.yml
+    playbook: playbooks/delete-edge-installer-iso.yml
     execution_environment: Josh's Demos Collection EE
     credentials:
       - Root Credentials
