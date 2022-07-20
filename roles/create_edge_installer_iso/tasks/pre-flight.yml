@@ -24,6 +24,13 @@
     size: 24g
     resizefs: yes
 
+- name: ensure / is big enough
+  community.general.lvol:
+    vg: os
+    lv: var
+    size: 12g
+    resizefs: yes
+
 # dirty workaround since vmware_copy module doesn't work
 - name: install nfs-utils
   ansible.builtin.dnf:
