@@ -83,6 +83,17 @@ controller_credential_types:
         ansible_user: "{  { console_dot_username }}"
         ansible_httpapi_pass: "{  { console_dot_password }}"
         ansible_httpapi_use_ssl: 'yes'
+  - name: Console Dot Offline Token
+    kind: cloud
+    inputs:
+      fields:
+        - id: console_dot_offline_token
+          type: string
+          label: Console Dot Offline Token
+          secret: yes
+    injectors:
+      extra_vars:
+        console_dot_offline_token: "{  { console_dot_offline_token }}"
 
 controller_credentials:
   - name: Automation Hub Image Registry Credentials
@@ -123,6 +134,9 @@ controller_credentials:
   - name: Console Dot API Connection Settings
     organization: "{  { audience }}"
     credential_type: Console Dot API Connection Settings
+  - name: Console Dot Offline Token
+    organization: "{  { audience }}"
+    credential_type: Console Dot Offline Token
 
 controller_execution_environments:
   - name: Josh's Demos Collection EE
@@ -237,7 +251,7 @@ controller_templates:
     become_enabled: yes
     allow_simultaneous: yes
     credentials:
-      - Console Dot API Connection Settings
+      - Console Dot Offline Token
   - name: Create Edge Devices Inventory
     inventory: "{  { audience }} Edge Utilities"
     limit: "edge-utilities.{{ demo_uuid }}.{{ base_dns_suffix }}"
