@@ -19,7 +19,7 @@
         inventory: "{{ audience }} Edge Systems"
         variables:
           system_type: hmi
-          edge_management_group_name: Human_Machine_interfaces
+          edge_management_group_name: Human_Machine_Interfaces
       - name: process_control_system
         inventory: "{{ audience }} Edge Systems"
         variables:
