@@ -305,6 +305,34 @@ controller_templates:
     allow_simultaneous: yes
     credentials:
       - Edge User Credentials
+  - name: Teardown Edge Systems
+    inventory: "{  { audience }} Edge Systems"
+    project: "{  { audience }} Edge Management Codebase"
+    organization: "{  { audience }}"
+    playbook: playbooks/teardown-virtual-machine.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - vCenter Credentials
+  - name: Delete Hosts from Controller Inventory
+    inventory: "{  { audience }} Edge Systems"
+    project: "{  { audience }} Edge Management Codebase"
+    organization: "{  { audience }}"
+    playbook: playbooks/delete-hosts-from-controller-inventory.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - Controller API Credentials
+    extra_vars:
+      ansible_connection: local
+      controller_inventory: "{  { audience }} Edge Systems"
+  - name: Delete Edge Installer ISO
+    inventory: "{  { audience }} Edge Utilities"
+    project: "{  { audience }} Edge Management Codebase"
+    limit: "edge-utilities.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    organization: "{  { audience }}"
+    playbook: playbooks/build-edge-workload.yml
+    execution_environment: Josh's Demos Collection EE
+    credentials:
+      - Root Credentials
 
 controller_workflows:
   - name: Deploy Edge Systems
@@ -379,3 +407,20 @@ controller_workflows:
         unified_job_template: Add Device to Edge Management Group
       - identifier: Deploy Edge Workload
         unified_job_template: Deploy Edge Workload
+
+  - name: Teardown Edge Systems
+    organization: "{  { audience }}"
+    state: present
+    simplified_workflow_nodes:
+      - identifier: Disconnect From Consoledot
+        unified_job_template: Disconnect from Consoledot
+        success_nodes:
+          - Teardown Edge Systems
+          - Delete Hosts from Controller Inventory
+          - Delete Edge Installer ISO
+      - identifier: Teardown Edge Systems
+        unified_job_template: Teardown Edge Systems
+      - identifier: Delete Hosts from Controller Inventory
+        unified_job_template: Delete Hosts from Controller Inventory
+      - identifier: Delete Edge Installer ISO
+        unified_job_template: Delete Edge Installer ISO
