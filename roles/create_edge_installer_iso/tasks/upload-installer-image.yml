@@ -33,6 +33,6 @@
 
 - name: unmount datastore path
   ansible.posix.mount:
-    path: /mnt/vmware-datastore
+    path: "/mnt/{{ source_installer_image }}/vmware-datastore"
     fstype: nfs
     state: unmounted
