@@ -322,24 +322,24 @@ controller_workflows:
           required: no
           default: "https://{  { audience | lower }}.com"
     simplified_workflow_nodes:
-      - identifier: Create Human Machine Interface Installer ISO
-        unified_job_template: Create Edge Installer ISO
-        extra_data:
-          source_installer_image: rhel-edge-hmi-image.iso
+      - identifier: Build Edge Workload
+        unified_job_template: Build Edge Workload
         success_nodes:
-          - Provision Edge Systems
+          - Create Process Control System Installer ISO
       - identifier: Create Process Control System Installer ISO
         unified_job_template: Create Edge Installer ISO
         extra_data:
           source_installer_image: rhel-edge-pcs-image.iso
         success_nodes:
-          - Provision Edge Systems
+          - Create Human Machine Interface Installer ISO
+      - identifier: Create Human Machine Interface Installer ISO
+        unified_job_template: Create Edge Installer ISO
+        extra_data:
+          source_installer_image: rhel-edge-hmi-image.iso
+        success_nodes:
+          - Create Edge Devices Inventory
       - identifier: Create Edge Devices Inventory
         unified_job_template: Create Edge Devices Inventory
-        success_nodes:
-          - Provision Edge Systems
-      - identifier: Build Edge Workload
-        unified_job_template: Build Edge Workload
         success_nodes:
           - Provision Edge Systems
       - identifier: Provision Edge Systems
