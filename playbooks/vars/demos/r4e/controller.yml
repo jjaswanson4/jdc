@@ -415,7 +415,7 @@ controller_workflows:
       - identifier: Disconnect From Consoledot
         unified_job_template: Disconnect from Consoledot
         success_nodes:
-          - Teardown Edge Systems
+          - Delete Edge Systems
           - Delete Hosts from Controller Inventory
           - Delete Edge Installer ISO
       - identifier: Delete Edge Systems
