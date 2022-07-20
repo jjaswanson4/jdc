@@ -282,6 +282,19 @@ controller_templates:
     ask_variables_on_launch: yes
     extra_vars:
       ansible_connection: local
+  - name: Run Controller Workflow
+    organization: Demo Provisioner
+    inventory: Demo Inventory
+    ask_inventory_on_launch: yes
+    ask_limit_on_launch: yes
+    project: Josh's Demos Collection
+    allow_simultaneous: yes
+    playbook: playbooks/run-controller-workflow.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_credential_on_launch: yes
+    ask_variables_on_launch: yes
+    extra_vars:
+      ansible_connection: local
   - name: Manage DNS Records
     organization: Demo Provisioner
     ask_inventory_on_launch: yes
