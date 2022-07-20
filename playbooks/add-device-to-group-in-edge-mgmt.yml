@@ -1,5 +1,27 @@
 ---
 
+# - name: add device to group in edge management
+#   hosts:
+#     - all
+#   gather_facts: no
+#   pre_tasks:
+#     - name: get information about the device from console dot
+#       consoledot.edgemanagement.devices_info:
+#       register: device_info
+#       delegate_to: console.redhat.com
+#     - name: set device ID fact
+#       ansible.builtin.set_fact:
+#         device_id: "{{ device_info.devices | json_query('data[*].Device') | json_query(json_query) | join | int }}"
+#       vars:
+#         json_query: "[?Name=='{{ inventory_hostname }}'].ID"
+#   tasks:
+#     - name: add device to group
+#       consoledot.edgemanagement.add_devices_to_group:
+#         name: "{{ demo_uuid }}"
+#         devices: "{{ device_id }}"
+#         state: "{{ group_membership_state | default('present') }}"
+#       delegate_to: console.redhat.com
+
 - name: auth with console dot
   hosts:
     - all
@@ -20,33 +42,47 @@
   tasks:
     - name: run tasks from localhost
       block:
-        # - name: get group ID
-        #   ansible.builtin.uri:
-        #     url: https://console.redhat.com/api/edge/v1/device-groups?name={{ demo_uuid }}
-        #   register: edge_management_group
-        # - name: get device ID
-        #   ansible.builtin.uri:
-        #     url: https://console.redhat.com/api/edge/v1/devices?hostname_or_id={{ inventory_hostname }}
-        #   register: device_info
-        #   until: "'Device' in device_info.content"
-        #   retries: 10
-        #   delay: 60
-        # - name: add device to group
-        #   ansible.builtin.uri:
-        #     url: https://console.redhat.com/api/edge/v1/device-groups/{{ edge_management_group.content | from_json | json_query('data[0].DeviceGroup.ID') }}/devices
-        #     method: POST
-        #     body_format: json
-        #     body: >
-        #       {
-        #         "ID": {{ edge_management_group.content | from_json | json_query('data[0].DeviceGroup.ID') | int }},
-        #         "Devices": [
-        #           {
-        #             "ID": {{ device_info.content | from_json | json_query('data[0].Device.ID') | int }}
-        #           }
-        #         ]
-        #       }
-        - name: Get information about the device from console dot
-          maxamillion.fleetmanager.devices_info:
-            name: "{{ inventory_hostname }}"
+        - name: get device ID
+          ansible.builtin.uri:
+            url: https://console.redhat.com/api/edge/v1/devices?hostname_or_id={{ inventory_hostname }}
           register: device_info
+          until: "'Device' in device_info.content"
+          retries: 10
+          delay: 60
+        - name: get demo group ID
+          ansible.builtin.uri:
+            url: https://console.redhat.com/api/edge/v1/device-groups?name={{ demo_uuid }}
+          register: demo_edge_management_group
+        - name: get system type group ID
+          ansible.builtin.uri:
+            url: https://console.redhat.com/api/edge/v1/device-groups?name={{ edge_management_group_name }}
+          register: system_edge_management_group
+        - name: add device to demo group
+          ansible.builtin.uri:
+            url: https://console.redhat.com/api/edge/v1/device-groups/{{ demo_edge_management_group.content | from_json | json_query('data[0].DeviceGroup.ID') }}/devices
+            method: POST
+            body_format: json
+            body: >
+              {
+                "ID": {{ demo_edge_management_group.content | from_json | json_query('data[0].DeviceGroup.ID') | int }},
+                "Devices": [
+                  {
+                    "ID": {{ device_info.content | from_json | json_query('data[0].Device.ID') | int }}
+                  }
+                ]
+              }
+        - name: add device to system group
+          ansible.builtin.uri:
+            url: https://console.redhat.com/api/edge/v1/device-groups/{{ system_edge_management_group.content | from_json | json_query('data[0].DeviceGroup.ID') }}/devices
+            method: POST
+            body_format: json
+            body: >
+              {
+                "ID": {{ system_edge_management_group.content | from_json | json_query('data[0].DeviceGroup.ID') | int }},
+                "Devices": [
+                  {
+                    "ID": {{ device_info.content | from_json | json_query('data[0].Device.ID') | int }}
+                  }
+                ]
+              }
       delegate_to: localhost
