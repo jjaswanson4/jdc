@@ -1,0 +1,12 @@
+---
+
+- name: remove hosts from an inventory in controller
+  hosts:
+    - all
+  vars:
+    controller_hosts:
+      - name: "{{ inventory_hostname }}"
+        inventory: "{{ controller_inventory }}"
+        state: absent
+  roles:
+    - redhat_cop.controller_configuration.hosts
