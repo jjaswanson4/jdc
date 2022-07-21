@@ -14,6 +14,7 @@
           demo: "{{ demo }}"
           demo_uuid: "{{ demo_uuid }}"
           edge_workload: "{{ edge_workload }}"
+          base_dns_suffix: "{{ base_dns_suffix }}"
     controller_groups:
       - name: human_machine_interface
         inventory: "{{ audience }} Edge Systems"
