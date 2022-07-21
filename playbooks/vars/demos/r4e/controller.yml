@@ -306,7 +306,7 @@ controller_templates:
     credentials:
       - Edge User Credentials
   - name: Delete Edge Systems
-    inventory: "{  { audience }} Edge Systems"
+    inventory: Local Actions
     project: "{  { audience }} Edge Management Codebase"
     organization: "{  { audience }}"
     playbook: playbooks/manage-rhel-edge-system.yml
