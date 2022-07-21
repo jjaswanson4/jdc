@@ -95,6 +95,16 @@
           when:
             - vm_state is defined
             - vm_state == 'absent'
+      rescue:
+        - name: print debug msg
+          ansible.builtin.debug:
+            msg: "System {{ system }} already not available, rescuing..."
+          loop_control:
+            loop_var: system
+          loop: "{{ systems_to_build }}"
+          when:
+            - vm_state is defined
+            - vm_state == 'absent'        
       always:
         - name: delete virtual rhel for edge system
           community.vmware.vmware_guest:
