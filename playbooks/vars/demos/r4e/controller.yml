@@ -225,7 +225,7 @@ controller_templates:
     inventory: Local Actions
     project: "{  { audience }} Edge Management Codebase"
     organization: "{  { audience }}"
-    playbook: playbooks/provision-rhel-edge-system.yml
+    playbook: playbooks/manage-rhel-edge-system.yml
     execution_environment: Josh's Demos Collection EE
     credentials:
       - vCenter Credentials
@@ -309,12 +309,14 @@ controller_templates:
     inventory: "{  { audience }} Edge Systems"
     project: "{  { audience }} Edge Management Codebase"
     organization: "{  { audience }}"
-    playbook: playbooks/teardown-virtual-machine.yml
+    playbook: playbooks/manage-rhel-edge-system.yml
     execution_environment: Josh's Demos Collection EE
     credentials:
       - vCenter Credentials
+    extra_vars:
+      vm_state: absent
   - name: Delete Hosts from Controller Inventory
-    inventory: "{  { audience }} Edge Systems"
+    inventory: Local Actions
     project: "{  { audience }} Edge Management Codebase"
     organization: "{  { audience }}"
     playbook: playbooks/delete-hosts-from-controller-inventory.yml
@@ -322,7 +324,6 @@ controller_templates:
     credentials:
       - Controller API Credentials
     extra_vars:
-      ansible_connection: local
       controller_inventory: "{  { audience }} Edge Systems"
   - name: Delete Edge Installer ISO
     inventory: "{  { audience }} Edge Utilities"
@@ -415,12 +416,17 @@ controller_workflows:
       - identifier: Disconnect From Consoledot
         unified_job_template: Disconnect from Consoledot
         success_nodes:
-          - Delete Edge Systems
-          - Delete Hosts from Controller Inventory
           - Delete Edge Installer ISO
-      - identifier: Delete Edge Systems
-        unified_job_template: Delete Edge Systems
-      - identifier: Delete Hosts from Controller Inventory
-        unified_job_template: Delete Hosts from Controller Inventory
+          - Delete Edge Systems
       - identifier: Delete Edge Installer ISO
         unified_job_template: Delete Edge Installer ISO
+        success_nodes:
+          - Delete Hosts from Controller Inventory
+      - identifier: Delete Edge Systems
+        unified_job_template: Delete Edge Systems
+        success_nodes:
+          - Delete Hosts from Controller Inventory
+      - identifier: Delete Hosts from Controller Inventory
+        unified_job_template: Delete Hosts from Controller Inventory
+        all_parents_must_converge: yes
+
