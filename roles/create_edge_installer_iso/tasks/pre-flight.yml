@@ -27,7 +27,7 @@
 - name: ensure / is big enough
   community.general.lvol:
     vg: os
-    lv: var
+    lv: root
     size: 12g
     resizefs: yes
 
