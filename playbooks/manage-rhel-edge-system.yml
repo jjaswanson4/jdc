@@ -32,7 +32,23 @@
           - name: "in-store-display-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
             installer_iso: "{{ demo_uuid }}-rhel-edge-hmi-image.iso"
       when:
-        - edge_workload == 'In-Store Display'      
+        - edge_workload == 'In-Store Display' 
+    - name: define list of systems to build | Kitchen Sink
+      ansible.builtin.set_fact:
+        systems_to_build:
+          - name: "process-control-system-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+            installer_iso: "{{ demo_uuid }}-rhel-edge-pcs-image.iso"
+          - name: "human-machine-interface-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+            installer_iso: "{{ demo_uuid }}-rhel-edge-hmi-image.iso" 
+          - name: "in-store-display-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+            installer_iso: "{{ demo_uuid }}-rhel-edge-hmi-image.iso"
+          - name: "in-store-display-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+            installer_iso: "{{ demo_uuid }}-rhel-edge-hmi-image.iso"
+          - name: "in-store-display-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
+            installer_iso: "{{ demo_uuid }}-rhel-edge-hmi-image.iso"
+      when:
+        - edge_workload is not defined or
+          edge_workload == "Kitchen Sink"
   tasks:
     - name: provision rhel for edge system
       community.vmware.vmware_guest:
@@ -74,6 +90,10 @@
             loop_var: system
             pause: 10
           loop: "{{ systems_to_build }}"
+          when:
+            - vm_state is defined
+            - vm_state == 'absent'  
+      always:
         - name: delete virtual rhel for edge system
           community.vmware.vmware_guest:
             name: "{{ system.name }}"
@@ -82,8 +102,8 @@
             loop_var: system
             pause: 10
           loop: "{{ systems_to_build }}"
-      when:
-        - vm_state is defined
-        - vm_state == 'absent'  
+          when:
+            - vm_state is defined
+            - vm_state == 'absent'  
 
 
