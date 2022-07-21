@@ -21,6 +21,7 @@
           - name: "human-machine-interface-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
             installer_iso: "{{ demo_uuid }}-rhel-edge-hmi-image.iso"
       when:
+        - edge_workload is defined
         - edge_workload == 'Process Control'
     - name: define list of systems to build | In-Store Display
       ansible.builtin.set_fact:
@@ -32,6 +33,7 @@
           - name: "in-store-display-1.{{ demo_uuid }}.{{ base_dns_suffix }}"
             installer_iso: "{{ demo_uuid }}-rhel-edge-hmi-image.iso"
       when:
+        - edge_workload is defined
         - edge_workload == 'In-Store Display' 
     - name: define list of systems to build | Kitchen Sink
       ansible.builtin.set_fact:
@@ -92,7 +94,7 @@
           loop: "{{ systems_to_build }}"
           when:
             - vm_state is defined
-            - vm_state == 'absent'  
+            - vm_state == 'absent'
       always:
         - name: delete virtual rhel for edge system
           community.vmware.vmware_guest:
