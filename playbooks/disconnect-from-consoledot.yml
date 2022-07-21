@@ -4,12 +4,11 @@
   hosts:
     - all
   tasks:
-    - name: let tasks run and "fail" if needed
-      block:
-        - name: disconnect insights
-          ansible.builtin.shell:
-            cmd: insights-client --unregister
-        - name: disconnect red hat connector
-          ansible.builtin.shell:
-            cmd: rhc disconnect
+    - name: disconnect insights
+      ansible.builtin.shell:
+        cmd: insights-client --unregister
+      failed_when: false
+    - name: disconnect red hat connector
+      ansible.builtin.shell:
+        cmd: rhc disconnect
       failed_when: false
