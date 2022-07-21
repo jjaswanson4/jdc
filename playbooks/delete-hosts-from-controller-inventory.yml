@@ -3,10 +3,31 @@
 - name: remove hosts from an inventory in controller
   hosts:
     - all
-  vars:
-    controller_hosts:
-      - name: "{{ inventory_hostname }}"
-        inventory: "{{ controller_inventory }}"
-        state: absent
-  roles:
-    - redhat_cop.controller_configuration.hosts
+  gather_facts: false
+  module_defaults:
+    ansible.builtin.uri:
+      user: "{{ controller_username }}"
+      password: "{{ controller_password }}"
+      force_basic_auth: yes
+      validate_certs: "{{ controller_validate_certs }}"
+  pre_tasks:
+    - name: get inventory ID
+      ansible.builtin.uri:
+        url: "https://{{ controller_hostname }}/api/v2/inventories/?name={{ controller_inventory | regex_replace(' ', '%20') }}"
+      register: controller_inventory_query
+    - name: get hosts in inventory
+      ansible.builtin.uri:
+        url: "https://{{ controller_hostname }}/api/v2/inventories/{{ controller_inventory_query.json.results[0].id }}/hosts"
+      register: hosts_in_inventory
+  tasks:
+    - name: delete hosts in inventory {{ controller_inventory }}
+      ansible.builtin.uri:
+        url: "https://{{ controller_hostname }}/api/v2/hosts/{{ host.id }}/"
+        method: DELETE
+        status_code:
+          - 204
+      register: host_delete
+      loop_control:
+        loop_var: host
+      loop: "{{ hosts_in_inventory.json.results }}"
+      
