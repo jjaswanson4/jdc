@@ -98,7 +98,7 @@
       rescue:
         - name: print debug msg
           ansible.builtin.debug:
-            msg: "System {{ system }} already not available, rescuing..."
+            msg: "System {{ system.name }} already not available, rescuing..."
           loop_control:
             loop_var: system
           loop: "{{ systems_to_build }}"
