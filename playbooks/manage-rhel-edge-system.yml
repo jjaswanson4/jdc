@@ -4,6 +4,14 @@
   hosts:
     - all
   gather_facts: no
+  module_defaults:
+    community.vmware.vmware_guest:
+      hostname: "{{ vcenter_hostname }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+      validate_certs: "{{ vcenter_validate_certs }}"
+      datacenter: "{{ vcenter_datacenter }}"
+      datastore: "{{ vcenter_datastore }}"
   pre_tasks:
     - name: define list of systems to build | Process Control
       ansible.builtin.set_fact:
@@ -28,12 +36,6 @@
   tasks:
     - name: provision rhel for edge system
       community.vmware.vmware_guest:
-        hostname: "{{ vcenter_hostname }}"
-        username: "{{ vcenter_username }}"
-        password: "{{ vcenter_password }}"
-        validate_certs: "{{ vcenter_validate_certs }}"
-        datacenter: "{{ vcenter_datacenter }}"
-        datastore: "{{ vcenter_datastore }}"
         folder: "/Demos/{{ demo_uuid }}/"
         name: "{{ system.name }}"
         state: poweredon
@@ -59,4 +61,29 @@
         loop_var: system
         pause: 10
       loop: "{{ systems_to_build }}"
+      when:
+        - vm_state is not defined or
+          (vm_state is defined and vm_state == 'poweredon')
+    - name: block of tasks to remove systems
+      block:
+        - name: power off virtual rhel for edge system
+          community.vmware.vmware_guest:
+            name: "{{ system.name }}"
+            state: poweredoff
+          loop_control:
+            loop_var: system
+            pause: 10
+          loop: "{{ systems_to_build }}"
+        - name: delete virtual rhel for edge system
+          community.vmware.vmware_guest:
+            name: "{{ system.name }}"
+            state: absent
+          loop_control:
+            loop_var: system
+            pause: 10
+          loop: "{{ systems_to_build }}"
+      when:
+        - vm_state is defined
+        - vm_state == 'absent'  
+
 
