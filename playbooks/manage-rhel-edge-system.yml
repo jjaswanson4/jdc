@@ -77,7 +77,7 @@
       register: deploy_vm
       loop_control:
         loop_var: system
-        pause: 10
+        pause: 5
       loop: "{{ systems_to_build }}"
       when:
         - vm_state is not defined or
@@ -90,7 +90,7 @@
             state: poweredoff
           loop_control:
             loop_var: system
-            pause: 10
+            pause: 5
           loop: "{{ systems_to_build }}"
           when:
             - vm_state is defined
@@ -102,7 +102,7 @@
             state: absent
           loop_control:
             loop_var: system
-            pause: 10
+            pause: 5
           loop: "{{ systems_to_build }}"
           when:
             - vm_state is defined
