@@ -20,19 +20,19 @@
         inventory: "{{ audience }} Edge Systems"
         variables:
           system_type: hmi
-          edge_management_group_name: Human_Machine_Interfaces
+          edge_management_group_name: Human Machine Interfaces
       - name: process_control_system
         inventory: "{{ audience }} Edge Systems"
         variables:
           system_type: pcs
           edge_workload_info: "{{ edge_workload_info }}"
-          edge_management_group_name: Process_Control_Systems
+          edge_management_group_name: Process Control Systems
       - name: in_store_display
         inventory: "{{ audience }} Edge Systems"
         variables:
           system_type: isd
           display_website: "{{ display_website }}"
-          edge_management_group_name: In-Store_Displays
+          edge_management_group_name: In-Store Displays
   roles:
     - redhat_cop.controller_configuration.inventories
     - redhat_cop.controller_configuration.groups
