@@ -25,7 +25,7 @@
   tasks:
     - name: create group in Edge Management
       consoledot.edgemanagement.groups:
-        name: "{{ edge_management_group  | regex_replace(' ', '_') }}"
+        name: "{{ edge_management_group }}"
         state: "{{ group_state | default('present') }}"
       loop_control:
         loop_var: edge_management_group
