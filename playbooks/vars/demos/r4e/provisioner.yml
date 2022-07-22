@@ -395,7 +395,7 @@ controller_workflows:
       demo: r4e
     simplified_workflow_nodes:
       - identifier: Run Controller Workflow to Cleanup Edge Systems
-        unified_job_template: Run Controller WOrkflow
+        unified_job_template: Run Controller Workflow
         limit: controller
         extra_data:
           controller_launch_jobs:
