@@ -145,7 +145,7 @@ controller_credentials:
     credential_type: Console Dot Offline Token
   - name: Console Dot Credentials
     organization: "{  { audience }}"
-    credential_type: Demo Console Dot Credentials
+    credential_type: Console Dot Credentials
 
 controller_execution_environments:
   - name: Josh's Demos Collection EE
