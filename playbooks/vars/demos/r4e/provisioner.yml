@@ -411,7 +411,6 @@ controller_workflows:
           - Demo Provisioner Console Dot Credentials
           - Demo Provisioner Console Dot Offline Token
         always_nodes:
-          - Teardown Edge Systems
           - Remove Demo Group In Edge Management
           - Teardown Management and Utility Systems
       - identifier: Unregister from Insights
@@ -431,14 +430,6 @@ controller_workflows:
           group_state: absent
         always_nodes:
           - Remove Demo Context
-      - identifier: Teardown Edge Systems
-        unified_job_template: Teardown Edge Systems
-        limit: edge_systems
-        credentials:
-          - Demo Provisioner Admin Credentials
-          - Demo Provisioner vCenter Credentials
-        always_nodes:
-          - Remove Demo Context     
       - identifier: Teardown Management and Utility Systems
         unified_job_template: Teardown Systems
         limit: 'utility_server:controller:hub'
