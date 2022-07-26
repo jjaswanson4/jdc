@@ -260,7 +260,7 @@ controller_templates:
     become_enabled: yes
     allow_simultaneous: yes
     credentials:
-      - Console Dot 
+      - Console Dot Credentials
       - Console Dot API Connection Settings
   - name: Create Edge Devices Inventory
     inventory: "{  { audience }} Edge Utilities"
