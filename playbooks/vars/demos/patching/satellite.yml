@@ -263,7 +263,7 @@ satellite:
         - name: cv-r4s-netweaver-rhel8.4
           repos:
             - repo: Red Hat Enterprise Linux 8 for x86_64 - SAP NetWeaver - Update Services for SAP Solutions (RPMs)
-              product: RHEL for SAP - Update Services for SAP Solutions
+              product: Red Hat Enterprise Linux for x86_64 - Update Services for SAP Solutions
               releasever: 8.4
         - name: cv-r4h-hana-rhel8.4
           repos:
@@ -278,7 +278,7 @@ satellite:
         - name: cv-e4s-highavailability-rhel8.4
           repos:
             - repo: Red Hat Enterprise Linux 8 for x86_64 - High Availability - Update Services for SAP Solutions (RPMs)
-              product: Red Hat Enterprise Linux High Availability - Update Services for SAP Solutions
+              product: Red Hat Enterprise Linux High Availability for x86_64 - Update Services for SAP Solutions 
               releasever: 8.4
         ##### Jump to 8.6 #####
         - name: cv-e4s-server-rhel8.6
@@ -294,7 +294,7 @@ satellite:
         - name: cv-r4s-netweaver-rhel8.6
           repos:
             - repo: Red Hat Enterprise Linux 8 for x86_64 - SAP NetWeaver - Update Services for SAP Solutions (RPMs)
-              product: RHEL for SAP - Update Services for SAP Solutions
+              product: Red Hat Enterprise Linux for x86_64 - Update Services for SAP Solutions
               releasever: 8.6
         - name: cv-r4h-hana-rhel8.4
           repos:
@@ -309,7 +309,7 @@ satellite:
         - name: cv-e4s-highavailability-rhel8.6
           repos:
             - repo: Red Hat Enterprise Linux 8 for x86_64 - High Availability - Update Services for SAP Solutions (RPMs)
-              product: Red Hat Enterprise Linux High Availability - Update Services for SAP Solutions
+              product: Red Hat Enterprise Linux High Availability for x86_64 - Update Services for SAP Solutions 
               releasever: 8.6
         - name: cv-server-rhel8
           repos:
