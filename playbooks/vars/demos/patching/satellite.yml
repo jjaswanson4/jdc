@@ -253,14 +253,13 @@ satellite:
         - name: cv-e4s-server-rhel8.4
           repos:
             - repo: Red Hat Enterprise Linux 8 for x86_64 - BaseOS - Update Services for SAP Solutions (RPMs)
-              product: Red Hat Enterprise Linux Server - Update Services for SAP Solutions
+              product: Red Hat Enterprise Linux for x86_64 - Update Services for SAP Solutions
               releasever: 8.4
         - name: cv-e4s-appstream-rhel8.4
           repos:
             - repo: Red Hat Enterprise Linux 8 for x86_64 - AppStream - Update Services for SAP Solutions (RPMs)
-              product: Red Hat Enterprise Linux Server - Update Services for SAP Solutions
+              product: Red Hat Enterprise Linux for x86_64 - Update Services for SAP Solutions
               releasever: 8.4
-              basearch: x86_64
         - name: cv-r4s-netweaver-rhel8.4
           repos:
             - repo: Red Hat Enterprise Linux 8 for x86_64 - SAP NetWeaver - Update Services for SAP Solutions (RPMs)
@@ -285,12 +284,12 @@ satellite:
         - name: cv-e4s-server-rhel8.6
           repos:
             - repo: Red Hat Enterprise Linux 8 for x86_64 - BaseOS - Update Services for SAP Solutions (RPMs)
-              product: Red Hat Enterprise Linux Server - Update Services for SAP Solutions
+              product: Red Hat Enterprise Linux for x86_64 - Update Services for SAP Solutions
               releasever: 8.6
         - name: cv-e4s-appstream-rhel8.6
           repos:
             - repo: Red Hat Enterprise Linux 8 for x86_64 - AppStream - Update Services for SAP Solutions (RPMs)
-              product: Red Hat Enterprise Linux Server - Update Services for SAP Solutions
+              product: Red Hat Enterprise Linux for x86_64 - Update Services for SAP Solutions
               releasever: 8.6
         - name: cv-r4s-netweaver-rhel8.6
           repos:
