@@ -321,9 +321,9 @@ satellite:
             - repo: Red Hat Enterprise Linux 8 for x86_64 - AppStream (RPMs)
               product: Red Hat Enterprise Linux for x86_64
               releasever: 8
-        - name: cv-satellitetools6.10-rhel8
+        - name: cv-satelliteclient-rhel8
           repos:
-            - repo: Red Hat Satellite Tools 6.10 for RHEL 8 x86_64 (RPMs)
+            - repo: Red Hat Satellite Client 6 for RHEL 8 x86_64 (RPMs)
               product: Red Hat Enterprise Linux for x86_64
       composite_content_views:
         - name: composite-rhel8
@@ -334,17 +334,17 @@ satellite:
             - name: cv-e4s-appstream-rhel8.4
             - name: cv-r4s-netweaver-rhel8.4
             - name: cv-r4h-hana-rhel8.4
-            - name: cv-e4s-satellitetools6.10-rhel8.4
+            - name: cv-e4s-satelliteclient-rhel8.4
             - name: cv-e4s-highavailability-rhel8.4
             - name: cv-e4s-server-rhel8.6
             - name: cv-e4s-appstream-rhel8.6
             - name: cv-r4s-netweaver-rhel8.6
             - name: cv-r4h-hana-rhel8.6
-            - name: cv-e4s-satellitetools6.10-rhel8.6
+            - name: cv-e4s-satelliteclient-rhel8.6
             - name: cv-e4s-highavailability-rhel8.6
             - name: cv-server-rhel8
             - name: cv-appstream-rhel8
-            - name: cv-satellitetools6.10-rhel8
+            - name: cv-satelliteclient-rhel8
             - name: cv-kickstart-rhel8.4
             - name: cv-kickstart-rhel8.6
       activation_keys:
