@@ -81,7 +81,7 @@ satellite:
         organizations:
           - name: "{  { audience }}"
     settings:
-      - name: sync_connect_timeout
+      - name: sync_connect_timeout_v2
         value: 3600
       - name: default_proxy_download_policy
         value: on_demand
