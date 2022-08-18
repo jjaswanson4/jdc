@@ -259,7 +259,8 @@ satellite:
           repos:
             - repo: Red Hat Enterprise Linux 8 for x86_64 - AppStream - Update Services for SAP Solutions (RPMs)
               product: Red Hat Enterprise Linux Server - Update Services for SAP Solutions
-              releasever: 8.4       
+              releasever: 8.4
+              basearch: x86_64
         - name: cv-r4s-netweaver-rhel8.4
           repos:
             - repo: Red Hat Enterprise Linux 8 for x86_64 - SAP NetWeaver - Update Services for SAP Solutions (RPMs)
