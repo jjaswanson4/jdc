@@ -263,17 +263,17 @@ satellite:
         - name: cv-r4s-netweaver-rhel8.4
           repos:
             - repo: Red Hat Enterprise Linux 8 for x86_64 - SAP NetWeaver - Update Services for SAP Solutions (RPMs)
-              product: Red Hat Enterprise Linux for x86_64 - Update Services for SAP Solutions
+              product: Red Hat Enterprise Linux for SAP Applications for x86_64 - Update Services for SAP Solutions
               releasever: 8.4
         - name: cv-r4h-hana-rhel8.4
           repos:
             - repo: Red Hat Enterprise Linux 8 for x86_64 - SAP Solutions - Update Services for SAP Solutions (RPMs)
-              product: RHEL for SAP HANA - Update Services for SAP Solutions
+              product: Red Hat Enterprise Linux for SAP Solutions for x86_64 - Update Services for SAP Solutions
               releasever: 8.4
-        - name: cv-e4s-satellitetools6.10-rhel8.4
+        - name: cv-e4s-satelliteclient-rhel8.4
           repos:
-            - repo: Red Hat Satellite Tools 6.10 for RHEL 8 x86_64 - Update Services SAP Solutions (RPMs)
-              product: Red Hat Enterprise Linux Server - Update Services for SAP Solutions
+            - repo: Red Hat Satellite Client 6 for RHEL 8 x86_64 - Update Services SAP Solutions (RPMs)
+              product: Red Hat Enterprise Linux for x86_64 - Update Services for SAP Solutions
               releasever: 8.4
         - name: cv-e4s-highavailability-rhel8.4
           repos:
@@ -294,17 +294,17 @@ satellite:
         - name: cv-r4s-netweaver-rhel8.6
           repos:
             - repo: Red Hat Enterprise Linux 8 for x86_64 - SAP NetWeaver - Update Services for SAP Solutions (RPMs)
-              product: Red Hat Enterprise Linux for x86_64 - Update Services for SAP Solutions
+              product: Red Hat Enterprise Linux for SAP Applications for x86_64 - Update Services for SAP Solutions
               releasever: 8.6
-        - name: cv-r4h-hana-rhel8.4
+        - name: cv-r4h-hana-rhel8.6
           repos:
             - repo: Red Hat Enterprise Linux 8 for x86_64 - SAP Solutions - Update Services for SAP Solutions (RPMs)
-              product: RHEL for SAP HANA - Update Services for SAP Solutions
+              product: Red Hat Enterprise Linux for SAP Solutions for x86_64 - Update Services for SAP Solutions
               releasever: 8.6
-        - name: cv-e4s-satellitetools6.10-rhel8.6
+        - name: cv-e4s-satelliteclient-rhel8.6
           repos:
-            - repo: Red Hat Satellite Tools 6.10 for RHEL 8 x86_64 - Update Services SAP Solutions (RPMs)
-              product: Red Hat Enterprise Linux Server - Update Services for SAP Solutions
+            - repo: Red Hat Satellite Client 6 for RHEL 8 x86_64 - Update Services SAP Solutions (RPMs)
+              product: Red Hat Enterprise Linux for x86_64 - Update Services for SAP Solutions
               releasever: 8.6
         - name: cv-e4s-highavailability-rhel8.6
           repos:
