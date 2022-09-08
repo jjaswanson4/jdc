@@ -1,0 +1,37 @@
+---
+
+- name: install openvino notebooks for demoing
+  hosts:
+    - all
+  pre_tasks:
+    - name: install some pre-reqs on *EL8
+      ansible.builtin.yum:
+        name:
+          - python36-devel
+          - mesa-libGL
+      when:
+        - ansible_distribution_major_version | int == 8
+    - name: check if venv exists
+      ansible.builtin.stat:
+        path: ~/openvino_venv
+      register: venv_exists
+    - name: setup venv
+      ansible.builtin.shell:
+        cmd: python -m venv ~/openvino_venv
+      when:
+        - not venv_exists.stat.exists
+  tasks:
+    - name: clone git repo
+      ansible.builtin.git:
+        repo: https://github.com/openvinotoolkit/openvino_notebooks.git
+        dest: ~/openvino_notebooks
+        depth: 1
+    - name: upgrade pip
+      ansible.builtin.pip:
+        name: pip
+        state: latest
+        virtualenv: ~/openvino_venv
+    - name: install requirements
+      ansible.builtin.pip:
+        requirements: ~/openvino_notebooks/requirements.txt
+        virtualenv: ~/openvino_venv
