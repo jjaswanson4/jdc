@@ -1,0 +1,73 @@
+---
+
+# - name: auth with console dot
+#   hosts:
+#     - all
+#   gather_facts: no
+#   roles:
+#     - ../roles/auth_with_console_dot
+
+# - name: update edge device
+#   hosts:
+#     - all
+#   gather_facts: false
+#   module_defaults:
+#     ansible.builtin.uri:
+#       headers:
+#         accept: application/json
+#         Authorization: Bearer {{ console_dot_api_access_token }}
+#       return_content: yes
+#   pre_tasks:
+#     - name: get information about the device from console dot
+#       consoledot.edgemanagement.devices_info:
+#       register: device_info
+#       delegate_to: console.redhat.com
+#     - name: set device ID fact
+#       ansible.builtin.set_fact:
+#         device_id: "{{ device_info.devices | json_query('data[*].Device') | json_query(json_query) | join }}"
+#       vars:
+#         json_query: "[?Name=='{{ inventory_hostname }}'].UUID"
+#     # - name: get imageset info
+#     #   consoledot.edgemanagement.imagesets_info:
+#     #     name: rhel-edge-hmi
+#     #   register: imageset_info
+#     #   delegate_to: console.redhat.com
+#     # - name: set imageset ID
+#     #   ansible.builtin.set_fact:
+#     #     imageset_id: "{{ imageset_info.imagesets.Data[0].image_set.ID }}"
+#   tasks:
+#     # - name: update device
+#     #   consoledot.edgemanagement.update_device:
+#     #     name: "{{ device_id }}"
+#     #     imageset_id: "{{ imageset_id }}"
+#     #   register: update_device
+#     #   delegate_to: console.redhat.com
+#     - name: get updates
+#       ansible.builtin.uri:
+#         url: "https://console.redhat.com/api/edge/v1/updates/device/{{ device_id }}"
+#       register: updates
+#     # - debug:
+#     #     msg: "{{ updates.content }}"
+#     - name: update device
+#       ansible.builtin.uri:
+#         url: https://console.redhat.com/api/edge/v1/updates
+#         method: POST
+#         body_format: json
+#         body: >
+#           {
+#             "CommitID": 749,
+#             "DevicesID": [
+#               "280b9f76-6790-42bc-9055-ffd851d5716a"
+#             ]
+#           }
+
+
+- name: trigger device update
+  hosts:
+    - all
+  tasks:
+    - name: trigger device update
+      consoledot.edgemanagement.update_device:
+        name:
+          - edge-005056987d59
+        #imageset_id: 430
