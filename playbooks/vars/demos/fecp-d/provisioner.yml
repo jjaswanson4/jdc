@@ -183,7 +183,7 @@ controller_workflows:
           - Demo Provisioner Netbox Credentials
           - Demo Provisioner Satellite Credentials
           - Demo Provisioner vCenter Credentials
-          - Demo Provisioner Root Account
+          - Demo Provisioner Automation User
         success_nodes:
           - Apply Standard Config to Controller
         failure_nodes:
@@ -196,7 +196,7 @@ controller_workflows:
         unified_job_template: Apply Standard Configuration
         limit: controller
         credentials:
-          - Demo Provisioner Root Account
+          - Demo Provisioner Automation User
         success_nodes:
           - Install Ansible Controller
         failure_nodes:
@@ -209,7 +209,7 @@ controller_workflows:
         unified_job_template: Install Ansible Controller
         limit: controller
         credentials:
-          - Demo Provisioner Root Account
+          - Demo Provisioner Automation User
           - Demo Provisioner Admin Credentials
           - Demo Provisioner Red Hat Registry Credentials
         success_nodes:
@@ -248,7 +248,7 @@ controller_workflows:
           - Demo Provisioner Netbox Credentials
           - Demo Provisioner Satellite Credentials
           - Demo Provisioner vCenter Credentials
-          - Demo Provisioner Root Account
+          - Demo Provisioner Automation User
         success_nodes:
           - Apply Standard Config to Image Builder Server
         failure_nodes:
@@ -261,7 +261,7 @@ controller_workflows:
         unified_job_template: Apply Standard Configuration
         limit: image_builder
         credentials:
-          - Demo Provisioner Root Account
+          - Demo Provisioner Automation User
         success_nodes:
           - Send Success Email
         failure_nodes:
@@ -278,7 +278,7 @@ controller_workflows:
           - Demo Provisioner Netbox Credentials
           - Demo Provisioner Satellite Credentials
           - Demo Provisioner vCenter Credentials
-          - Demo Provisioner Root Account
+          - Demo Provisioner Automation User
         success_nodes:
           - Apply Standard Config to Edge Images Server
         failure_nodes:
@@ -291,7 +291,7 @@ controller_workflows:
         unified_job_template: Apply Standard Configuration
         limit: edge_image_hosting
         credentials:
-          - Demo Provisioner Root Account
+          - Demo Provisioner Automation User
         success_nodes:
           - Send Success Email
         failure_nodes:
