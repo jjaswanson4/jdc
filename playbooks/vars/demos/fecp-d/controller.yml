@@ -1,0 +1,364 @@
+---
+
+cpus: 4
+memory_mb: 16384
+os: rhel9
+application: general
+
+aap_download_url: http://satellite.lab.msp.redhat.com/pub/ansible-automation-platform-setup-latest.tar.gz
+aap_installer_bundle: ansible-automation-platform-setup-latest.tar.gz
+
+controller_install:
+  admin_password: "{  { admin_password }}"
+  pg:
+    password: "{  { admin_password }}"
+
+bootstrap_controller: yes
+
+controller_hostname: "{  { inventory_hostname }}"
+controller_username: "{  { admin_username }}"
+controller_password: "{  { admin_password }}"
+controller_validate_certs: no
+
+controller_configuration_projects_async_retries: 60
+controller_configuration_projects_async_delay: 5
+
+controller_license:
+  manifest: /tmp/controller-manifest.zip
+
+controller_organizations:
+  - name: "{  { audience }}"
+
+controller_credential_types:
+  - name: Automation Hub Image Registry Credentials
+    kind: cloud
+    injectors:
+      extra_vars:
+        hub_image_registry_username: "{  { admin_username }}"
+        hub_image_registry_password: "{  { admin_password }}"
+        hub_image_registry_tls_verify: 'no'
+
+controller_credentials:
+  - name: Automation Hub Image Registry Credentials
+    organization: "{  { audience }}"
+    credential_type: Container Registry
+    inputs:
+      host: hub.lab.msp.redhat.com
+      username: "{  { admin_username }}"
+      password: "{  { admin_password }}"
+      verify_ssl: no
+  - name: Edge User Credentials
+    organization: "{  { audience }}"
+    credential_type: Machine
+    inputs:
+      username: "{  { edge_user_username }}"
+      ssh_key_data: "{  { edge_user_ssh_key_data }}"
+
+controller_execution_environments:
+  - name: Josh's Demos Collection EE
+    image: 'hub.lab.msp.redhat.com/joshs-demos-collection-ee:latest'
+    organization: "{  { audience }}"
+    credential: Automation Hub Image Registry Credentials
+    pull: always
+
+controller_inventories:
+  - name: "{  { audience }} Edge Systems"
+    organization: "{  { audience }}"
+    variables:
+      audience: "{  { audience }}"
+      demo_uuid: "{  { demo_uuid }}"
+  - name: "{  { audience }} Edge Utilities"
+    organization: "{  { audience }}"
+    variables:
+      audience: "{  { audience }}"
+      demo_uuid: "{  { demo_uuid }}"
+  - name: Local Actions
+    organization: "{  { audience }}"
+    variables:
+      audience: "{  { audience }}"
+      demo_uuid: "{  { demo_uuid }}"
+      base_dns_suffix: "{  { base_dns_suffix }}"
+
+  - name: "image-builder.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    variables:
+      os: rhel9
+      cpus: 8
+      memory_mb: 24576
+      application: general
+      lifecycle_environment: production
+  - name: edge-images.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    variables:
+      os: rhel9
+      cpus: 8
+      memory_mb: 24576
+      application: general
+      lifecycle_environment: production
+
+  - name: localhost
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    variables:
+      ansible_connection: local
+      ansible_python_interpreter: '{  { ansible_playbook_python }}'
+
+controller_group_tiers: 2
+controller_groups_tier1:
+  - name: image_builder
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    hosts:
+      - "image-builder.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: edge_image_hosting
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    hosts:
+      - edge-images.{{ demo_uuid }}.{{ base_dns_suffix }}"
+
+controller_groups_tier2:
+  - name: demo_hosts
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    children:
+      - image_builder
+      - edge_image_hosting
+    variables:
+      provisioning:
+        host_group: "{  { os }}/vlan146"
+        method: bootdisk
+        dns_domain: "{  { demo_uuid }}.{  { base_dns_suffix }}"
+        cpus: "{  { cpus }}"
+        memory_mb: "{  { memory_mb }}"
+        activation_keys: "ak-{  { application }}-{  { os }}-{  { lifecycle_environment }}"
+
+
+controller_projects:
+  - name: "{  { audience }} Edge Management Codebase"
+    organization: "{  { audience }}"
+    scm_branch: main
+    scm_type: git
+    scm_url: https://github.com/jjaswanson4/jdc.git
+
+# controller_templates:
+#   - name: Create Edge Installer ISO
+#     inventory: "{  { audience }} Edge Utilities"
+#     limit: "edge-utilities.{{ demo_uuid }}.{{ base_dns_suffix }}"
+#     project: "{  { audience }} Edge Management Codebase"
+#     organization: "{  { audience }}"
+#     playbook: playbooks/create-edge-installer-iso.yml
+#     execution_environment: Josh's Demos Collection EE
+#     ask_variables_on_launch: yes
+#     allow_simultaneous: yes
+#     credentials:
+#       - Root Credentials
+#       - RHC Edge Credentials
+#       - Controller API Credentials
+#       - Red Hat Registry Credentials
+#       - vCenter Credentials
+#   - name: Provision Edge Systems
+#     inventory: Local Actions
+#     project: "{  { audience }} Edge Management Codebase"
+#     organization: "{  { audience }}"
+#     playbook: playbooks/manage-rhel-edge-system.yml
+#     execution_environment: Josh's Demos Collection EE
+#     credentials:
+#       - vCenter Credentials
+#   - name: Apply Configuration to Edge Device
+#     inventory: "{  { audience }} Edge Systems"
+#     project: "{  { audience }} Edge Management Codebase"
+#     organization: "{  { audience }}"
+#     playbook: playbooks/post-install-rhel-edge-systems.yml
+#     execution_environment: Josh's Demos Collection EE
+#     ask_limit_on_launch: yes
+#     become_enabled: yes
+#     allow_simultaneous: yes
+#     credentials:
+#       - Edge User Credentials
+#   - name: Add Device to Edge Management Group
+#     inventory: "{  { audience }} Edge Systems"
+#     limit: console.redhat.com
+#     project: "{  { audience }} Edge Management Codebase"
+#     organization: "{  { audience }}"
+#     playbook: playbooks/add-device-to-group-in-edge-mgmt.yml
+#     execution_environment: Josh's Demos Collection EE
+#     ask_limit_on_launch: yes
+#     become_enabled: yes
+#     allow_simultaneous: yes
+#     credentials:
+#       - Console Dot Credentials
+#       - Console Dot API Connection Settings
+#   - name: Create Edge Devices Inventory
+#     inventory: "{  { audience }} Edge Utilities"
+#     limit: "edge-utilities.{{ demo_uuid }}.{{ base_dns_suffix }}"
+#     project: "{  { audience }} Edge Management Codebase"
+#     organization: "{  { audience }}"
+#     playbook: playbooks/create-edge-inventory-in-controller.yml
+#     execution_environment: Josh's Demos Collection EE
+#     credentials:
+#       - Controller API Credentials
+#   - name: Build Edge Workload
+#     inventory: "{  { audience }} Edge Utilities"
+#     project: "{  { audience }} Edge Management Codebase"
+#     limit: "edge-utilities.{{ demo_uuid }}.{{ base_dns_suffix }}"
+#     organization: "{  { audience }}"
+#     playbook: playbooks/build-edge-workload.yml
+#     execution_environment: Josh's Demos Collection EE
+#     credentials:
+#       - Root Credentials
+#       - Red Hat Registry Credentials
+#       - Local Automation Hub Image Registry Credentials
+#   - name: Add Edge Device to Controller Group
+#     inventory: "{  { audience }} Edge Systems"
+#     ask_limit_on_launch: yes
+#     project: "{  { audience }} Edge Management Codebase"
+#     organization: "{  { audience }}"
+#     playbook: playbooks/add-edge-device-to-controller-group.yml
+#     execution_environment: Josh's Demos Collection EE
+#     allow_simultaneous: yes  
+#     credentials:
+#       - Edge User Credentials
+#       - Controller API Credentials
+#   - name: Deploy Edge Workload
+#     inventory: "{  { audience }} Edge Systems"
+#     project: "{  { audience }} Edge Management Codebase"
+#     organization: "{  { audience }}"
+#     playbook: playbooks/deploy-edge-workload.yml
+#     execution_environment: Josh's Demos Collection EE
+#     ask_limit_on_launch: yes
+#     allow_simultaneous: yes
+#     credentials:
+#       - Edge User Credentials
+#       - Controller API Credentials
+#       - Local Automation Hub Image Registry Credentials
+#   - name: Disconnect from Consoledot
+#     inventory: "{  { audience }} Edge Systems"
+#     project: "{  { audience }} Edge Management Codebase"
+#     organization: "{  { audience }}"
+#     playbook: playbooks/disconnect-from-consoledot.yml
+#     execution_environment: Josh's Demos Collection EE
+#     ask_limit_on_launch: yes
+#     allow_simultaneous: yes
+#     credentials:
+#       - Edge User Credentials
+#   - name: Delete Edge Systems
+#     inventory: Local Actions
+#     project: "{  { audience }} Edge Management Codebase"
+#     organization: "{  { audience }}"
+#     playbook: playbooks/manage-rhel-edge-system.yml
+#     execution_environment: Josh's Demos Collection EE
+#     credentials:
+#       - vCenter Credentials
+#     extra_vars:
+#       vm_state: absent
+#   - name: Delete Hosts from Controller Inventory
+#     inventory: Local Actions
+#     project: "{  { audience }} Edge Management Codebase"
+#     organization: "{  { audience }}"
+#     playbook: playbooks/delete-hosts-from-controller-inventory.yml
+#     execution_environment: Josh's Demos Collection EE
+#     credentials:
+#       - Controller API Credentials
+#     extra_vars:
+#       controller_inventory: "{  { audience }} Edge Systems"
+#   - name: Delete Edge Installer ISO
+#     inventory: "{  { audience }} Edge Utilities"
+#     project: "{  { audience }} Edge Management Codebase"
+#     limit: "edge-utilities.{{ demo_uuid }}.{{ base_dns_suffix }}"
+#     organization: "{  { audience }}"
+#     playbook: playbooks/delete-edge-installer-iso.yml
+#     execution_environment: Josh's Demos Collection EE
+#     credentials:
+#       - Root Credentials
+
+# controller_workflows:
+#   - name: Deploy Edge Systems
+#     organization: "{  { audience }}"
+#     state: present
+#     extra_vars:
+#       audience: "{  { audience }}"
+#       demo: "{  { demo }}"
+#       demo_uuid: "{  { demo_uuid }}"
+#       base_dns_suffix: "{  { base_dns_suffix }}"
+#     survey_enabled: yes
+#     survey:
+#       name: ''
+#       description: ''
+#       spec:
+#         - type: multiplechoice
+#           question_name: Workload Type?
+#           question_description: What workload should be run?
+#           variable: edge_workload
+#           choices:
+#             - Process Control
+#             - In-Store Display
+#           required: yes
+#           default: Process Control
+#         - type: text
+#           question_name: In-Store Display Website?
+#           question_description: If building in-store displays, what website should they display?
+#           variable: display_website
+#           required: no
+#           default: "https://{  { audience | lower }}.com"
+#     simplified_workflow_nodes:
+#       - identifier: Build Edge Workload
+#         unified_job_template: Build Edge Workload
+#         success_nodes:
+#           - Create Process Control System Installer ISO
+#       - identifier: Create Process Control System Installer ISO
+#         unified_job_template: Create Edge Installer ISO
+#         extra_data:
+#           source_installer_image: rhel-edge-pcs-image.iso
+#         success_nodes:
+#           - Create Human Machine Interface Installer ISO
+#       - identifier: Create Human Machine Interface Installer ISO
+#         unified_job_template: Create Edge Installer ISO
+#         extra_data:
+#           source_installer_image: rhel-edge-hmi-image.iso
+#         success_nodes:
+#           - Create Edge Devices Inventory
+#       - identifier: Create Edge Devices Inventory
+#         unified_job_template: Create Edge Devices Inventory
+#         success_nodes:
+#           - Provision Edge Systems
+#       - identifier: Provision Edge Systems
+#         unified_job_template: Provision Edge Systems
+#         all_parents_must_converge: yes
+   
+#   - name: Post-Install Edge System
+#     organization: "{  { audience }}"
+#     state: present
+#     ask_limit_on_launch: yes
+#     allow_simultaneous: yes
+#     simplified_workflow_nodes:
+#       - identifier: Apply Configuration to Edge Device
+#         unified_job_template: Apply Configuration to Edge Device
+#         success_nodes:
+#           - Add Edge Device to Controller Group
+#       - identifier: Add Edge Device to Controller Group
+#         unified_job_template: Add Edge Device to Controller Group
+#         success_nodes:
+#           - Deploy Edge Workload
+#           - Add Device to Edge Management Group
+#       - identifier: Add Device to Edge Management Group
+#         unified_job_template: Add Device to Edge Management Group
+#       - identifier: Deploy Edge Workload
+#         unified_job_template: Deploy Edge Workload
+
+#   - name: Teardown Edge Systems
+#     organization: "{  { audience }}"
+#     state: present
+#     simplified_workflow_nodes:
+#       - identifier: Disconnect From Consoledot
+#         unified_job_template: Disconnect from Consoledot
+#         success_nodes:
+#           - Delete Edge Installer ISO
+#           - Delete Edge Systems
+#       - identifier: Delete Edge Installer ISO
+#         unified_job_template: Delete Edge Installer ISO
+#         success_nodes:
+#           - Delete Hosts from Controller Inventory
+#       - identifier: Delete Edge Systems
+#         unified_job_template: Delete Edge Systems
+#         success_nodes:
+#           - Delete Hosts from Controller Inventory
+#       - identifier: Delete Hosts from Controller Inventory
+#         unified_job_template: Delete Hosts from Controller Inventory
+#         all_parents_must_converge: yes
+

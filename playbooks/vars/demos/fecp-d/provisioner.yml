@@ -1,0 +1,393 @@
+---
+
+# By default, the org 'Demo Provisioner' is created and resources are configured there,
+# Use this variable to override this behavior.
+# For example, overriding to 'Default' will put the resources into the default controller organization.
+controller_organization: Demo Provisioner
+
+# This is the default project name. It is a var so demos can import specific job templates and override the project locally.
+# Change this to change the name of the project for the provisioner job templates.
+project: Josh's Demos Collection
+
+# This is the default prefix for assets created for this demo.
+# Change this variable to use a different prefix.
+demo_prefix: Far Edge Compute Platform - Disconnected
+
+# This is the realitive path to the vars files for this demo.
+# Typically this contains a vars file for the provisioner, Satellite, and Controller.
+vars_files_path: "vars/demos/{{ demo }}"
+
+# This is the execution environment used for this demo provisioner.
+# This execution environment will automatically be configured in Controller.
+execution_environment:
+  name: Josh's Demos Collection EE
+  registry: "{{ ee_registry.host }}"
+  image: joshs-demos-collection-ee
+  credential: Demo Provisioner EE Image Registry Credentials
+
+# This is the information used for the instance of Controller for the demo.
+# This can be the same instance as where the provisioner is deployed, but it's not recommended.
+controller_configuration_file: "{{ vars_files_path }}/controller.yml"
+
+# This is the information used for the instance of Satellite for the demo.
+# This can be the same instance as where the provisioner is deployed, but it's not recommended.
+satellite_configuration_file: "{{ vars_files_path }}/satellite.yml"
+
+# This is the information used for the instance of Hub for the demo.
+# This can be the same instance as where the provisioner is deployed, but it's not recommended.
+hub_configuration_file: "{{ vars_files_path }}/hub.yml"
+
+base_dns_suffix: demos.lcl
+
+# This toggles secure logging, for example: when configuring credentials on Ansible Controller.
+# Since I'm using my own instance, secure logging isn't a requirement.
+controller_configuration_credentials_secure_logging: no
+
+# These are where demo specific components are defined, in hash form. These will automatically be added to the common resources.
+# If there is no need for a specific, resource, simply define an empty var, such as `controller_organizations: []`
+controller_organizations: []
+controller_execution_environments: []
+controller_inventories: []
+controller_projects: []
+
+controller_configuration_projects_async_retries: 60
+controller_configuration_projects_async_delay: 5
+
+controller_credential_types:
+  - name: Demo Provisioner Edge User SSH Key Data
+    kind: cloud
+    inputs:
+      fields:
+        - id: edge_user_username
+          type: string
+          label: Username
+        - id: edge_user_ssh_key_data
+          type: string
+          label: Private SSH Key Data
+          secret: yes
+    injectors:
+      extra_vars:
+        edge_user_username: "{  { edge_user_username }}"
+        edge_user_ssh_key_data: "{  { edge_user_ssh_key_data }}"
+
+
+controller_credentials:
+  - name: Demo Provisioner Edge User Credentials
+    credential_type: Demo Provisioner Edge User SSH Key Data
+    organization: "{{ controller_organization }}"
+    inputs:
+      edge_user_username: edge-user
+      edge_user_ssh_key_data: "{{ edge_user_key_data }}"
+
+controller_hosts:
+  - name: "image-builder.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    variables:
+      os: rhel9
+      cpus: 8
+      memory_mb: 24576
+      application: general
+      lifecycle_environment: production
+  - name: edge-images.{{ demo_uuid }}.{{ base_dns_suffix }}"
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    variables:
+      os: rhel9
+      cpus: 8
+      memory_mb: 24576
+      application: general
+      lifecycle_environment: production
+  - name: localhost
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    variables:
+      ansible_connection: local
+      ansible_python_interpreter: '{  { ansible_playbook_python }}'
+
+controller_group_tiers: 3
+controller_groups_tier1:
+  - name: image_builder
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    hosts:
+      - "image-builder.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: edge_image_hosting
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    hosts:
+      - edge-images.{{ demo_uuid }}.{{ base_dns_suffix }}"
+
+controller_groups_tier2:
+  - name: edge_utilities
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    children:
+      - image_builder
+      - edge_image_hosting
+
+controller_groups_tier3:
+  - name: demo_hosts
+    inventory: "Demo {{ demo_uuid }} Inventory"
+    children:
+      - edge_utilities
+    variables:
+      provisioning:
+        host_group: "{  { os }}/vlan146"
+        method: bootdisk
+        dns_domain: "{  { demo_uuid }}.{  { base_dns_suffix }}"
+        cpus: "{  { cpus }}"
+        memory_mb: "{  { memory_mb }}"
+        activation_keys: "ak-{  { application }}-{  { os }}-{  { lifecycle_environment }}"
+
+controller_templates: []
+
+controller_workflows:
+  - name: Provision Far Edge Compute Platform | Disconnected Demo
+    organization: "{{ controller_organization }}"
+    state: "{{ controller_state | default('present') }}"
+    ask_inventory_on_launch: yes
+    ask_variables_on_launch: yes
+    extra_vars:
+      demo: fecp-d
+    simplified_workflow_nodes:    
+      - identifier: Create CMDB Records
+        unified_job_template: Manage CMDB Records
+        limit: 'demo_hosts:controller'
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner vCenter Credentials
+        success_nodes:
+          - Create DNS Records
+        failure_nodes:
+          - Send Failure Email About 'Create CMDB Records'
+      - identifier: Send Failure Email About 'Create CMDB Records'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Create CMDB Records
+      - identifier: Create DNS Records
+        unified_job_template: Manage DNS Records
+        limit: 'demo_hosts:controller'
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner IDM Credentials
+        success_nodes:
+          - Provision Controller
+          - Provision Image Builder Server
+          - Provision Edge Images Server
+        failure_nodes:
+          - Send Failure Email About 'Create DNS Records'
+      - identifier: Send Failure Email About 'Create DNS Records'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Create DNS Records
+      # Ansible Controller
+      - identifier: Provision Controller
+        unified_job_template: Provision Systems
+        limit: controller
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner Satellite Credentials
+          - Demo Provisioner vCenter Credentials
+          - Demo Provisioner Root Account
+        success_nodes:
+          - Apply Standard Config to Controller
+        failure_nodes:
+          - Send Failure Email About 'Provision Controller'
+      - identifier: Send Failure Email About 'Provision Controller'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Provision Controller
+      - identifier: Apply Standard Config to Controller
+        unified_job_template: Apply Standard Configuration
+        limit: controller
+        credentials:
+          - Demo Provisioner Root Account
+        success_nodes:
+          - Install Ansible Controller
+        failure_nodes:
+          - Send Failure Email About 'Apply Standard Config to Controller'
+      - identifier: Send Failure Email About 'Apply Standard Config to Controller'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Apply Standard Config to Controller     
+      - identifier: Install Ansible Controller
+        unified_job_template: Install Ansible Controller
+        limit: controller
+        credentials:
+          - Demo Provisioner Root Account
+          - Demo Provisioner Admin Credentials
+          - Demo Provisioner Red Hat Registry Credentials
+        success_nodes:
+          - Configure Ansible Controller
+        failure_nodes:
+          - Send Failure Email About 'Install Ansible Controller'
+      - identifier: Send Failure Email About 'Install Ansible Controller'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Install Ansible Controller
+      - identifier: Configure Ansible Controller
+        unified_job_template: Configure Ansible Controller
+        limit: controller
+        credentials:
+          - Demo Provisioner Admin Credentials
+          - Demo Provisioner Red Hat Registry Credentials
+          - Demo Provisioner RHC Edge Credentials
+          - Demo Provisioner vCenter Credentials
+          - Demo Provisioner Edge User Credentials
+          - Demo Provisioner Console Dot Credentials
+          - Demo Provisioner Console Dot Offline Token
+        success_nodes:
+          - Send Success Email
+        failure_nodes:
+          - Send Failure Email About 'Configure Ansible Controller'
+        all_parents_must_converge: yes
+      - identifier: Send Failure Email About 'Configure Ansible Controller'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Configure Ansible Controller
+      # Image Builder Server
+      - identifier: Provision Image Builder Server
+        unified_job_template: Provision Systems
+        limit: image_builder
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner Satellite Credentials
+          - Demo Provisioner vCenter Credentials
+          - Demo Provisioner Root Account
+        success_nodes:
+          - Apply Standard Config to Image Builder Server
+        failure_nodes:
+          - Send Failure Email About 'Provision Image Builder Server'
+      - identifier: Send Failure Email About 'Provision Image Builder Server'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Provision Image Builder Server
+      - identifier: Apply Standard Config to Image Builder Server
+        unified_job_template: Apply Standard Configuration
+        limit: image_builder
+        credentials:
+          - Demo Provisioner Root Account
+        success_nodes:
+          - Send Success Email
+        failure_nodes:
+          - Send Failure Email About 'Apply Standard Config to Image Builder Server'
+      - identifier: Send Failure Email About 'Apply Standard Config to Image Builder Server'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Apply Standard Config to Image Builder Server
+      # Edge Images Server
+      - identifier: Provision Edge Images Server
+        unified_job_template: Provision Systems
+        limit: edge_image_hosting
+        credentials:
+          - Demo Provisioner Netbox Credentials
+          - Demo Provisioner Satellite Credentials
+          - Demo Provisioner vCenter Credentials
+          - Demo Provisioner Root Account
+        success_nodes:
+          - Apply Standard Config to Edge Images Server
+        failure_nodes:
+          - Send Failure Email About 'Provision Edge Images Server'
+      - identifier: Send Failure Email About 'Provision Edge Images Server'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Provision Edge Images Server
+      - identifier: Apply Standard Config to Edge Images Server
+        unified_job_template: Apply Standard Configuration
+        limit: edge_image_hosting
+        credentials:
+          - Demo Provisioner Root Account
+        success_nodes:
+          - Send Success Email
+        failure_nodes:
+          - Send Failure Email About 'Apply Standard Config to Edge Images Server'
+      - identifier: Send Failure Email About 'Apply Standard Config to Edge Images Server'
+        unified_job_template: Send Provisioner Email
+        extra_data:
+          failed_at_step: Apply Standard Config to Edge Images Server
+      - identifier: Send Success Email
+        unified_job_template: Send Provisioner Email
+        all_parents_must_converge: yes
+        extra_data:
+          provisioner_status: success
+
+  # - name: Teardown RHEL for Edge Demo
+  #   organization: "{{ controller_organization }}"
+  #   state: "{{ controller_state | default('present') }}"
+  #   ask_inventory_on_launch: yes
+  #   ask_variables_on_launch: yes
+  #   extra_vars:
+  #     demo: r4e
+  #   simplified_workflow_nodes:
+  #     - identifier: Run Controller Workflow to Cleanup Edge Systems
+  #       unified_job_template: Run Controller Workflow
+  #       limit: controller
+  #       extra_data:
+  #         controller_launch_jobs:
+  #           - name: Teardown Edge Systems
+  #             wait: true
+  #             interval: 5
+  #       credentials:
+  #         - Demo Provisioner Admin Credentials
+  #         - Demo Provisioner Red Hat Registry Credentials
+  #         - Demo Provisioner RHC Edge Credentials
+  #         - Demo Provisioner vCenter Credentials
+  #         - Demo Provisioner Edge User Credentials
+  #         - Demo Provisioner Console Dot Credentials
+  #         - Demo Provisioner Console Dot Offline Token
+  #       always_nodes:
+  #         - Remove Demo Group In Edge Management
+  #         - Teardown Management and Utility Systems
+  #     - identifier: Unregister from Insights
+  #       unified_job_template: Unregister from Insights
+  #       limit: controller
+  #       credentials:
+  #         - Demo Provisioner Root Account
+  #         - Demo Provisioner Admin Credentials
+  #       always_nodes:
+  #         - Teardown Management and Utility Systems
+  #     - identifier: Remove Demo Group In Edge Management
+  #       unified_job_template: Manage Groups In Edge Management
+  #       limit: console.redhat.com
+  #       credentials:
+  #         - Demo Provisioner Console Dot Credentials
+  #       extra_data:
+  #         group_state: absent
+  #       always_nodes:
+  #         - Remove Demo Context
+  #     - identifier: Teardown Management and Utility Systems
+  #       unified_job_template: Teardown Systems
+  #       limit: 'utility_server:controller:hub'
+  #       credentials:
+  #         - Demo Provisioner Satellite Credentials
+  #         - Demo Provisioner Admin Credentials
+  #       always_nodes:
+  #         - Cleanup DNS Records
+  #       all_parents_must_converge: yes
+  #     - identifier: Cleanup DNS Records
+  #       unified_job_template: Manage DNS Records
+  #       limit: 'utility_server:controller:hub'
+  #       credentials:
+  #         - Demo Provisioner Admin Credentials
+  #         - Demo Provisioner Netbox Credentials
+  #         - Demo Provisioner IDM Credentials
+  #       extra_data:
+  #         dns_records_state: absent
+  #       always_nodes:
+  #         - Remove CMDB Records
+  #     - identifier: Remove CMDB Records
+  #       unified_job_template: Manage CMDB Records
+  #       limit: 'utility_server:controller:hub'
+  #       credentials:
+  #         - Demo Provisioner Admin Credentials
+  #         - Demo Provisioner Netbox Credentials
+  #         - Demo Provisioner vCenter Credentials
+  #       extra_data:
+  #         cmdb_record_state: absent
+  #       always_nodes:
+  #         - Remove Demo Context
+  #     - identifier: Remove Demo Context
+  #       unified_job_template: Configure Demo Context
+  #       credentials:
+  #         - Demo Provisioner Netbox Credentials
+  #         - Demo Provisioner vCenter Credentials
+  #         - Demo Provisioner IDM Credentials
+  #         - Demo Provisioner Satellite Credentials
+  #       all_parents_must_converge: yes
+  #       extra_data:
+  #         demo_context_state: absent
