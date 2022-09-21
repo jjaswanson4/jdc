@@ -88,7 +88,7 @@ controller_hosts:
       memory_mb: 24576
       application: general
       lifecycle_environment: production
-  - name: edge-images.{{ demo_uuid }}.{{ base_dns_suffix }}"
+  - name: "edge-images.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "Demo {{ demo_uuid }} Inventory"
     variables:
       os: rhel9
@@ -111,7 +111,7 @@ controller_groups_tier1:
   - name: edge_image_hosting
     inventory: "Demo {{ demo_uuid }} Inventory"
     hosts:
-      - edge-images.{{ demo_uuid }}.{{ base_dns_suffix }}"
+      - "edge-images.{{ demo_uuid }}.{{ base_dns_suffix }}"
 
 controller_groups_tier2:
   - name: edge_utilities
