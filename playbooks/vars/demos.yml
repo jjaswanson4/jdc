@@ -17,3 +17,5 @@ available_demos:
     display_name: Automation Everywhere
   - name: r4e
     display_name: RHEL for Edge
+  - name: fecp-d
+    disaply_name: Far Edge Compute Platform | Disconnected
