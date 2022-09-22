@@ -317,8 +317,7 @@ controller_templates:
     playbook: playbooks/apply-standard-configuration.yml
     execution_environment: Josh's Demos Collection EE
     ask_credential_on_launch: yes
-    extra_vars:
-      ansible_become: no
+    become_enabled: yes
   - name: Provision Windows Systems
     inventory: Demo Inventory
     ask_inventory_on_launch: yes
