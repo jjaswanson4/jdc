@@ -5,3 +5,63 @@
     - all
   roles:
     - osbuild.composer.server
+  post_tasks:
+    - name: check repo baseurls
+      ansible.builtin.shell:
+        cmd: grep 'cdn.redhat.com' /etc/yum.repos.d/redhat.repo
+      changed_when: false
+      check_mode: false
+      failed_when: false
+      register: baseurl_check
+    - name: configure image builder to use satellite repos over CDN
+      block:
+        - name: create repositories dirs
+          ansible.builtin.file:
+            path: "{{ directory }}"
+            state: directory
+          loop:
+            - /etc/osbuild-composer
+            - /etc/osbuild-composer/repositories
+          notify:
+            - restart_ib_services
+        - name: copy over source files
+          ansible.builtin.copy:
+            src: "/usr/share/osbuild-composer/repositories/rhel-{{ ansible_distribution_major_version }}{{ ansible_distribution_minor_version }}.json"
+            dest: "/etc/osbuild-composer/repositories/rhel-{{ ansible_distribution_major_version }}{{ ansible_distribution_minor_version }}.json"
+            remote_src: yes
+          notify:
+            - restart_ib_services
+        - name: get baseurl from /etc/yum.repos.d/redhat.repo
+          ansible.builtin.shell:
+            cmd: grep baseurl /etc/yum.repos.d/redhat.repo | grep 'baseos\|appstream' | sed 's/baseurl = https...//g' | cut -d '/' -f 1-6 | sort --unique
+          register: grab_baseurl
+          changed_when: false
+        - name: replace baseurls
+          ansible.builtin.replace:
+            path: "/etc/osbuild-composer/repositories/rhel-{{ ansible_distribution_major_version }}{{ ansible_distribution_minor_version }}.json"
+            regexp: 'cdn\.redhat\.com'
+            replace: "{{ grab_baseurl.stdout }}"
+          notify:
+            - restart_ib_services
+        - name: backup the cert bundle
+          ansible.builtin.copy:
+            src: /etc/rhsm/ca/redhat-uep.pem
+            dest: /etc/rhsm/ca/redhat-uep.pem.backup
+            remote_src: yes
+          notify:
+            - restart_ib_services
+        - name: dump the CDN cert bundle
+          ansible.builtin.file:
+            path: /etc/rhsm/ca/redhat-uep.pem
+            state: absent
+          notify:
+            - restart_ib_services
+        - name: link the satellite cert bundle
+          ansible.builtin.file:
+            src: /etc/rhsm/ca/katello-server-ca.pem
+            dest: /etc/rhsm/ca/redhat-uep.pem
+            state: link
+          notify:
+            - restart_ib_services
+      when:
+        - baseurl_check.rc | int != 0
