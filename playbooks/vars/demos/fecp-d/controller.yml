@@ -136,7 +136,6 @@ controller_templates:
     organization: "{  { audience }}"
     playbook: playbooks/setup-image-builder.yml
     execution_environment: Josh's Demos Collection EE
-    ask_variables_on_launch: yes
     allow_simultaneous: yes
     become_enabled: yes
     credentials:
