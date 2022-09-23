@@ -81,7 +81,7 @@ controller_inventories:
 
 controller_hosts:
   - name: "image-builder.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Utilities"
     variables:
       os: rhel9
       cpus: 8
@@ -89,7 +89,7 @@ controller_hosts:
       application: general
       lifecycle_environment: production
   - name: "edge-images.{{ demo_uuid }}.{{ base_dns_suffix }}"
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Utilities"
     variables:
       os: rhel9
       cpus: 8
@@ -98,37 +98,21 @@ controller_hosts:
       lifecycle_environment: production
 
   - name: localhost
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: Local Actions
     variables:
       ansible_connection: local
       ansible_python_interpreter: '{  { ansible_playbook_python }}'
 
-controller_group_tiers: 2
+controller_group_tiers: 1
 controller_groups_tier1:
   - name: image_builder
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Utilities"
     hosts:
       - "image-builder.{{ demo_uuid }}.{{ base_dns_suffix }}"
   - name: edge_image_hosting
-    inventory: "Demo {{ demo_uuid }} Inventory"
+    inventory: "{  { audience }} Edge Utilities"
     hosts:
       - "edge-images.{{ demo_uuid }}.{{ base_dns_suffix }}"
-
-controller_groups_tier2:
-  - name: demo_hosts
-    inventory: "Demo {{ demo_uuid }} Inventory"
-    children:
-      - image_builder
-      - edge_image_hosting
-    variables:
-      provisioning:
-        host_group: "{  { os }}/vlan146"
-        method: bootdisk
-        dns_domain: "{  { demo_uuid }}.{  { base_dns_suffix }}"
-        cpus: "{  { cpus }}"
-        memory_mb: "{  { memory_mb }}"
-        activation_keys: "ak-{  { application }}-{  { os }}-{  { lifecycle_environment }}"
-
 
 controller_projects:
   - name: "{  { audience }} Edge Management Codebase"
