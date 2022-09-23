@@ -145,7 +145,7 @@ controller_templates:
     limit: image_builder
     project: "{  { audience }} Edge Management Codebase"
     organization: "{  { audience }}"
-    playbook: playbooks/setup-image-builder.yml
+    playbook: playbooks/build-image.yml
     execution_environment: Josh's Demos Collection EE
     allow_simultaneous: yes
     become_enabled: yes
@@ -163,7 +163,7 @@ controller_templates:
         customizations:
           user:
             name: edge-user
-            password: "{  { ansible_password }}"
+            password: "{  { admin_password }}"
             groups: '["users", "wheel"]'
 
 
