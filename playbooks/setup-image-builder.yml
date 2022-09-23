@@ -19,6 +19,8 @@
           ansible.builtin.file:
             path: "{{ directory }}"
             state: directory
+          loop_control:
+            loop_var: directory
           loop:
             - /etc/osbuild-composer
             - /etc/osbuild-composer/repositories
@@ -65,3 +67,16 @@
             - restart_ib_services
       when:
         - baseurl_check.rc | int != 0
+  handlers:
+    - name: restart image builder services
+      ansible.builtin.systemd:
+        name: "{{ service }}"
+        state: restarted
+      loop_control:
+        loop_var: service
+      loop:
+        - osbuild-worker@.service.d
+        - osbuild-worker@1.service
+        - osbuild-composer.service
+      listen:
+        - restart_ib_services
