@@ -1,0 +1,7 @@
+---
+
+- name: setup image builder
+  hosts:
+    - all
+  roles:
+    - osbuild.composer.server
