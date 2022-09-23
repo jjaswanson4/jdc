@@ -140,6 +140,32 @@ controller_templates:
     become_enabled: yes
     credentials:
       - Automation User
+  - name: Create Initial Edge Image
+    inventory: "{  { audience }} Edge Utilities"
+    limit: image_builder
+    project: "{  { audience }} Edge Management Codebase"
+    organization: "{  { audience }}"
+    playbook: playbooks/setup-image-builder.yml
+    execution_environment: Josh's Demos Collection EE
+    allow_simultaneous: yes
+    become_enabled: yes
+    credentials:
+      - Automation User
+    extra vars:
+      blueprint:
+        name: rhel-edge-image
+        version: 1.0.0
+        packages:
+          - vim-enhanced
+          - ansible-core
+          - git
+          - open-vm-tools
+        customizations:
+          user:
+            name: edge-user
+            password: "{  { ansible_password }}"
+            groups: '["users", "wheel"]'
+
 
 # controller_workflows:
 #   - name: Deploy Edge Systems
