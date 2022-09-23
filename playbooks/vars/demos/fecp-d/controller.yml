@@ -53,6 +53,13 @@ controller_credentials:
     inputs:
       username: "{  { edge_user_username }}"
       ssh_key_data: "{  { edge_user_ssh_key_data }}"
+  - name: Automation User
+    organization: "{  { audience }}"
+    credential_type: Machine
+    inputs:
+      username: ansible
+      password: "{  { admin_password }}"
+      become_password: "{  { admin_password }}"
 
 controller_execution_environments:
   - name: Josh's Demos Collection EE
@@ -121,136 +128,19 @@ controller_projects:
     scm_type: git
     scm_url: https://github.com/jjaswanson4/jdc.git
 
-# controller_templates:
-#   - name: Create Edge Installer ISO
-#     inventory: "{  { audience }} Edge Utilities"
-#     limit: "edge-utilities.{{ demo_uuid }}.{{ base_dns_suffix }}"
-#     project: "{  { audience }} Edge Management Codebase"
-#     organization: "{  { audience }}"
-#     playbook: playbooks/create-edge-installer-iso.yml
-#     execution_environment: Josh's Demos Collection EE
-#     ask_variables_on_launch: yes
-#     allow_simultaneous: yes
-#     credentials:
-#       - Root Credentials
-#       - RHC Edge Credentials
-#       - Controller API Credentials
-#       - Red Hat Registry Credentials
-#       - vCenter Credentials
-#   - name: Provision Edge Systems
-#     inventory: Local Actions
-#     project: "{  { audience }} Edge Management Codebase"
-#     organization: "{  { audience }}"
-#     playbook: playbooks/manage-rhel-edge-system.yml
-#     execution_environment: Josh's Demos Collection EE
-#     credentials:
-#       - vCenter Credentials
-#   - name: Apply Configuration to Edge Device
-#     inventory: "{  { audience }} Edge Systems"
-#     project: "{  { audience }} Edge Management Codebase"
-#     organization: "{  { audience }}"
-#     playbook: playbooks/post-install-rhel-edge-systems.yml
-#     execution_environment: Josh's Demos Collection EE
-#     ask_limit_on_launch: yes
-#     become_enabled: yes
-#     allow_simultaneous: yes
-#     credentials:
-#       - Edge User Credentials
-#   - name: Add Device to Edge Management Group
-#     inventory: "{  { audience }} Edge Systems"
-#     limit: console.redhat.com
-#     project: "{  { audience }} Edge Management Codebase"
-#     organization: "{  { audience }}"
-#     playbook: playbooks/add-device-to-group-in-edge-mgmt.yml
-#     execution_environment: Josh's Demos Collection EE
-#     ask_limit_on_launch: yes
-#     become_enabled: yes
-#     allow_simultaneous: yes
-#     credentials:
-#       - Console Dot Credentials
-#       - Console Dot API Connection Settings
-#   - name: Create Edge Devices Inventory
-#     inventory: "{  { audience }} Edge Utilities"
-#     limit: "edge-utilities.{{ demo_uuid }}.{{ base_dns_suffix }}"
-#     project: "{  { audience }} Edge Management Codebase"
-#     organization: "{  { audience }}"
-#     playbook: playbooks/create-edge-inventory-in-controller.yml
-#     execution_environment: Josh's Demos Collection EE
-#     credentials:
-#       - Controller API Credentials
-#   - name: Build Edge Workload
-#     inventory: "{  { audience }} Edge Utilities"
-#     project: "{  { audience }} Edge Management Codebase"
-#     limit: "edge-utilities.{{ demo_uuid }}.{{ base_dns_suffix }}"
-#     organization: "{  { audience }}"
-#     playbook: playbooks/build-edge-workload.yml
-#     execution_environment: Josh's Demos Collection EE
-#     credentials:
-#       - Root Credentials
-#       - Red Hat Registry Credentials
-#       - Local Automation Hub Image Registry Credentials
-#   - name: Add Edge Device to Controller Group
-#     inventory: "{  { audience }} Edge Systems"
-#     ask_limit_on_launch: yes
-#     project: "{  { audience }} Edge Management Codebase"
-#     organization: "{  { audience }}"
-#     playbook: playbooks/add-edge-device-to-controller-group.yml
-#     execution_environment: Josh's Demos Collection EE
-#     allow_simultaneous: yes  
-#     credentials:
-#       - Edge User Credentials
-#       - Controller API Credentials
-#   - name: Deploy Edge Workload
-#     inventory: "{  { audience }} Edge Systems"
-#     project: "{  { audience }} Edge Management Codebase"
-#     organization: "{  { audience }}"
-#     playbook: playbooks/deploy-edge-workload.yml
-#     execution_environment: Josh's Demos Collection EE
-#     ask_limit_on_launch: yes
-#     allow_simultaneous: yes
-#     credentials:
-#       - Edge User Credentials
-#       - Controller API Credentials
-#       - Local Automation Hub Image Registry Credentials
-#   - name: Disconnect from Consoledot
-#     inventory: "{  { audience }} Edge Systems"
-#     project: "{  { audience }} Edge Management Codebase"
-#     organization: "{  { audience }}"
-#     playbook: playbooks/disconnect-from-consoledot.yml
-#     execution_environment: Josh's Demos Collection EE
-#     ask_limit_on_launch: yes
-#     allow_simultaneous: yes
-#     credentials:
-#       - Edge User Credentials
-#   - name: Delete Edge Systems
-#     inventory: Local Actions
-#     project: "{  { audience }} Edge Management Codebase"
-#     organization: "{  { audience }}"
-#     playbook: playbooks/manage-rhel-edge-system.yml
-#     execution_environment: Josh's Demos Collection EE
-#     credentials:
-#       - vCenter Credentials
-#     extra_vars:
-#       vm_state: absent
-#   - name: Delete Hosts from Controller Inventory
-#     inventory: Local Actions
-#     project: "{  { audience }} Edge Management Codebase"
-#     organization: "{  { audience }}"
-#     playbook: playbooks/delete-hosts-from-controller-inventory.yml
-#     execution_environment: Josh's Demos Collection EE
-#     credentials:
-#       - Controller API Credentials
-#     extra_vars:
-#       controller_inventory: "{  { audience }} Edge Systems"
-#   - name: Delete Edge Installer ISO
-#     inventory: "{  { audience }} Edge Utilities"
-#     project: "{  { audience }} Edge Management Codebase"
-#     limit: "edge-utilities.{{ demo_uuid }}.{{ base_dns_suffix }}"
-#     organization: "{  { audience }}"
-#     playbook: playbooks/delete-edge-installer-iso.yml
-#     execution_environment: Josh's Demos Collection EE
-#     credentials:
-#       - Root Credentials
+controller_templates:
+  - name: Setup Image Builder
+    inventory: "{  { audience }} Edge Utilities"
+    limit: image_builder
+    project: "{  { audience }} Edge Management Codebase"
+    organization: "{  { audience }}"
+    playbook: playbooks/setup-image-builder.yml
+    execution_environment: Josh's Demos Collection EE
+    ask_variables_on_launch: yes
+    allow_simultaneous: yes
+    become_enabled: yes
+    credentials:
+      - Automation User
 
 # controller_workflows:
 #   - name: Deploy Edge Systems
