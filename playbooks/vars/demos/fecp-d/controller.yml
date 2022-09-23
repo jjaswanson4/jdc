@@ -151,7 +151,7 @@ controller_templates:
     become_enabled: yes
     credentials:
       - Automation User
-    extra vars:
+    extra_vars:
       blueprint:
         name: rhel-edge-image
         version: 1.0.0
