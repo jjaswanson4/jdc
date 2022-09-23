@@ -79,6 +79,7 @@ controller_inventories:
       demo_uuid: "{  { demo_uuid }}"
       base_dns_suffix: "{  { base_dns_suffix }}"
 
+controller_hosts:
   - name: "image-builder.{{ demo_uuid }}.{{ base_dns_suffix }}"
     inventory: "Demo {{ demo_uuid }} Inventory"
     variables:
