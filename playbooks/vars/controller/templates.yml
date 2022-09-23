@@ -13,6 +13,7 @@ controller_templates:
     execution_environment: Josh's Demos Collection EE
     ask_credential_on_launch: yes
     ask_variables_on_launch: yes
+    become_enabled: yes
   - name: Install Ansible Automation Platform
     organization: Demo Provisioner
     inventory: Demo Inventory
