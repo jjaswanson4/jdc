@@ -1,0 +1,9 @@
+---
+
+- name: determine "from" hash
+  ansible.builtin.set_fact:
+    from_hash: "{{ (available_images | selectattr('version', 'search', (versions.split(':')[0])) | list | first).hash }}"
+
+- name: determine "to" hash
+  ansible.builtin.set_fact:
+    to_hash: "{{ (available_images | selectattr('version', 'search', (versions.split(':')[1])) | list | first).hash }}"

@@ -1,0 +1,83 @@
+---
+
+- name: host R4E image on a webserver
+  hosts:
+    - all
+  gather_facts: no
+  pre_tasks:
+    - name: ensure a web server is installed
+      ansible.builtin.dnf:
+        name: httpd
+    - name: create directory ostree repo
+      ansible.builtin.file:
+        path: /var/www/html/edge
+        state: directory
+      register: ostree_init
+    - name: actions after init of repo
+      block:
+        - name: init ostree repo
+          ansible.builtin.shell:
+            cmd: ostree init --repo=/var/www/html/edge
+        - name: init latest image info file
+          ansible.builtin.copy:
+            dest: /var/www/html/edge/latest-image-info.yml
+            content: |
+              latest_version: 0.0.0
+              latest_hash:
+        - name: init image list file
+          ansible.builtin.copy:
+            dest: /var/www/html/edge/images-list.yml
+            content: 'available_images:'
+      when:
+        - ostree_init.changed
+  tasks:
+    - name: read in ansible log file
+      ansible.builtin.slurp:
+        src: /var/www/html/edge/latest-image-info.yml
+      register: repo_log_file
+    - name: set repo fact based off log file
+      ansible.builtin.set_fact:
+        repo_status: "{{ repo_log_file.content | b64decode | from_yaml }}"
+    - name: tasks to add commit to repo
+      block:
+        - name: commit to repo
+          ansible.builtin.shell:
+            cmd: >
+              ostree commit
+              --repo /var/www/html/edge
+              --branch rhel/9/x86_64/edge
+              --tree=tar=/tmp/{{ image.name }}-{{ image.version }}.tar
+          register: ostree_output
+        - name: update latest version
+          ansible.builtin.lineinfile:
+            path: /var/www/html/edge/latest-image-info.yml
+            regexp: '^latest_version'
+            line: "latest_version: {{ image.version }}"
+        - name: update latest hash
+          ansible.builtin.lineinfile:
+            path: /var/www/html/edge/latest-image-info.yml
+            regexp: '^latest_hash'
+            line: "latest_hash: {{ ostree_output.stdout }}"
+        - name: set image info fact
+          ansible.builtin.set_fact:
+            just_committed_image:
+              - version: "{{ image.version }}"
+                hash: "{{ ostree_output.stdout }}"
+        - name: add version to available versions
+          ansible.builtin.blockinfile:
+            path: /var/www/html/edge/images-list.yml
+            block: "{{ just_committed_image | to_nice_yaml }}"
+            insertafter: '^available_versions:'
+            marker: ''
+      when:
+        - image.version != repo_status.latest_version
+  post_tasks:
+    - name: include role to generate static deltas
+      ansible.builtin.include_role:
+        name: ../roles/ostree_generate_static_deltas
+      loop_control:
+        loop_var: versions
+      loop: "{{ generate_deltas_between_versions }}"
+      when:
+        - generate_static_deltas is defined
+        - generate_static_deltas

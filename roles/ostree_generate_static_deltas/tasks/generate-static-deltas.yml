@@ -1,0 +1,9 @@
+---
+
+- name: tell ostree to generate static deltas
+  ansible.builtin.shell:
+    cmd: >
+      ostree static-delta generate
+      --repo=/var/www/html/edge/
+      --from="{{ from_hash }}"
+      --to="{{ to_hash }}"

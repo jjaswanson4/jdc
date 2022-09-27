@@ -1,0 +1,10 @@
+---
+
+- name: import tasks to get info about images
+  ansible.builtin.import_tasks: get-images-info.yml
+
+- name: import tasks to determine hashes
+  ansible.builtin.import_tasks: determine-hashes.yml
+
+- name: import tasks to generate static deltas
+  ansible.builtin.import_tasks: generate-static-deltas.yml

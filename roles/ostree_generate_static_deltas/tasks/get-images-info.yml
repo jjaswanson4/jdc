@@ -1,0 +1,12 @@
+---
+
+- name: read in information about images
+  ansible.builtin.slurp:
+    src: /var/www/html/edge/images-list.yml
+  register: available_images_file
+- name: set available images fact
+  ansible.builtin.set_fact:
+    available_images: "{{ available_images_file.content | b64decode | from_yaml }}"
+- name: dump nested
+  ansible.builtin.set_fact:
+    available_images: "{{ available_images.available_images }}"
